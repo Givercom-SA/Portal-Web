@@ -1,0 +1,32 @@
+﻿@model Web.Principal.Areas.GestionarEmbarques.Models.SolicitudFacturacionMotivoRechazoModel
+
+
+
+<form asp-action="RegistrarEstadoFacturacion" asp-area="GestionarEmbarques" id="frmRegistrarMotivoRechazo" asp-controller="Facturacion" method="post">
+
+    <div class="modal fade" data-bs-backdrop="static" id="modal_rechazar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar motivo de rechazo</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label pt-2">Motivo</label>
+                        <div class="col-sm-9">
+                            <textarea asp-for="Mensaje" class="form-control" id="txtMotivoRechazo" rows="3"></textarea>
+                            <span asp-validation-for="Mensaje"  class="small text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnRechazarSolicitudFacturacion" onclick="AnularAprobar('SR')" class="btn btn-primary" type="button">Rechazar</button>
+                    <button id="btnCancelarRechazo" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>

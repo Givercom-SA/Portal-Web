@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioMenuVM>
+@{
+    string Disabled = string.Empty;
+    if (ViewData.ContainsKey("ModoLectura"))
+        Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
+}
+@if (Model != null)
+{
+    <div class="list-group small">
+        @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
+        {
+            <label class="list-group-item"><b>@grupo</b></label>
+            @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
+            {
+                <label class="list-group-item">
+                    @if (item.Permiso == 1)
+                    {
+                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled> @item.Nombre
+                    }
+                    else
+                    {
+                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled> @item.Nombre
+                    }
+                </label>
+            }
+        }
+    </div>
+}

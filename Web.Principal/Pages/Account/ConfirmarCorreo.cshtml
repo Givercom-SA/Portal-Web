@@ -1,0 +1,59 @@
+﻿@page "{token?}"
+@model ConfirmarCorreoModel
+@{
+    ViewData["Title"] = "Plataforma Digital | Confirmar Correo";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title> @ViewData["Title"] </title>
+
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
+    <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/js/feather.min.js" crossorigin="anonymous"></script>
+
+</head>
+<body style="background-image: url('/img/backgrounds/banner-slide-1_1.webp'); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; " class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-xl px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <!-- Basic login form-->
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header justify-content-center"><h3 class="fw-light my-4">Confirmación completada</h3></div>
+                                <div id="partialForm" class="card-body">
+                                    <div class="small mb-3 text-muted">Felicitaciones, su correo ha sido confirmado correctamente, ahora puede iniciar sesión y acceder al sistema.</div>
+                                    <div class="justify-content-between mt-4 mb-0">
+                                        <a class="small" asp-page="Login">Iniciar sesión</a>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <div class="small"><a asp-page="SolicitarAcceso">Si no tiene cuenta, registrese!</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="layoutAuthentication_footer">
+            <partial name="_Footer" />
+        </div>
+
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/scripts.js"></script>
+</body>
+</html>

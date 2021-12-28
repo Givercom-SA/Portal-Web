@@ -1,0 +1,359 @@
+﻿@model Web.Principal.Areas.GestionarEmbarques.Models.ListarSolicitudFacturacionTerceroModel
+
+@{
+    ViewData["Title"] = "Bandeja de Asignación de Facturación a Terceros";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Bandeja de Solicitud de Facturación a Terceros
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá atender las solicitudes de facturación a terceros.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <form method="get">
+        <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                Filtros para Búsqueda
+                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
+            </div>
+
+            <div class="card-body">
+                <div class="sbp-preview-content">
+                    <div class="row gx-3">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="small mb-1">Nro. de Embarque</label>
+                                <input class="form-control" type="text" asp-for="@Model.EmbarqueNroBL" placeholder=" Ingrese nro. de embarque" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            @{
+                                if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                                {
+
+
+
+
+                                    <div class="mb-3">
+                                        <label class="small mb-1">Consignatario de Embarque</label>
+                                        <input class="form-control" type="text" asp-for="@Model.Entidad" placeholder=" Ingrese consignatorio de embarque" />
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    <div class="mb-3">
+                                        <label class="small mb-1">Consignatario de Embarque</label>
+                                        <input class="form-control" type="text" asp-for="@Model.Entidad" disabled placeholder=" " />
+                                    </div>
+                                }
+
+
+
+                            }
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="small mb-1">Entidad Tercero</label>
+                                <input class="form-control" type="text" asp-for="@Model.Cliente" placeholder=" Ingrese entidad tercero" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="small mb-1">Estado</label>
+                                <select asp-for="@Model.Estado" asp-items="@ViewBag.ListEstado as SelectList" class="form-select small">
+                                    <option value="0">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Billing history card-->
+    <div class="card card-header-actions mb-4">
+        <div class="card-header ">
+            Registros Encontrados
+        </div>
+        <div class="card-body">
+            <!-- Billing history table-->
+            <div class="table-responsive table-billing-history">
+                @if (Model.model.SolicituresFacturacionTereceros != null && Model.model.SolicituresFacturacionTereceros.Count() > 0)
+                {
+                    <partial name="_ResultadoFacturacionTerceroFiltro" model="@Model" />
+                }
+                else
+                {
+                    @Html.Raw("No existen registros...");
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_confirmar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar</h5>
+
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="0" id="pIdRegistro" />
+                <input type="hidden" value="" id="pEstado" />
+                <input type="hidden" value="" id="pCorreo" />
+                <div class="p-2" id="ResultConfirmar"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnAprobarRechazar" class="btn btn-primary" type="button">Aceptar</button>
+                <button id="btnCancelarConfirmar" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_facturacion_tercero_historial" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historial de Eventos</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="divContentFacturacionTerceroHistorial">
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".loader").fadeOut("slow");
+            let dataTable = new simpleDatatables.DataTable("#datatable", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+
+        });
+
+        function CargarPagina() {
+            $('#modal_confirmar').modal('hide');
+            location.reload();
+        }
+
+        $("#btnAprobarRechazar").click(function () {
+
+            $("#btnAprobarRechazar").prop('disabled', true);
+            $("#btnCancelarConfirmar").prop('disabled', true);
+
+            var formData = new FormData();
+            formData.append("Id", $('#pIdRegistro').val());
+            formData.append("Estado", $('#pEstado').val());
+            formData.append("Correo", $('#pCorreo').val());
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AprobarRechazarFacturacionTercero", "Embarque", new { area= "GestionarEmbarques" })",
+                data: formData,
+                dataType: "json",
+                contentType: false,
+                processData: false
+            })
+                .done(function (result) {
+
+                if (result != null) {
+                    if (result.codigo == 0) {
+                        ShowAlertMensage('ResultConfirmar', 'success', '', result.mensaje, 3, CargarPagina);
+                    } else {
+                        ShowAlertMensage('ResultConfirmar', 'warning', '', result.mensaje, 0, null);
+                        $("#btnCancelarConfirmar").prop('disabled', false);
+                        $("#btnAprobarRechazar").prop('disabled', false);
+                    }
+                } else {
+                    $("#btnCancelarConfirmar").prop('disabled', false);
+                    $("#btnAprobarRechazar").prop('disabled', false);
+                }
+            })
+            .fail(function (xhr, status, error) {
+                $("#btnCancelarConfirmar").prop('disabled', false);
+                $("#btnAprobarRechazar").prop('disabled', false);
+            })
+            .always(function () {
+
+            });
+
+        });
+
+        function ConfirmarAprobrarRechazar(Id, Estado, Correo) {
+            $("#ResultConfirmar").html("");
+            switch (Estado) {
+                case "SA":
+                    $("#btnAprobarRechazar").text("Aprobar");
+                    $("#ResultConfirmar").html("¿Desea Aprobar esta solicitud?");
+                    break;
+                case "SR":
+                    $("#btnAprobarRechazar").text("Rechazar");
+                    $("#ResultConfirmar").html("¿Desea Rechazar esta solicitud?");
+                    break;
+            }
+
+            $('#pIdRegistro').val(Id);
+            $('#pEstado').val(Estado);
+            $('#pCorreo').val(Correo);
+            $('#modal_confirmar').modal('show');
+        }
+
+
+        function DataTableFacturacionTerceroHistorial() {
+
+            try {
+
+                new simpleDatatables.DataTable("#dtFacturacionTerceroHistorial", {
+                    searchable: true,
+                    labels: {
+                        "noRows": "No hay información",
+                        perPage: "{select} Registros por página",
+                        "info": "Mostrando {start} a {end} de {rows} Registros",
+                        placeholder: "Filtro rápido...",
+                    },
+                });
+            }
+            catch (Erro) {
+
+
+            }
+
+        }
+
+        function AbrirHistorial(IdFacturacionTercero) {
+
+            FacturacionTerceroHistorial(IdFacturacionTercero);
+
+        }
+
+
+        function FacturacionTerceroHistorial(IdFacturacionTercero) {
+
+
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ListarFacturacionTerceroHistorial", "Facturacion",new { area="GestionarEmbarques"})",
+                data: { id: IdFacturacionTercero },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                beforeSend: function ()
+                {
+                    $(".loader").fadeIn("slow");
+                    $("#divContentFacturacionTerceroHistorial").html("Procesando...")
+
+                },
+            })
+                .done(function (response) {
+                    $(".loader").fadeOut("slow");
+                    $('#modal_facturacion_tercero_historial').modal('show');
+                    $("#divContentFacturacionTerceroHistorial").html(response);
+
+                    DataTableFacturacionTerceroHistorial();
+
+                })
+                .fail(function (xhr, status, error) {
+                    $(".loader").fadeOut("slow");
+
+
+                    $('#dialogError').modal('show');
+                    $("#outputMensajeError").html(error);
+
+                })
+                .always(function () {
+
+
+                });
+
+        }
+
+    </script>
+}

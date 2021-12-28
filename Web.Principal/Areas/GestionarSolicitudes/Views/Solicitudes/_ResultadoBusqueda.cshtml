@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ViewModel.Datos.Solicitud.SolicitudVM>
+
+<table id="datatable" class="table">
+    <thead>
+        <tr>
+            <th>Nro. Solicitud</th>
+            <th>Fecha de Ingreso</th>
+            <th>Tipo de Documento</th>
+            <th>Nro. de Documento</th>
+            <th>Solicitante</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Nro. Solicitud</th>
+            <th>Fecha de Ingreso</th>
+            <th>Tipo de Documento</th>
+            <th>Nro. de Documento</th>
+            <th>Solicitante</th>
+            <th>Estado</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+        <tr>
+            <td><a href='@Url.Action("VerSolicitud", "Solicitudes", new { nroSolicitud = item.CodigoSolicitud })'> #@item.CodigoSolicitud </a></td>
+            <td>@item.FechaRegistro.ToShortDateString()</td>
+
+            <td>@item.TipoDocumento</td>
+            <td>@item.NumeroDocumento</td>
+            <td>@item.RazonSocial</td>
+            @if (item.CodigoEstado.Equals("SP"))
+            {
+                <td><span class="badge bg-light text-dark">Pendiente</span></td>
+            }
+            else if (item.CodigoEstado.Equals("SA"))
+            {
+                <td><span class="badge bg-light text-success">Aprobado</span></td>
+            }
+            else if (item.CodigoEstado.Equals("SR"))
+            {
+                <td><span class="badge bg-light text-danger">Rechazado</span></td>
+            }
+
+        </tr>
+            }
+        }
+        else
+            Html.Raw("No existen registros");
+
+    </tbody>
+</table>

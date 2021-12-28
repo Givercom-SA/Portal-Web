@@ -1,0 +1,150 @@
+﻿@using ViewModel.Datos.UsuarioRegistro
+@{
+    int IdPerfil = Convert.ToInt32(ViewData["IdPerfil"]);
+    string PerfilNombre = ViewData["PerfilNombre"].ToString();
+    var RucRazon = ViewData["RucRazonSocial"].ToString();
+    List<PerfilLoginVM> PerfilesSesion = ViewData["PerfilesSesion"] as List<PerfilLoginVM>;
+    var NombreEmpresaTrans = ViewData["EmpresaTransmaresSelct"].ToString();
+    var ImagenEmpresaTransmaresSelct = ViewData["ImagenEmpresaTransmaresSelct"].ToString();
+    
+}
+<nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white" id="sidenavAccordion">
+    <!-- Sidenav Toggle Button-->
+    <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0" id="sidebarToggle"><i data-feather="menu"></i></button>
+
+    <a class="navbar-brand" href="@Url.Action("Home","Inicio",new {  area="GestionarDashboards"})">      <img src="~/img/@ImagenEmpresaTransmaresSelct" style="height:59px!important" />  </a>
+
+    <form class="form-inline me-auto d-none d-lg-block me-3" style="background-color:none!important">
+
+        <div class="input-group">
+            @RucRazon
+
+        </div>
+    </form>
+
+
+
+    <ul class="navbar-nav align-items-center ms-auto">
+        <!-- Documentation Dropdown-->
+        <li class="nav-item dropdown no-caret d-none d-md-block me-3 py-1 px-3 ">
+            @if (PerfilesSesion != null)
+            {
+                if (PerfilesSesion.Count() > 1)
+                {
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="fw-500">Perfil: <b>@PerfilNombre</b></div>
+                        <i class="fas fa-chevron-right dropdown-arrow"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
+                        @foreach (var item in PerfilesSesion)
+                        {
+                            if (item.IdPerfil == IdPerfil)
+                            {
+                                <a class="dropdown-item py-3 active" href="javascript:void(0)">
+                                    <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="user"></i></div>
+                                    <div>
+                                        @item.Nombre
+                                    </div>
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item py-3" href="javascript:void(0)" onclick="CambiarPerfil(@item.IdPerfil)">
+                                    <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="user"></i></div>
+                                    <div>
+                                        @item.Nombre
+                                    </div>
+                                </a>
+                            }
+
+                            <div class="dropdown-divider m-0"></div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="fw-500">Perfil: <b>@PerfilNombre</b></div>
+                    </a>
+                }
+            }
+        </li>
+
+        <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
+            <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownAlerts" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="bell"></i></a>
+            <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownAlerts">
+                <h6 class="dropdown-header dropdown-notifications-header">
+                    <i class="me-2" data-feather="bell"></i>
+                    Alertas
+                </h6>
+
+                <p id="user" style="display:none"></p>
+                <input type="hidden" id="signalRConnectionId" />
+                <div id="divListAlertas">
+                    @*
+
+        <a class="dropdown-item dropdown-notifications-item" href="#!">
+            <div class="dropdown-notifications-item-icon bg-warning"><i data-feather="activity"></i></div>
+            <div class="dropdown-notifications-item-content">
+                <div class="dropdown-notifications-item-content-details">December 29, 2021</div>
+                <div class="dropdown-notifications-item-content-text">This is an alert message. It's nothing serious, but it requires your attention.</div>
+            </div>
+        </a>
+        <a class="dropdown-item dropdown-notifications-item" href="#!">
+            <div class="dropdown-notifications-item-icon bg-danger"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="dropdown-notifications-item-content">
+                <div class="dropdown-notifications-item-content-details">December 8, 2021</div>
+                <div class="dropdown-notifications-item-content-text">Critical system failure, systems shutting down.</div>
+            </div>
+        </a>
+        <a class="dropdown-item dropdown-notifications-item" href="#!">
+            <div class="dropdown-notifications-item-icon bg-success"><i data-feather="user-plus"></i></div>
+            <div class="dropdown-notifications-item-content">
+                <div class="dropdown-notifications-item-content-details">December 2, 2021</div>
+                <div class="dropdown-notifications-item-content-text">New user request. Woody has requested access to the organization.</div>
+            </div>
+        </a>*@
+                </div>
+
+                <a class="dropdown-item dropdown-notifications-footer" href="#!">Ver todas las alertas</a>
+          
+            </div>
+        </li>
+
+
+        <!-- User Dropdown-->
+        <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
+            <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="img-fluid" src="~/img/illustrations/profiles/profile-1.png" /></a>
+            <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
+                <h6 class="dropdown-header d-flex align-items-center">
+                    <img class="dropdown-user-img" src="~/img/illustrations/profiles/profile-1.png" />
+                    <div class="dropdown-user-details">
+                        <div class="dropdown-user-details-name">@ViewData["NombreUsuario"]</div>
+                        <div class="dropdown-user-details-email">@ViewData["CorreoUsuario"]</div>
+
+
+                    </div>
+                </h6>
+                <div class="dropdown-divider"></div>
+
+                <a class="dropdown-item" href="@Url.Action("CuentaUsuario","Usuario",new { area="GestionarUsuarios"})">
+                    <div class="dropdown-item-icon"><i data-feather="settings"></i></div>
+                    Mi cuenta
+                </a>
+
+                <a class="dropdown-item" href="@Url.Action("CambiarContrasenia","Login", new {area="GestionarAccesos", nuevo="0" })">
+                    <div class="dropdown-item-icon"><i data-feather="settings"></i></div>
+                    Cambiar contraseña
+                </a>
+
+                <a class="dropdown-item" href="@Url.Action("LogOut", "Login", new { area = "GestionarAccesos" })">
+                    <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
+                    Cerrar sesión
+                </a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<form id="frmCambiarPerfil" asp-area="GestionarDashboards" asp-controller="inicio" asp-action="CambiarPerfil" method="post">
+    <input id="IdPerfilSesion" name="IdPerfil" type="hidden" value="0" />
+</form>

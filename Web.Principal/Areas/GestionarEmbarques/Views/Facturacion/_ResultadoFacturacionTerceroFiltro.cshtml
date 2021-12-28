@@ -1,0 +1,81 @@
+﻿@model Web.Principal.Areas.GestionarEmbarques.Models.ListarSolicitudFacturacionTerceroModel
+
+@functions{
+    string MostrarEstado(string Estado, string EstadoNombre, string id)
+    {
+        string strEstado = string.Empty;
+        switch (Estado)
+        {
+            case "SP": //Pendiente
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge badge-light text-body'>{1}</span></a>",id, EstadoNombre);
+                break;
+            case "SA": //Aprobado
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge bg-light text-success'>{1}</span></a>",id, EstadoNombre);
+                break;
+            case "SR": //Rechazado
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge bg-light text-danger'>{1}</span></a>", id, EstadoNombre);
+                break;
+        }
+        return strEstado;
+    }
+}
+
+<table id="datatable" class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nro. de Solicitud</th>
+            <th scope="col">Nro. de Embarque</th>
+            <th scope="col">Fecha de Registro</th>
+            <th scope="col">Consignatario de Embarque</th>
+            <th scope="col">Entidad Tercero</th>
+            <th scope="col">Estado</th>
+
+
+            @{
+
+
+                if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                {
+
+                    <th width="30px" class="border-gray-200" scope="col">Acción</th>
+                    } 
+                }
+                </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.model.SolicituresFacturacionTereceros)
+        {
+            <tr>
+                <td><a href="@Url.Action("VerFacturacionTercero", "Facturacion", new { area = "GestionarEmbarques", id = item.IdFacturacionTercero })">@item.Codigo</a></td>
+                <td>@item.EmbarqueNroBL</td>
+                <td>@item.FechaRegistro</td>
+                <td>@item.EntidadDatos</td>
+                <td>@item.ClienteNombres</td>
+
+                <td>@Html.Raw(MostrarEstado(item.Estado, item.EstadoNombre, item.IdFacturacionTercero))</td>
+
+
+                @{    
+
+
+                    if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                    {
+
+
+                <td>
+                    @if (item.Estado.Equals("SP"))
+                    {
+                        <a onclick="ConfirmarAprobrarRechazar(@item.IdFacturacionTercero, 'SA', '@item.Correo')" href="javascript:void(0)" title="Aprobar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="check-circle"></i></a>
+                        <a onclick="ConfirmarAprobrarRechazar(@item.IdFacturacionTercero,'SR','@item.Correo')" href="javascript:void(0)" title="Rechazar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="x-circle"></i></a>
+                    }
+
+                </td>
+                    }
+               
+                    }
+
+            </tr>
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,144 @@
+﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.PerfilModel
+@{
+    ViewData["Title"] = "Crear Perfil";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Nuevo Perfil
+                    </h1>
+                    <div class="page-header-subtitle">Aquí puedes crear un perfil y accesos al sistema.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Nuevo registro
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+                <form id="frmPerfil">
+                    <div class="form-group row">
+                        <label asp-for="@Model.Nombre" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-7">
+                            <input asp-for="@Model.Nombre" class="form-control" type="text" placeholder="Ingresar Nombre" />
+                            <span asp-validation-for="@Model.Nombre" class="small text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <fieldset class="border p-2 h-100">
+                                <legend class="w-auto small">Accesos</legend>
+                                <div style="height:250px;" class="overflow-auto" id="MenuCheckBox">
+                                    @await Html.PartialAsync("_MenusPorPerfil", ViewBag.Menus as List<ViewModel.Datos.Perfil.MenuPerfilVM>)
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="MensajeResult"></div>
+                    <hr />
+                    <div class="mb-2 text-right">
+                        <button class="btn btn-primary" type="submit">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_mensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perfil Creado</h5>
+            </div>
+            <div class="modal-body" id="mensaje"></div>
+            <div class="modal-footer">
+                <button id="btnCerrar" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+
+        $("#frmPerfil").submit(function (e) {
+            $('#MensajeResult').html("");
+            e.preventDefault();
+            var isValid = $('#frmPerfil').valid();
+            if (isValid) {
+                var form = $('#frmPerfil')[0];
+                var formData = new FormData(form);
+                $.ajax({
+                    type: "POST",
+                    url: "/GestionarAutorizacion/Perfil/CrearPerfil",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    }
+                }).done(function (result) {
+
+                        $(".loader").fadeOut("slow");
+
+                        if (result != null) {
+                            if (result.codigo == 0) {
+                                $('#mensaje').html(result.mensaje);
+                                $('#modal_mensaje').modal('show');
+                            } else {
+                                ShowAlertMensage('MensajeResult', 'warning', '', result.mensaje, 0, null);
+                            }
+                        } else {
+
+                        }
+                    })
+                    .fail(function (xhr, status, error) {
+
+                        $(".loader").fadeOut("slow");
+                    }).always(function () {
+
+                      
+                    });
+            }
+        });
+
+        $("#btnCerrar").click(function () {
+            $('#modal_mensaje').modal('hide');
+            window.location.href = "/GestionarAutorizacion/Perfil/ListarPerfiles";
+        });
+
+        $("#btnVolver").click(function () {
+            window.location.href = "/GestionarAutorizacion/Perfil/ListarPerfiles";
+        });
+
+    </script>
+}

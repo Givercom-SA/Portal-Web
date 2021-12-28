@@ -1,0 +1,950 @@
+﻿@model ViewModel.Datos.Embarque.CobroPendienteFacturar.ListCobrosPendienteEmbarqueVM
+
+
+
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i class="bi bi-file-earmark-spreadsheet">  </i></div>
+                        Registro de Instrucción de Facturación a Terceros
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá registrar una solicitud de instrucción de facturación a terceros</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <!-- Wizard card example with navigation-->
+    <div class="card">
+        <div class="card-header border-bottom">
+            <!-- Wizard navigation-->
+            <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="cardTab" role="tablist">
+                <!-- Wizard navigation item 1-->
+                <a class="nav-item nav-link active" id="wzCobrosFacturar-tab" href="#wzCobrosFacturar" data-bs-toggle="tab" role="tab" aria-controls="wzCobrosFacturar" aria-selected="true">
+                    <div class="wizard-step-icon">1</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Cobros Pendientes</div>
+                        <div class="wizard-step-text-details">Detalle de conceptos</div>
+                    </div>
+                </a>
+                <!-- Wizard navigation item 2-->
+                <a class="nav-item nav-link " id="wzClienteTercero-tab" href="#wzClienteTercero" disabled onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzClienteTercero" aria-selected="true">
+                    <div class="wizard-step-icon">2</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Registro de Solicitud de Facturación a Terceros </div>
+                        <div class="wizard-step-text-details">Información de entidad y otros</div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+        <div class="card-body">
+
+
+            <form id="formRegCobroPendienteFacturar" asp-action="RegistrarFacturaTercero" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+
+
+
+                <div class="tab-content" id="cardTabContent">
+                    <!-- Wizard tab pane item 1-->
+                    <div class="tab-pane py-5 py-xl-5 fade show active" id="wzCobrosFacturar" role="tabpanel" aria-labelledby="wzCobrosFacturar-tab">
+                        <div class="row justify-content-center">
+                            <div class="col-xxl-10 col-xl-10">
+                                <h3 class="text-primary">Paso 1</h3>
+                                <h5 class="card-title mb-4">Seleccione los conceptos a registrar</h5>
+
+                                <input type="hidden" asp-for="@Model.KEYBL" />
+                                <input type="hidden" asp-for="@Model.BL" />
+                                <div class="table-responsive table-billing-history">
+                                    <table id="dtConceptoCobro" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Seleccionar</th>
+                                                <th>Tipo de Provisión</th>
+                                                <th>Código de Rubro</th>
+                                                <th>Concepto</th>
+                                                <th>Moneda</th>
+                                                <th>Importe</th>
+                                                <th>Igv</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (var item = 0; item < Model.CobrosPendientesEmbarque.Count; item++)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <input type="checkbox" asp-for="@Model.CobrosPendientesEmbarque[item].Check"
+                                                               class="form-check-input cssCheckConceptoCobroPendiente"
+                                                               onchange="ValidarCobroPendiente()"
+                                                               data-concepto="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Check" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].RubroCodigo" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Descripcion" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Moneda" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Importe" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Igv" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Total" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].FlagAsignacion" />
+                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ID" />
+
+                                                    </td>
+
+                                                    <td>@Model.CobrosPendientesEmbarque[item].Descripcion</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].RubroCodigo</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].Moneda</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].Importe</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].Igv</td>
+                                                    <td>@Model.CobrosPendientesEmbarque[item].Total</td>
+
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <hr class="my-4" />
+                                <div class="d-flex justify-content-between">
+
+                                    <a class="btn btn-light" href="javascript: history.go(-1)"> Volver </a>
+                                    <a class="btn btn-primary" href="javascript:IrClienteFacturar()" id="btnInstruFactuTerPaso1"> Siguiente </a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Wizard tab pane item 2-->
+                    <div class="tab-pane py-5 py-xl-5 fade" id="wzClienteTercero" role="tabpanel" aria-labelledby="wzClienteTercero-tab">
+                        <div class="row justify-content-center">
+                            <div class="col-xxl-10 col-xl-10">
+
+                                <h3 class="text-primary">Paso 2</h3>
+                                <h5 class="card-title mb-4">Selecionar una entidad</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- Form Group (first name)-->
+                                        <div class="mb-3">
+
+                                            <p class="small">
+                                                Si la entidad no se muestra en la lista, por favor comunicarse con el operativo o customer services asignado a su embarque.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+
+                                    @{
+                                        if (Model.EstaAsginadoAgenteAduanas == "1")
+                                        {
+
+                                            <fieldset>
+                                                <legend class="small">Tipo Entidad </legend>
+
+
+
+                                                <div class="col-md-6">
+
+                                                    <div class="form-check form-check-solid small">
+                                                        <input asp-for="@Model.SolicitarFacturacionTercero.TipoEntidad" checked id="rbtClienteExterno" onchange="CambiarTipoEntidad(this,'CE')" class="form-check-input" type="radio" value="CE" />
+                                                        <label class="form-check-label">Cliente Externo</label>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                                <div class="col-md-6">
+
+                                                    <div class="form-check form-check-solid small">
+                                                        <input asp-for="@Model.SolicitarFacturacionTercero.TipoEntidad" id="rbtAgenteAduanas" onchange="CambiarTipoEntidad(this,'AA')" class="form-check-input" type="radio" value="AA" />
+                                                        <label class="form-check-label">Agente de Aduanas</label>
+                                                    </div>
+
+                                                </div>
+                                            </fieldset>
+                                        }
+                                    }
+
+
+
+                                    <input asp-for="@Model.SolicitarFacturacionTercero.TipoEntidad" id="hidenTipoEntidad" type="hidden" />
+
+                                </div>
+                                <br />
+
+
+                                <div id="divContentClienteExterno">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (first name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.TipoDocumento" class="small mb-1"></label>
+                                                <select asp-for="@Model.SolicitarFacturacionTercero.TipoDocumento" id="ddlTipoDocumento"
+                                                        onchange="tipoDocumentoEvent(this)"
+                                                        asp-items="ViewBag.ListTipoDocumento"
+                                                        class="form-select">
+                                                    <option value="0">Seleccionar</option>
+                                                </select>
+
+                                                <span asp-validation-for="@Model.SolicitarFacturacionTercero.TipoDocumento" id="spanValidarTipoDocumento" class="small text-danger"></span>
+                                                <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.TipoDocumento" />
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (last name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.NumeroDocumento" class="small mb-1"></label>
+                                                <input asp-for="@Model.SolicitarFacturacionTercero.NumeroDocumento" id="txtNumeroDocumento" maxlength="11" class="form-control" type="text" placeholder="Ingrese su número de documento" />
+                                                <span asp-validation-for="@Model.SolicitarFacturacionTercero.NumeroDocumento" id="spanValidarNumeroDocumento" class="small text-danger"></span>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (first name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.RazonSocialNombres" class="small mb-1"></label>
+
+                                                <input asp-for="@Model.SolicitarFacturacionTercero.RazonSocialNombres" id="txtRazonSocial" class="form-control" type="text" placeholder="Ingrese una rázon social / nombres" />
+                                                <span asp-validation-for="@Model.SolicitarFacturacionTercero.RazonSocialNombres" id="spanValidarNombreRazon" class="small text-danger"></span>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary" onclick="BuscarClienteTerceros()" type="button">Buscar </button>
+
+                                    <hr />
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+
+                                            <div id="divContenedorClientesFacturarTercero"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" style="display:none">
+
+                                        <label asp-for="@Model.SolicitarFacturacionTercero.Archivo" class="small mb-1"></label>
+                                        <input type="file" asp-for="@Model.SolicitarFacturacionTercero.Archivo" class="form-control small" accept=".jpg, .jpeg" onchange="fileValidation(this)">
+                                        <span asp-validation-for="@Model.SolicitarFacturacionTercero.Archivo" id="spanValidarArchivo" class="small text-danger"></span>
+                                        <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.Archivo" id="hidenArchivo" />
+
+                                    </div>
+
+                                </div>
+
+                                <div id="divContentAgenteAduanas" style="display:none">
+
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (first name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasTipoDocumento" class="small mb-1"></label>
+                                                <select asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasTipoDocumento" disabled
+                                                        asp-items="ViewBag.ListTipoDocumento"
+                                                        class="form-select">
+                                                </select>
+
+                                                <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasTipoDocumento" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (last name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasNumeroDocumento" class="small mb-1"></label>
+                                                <input asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasNumeroDocumento" id="txtAgenteAduanasNumeroDocumento" readonly class="form-control" type="text" />
+                                                <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasNumeroDocumento" />
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <!-- Form Group (first name)-->
+                                            <div class="mb-3">
+
+                                                <label asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasRazonSocial" class="small mb-1"></label>
+
+                                                <input asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasRazonSocial" id="txtAgenteAduanasRazonSocial" readonly class="form-control" type="text" />
+
+                                                <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.AgenteAduanasRazonSocial" />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+
+                                <div class="alert alert-success alert-icon" id="alertInfo" role="alert" style="display:none">
+
+                                    <div class="alert-icon-aside">
+                                        <i class="far fa-flag"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Información</h6>
+                                        <output id="outputDetalleOK"></output>
+                                    </div>
+                                </div>
+
+
+                                <div class="alert alert-warning alert-icon" id="alertWarning" role="alert" style="display:none">
+
+                                    <div class="alert-icon-aside">
+                                        <i data-feather="feather"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Alerta</h6>
+                                        <output id="outputDetalleAlerta"></output>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-danger alert-icon" id="alertError" role="alert" style="display:none">
+
+                                    <div class="alert-icon-aside">
+                                        <i data-feather="feather"></i>
+                                    </div>
+                                    <div class="alert-icon-content">
+                                        <h6 class="alert-heading">Error</h6>
+                                        <output id="outputDetalleError"></output>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4" />
+
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-light" href="javascript:RegresarConcepto()"> Regresar </a>
+
+                                    <button class="btn btn-primary" type="button" onclick="RegistrarFacTerceroTenor()"> Registrar</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="dialogTenor" tabindex="1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Condiciones y Términos</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Mediante la presente Yo, <b>@Model.Tenor.RepresentanteLegalEmpresaLogeada</b> representante legal /apoderada de la empresa <b>@Model.Tenor.RazonSocialEmpresaLogeada</b> con RUC <b>@Model.Tenor.RucEmpresaLogeada</b>
+                autorizo que los servicios brindados al B/L  <b>@Model.Tenor.NroEmbarque</b> sean facturados a la empresa <b><output id="TenorTerceroRazonSocial"></output></b>  con RUC <b><output id="TenorTerceroRuc"></output></b>
+                <br />
+                <br />
+                Numero de B/L: @Model.Tenor.NroEmbarque  
+                <br />
+                <br />
+                Servicios :
+                <br />
+                <output id="TenorServicios"></output>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="@Model.SolicitarFacturacionTercero.AceptarCondicion" class="form-check-input" id="chkAceptarTerminoCondicion" type="checkbox" />
+
+                                <input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.AceptarCondicion" />
+                                <label class="small mb-1"> Aceptar condiciones y términos</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="ConfirmarRegistroFacturacion()" type="button">Aceptar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="2" data-toggle="modal" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogOk" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+
+
+
+        let outputDetalleOK = $("#outputDetalleOK");
+        let outputDetalleAlerta = $("#outputDetalleAlerta");
+        let outputDetalleError = $("#outputDetalleError");
+        let outputMensaje = $("#outputMensaje");
+        let outputMensajeOk = $("#outputMensajeOk");
+
+
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+            let dtConceptoCobro = new simpleDatatables.DataTable("#dtConceptoCobro", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+
+        });
+
+
+
+        function TriggerCLienteFacTerceroTable() {
+            new simpleDatatables.DataTable("#dtClientesFactTercero", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+
+        }
+
+
+        function ValidarCobroPendiente() {
+
+            let blSeleccionado = false;
+
+            $(".cssCheckConceptoCobroPendiente").each(function (index) {
+
+                if ($(this).is(':checked')) {
+                    blSeleccionado = true;
+                }
+
+            });
+
+            if (blSeleccionado == true) {
+                $("#wzClienteTercero-tab").removeAttr("disabled");
+
+
+
+            } else {
+                $("#wzClienteTercero-tab").attr("disabled", "disabled");
+
+            }
+        }
+
+
+        function ObtenerCobrosPendientesTenor() {
+            var strConcepto = "";
+
+            $(".cssCheckConceptoCobroPendiente").each(function (index) {
+
+                if ($(this).is(':checked')) {
+
+                    if (strConcepto == "") {
+                        strConcepto = "<li>" + $(this).data("concepto") + "</li>";
+                    }
+                    else {
+                        strConcepto = strConcepto + "<li>" + $(this).data("concepto")+"</li>";
+                    }
+
+                }
+
+            });
+
+            return strConcepto;
+
+        }
+
+
+        function ValidarPasoCobroPendiente() {
+            let blSeleccionado = false;
+
+            $(".cssCheckConceptoCobroPendiente").each(function (index) {
+
+                if ($(this).is(':checked')) {
+                    blSeleccionado = true;
+                }
+
+            });
+
+            if (blSeleccionado == false) {
+
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar al menos un cobro pendiente");
+
+            }
+        }
+
+        function IrClienteFacturar() {
+
+
+            let blSeleccionado = false;
+
+            $(".cssCheckConceptoCobroPendiente").each(function (index) {
+
+                if ($(this).is(':checked')) {
+                    blSeleccionado = true;
+                }
+
+            });
+
+            if (blSeleccionado == true) {
+
+                $("#wzCobrosFacturar-tab").removeClass("active");
+                $("#wzClienteTercero-tab").addClass("active");
+
+
+                $("#wzCobrosFacturar").removeClass("active show");
+                $("#wzClienteTercero").addClass("active show");
+
+            } else {
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar al menos un cobro pendiente");
+            }
+
+        }
+
+        function RegresarConcepto() {
+
+            $("#wzClienteTercero-tab").removeClass("active");
+            $("#wzCobrosFacturar-tab").addClass("active");
+
+
+            $("#wzClienteTercero").removeClass("active show");
+            $("#wzCobrosFacturar").addClass("active show");
+        }
+
+        function BuscarClienteTerceros() {
+
+            let blValido = true;
+
+            $("#spanValidarTipoDocumento").html("");
+            $("#spanValidarNombreRazon").html("");
+            $("#spanValidarNumeroDocumento").html("");
+
+            var doc = $("#txtNumeroDocumento").val();
+            var rtrim = /\s+/g;
+            doc.replace(rtrim, "")
+
+
+            if ($("#ddlTipoDocumento").children("option:selected").val() == "DNI" && (doc == "" || doc.length <  8) ) {
+                $("#spanValidarNumeroDocumento").html("Debe ingresar un número de documento válido");
+                $("#txtNumeroDocumento").focus();
+                blValido = false;
+            }
+
+            if ($("#ddlTipoDocumento").children("option:selected").val() == "RUC" && (doc == "" || doc.length < 11)) {
+                $("#spanValidarNumeroDocumento").html("Debe ingresar un número de documento válido");
+                $("#txtNumeroDocumento").focus();
+                blValido = false;
+            }
+
+           
+            if ($("#ddlTipoDocumento").children("option:selected").val() == "0") {
+
+                let cadena = $("#txtRazonSocial").val().replace(/\s/g, "");
+                if (cadena == "" || cadena.length <= 4) {
+
+                    $("#spanValidarNombreRazon").html("Debe ingresar un criterio mínimo de 5 caracteres");
+                    $("#txtRazonSocial").focus();
+                    blValido = false;
+                }
+
+            }
+
+
+            if (blValido) {
+                var formData = $('#formRegCobroPendienteFacturar').serialize();
+
+                $.ajax({
+                    url: '/FacturarTercero/BuscarClienteExterno',
+                    data: formData,
+                    type: 'POST',
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $(".loader").fadeOut("slow");
+                    },
+                    success: function (response) {
+
+                        $("#divContenedorClientesFacturarTercero").html(response);
+
+                        TriggerCLienteFacTerceroTable();
+
+                    },
+                    complete: function (data) {
+
+                        $('#modal_solicitud_fact_tercero').modal('show');
+                        $('#modal_cobros_pendientes_cobrar').modal('hide');
+                        $(".loader").fadeOut("slow");
+                    }
+                });
+            }
+
+        }
+
+
+        function tipoDocumentoEvent(sender)
+        {
+            $("#txtNumeroDocumento").val("");
+            $("#txtRazonSocial").val("");
+
+        }
+
+
+        function RegistrarFacturacionTercero() {
+
+
+
+
+        }
+
+
+        function AJAXSubmit(oFormElement) {
+
+
+            $("#alertWarning").hide();
+            $("#alertInfo").hide();
+            $("#alertInfo").hide();
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+
+
+                $.ajax({
+                    url: oFormElement.action,
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $('#alertError').show();
+
+                        outputDetalleError.html('Resultado: ' + errorThrown);
+
+                        $(".loader").fadeOut("slow");
+
+                    },
+                    success: function (response) {
+
+                        $(".loader").fadeOut("slow");
+
+
+                        if (response.codigo == 0) {
+
+
+                            $("#dialogTenor").modal("hide")
+                            $('#alertInfo').show();
+                            $("#dialogOk").modal("show");
+                            outputMensajeOk.html('Se registro con éxito');
+
+                            outputDetalleOK.html('Se registro con éxito');
+
+                        }
+                        else if (response.codigo == -100) {
+
+                            $('#alertError').show();
+
+                            outputDetalleError.html("Resultado: " + response.mensaje);
+                        }
+                        else {
+
+
+                            $('#alertWarning').show();
+
+                            outputDetalleAlerta.html("Resultado: " + response.mensaje);
+
+                        }
+
+
+
+                    },
+                    complete: function (data) {
+
+                        $(".loader").fadeOut("slow");
+
+                    }
+                });
+
+
+
+
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                alert("Error inesperado");
+
+
+            }
+
+
+
+
+        }
+
+
+        function RegistrarFacTerceroTenor() {
+
+            if (validarFacturarTercero()) {
+
+                tenor();
+            }
+
+        }
+
+        function ConfirmarRegistroFacturacion() {
+
+            if (!$("#chkAceptarTerminoCondicion").is(':checked')) {
+
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe aceptar los terminos y condiciones");
+
+            } else {
+
+                $("#formRegCobroPendienteFacturar").submit();
+            }
+
+        }
+
+
+        function tenor() {
+
+            $("#TenorServicios").html(ObtenerCobrosPendientesTenor());
+
+            $("#dialogTenor").modal("show");
+
+
+        }
+
+
+
+
+        function validarFacturarTercero() {
+
+            let validado = true;
+
+
+
+            let blSeleccionadoCliente = false;
+
+
+            if ($("#hidenTipoEntidad").val() == "CE") {
+
+
+                if ($(".cssSelectClienteExterno").length > 0) {
+                    $(".cssSelectClienteExterno").each(function (index) {
+
+                        if ($(this).is(':checked')) {
+                            blSeleccionadoCliente = true;
+                        }
+
+                    });
+
+
+                }
+
+                if (blSeleccionadoCliente == false) {
+                    validado = false;
+
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html("Debe seleccionar un cliente");
+                }
+            }
+
+
+
+
+
+            if (validado == false) {
+
+                $("#alertWarning").show();
+                $("#outputDetalleAlerta").html(" Por favor ingresar los campos requeridos.");
+
+
+            }
+
+
+
+            return validado;
+
+
+        }
+
+        function SeleccionarCliente(sender) {
+
+
+            var objSeleccionado = $(sender);
+
+
+            $("#hidenClienteSeleccionado").val(objSeleccionado.data("clienteid"));
+            $("#hidenClienteNroDocumento").val(objSeleccionado.data("clientenumero"));
+            $("#hidenClienteRazonNombre").val(objSeleccionado.data("clienterazonnombre"));
+
+
+            $("#TenorTerceroRazonSocial").html(objSeleccionado.data("clienterazonnombre"));
+            $("#TenorTerceroRuc").html(objSeleccionado.data("clientenumero"));
+
+        }
+
+        function fileValidation(objThis) {
+            var fileInput = objThis;
+            var filePath = fileInput.value;
+            var allowedExtensions = /(.jpg|.jpeg)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Por favor subir archivos con extensiones .jpeg/.jpg');
+                fileInput.value = '';
+                return false;
+            } else {
+                $("#hidenArchivo").val("archivo cargado")
+            }
+
+        }
+
+        function ActualizarForm() {
+
+            history.go(-1)
+        }
+
+
+        function CambiarTipoEntidad(obj, data) {
+
+            if (data == "CE") {
+                $("#divContentAgenteAduanas").hide();
+                $("#divContentClienteExterno").show();
+                $("#hidenTipoEntidad").val("CE");
+
+                $("#TenorTerceroRazonSocial").html("");
+                $("#TenorTerceroRuc").html("");
+
+
+            } else if (data == "AA") {
+
+                $("#hidenTipoEntidad").val("AA");
+                $("#divContentAgenteAduanas").show();
+                $("#divContentClienteExterno").hide();
+
+                $("#TenorTerceroRazonSocial").html($("#txtAgenteAduanasRazonSocial").val());
+                $("#TenorTerceroRuc").html($("#txtAgenteAduanasNumeroDocumento").val());
+
+            }
+
+
+        }
+
+    </script>
+}

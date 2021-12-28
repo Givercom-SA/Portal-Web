@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioVM>
+
+<table  id="datatable" class="table">
+    <thead>
+        <tr>
+            <th class="border-gray-200" scope="col">Id</th>
+            <th class="border-gray-200" scope="col">Correo</th>
+            <th class="border-gray-200" scope="col">Nombre Completo</th>
+            <th class="border-gray-200" scope="col">Perfil</th>
+            <th class="border-gray-200" scope="col">Es Admin</th>
+            <th class="border-gray-200" scope="col">Estado</th>
+            <th width="100px" class="border-gray-200" scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.getCodigoUsuario()</td>
+
+            <td>@item.Correo</td>
+            <td title="@item.getNombre()">@item.getNombreCorto()</td>
+
+
+            <td>@item.PerfilNombre </td>
+
+            @if (item.EsAdmin == true)
+            {
+        <td><span class="badge bg-light text-success">Si</span>  </td>
+            }
+            else
+            {
+                <td><span class="badge bg-light text-danger">No</span> </td>
+            }
+
+            @if (item.Activo == true)
+                {
+                <td>  <span class="badge bg-light text-success">Activo</span>  </td>
+            }
+            else
+            {
+        <td>  <span class="badge bg-light text-danger">No activo</span> </td>
+            }
+        <td>
+            <a href='@Url.Action("EditarUsuario","Usuario", new { Id=@item.IdUsuario })' title="Editar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="edit"></i></a>
+            <a onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="info"></i></a>
+        </td>
+
+        </tr>
+        }
+
+    </tbody>
+</table>

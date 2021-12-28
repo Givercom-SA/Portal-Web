@@ -1,0 +1,1032 @@
+﻿@page
+@model SolicitarAccesoModel
+@{
+    ViewData["Title"] = "Plataforma Digital | Solicitud de acceso";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title> @ViewData["Title"] </title>
+    <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
+
+    
+    <link href="@Url.Content("~/css/styles.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/style_main.css")" rel="stylesheet" />
+
+    <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/js/feather.min.js" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+    <style>
+
+
+        .cssSolicitarAccesoDocumento {
+            height: 100%;
+            overflow: auto;
+            border: 1px dashed #808080;
+            padding: 5px
+        }
+
+    </style>
+
+
+
+
+</head>
+<body style="background-image: url('/img/backgrounds/banner-slide-1_1.webp'); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; " class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-xl px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <!-- Basic registration form-->
+                            <div class="card card-header-actions mx-auto shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header">
+                                    <div  class="justify-content-center">
+                                        Solicitar Acceso
+                                    </div>
+                                        <div>
+                                            <img src="@Url.Content("~/img/logo_transmaresGroup_estrella.png")" height="70px" />
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Registration form-->
+                                        <form asp-route-returnUrl="@Model.ReturnUrl" id="frmSolicitarAcceso" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+                                            <!-- Form Row-->
+
+                                            <div class="loader" style="">
+                                                <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+                                            </div>
+
+                                            <div class="row gx-3">
+                                                <div class="col-md-6">
+                                                    <fieldset class="mb-1">
+                                                        <legend class="small" style="font-weight:bold"> Consideraciones </legend>
+                                                        <ul>
+                                                            <li>
+                                                                <span class="small text-danger field-validation-valid">
+                                                                    (*)
+                                                                </span>       <label class="small mb-1"> Campos obligatorios</label>
+                                                            </li>
+                                                        </ul>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+
+ 
+
+                                            <div class="row gx-3">
+                                                <div class="col-md-6">
+                                                    <fieldset>
+                                                        <legend class="small" style="font-weight:bold">  Datos de Entidad</legend>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <!-- Form Group (first name)-->
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.TipoDocumento" class="small mb-1"></label>
+                                                                    <select asp-for="Input.TipoDocumento" id="ddlTipoDocumento"
+                                                                            asp-items="Model.Input.ListTipoDocumento"
+                                                                            onchange="onTipoDocumento(this)"
+                                                                            class="form-select">
+                                                                        <option value="0">Seleccionar</option>
+                                                                    </select>
+
+                                                                    <span asp-validation-for="Input.TipoDocumento" class="small text-danger"></span>
+                                                                    <input type="hidden" asp-for="Input.TipoDocumento" />
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <!-- Form Group (last name)-->
+                                                                <div class="mb-3">
+
+                                                                    <label asp-for="Input.NumeroDocumento" class="small mb-1"></label>
+                                                                    <input asp-for="Input.NumeroDocumento" id="txtNumeroDocumento" maxlength="11" class="form-control" type="text" placeholder="Ingrese su número de documento" />
+                                                                    <span asp-validation-for="Input.NumeroDocumento" id="spanNumeroDocumento" class="small text-danger"></span>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.RazonSocial" class="small mb-1"></label>
+                                                                    <input asp-for="Input.RazonSocial" id="txtRazonSocial" class="form-control" onkeydown="fnVerificarValidacion(this)" disabled type="text" placeholder="Ingrese la rázon social" />
+                                                                    <span id="spanInputRazonSocial" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+
+
+                                                    <fieldset>
+
+                                                        <legend class="small" style="font-weight:bold">  Datos de Representante Legal</legend>
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.Nombres" class="small mb-1"></label>
+                                                                    <input asp-for="Input.Nombres" class="form-control" type="text" placeholder="Ingrese sus nombres" />
+                                                                    <span asp-validation-for="Input.Nombres" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <!-- Form Group (password)-->
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.ApellidoPaterno" class="small mb-1"></label>
+                                                                    <input asp-for="Input.ApellidoPaterno" class="form-control" type="text" placeholder="Ingrese su apellido paterno" />
+                                                                    <span asp-validation-for="Input.ApellidoPaterno" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-6">
+                                                                <!-- Form Group (confirm password)-->
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.ApellidoMaterno" class="small mb-1"></label>
+                                                                    <input asp-for="Input.ApellidoMaterno" class="form-control" type="text" placeholder="Ingrese su apellido materno" />
+                                                                    <span asp-validation-for="Input.ApellidoMaterno" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <!-- Form Group (email address)            -->
+                                                                <div class="mb-3">
+                                                                    <label asp-for="Input.Correo" class="small mb-1"></label>
+                                                                    <input asp-for="Input.Correo" class="form-control" id="txtCorreo" type="email" aria-describedby="emailHelp" placeholder="Ingrese su correo" />
+                                                                    <span asp-validation-for="Input.Correo" class="small text-danger"></span>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="sbp-preview-content" style="display:none">
+                                                            <label class="small mb-1"> Adjuntar documentos (Se admite solo formatos JPG, JPEG y PDF) </label>
+
+                                                            <span id="spanFiles" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+
+                                                            <div id="divContenedorFile" class="cssSolicitarAccesoDocumento" style="display: flex; justify-content: center; align-items: center; ">
+                                                                <div class='lds-ripple' id='divLoadTipoEntidadFile' style="display:none"><div></div><div></div></div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </fieldset>
+                                                    <fieldset>
+
+                                                        <legend class="small" style="font-weight:bold">Tipo Entidad</legend>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="sbp-preview-content">
+                                                                    @for (int i = 0; i < Model.Input.ListTipoEntidad2.TiposEntidad.Count; i++)
+                                                                    {
+
+                                                                        <div class="form-check">
+                                                                            <input asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check"
+                                                                                   data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area = "GestionarAccesos" })"
+                                                                                   data-codtipoentidad="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad"
+                                                                                   class="form-check-input cssChkTipoEntidad" onchange="onChangeTipoEntidadSelect(this)" type="checkbox" />
+
+                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check" />
+                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad" />
+                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].IdParametro" />
+                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad" />
+                                                                            <label class="small mb-1"> @Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad </label>
+                                                                        </div>
+
+                                                                    }
+                                                                    <span id="spanTipoEntidad" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </fieldset>
+
+
+
+                                                    
+                                                </div>
+
+                                                <div class="col-md-6">
+
+
+                                                    <fieldset id="fsAgenteAduanas" style="display:none">
+
+                                                        <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-12">
+                                                                <div class="sbp-preview-content">
+
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.HabiliarProcesoFacturacion" type="checkbox" />
+                                                                        <label class="small mb-1" asp-for="@Model.Input.HabiliarProcesoFacturacion"></label>
+                                                                        <span  asp-validation-for="@Model.Input.HabiliarProcesoFacturacion" class="small text-danger"></span>
+                                                                    </div>
+
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC"
+                                                                               onchange="onOtrosDatos(this)"
+                                                                               data-codigo="termino_condi_general"
+                                                                               type="checkbox" />
+                                                                        <a href="~/fileserver/Terminos_Condiciones_Generales_Contratacion.pdf" id="anchorTerminoCondicionGeneral" class="small" target="_blank">@Model.Input.TerminoCondicionesGeneralesContraTCGC</a>
+                                                                        <span asp-validation-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC" id="spanTerminosCondicionesGeneerales" class="small text-danger"></span>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="mb-3">
+                                                                    <label asp-for="@Model.Input.CodigoSunat" class="small mb-1"></label>
+                                                                    <input asp-for="@Model.Input.CodigoSunat" id="txtCodigoSunat" onblur="onValidarCodigoSunat(this)" class="form-control" type="text" minlength="1" maxlength="10" placeholder="Ingrese código de sunat" />
+                                                                    <span asp-validation-for="@Model.Input.CodigoSunat" id="spanCodigoSunat" class="small text-danger"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </fieldset>
+
+
+                                                    <fieldset>
+
+                                                        <legend class="small" style="font-weight:bold">Otros Datos</legend>
+
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-12">
+
+                                                                <div class="sbp-preview-content">
+
+                                                                    <div class="form-check">
+                                                                        <input asp-for="Input.seBrindaOperacionesCargaFCL" onchange="onOtrosDatos(this)"
+                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                               data-codigo="carga_fcl"
+                                                                               class="form-check-input" id="chkSeBrindaFCL" type="checkbox" />
+                                                                        <a href="~/fileserver/ACUERDO_POR_SERVICIOS_FCL.pdf" class="small" target="_blank">Se Brindara Operaciones con Cargas FCL</a>
+
+                                                                        <span asp-validation-for="Input.seBrindaOperacionesCargaFCL" id="spanOperacionCargaFCL" class="small text-danger"></span>
+
+                                                                    </div>
+
+                                                                    <div class="form-check">
+                                                                        <input asp-for="Input.seBrinaAgenciaAdeuanas"
+                                                                               id="chkSeBrindaAgenciaAduana"
+                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                               class="form-check-input" type="checkbox" />
+
+                                                                        <label asp-for="Input.seBrinaAgenciaAdeuanas" class="small"></label>
+                                                                        <span asp-validation-for="Input.seBrinaAgenciaAdeuanas"
+                                                                              class="small text-danger"></span>
+                                                                    </div>
+
+                                                                    <div class="form-check" id="divEndose" style="display:none">
+                                                                        <input asp-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="chkEndose"
+                                                                               onchange="onOtrosDatos(this)"
+                                                                               data-codigo="endose"
+                                                                               class="form-check-input" type="checkbox" />
+
+                                                                        <a href="~/fileserver/ACUERDO_DE_COOPERACION_Y_SEGURIDAD_PARA_EL_CORRECTO_US_DE_ENDOSES ELECTRONICOS.pdf" id="anchorEndose" class="small" target="_blank">Acuerdo para el Correcto Uso de los Endoses Electrónicos (*)</a>
+                                                                        <span asp-validation-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="spanEndose" class="small text-danger"></span>
+
+                                                                    </div>
+
+                                                                    <div class="form-check" id="divCadenaSuministro" style="display:none">
+                                                                        <input asp-for="Input.acuerdoSeguridadCadenaSuministra" onchange="onOtrosDatos(this)"
+                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                               data-codigo="cadena_suministro"
+                                                                               class="form-check-input" id="chkAcuerdoCadenaSumistro" type="checkbox" />
+                                                                        <a href="~/fileserver/Acuerdo_de_Seguridad_de_la_Cadena_de_Suministro.pdf" id="anchorAcuerdoCadenaSumini" class="small" target="_blank">Acuerdo de Seguridad de la Cadena de Suministro (*)</a>
+
+                                                                        <span asp-validation-for="Input.acuerdoSeguridadCadenaSuministra" id="spanAcuerdoCadenaSumistro" class="small text-danger"></span>
+                                                                    </div>
+
+                                                                    <div class="form-check" id="divVeracidadInfo" style="display:none">
+                                                                        <input asp-for="Input.declaracionJUridaVeracidadInformacio" onchange="onOtrosDatos(this)"
+                                                                               data-codigo="vericidad_informacion"
+                                                                               class="form-check-input" id="chkVeracidadInfo" type="checkbox" />
+                                                                        <a href="~/fileserver/Declaración_Jurada_de_Veracidad_de_Información.pdf" id="anchorVeracidadInfo" class="small" target="_blank">Declaración Jurada de Veracidad de la Información</a>
+
+                                                                        <span asp-validation-for="Input.declaracionJUridaVeracidadInformacio" id="spanVeracidadInfo" class="small text-danger"></span>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                    
+                                                        </div>
+
+
+                                                    </fieldset>
+
+
+                                                </div>
+
+                                            </div>
+                                            <hr />
+
+                                            <div id="divOutputOk" class="alert alert-success" role="alert" style="display:none">
+                                                <output id="outputOk" class="small"></output>
+                                            </div>
+
+                                            <div id="divOutputError" class="alert alert-danger" role="alert" style="display:none">
+                                                <output id="outputError" class="small"></output>
+                                            </div>
+
+                                            <div id="divOutputAlerta" class="alert alert-warning" role="alert" style="display:none">
+                                                <output id="outputAlerta" class="small"></output>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">CONTINUAR</button>
+
+                                            <div class="row" id="divContentPlantilla" style="display:none">
+
+                                                <label class="small mb-1"> </label>
+                                                <input type="file" class="form-control small" accept=".pdf, .jpg, .jpeg" onchange="fileValidation(this)">
+                                                <input type="hidden">
+
+                                                <br />
+
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <div class="small"><a asp-page="Login">Si ya tiene cuenta, Ingrese!</a></div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="layoutAuthentication_footer">
+            <partial name="_Footer" />
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <div class="toast" role="alert" id="divToastOk" tabindex="2000" data-delay="10000" aria-live="assertive" data-bs-autohide="false" aria-atomic="true" style=" position: fixed; z-index: 3000; right: 0%; top: 0%;">
+        <div class="toast-header bg-success text-white">
+            <i data-feather="alert-circle"></i>
+            <strong class="mr-auto">Información</strong>
+            <small class="text-white-50 ml-2"></small>
+            <button class="ml-2 mb-1 btn-close btn-close-white" type="button" data-bs-dismiss="toast" aria-label="Close">                                                            </button>
+        </div>
+        <div class="toast-body"> <output id="outputDetalleOK"> </output>  </div>
+    </div>
+
+    <div class="toast" role="alert" id="divToastAlerta" data-delay="10000" tabindex="2000" aria-live="assertive" data-bs-autohide="false" aria-atomic="true" style="        position: fixed;
+        z-index: 3000;
+        right: 0%;
+        top: 0%;">
+        <div class="toast-header bg-warning text-white">
+            <i data-feather="alert-circle"></i>
+            <strong class="mr-auto">Alerta</strong>
+            <small class="text-white-50 ml-2"></small>
+            <button class="ml-2 mb-1 btn-close btn-close-white" type="button" data-bs-dismiss="toast" aria-label="Close">                                                            </button>
+        </div>
+        <div class="toast-body"> <output id="outputDetalleAlerta"> </output> </div>
+    </div>
+
+    <div class="toast" role="alert" id="divToastError" tabindex="2000" data-delay="10000" aria-live="assertive" data-bs-autohide="false" aria-atomic="true" style="        position: fixed;
+        z-index: 3000;
+        right: 0%;
+        top: 0%;">
+        <div class="toast-header bg-danger text-white">
+            <i data-feather="alert-circle"></i>
+            <strong class="mr-auto">Error</strong>
+            <small class="text-white-50 ml-2"></small>
+            <button class="ml-2 mb-1 btn-close btn-close-white" type="button" data-bs-dismiss="toast" aria-label="Close">                                                            </button>
+        </div>
+        <div class="toast-body"><output id="outputDetalleError"> </output></div>
+    </div>
+
+    <div class="modal fade" id="modalVerificarCorreo" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalVerificarCorreoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerificarCorreoLabel">Verificar correo</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="small mb-3 text-muted">Falta poco para registrar tu solictud, hemos enviado un código de verificación al correo <u> <span style="color:black" class="small" id="spanCorreoIngresado">   </span></u>.</div>
+
+
+                    <partial name="Shared/_VerificarCodigo" model="@Model.Input.ValidarCorreo" />
+                    <input type="hidden" id="hidenUrlReenviarCodigo" data-url="@Url.RouteUrl("solicitaracceso_reenviarcodigo")" />
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button><button id="btnVerificarCdoigo" onclick="fnVeirificarCodigo()" class="btn btn-primary" type="button">Verificar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="Shared/_ValidationScriptsPartial" />
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/scripts.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script>
+
+        function fnVeirificarCodigo() {
+            $("#frmrVerificarCodigo").submit();
+        }
+
+        function fnVerificarValidacion(objthis) {
+
+            if ($("#ddlTipoDocumento").children("option:selected").val() == "RUC") {
+
+                if ($("#spanInputRazonSocial").html() == "") {
+
+                    $("#spanInputRazonSocial").html("Ingresar la razón social");
+                }
+
+                if ($("#txtRazonSocial").val() != "") {
+                    $("#spanInputRazonSocial").hide();
+                } else {
+                    $("#spanInputRazonSocial").show();
+                }
+            }
+        }
+
+        function fnReenviarCodigo(objReenviar) {
+
+            let outputDetalleOK = $("#outputDetalleOK");
+            let outputDetalleAlerta = $("#outputDetalleAlerta");
+            let outputDetalleError = $("#outputDetalleError");
+
+            let urlReenviarCodigo = $("#hidenUrlReenviarCodigo").data('url');
+
+            $.ajax({
+                url: urlReenviarCodigo,
+                type: "GET",
+                data: {},
+                dataType: "json",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+
+                    $(".loader").fadeIn("slow");
+                }
+            }).done(function (response) {
+
+                $(".loader").fadeOut("slow");
+
+                if (response.codigo == 0) {
+
+                   
+                    $("#txtCodigoVerificacion").val("");
+
+                    $("#divValidarOutputOk").show();
+                    $("#outputValidarOk").html('Se reenvio el código con éxito');
+
+                    $("#divValidarOutputAlerta").hide();
+                    $("#outputValidarAlerta").html('');
+
+                    $("#divValidarOutputError").hide();
+                    $("#outputValidarError").html('');
+                    
+   
+                     
+                } else {
+
+                    $("#divToastAlerta").toast("show");
+
+                    outputDetalleAlerta.html("Resultado: " + response.mensaje);
+
+                }
+
+            }).fail(function (response) {
+
+                $(".loader").fadeOut("slow");
+
+                $("#divToastError").toast("show");
+
+                outputDetalleError.html('Resultado: ' + response.responseText);
+
+            }).always(function (response) {
+
+            });
+        }
+
+        async function fnSubValidarCorreo(oFormElement) {
+
+            $("#divValidarOutputOk").hide();
+            $("#divValidarOutputError").hide();
+            $("#divValidarOutputAlerta").hide();
+
+            let json = "";
+            let outputValidarOk = $("#outputValidarOk");
+            let outputValidarError = $("#outputValidarError");
+            let outputValidarAlerta = $("#outputValidarAlerta");
+
+            $(".loader").fadeIn("slow");
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+                const response = await fetch(oFormElement.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    let jsonResponseForm = await response.json();
+
+                    if (jsonResponseForm.codigo != 0) {
+
+                        $("#divValidarOutputAlerta").show();
+                        outputValidarAlerta.html(jsonResponseForm.mensaje);
+
+
+                    } else {
+
+                        $("#divValidarOutputOk").show();
+                        outputValidarOk.html('Registrado con éxito');
+
+
+                        window.location.href = "/Account/SolicitudAccesoRegistrado";
+                    }
+
+                    $(".loader").fadeOut("slow");
+
+                } else {
+
+                    $(".loader").fadeOut("slow");
+                    $("#divValidarOutputError").show();
+                    outputValidarError.html('Resultado: ' + response.status + ' ' + response.statusText);
+
+                }
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                $("#divValidarOutputError").show();
+                outputValidarError.html('Resultado: ' + error);
+
+            }
+        }
+
+        async function AJAXSubmit(oFormElement) {
+
+            $("#divOutputOk").hide();
+            $("#divOutputError").hide();
+            $("#divOutputAlerta").hide();
+
+            let json = "";
+            let outputOk = $("#outputOk");
+            let outputError = $("#outputError");
+            let outputAlerta = $("#outputAlerta");
+
+            $(".loader").fadeIn("slow");
+            $("#spanInputRazonSocial").html("");
+            $("#spanTipoEntidad").html("");
+            $("#spanFiles").html("");
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+                const response = await fetch(oFormElement.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    let jsonResponseForm = await response.json();
+
+                    if (jsonResponseForm.codigo != 0) {
+
+                        $("#divOutputAlerta").show();
+                        outputAlerta.html(jsonResponseForm.mensaje);
+
+                        for (var item = 0; item < jsonResponseForm.listActionListResponse.length; item++) {
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.RazonSocial") {
+                                $("#spanInputRazonSocial").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                $("#txtRazonSocial").focus();
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.NumeroDocumento") {
+                                $("#spanNumeroDocumento").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                $("#txtNumeroDocumento").focus();
+                            }
+
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.TipoEntidad2") {
+                                $("#spanTipoEntidad").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.Files") {
+                                $("#spanFiles").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.acuerdoSeguridadCadenaSuministra") {
+                                $("#spanAcuerdoCadenaSumistro").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.acuerdoCorrectoUsoEndosesElectronico") {
+                                $("#spanEndose").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.declaracionJUridaVeracidadInformacio") {
+                                $("#spanVeracidadInfo").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.seBrindaOperacionesCargaFCL") {
+                                $("#spanOperacionCargaFCL").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.CodigoSunat") {
+
+                                $("#spanCodigoSunat").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Input.TerminoCondicionesGeneralesContraTCGC") {
+
+                                $("#spanTerminosCondicionesGeneerales").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+                            
+
+                        }
+                    } else {
+
+                        $("#spanCorreoIngresado").html($("#txtCorreo").val());
+
+                       // $("#divOutputOk").show();
+                        //outputOk.html('Registrado con exito');
+                        $('#modalVerificarCorreo').modal('show')
+                        $("#txtCodigoVerificacion").val("");
+
+                        $("#divValidarOutputOk").hide();
+                        $("#outputValidarOk").html('');
+                        $("#divValidarOutputAlerta").hide();
+                        $("#outputValidarAlerta").html('');
+                        $("#divValidarOutputError").hide();
+                        $("#outputValidarError").html('');
+
+
+                        // window.location.href = "/Account/ValidarCorreo";
+                    }
+
+                    $(".loader").fadeOut("slow");
+                } else {
+
+                    $(".loader").fadeOut("slow");
+
+
+                    $("#divOutputError").show();
+                    outputError.html(response.status + ' ' + response.statusText);
+
+                }
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                $("#divOutputError").show();
+                outputError.html('Result: ' + error);
+
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        var strEndose = "Acuerdo para el Correcto Uso de los Endoses Electrónicos";
+        var strTerminoCondicionGeneralContratacion = "Términos y Condiciones Generales de Contratación - T&CGC (*)";
+        var strVerificacionInfo = "Declaración Jurada de Veracidad de la Información";
+        var strCadenaSuminis = "Acuerdo de Seguridad de la Cadena de Suministro";
+
+        var listArchivosAdjuntos = Array();
+
+
+
+
+        function onTipoDocumento(obj) {
+
+            var objectThis = $(obj);
+
+            if (objectThis.children("option:selected").val() == "DNI") {
+                $("#txtRazonSocial").attr("disabled", true);
+                $("#txtRazonSocial").val("");
+                $("#txtNumeroDocumento").val("");
+                $("#txtNumeroDocumento").attr("maxlength", "8");
+
+            }
+            else {
+
+                $("#txtRazonSocial").val("");
+                $("#txtRazonSocial").attr("disabled", false);
+                $("#txtNumeroDocumento").val("");
+                $("#txtNumeroDocumento").attr("maxlength", "11");
+
+            }
+        }
+
+        function setearCheck() {
+
+            $("#anchorVeracidadInfo").html(strVerificacionInfo);
+            $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis);
+            $("#anchorEndose").html(strEndose);
+            $("#anchorTerminoCondicionGeneral").html(strTerminoCondicionGeneralContratacion);
+            $("#spanVeracidadInfo").html("");
+            $("#spanAcuerdoCadenaSumistro").html("");
+            $("#spanEndose").html("");
+
+
+
+        }
+
+
+        function onChangeTipoEntidadSelect(obj) {
+
+
+
+            $("#chkEndose").prop("checked", false);
+            $("#chkAcuerdoCadenaSumistro").prop("checked", false);
+            $("#chkVeracidadInfo").prop("checked", false);
+
+
+            $("#divEndose").hide();
+            $("#divCadenaSuministro").hide();
+            $("#divVeracidadInfo").hide();
+
+            let objTipoEntidad = $(obj);
+            let strCodigoTipoEbtidad = objTipoEntidad.data("codtipoentidad");
+
+            if (strCodigoTipoEbtidad == "@Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS") {
+
+                if (objTipoEntidad.is(":checked")) {
+                    $("#fsAgenteAduanas").show();
+                } else {
+                    $("#fsAgenteAduanas").hide();
+                }
+            }
+
+            onChangeTipoEntidad(obj);
+        }
+
+
+
+        function onOtrosDatos(objSender) {
+
+            let strDatos = $(objSender).data("codigo");
+            let blEstado = $(objSender).is(":checked");
+
+            if (strDatos == "vericidad_informacion") {
+                if (blEstado) {
+                    $("#spanVeracidadInfo").html("");
+                } else {
+                    $("#spanVeracidadInfo").html("Esta opción es requerido");
+                }
+
+
+            } else if (strDatos == "cadena_suministro") {
+
+                if (blEstado) {
+                    $("#spanAcuerdoCadenaSumistro").html("");
+                } else {
+                    $("#spanAcuerdoCadenaSumistro").html("Esta opción es requerido");
+                }
+
+
+
+            } else if (strDatos == "carga_fcl") {
+
+                if (blEstado) {
+                    $("#spanOperacionCargaFCL").html("");
+                } else {
+                    $("#spanOperacionCargaFCL").html("Esta opción es requerido");
+                }
+
+
+
+            } else if (strDatos == "endose") {
+                if (blEstado) {
+                    $("#spanEndose").html("");
+                } else {
+                    $("#spanEndose").html("Esta opción es requerido");
+                }
+
+
+
+
+            }
+            else if (strDatos == "termino_condi_general") {
+                if (blEstado) {
+                    $("#spanTerminosCondicionesGeneerales").html("");
+                } else {
+                    $("#spanTerminosCondicionesGeneerales").html("Esta opción es requerido");
+                }
+            }
+
+
+
+        }
+
+
+        function onChangeTipoEntidad(obj) {
+
+            let outputOk = $("#outputOk");
+            let outputError = $("#outputError");
+            let outputAlerta = $("#outputAlerta");
+
+
+            var objectThis = $(obj);
+            var url = objectThis.data('url');
+
+            setearCheck();
+
+
+            let _logOperacion = "Log";
+            console.log("INI-" + _logOperacion);
+
+            let listTipoEntidadSelec = new Object();
+            listTipoEntidadSelec.TiposEntidad = [];
+
+            var checkEntidadAlMenosUno = false;
+
+
+            $(".cssChkTipoEntidad").each(function (index) {
+
+                if ($(this).is(':checked')) {
+
+
+                    checkEntidadAlMenosUno = true;
+
+                    let objTipoEntidad = new Object();
+                    objTipoEntidad.CodTipoEntidad = $(this).data('codtipoentidad');
+
+                    listTipoEntidadSelec.TiposEntidad.push(objTipoEntidad);
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC03") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#divVeracidadInfo").show();
+
+                    }
+
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC02") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis + " (*)");
+                        $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC01" || objTipoEntidad.CodTipoEntidad == "TC04") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis + " (*)");
+                        $("#anchorEndose").html(strEndose + " (*)");
+
+
+                        $("#divEndose").show();
+                         $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                }
+
+            });
+
+
+            listTipoEntidadSelec.BrindaCargaFCL = $("#chkSeBrindaFCL").is(':checked');
+            listTipoEntidadSelec.AcuerdoSeguridadCadenaSuministro = $("#chkAcuerdoCadenaSumistro").is(':checked');
+            listTipoEntidadSelec.SeBrindaAgenciamientodeAduanas = $("#chkSeBrindaAgenciaAduana").is(':checked');
+
+
+
+            if (checkEntidadAlMenosUno)
+            {
+                $("#spanTipoEntidad").html("");
+            } else {
+                $("#spanTipoEntidad").html("Debe seleccionar al menos un tipo de entidad");
+            }
+
+         
+
+            return true;
+        }
+
+        function valideKey(event) {
+            if ((event.keyCode < 48 || event.keyCode > 57)
+                && (event.keyCode < 96 || event.keyCode > 105)
+                && event.keyCode !== 190
+                && event.keyCode !== 110
+                && event.keyCode !== 8 && event.keyCode !== 9) {
+                return false;
+            }
+        }
+
+        function fileValidation(objThis) {
+
+            var fileInput = objThis;
+            var filePath = fileInput.value;
+            var allowedExtensions = /(.pdf|.jpg|.jpeg)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Por favor subir archivos con extensiones .pdf/.jpeg/.jpg');
+                fileInput.value = '';
+                return false;
+            } else {
+
+            }
+
+        }
+
+
+        function onValidarCodigoSunat(sender) {
+
+            let txtCodigoSunat = $(sender);
+            let strValor = txtCodigoSunat.val().replace(/\s/g, "");
+
+            if (strValor == "") {
+                $("#spanCodigoSunat").html("@Utilitario.Constante.SolicitudAccesoConstante.MensajeRegistroDatosEntidad.MENSAJE_CODIGO_SUNAT");
+            } else {
+                $("#spanCodigoSunat").html("");
+            }
+
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            var defaultRangeValidator = $.validator.methods.range;
+            $.validator.methods.range = function (value, element, param) {
+                if (element.type === 'checkbox') {
+                    // if it's a checkbox return true if it is checked
+                    return element.checked;
+                } else {
+                    // otherwise run the default validation function
+                    return defaultRangeValidator.call(this, value, element, param);
+                }
+            }
+
+            $("#txtNumeroDocumento").keydown(function (event) {
+                //alert(event.keyCode);
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                    return false;
+                }
+            });
+
+
+        });
+
+    </script>
+
+</body>
+</html>

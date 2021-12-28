@@ -1,0 +1,112 @@
+﻿@model Web.Principal.Areas.GestionarEmbarques.Models.ListarSolicitudesMemoModel
+
+@{
+    ViewBag.Title = "Listado de Solicitudes de Memos";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                       Bandeja de Solicitudes Memos
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá ver las solicitudes de memos.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <form asp-route-returnUrl="@Model.ReturnUrl" method="get">
+
+
+        <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                Filtros para búsqueda
+                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
+            </div>
+
+            <div class="card-body">
+                <div class="sbp-preview-content">
+                    <div class="row gx-3">
+                        <div class="col-md-3">
+                            <label asp-for="@Model.CodSolicitud" class="small mb-1"></label>
+                            <input class="form-control" asp-for="@Model.CodSolicitud" type="text" placeholder="Ingresar código de solicitud" />
+                        </div>
+                        <div class="col-md-3">
+                        <label asp-for="@Model.Ruc" class="small mb-1"></label>
+                        <input class="form-control" asp-for="@Model.Ruc" type="text" placeholder="Ingresar RUC/DNI Consignatario" />
+                    </div>
+                        <div class="col-md-3">
+                            <label asp-for="@Model.CodEstado" class="small mb-1"></label>
+                            <select asp-for="@Model.CodEstado" id="ddlEmpresa"
+                                    asp-items="@ViewBag.ListarEstado"
+                                    class="form-select small">
+                                <option value="0">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-header-actions mb-4">
+            <div class="card-header ">
+                Registros encontrados
+
+            </div>
+            <div class="card-body">
+                <!-- Billing history table-->
+                <div class="table-responsive table-billing-history">
+                    <partial name="_ResultadoBusqueda" model="@Model.listaResultado" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+    <link href="@Url.Content("~/js/datatables/datatables-simple-demo.js")" rel="stylesheet" />
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+            let dataTable = new simpleDatatables.DataTable("#datatable", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+                columns: [
+
+                    {
+                        select: 2,
+                        type: "date",
+                        format: "DD/MM/YYYY"
+                    }
+                ]
+            });
+
+        });
+
+
+
+
+    </script>
+
+}

@@ -1,0 +1,124 @@
+﻿@model ViewModel.Datos.Perfil.PerfilVM
+@{
+    ViewData["Title"] = "Editar Perfil";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Editar Perfil
+                    </h1>
+                    <div class="page-header-subtitle">Aquí puedes modificar el perfil y accesos al sistema.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Editar registro
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+                <form id="frmPerfil">
+                    <div class="form-group row">
+                        <label asp-for="@Model.Nombre" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-7">
+                            <input asp-for="@Model.Nombre" class="form-control" type="text" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-3">
+                            <fieldset class="border p-2 h-100">
+                                <legend class="w-auto small">Estado</legend>
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" type="radio" value="true">
+                                    <label class="form-check-label" for="Radio1">Activo</label>
+                                </div>
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" type="radio" value="false">
+                                    <label class="form-check-label" for="Radio2">Inactivo</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-sm-4">
+                            <fieldset class="border p-2 h-100">
+                                <legend class="w-auto small">Accesos</legend>
+                                <div style="height:250px;" class="overflow-auto" id="MenuCheckBox">
+                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="MensajeResult"></div>
+                    <hr />
+                    <div class="mb-2 text-right">
+                        <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+
+        $("#btnGuardar").click(function () {
+            var form = $('#frmPerfil')[0];
+            var formData = new FormData(form);
+            formData.append("IdPerfil", @ViewBag.IdPerfil);
+            $.ajax({
+                type: "POST",
+                url: "/GestionarAutorizacion/Perfil/EditarPerfil",
+                data: formData,
+                contentType: false,
+                processData: false
+            })
+            .done(function (result) {
+                if (result != null) {
+                    if (result.codigo == 0) {
+                        ShowAlertMensage('MensajeResult', 'success', '', "El perfil se ha actualizo correctamente.", 3, null);
+                    } else {
+                        ShowAlertMensage('MensajeResult', 'warning', '', result.mensaje, 0, null);
+                    }
+                }else{
+
+                }
+            })
+            .fail(function (xhr, status, error) {
+
+            })
+            .always(function () {
+
+            });
+
+        });
+
+        $("#btnVolver").click(function () {
+            window.location.href = "/GestionarAutorizacion/Perfil/ListarPerfiles";
+        });
+
+    </script>
+}

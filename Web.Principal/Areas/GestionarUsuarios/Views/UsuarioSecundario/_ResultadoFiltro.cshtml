@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioVM>
+
+<table id="datatable" class="table">
+    <thead>
+        <tr>
+          
+            <th class="border-gray-200" scope="col">Correo</th>
+            <th class="border-gray-200" scope="col">Perfil</th>
+            <th class="border-gray-200" scope="col">Estado</th>
+            <th width="100px" class="border-gray-200" scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+           
+                <td>@item.Correo</td>
+                <td>@item.PerfilNombre</td>
+                <td>
+                    @if (item.Activo == true)
+                    {
+                        <span class="badge bg-light text-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-light text-danger">No activo</span>
+                    }
+                </td>
+                <td>
+                    <a href='@Url.Action("EditarUsuario","UsuarioSecundario", new { Id=@item.IdUsuario })' title="Editar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="edit"></i></a>
+                    <a onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="info"></i></a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

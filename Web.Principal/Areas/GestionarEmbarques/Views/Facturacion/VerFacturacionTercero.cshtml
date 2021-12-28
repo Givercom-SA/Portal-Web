@@ -1,0 +1,239 @@
+﻿@model ViewModel.Datos.Embarque.SolicitudFacturacionTercero.ListarFacturacionTerceroDetalleResultVM
+@{
+    ViewBag.Title = "Detalle Solicitud";
+
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Detalle de Solicitud de Facturación a Tercero
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá visualizar el detalle de la solicitud de facturación a tercero.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <!-- Custom page header alternative example-->
+
+
+    <div class="card card-header-actions mb-2">
+        <div class="card-header">
+            Nro. de Solicitud: @Model.Codigo
+
+            <button class="btn btn-sm btn-primary" type="button" onclick="history.back()">Volver</button>
+
+        </div>
+        <div class="card-body">
+
+            <div class="sbp-preview-content">
+
+
+
+                <div class="row mb-3">
+
+                    <div class="col-6 col-sm-6  small ">
+
+                        <div class="row">
+
+                            <div class="col-6 col-sm-6 ">
+
+
+                                @Html.Raw("Nro. de Embarque")
+
+                            </div>
+                            <div class="col-6 col-sm-6 ">
+
+                                <input class="form-control  small" type="text" disabled value="@Model.EmbarqueNroBL" />
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                        <div class="col-6 col-sm-6  small ">
+
+
+                            <div class="row">
+
+
+                                <div class="col-6">
+
+
+                                    @Html.Raw("Estado: ")
+
+                                </div>
+                                <div class="col-6">
+
+                                    <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+
+                                </div>
+
+                                   
+                            </div>
+
+                        </div>
+
+
+                        </div>
+
+                <div class="row mb-3">
+
+                    <div class="col-6 col-sm-6  small ">
+
+                        <div class="row">
+                            <div class="col-6 col-sm-6 ">
+
+
+                                @Html.Raw("Fecha de Registro: ")
+
+                            </div>
+                            <div class="col-6 col-sm-6 ">
+
+                                <input class="form-control  small" type="text" disabled value="@Model.FechaRegistro" />
+
+                            </div>
+                            </div>
+                        </div>
+
+
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+
+                                @Html.Raw("Consignatario de Embarque: ")
+
+                            </div>
+                            <div class="col-6">
+
+                                <input class="form-control  small" type="text" disabled value="@Model.EntidadDatos" />
+
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                <div class="row mb-3">
+
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6 col-sm-6 ">
+                                @Html.Raw("Entidad Tercero: ")
+                            </div>
+                            <div class="col-6 col-sm-6 ">
+                                <input class="form-control  small" type="text" disabled value="@Model.ClienteNombre" />
+                            </div>
+                            </div>
+                        </div>
+
+
+                    
+
+                    </div>
+
+            </div>
+
+    </div>
+
+</div>
+
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Cobros por Pagar</div>
+                <div class="card-body">
+                    <div class="table-responsive table-billing-history">
+                        <table id="dtAsignarCobrosPagar" class="table table-bordered table-hover table-striped table-responsive-sm">
+                            <thead>
+                                <tr>
+
+                                    <th>Concepto</th>
+                                    <th>Moneda</th>
+                                    <th>Importe</th>
+                                    <th>IGV</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.CodigoResultado == 0)
+                                {
+                                    foreach (var item in Model.ListFacturacionTerceroDetalle)
+                                    {
+                                        <tr>
+
+                                            <td>@item.Concepto</td>
+                                            <td>@item.Moneda</td>
+                                            <td>@item.Importe</td>
+                                            <td>@item.IGV</td>
+                                            <td>@item.Total</td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4" style="display:none">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Historial de Eventos</div>
+                <div class="card-body px-0">
+                    <div class="table-responsive table-billing-history">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-gray-200" scope="col">Usuario</th>
+                                    <th class="border-gray-200" scope="col">Descripción</th>
+                                    <th class="border-gray-200" scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Historial)
+                                {
+                                    <tr>
+                                        <td>@item.NombreUsuario</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.FechaRegistro</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+
+
+    </script>
+
+}

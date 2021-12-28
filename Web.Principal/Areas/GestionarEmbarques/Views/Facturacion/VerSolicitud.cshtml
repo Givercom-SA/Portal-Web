@@ -1,0 +1,349 @@
+﻿@model  Web.Principal.Areas.GestionarEmbarques.Models.VerSolicitudFacturacionModel
+@{
+    ViewBag.Title = "Detalle Solicitud de Facturación";
+
+}
+
+@Html.Hidden("hidenCodigoSolicitudFacturacion", Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.IdSolicitudFacturacion)
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Detalle de Solicitud de Facturación
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá aprobar o rechazar una solicitud de facturación.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <!-- Custom page header alternative example-->
+
+
+    <div class="card card-header-actions mb-2">
+        <div class="card-header">
+            Solicitud: @Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.CodigoSolicitud
+
+            <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+
+        </div>
+        <div class="card-body">
+
+            <div class="sbp-preview-content">
+                <div class="row mb-3">
+
+                    <h5>Datos de General</h5>
+
+
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Nro. de Embarque: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.NroBl" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Fecha de Registro: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.FechaRegistro" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Tipo de Pago: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.TipoPagoDescripcion" />
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.TipoPago.Equals(Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO)) { 
+                        <div class=" col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Método Pago: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.MetodoPagoDescripcion" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                  <div class="row mb-3">
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Monto Total: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.MontoTotalString()" />
+                            </div>
+                        </div>
+                    </div>
+
+          
+                </div>
+
+                @if (Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.TipoPago.Equals(Utilitario.Constante.EmbarqueConstante.TipoPago.CREDITO))
+                {
+
+                    <h5>Datos de Crédito</h5>
+
+                    <div class="row mb-3">
+                        <div class="col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Credito: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.CreditoDescripcion" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class=" col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Aceptó Términos y Condiciones: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.AcetoFormularioString()" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+                @if (Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.TipoPago.Equals(Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO))
+                {
+                    if (Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.MetodoPago.Equals(Utilitario.Constante.EmbarqueConstante.MetodoPago.TRANSFERENCIA))
+                    {
+
+                    <h5>Datos de Transferencia</h5>
+                    <div class="row mb-3">
+                        <div class="col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Banco Transferencia: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.BancoTransferenciadescriocion()" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class=" col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Código Operación Transferencia: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.CodigoOperacionTransferencia" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+          
+                    <div class="row mb-3">
+                        <div class="col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Fecha Transferencia: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.FechaTransferencia.ToString("dd/MM/yyyy")" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class=" col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Importe Transferencia: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.ImporteTransferencia" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    }
+
+                }
+                    <h5>Datos de Cliente Externo</h5>
+
+                    <div class="row mb-3">
+                        <div class="col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Cliente: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.ClienteRazonSocial" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class=" col-6 col-sm-6  small ">
+
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Tipo de Documento: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.ClienteTipoDocumento" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-6 col-sm-6  small ">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Nro. de Documento: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.ClienteNroDocumento" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <hr />
+
+                    <div style="position: absolute; bottom: 1rem; right: 1rem;">
+                        <!-- Toast -->
+                        <div class="toast" id="toastBasic" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                            <div class="toast-header">
+                                <i data-feather="bell"></i>
+                                <strong class="mr-auto">Estado de Documentos</strong>
+                                <button class="ml-2 mb-1 btn-close" type="button" data-bs-dismiss="toast" aria-label="Close">                                                                </button>
+                            </div>
+                            <div class="toast-body">Debe seleccionar el motivo de rechazo !!.</div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+    </div>
+
+</div>
+
+
+    <div class="row mb-2">
+        <div class="col-6">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Detalle</div>
+                <div class="card-body px-0">
+                    <div class="table-responsive table-billing-history">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-gray-200" scope="col">Provisión</th>
+                                    <th class="border-gray-200" scope="col">Moneda</th>
+                                    <th class="border-gray-200" scope="col">Importe</th>
+                                    <th class="border-gray-200" scope="col">IGV</th>
+                                    <th class="border-gray-200" scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.DetalleFacturacion)
+                                {
+                                <tr>
+                                    <td>@item.DescripcionConcepto</td>
+                                    <td>@item.Moneda</td>
+                                    <td>@item.Importe</td>
+                                    <td>@item.IGV</td>
+                                    <td>@item.Total</td>
+
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Historial de Eventos</div>
+                <div class="card-body px-0">
+                    <div class="table-responsive table-billing-history">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-gray-200" scope="col">Usuario</th>
+                                    <th class="border-gray-200" scope="col">Descripción</th>
+                                    <th class="border-gray-200" scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.LeerSolicitudFacturacionBandejaResult.SolicitudFacturacion.Enventos)
+                                {
+                                    <tr>
+                                        <td>@item.NombreUsuario</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.FechaRegistro</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+    
+
+
+    </script>
+
+}

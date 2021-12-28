@@ -1,0 +1,59 @@
+﻿@model ViewModel.Datos.Embarque.AsignarAgente.AsignarAgenteHistorialResultVM
+
+
+@if (Model.Historial != null && Model.Historial.Count() > 0)
+{
+
+    @functions{
+        string MostrarEstado(string Estado, string EstadoNombre)
+        {
+            string strEstado = string.Empty;
+            switch (Estado)
+            {
+                case "1": //Pendiente
+                    strEstado = string.Format("<span class='badge badge-light text-body'>{0}</span>", EstadoNombre);
+                    break;
+                case "2": //Aprobado
+                    strEstado = string.Format("<span class='badge bg-light text-success'>{0}</span>", EstadoNombre);
+                    break;
+                case "3": //Rechazado
+                    strEstado = string.Format("<span class='badge bg-light text-danger'>{0}</span>", EstadoNombre);
+                    break;
+                case "4": //Anulado
+                    strEstado = string.Format("<span class='badge bg-light text-danger'><del>{0}</del></span>", EstadoNombre);
+                    break;
+            }
+            return strEstado;
+        }
+    }
+    <table id="dtAsignacionAduanaHistorial" class="table">
+        <thead>
+            <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Historial)
+            {
+            <tr>
+                <td>@item.FechaHistorial</td>
+                <td>@item.Usuario</td>
+                <td>@item.EstadoSolicitud</td>
+                <td>@item.Descripcion</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+}
+else
+{
+    @Html.Raw("No existen registros...");
+}
+
+
+

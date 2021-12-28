@@ -1,0 +1,57 @@
+﻿@model List<ViewModel.Datos.UsuarioRegistro.MenuLoginVM>
+<div class="sidenav-menu">
+    <div class="nav accordion" id="accordionSidenav">
+        <div class="sidenav-menu-heading"></div>
+
+
+        <div class="sidenav-menu-heading d-sm-none">Cuenta</div>
+        <a class="nav-link d-sm-none" href="#!">
+            <div class="nav-link-icon"><i data-feather="bell"></i></div>
+            Alertas
+            <span class="badge bg-warning-soft text-warning ms-auto">4 Nuevos!</span>
+        </a>
+
+        <div class="sidenav-menu-heading">Core</div>
+        <!-- Sidenav Accordion (Dashboard)-->
+        <a class="nav-link" href="@Url.Action("Home","Inicio",new { area="GestionarDashboards"})">
+            <div class="nav-link-icon"><i data-feather="activity"></i></div>
+            Dashboards
+
+        </a>
+
+        <div class="sidenav-menu-heading">Gestionar</div>
+
+
+        @if (Model != null)
+        {
+            @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
+            {
+                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapse_@grupo" aria-expanded="false" aria-controls="collapse_@grupo">
+                    <div class="nav-link-icon"><i data-feather="grid"></i></div>
+                    @grupo
+                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+
+                <div class="collapse" id="collapse_@grupo" data-bs-parent="#accordionSidenav">
+                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages_@grupo">
+                        @foreach (var item in Model.Where(x => x.Grupo.Equals(grupo)))
+                        {
+                            <a class="nav-link" asp-controller="@item.Controlador" asp-action="@item.Accion" asp-area="@item.Area">@item.Nombre</a>
+                        }
+                    </nav>
+                </div>
+            }
+        }
+
+        <!-- Sidenav Menu Heading (Core)-->
+        <div class="sidenav-menu-heading">Seguridad</div>
+        <!-- Sidenav Accordion (Dashboard)-->
+        <a class="nav-link" href="@Url.Action("LogOut", "Login", new { area = "GestionarAccesos" })">
+            <div class="nav-link-icon"><i data-feather="activity"></i></div>
+            Cerrar Sesión
+
+        </a>
+
+    </div>
+</div>
+

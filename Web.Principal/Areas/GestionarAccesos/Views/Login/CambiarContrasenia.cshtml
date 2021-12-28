@@ -1,0 +1,149 @@
+﻿@model Web.Principal.Areas.GestionarAccesos.Models.CambiarContraseniaModel
+
+@{
+    ViewData["Title"] = "Cambiar Contraseña";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container-xl px-4 mt-4">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Change password card-->
+            <div class="card mb-4">
+                <div class="card-header">@ViewData["Title"]</div>
+                <div class="card-body">
+                    <form method="post">
+                        <!-- Form Group (current password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="currentPassword">Contraseña actual</label>
+                            <input class="form-control" id="currentPassword" maxlength="50"  type="password" placeholder="Ingrese su contraseña actual"
+                                   asp-for="contraseniaActual" />
+                            <span asp-validation-for="contraseniaActual" class="small text-danger"></span>
+
+
+                            <input  type="hidden" asp-for="EsNuevo" />
+                        </div>
+                        <!-- Form Group (new password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="newPassword">Nueva contraseña</label>
+                            <input class="form-control" id="newPassword" maxlength="50" type="password" placeholder="Ingrese su nueva contraseña"
+                                   asp-for="contraseniaNueva" />
+                            <span asp-validation-for="contraseniaNueva" class="small text-danger"></span>
+                        </div>
+                        <!-- Form Group (confirm password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="confirmPassword">Confirmar contraseña</label>
+                            <input class="form-control" maxlength="50" asp-for="Contrasenia" id="confirmPassword" type="password" placeholder="Confirme su nueva contraseña" />
+                            <span asp-validation-for="Contrasenia" class="small text-danger"></span>
+                        </div>
+
+                        <div id="divOutputOk" class="alert alert-success" role="alert" style="display:none">
+                            <output id="outputOk"  class="small"></output>
+                        </div>
+
+                        <div id="divOutputError" class="alert alert-danger" role="alert" style="display:none">
+                            <output id="outputError"  class="small"></output>
+                        </div>
+
+                        <div id="divOutputAlerta" class="alert alert-warning"  role="alert" style="display:none">
+                            <output id="outputAlerta" class="small"></output>
+                        </div>
+
+
+
+                        <button class="btn btn-primary" type="submit">Grabar</button>
+                        <a class="btn btn-secondary" href="~/" >Salir</a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogConfirmacion" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+        
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeConfirmacion"></output>
+            </div>
+            <div class="modal-footer"><a class="btn btn-primary" href="~/"  >Iniciar Sesion</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeAlerta"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    
+  
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+
+            var strCodigo  = "@ViewBag.codigo";
+            var strMensaje ="@ViewBag.mensaje";
+
+
+            if (strCodigo == "0") {
+
+
+                $("#divOutputOk").show();
+                $("#outputOk").html(strMensaje);
+
+                $("#outputMensajeConfirmacion").html(strMensaje);
+                $("#dialogConfirmacion").modal("show");
+
+
+            }
+            else if (strCodigo == "-200") {
+
+            
+                $("#divOutputError").show();
+                $("#outputError").html(strMensaje);
+
+            }
+            else if (strCodigo != "") {
+
+                $("#currentPassword").focus();
+
+                $("#divOutputAlerta").show();
+                $("#outputAlerta").html(strMensaje);
+
+            }
+
+
+
+        });
+
+
+    </script>
+
+}

@@ -1,0 +1,97 @@
+﻿@model ViewModel.Datos.Embarque.CobroPendienteFacturar.ListCobrosPendienteEmbarqueVM
+
+
+
+<form asp-action="EmbarqueSolicitarCobroPendienteFactura" asp-controller="Embarque" asp-area="GestionarEmbarque" id="formSolicitarFacturacionTercero">
+
+
+
+
+    <input type="hidden" asp-for="@Model.KEYBL" />
+
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <!-- Form Group (first name)-->
+            <div class="mb-3">
+
+                <label asp-for="@Model.BlNietos" class="small mb-1"></label>
+                <select asp-for="@Model.BlNietos"
+                        asp-items="ViewBag.ListTipoDocumento"
+                        class="form-select">
+                    <option value="0">Seleccionar</option>
+                </select>
+
+                <span asp-validation-for="@Model.BlNietos" id="spanValidarTipoDocumento" class="small text-danger"></span>
+                <input type="hidden" asp-for="@Model.BlNietos" />
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Form Group (last name)-->
+            <div class="mb-3">
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <div class="table-responsive table-billing-history">
+        <table id="datatable" class="table">
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    @*<th>Código Concepto</th>
+                    <th>Tipo Provicion</th>*@
+                    <th>Concepto</th>
+                    <th>Moneda</th>
+                    <th>Importe</th>
+
+                    <th>Igv</th>
+                    <th>Total</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (var item = 0; item < Model.CobrosPendientesEmbarque.Count; item++)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" asp-for="@Model.CobrosPendientesEmbarque[item].Check" class="form-check-input" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Check" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].RubroCodigo" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Descripcion" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Moneda" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Importe" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Igv" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Total" />
+                            <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].FlagAsignacion" />
+
+                        </td>
+                        @*<td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigo</td>
+                        <td>@Model.CobrosPendientesEmbarque[item].Descripcion</td>*@
+                        <td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion</td>
+                        <td>@Model.CobrosPendientesEmbarque[item].Moneda</td>
+                        <td>@Model.CobrosPendientesEmbarque[item].Importe</td>
+                        <td>@Model.CobrosPendientesEmbarque[item].Igv</td>
+                        <td>@Model.CobrosPendientesEmbarque[item].Total</td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</form>

@@ -1,0 +1,37 @@
+﻿
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+ 
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+            $(document).ajaxError(function (event, jqxhr, settings) {
+                if (jqxhr.status == 408) {
+                    url = '@Url.RouteUrl("cerrarsesionasync")',
+                    window.location.href = url;
+                }
+            });
+
+            $.sessionTimeout({
+                logoutButton: 'Cerrar Sesión',
+                keepAliveButton: 'Seguir conectado',
+                logoutUrl: '@Url.RouteUrl("cerrarsesionasync")',
+                redirUrl: '@Url.RouteUrl("PaginaExpirada")',
+                //warnAfter: 10e3,
+                //redirAfter: 10e3 + 10e3,
+                warnAfter: @(Convert.ToInt32(Configuration.GetSection("Session")["TimeExpired"]) * 1e3 - 65e3),
+                redirAfter: @(Convert.ToInt32(Configuration.GetSection("Session")["TimeExpired"]) * 1e3 - 5e3),
+                countdownBar: true
+            });
+
+    });
+
+        function sessionKeepAlive() {
+
+            $.get("@Url.RouteUrl("KeepAlive")", function (data) { });
+        }
+
+
+
+</script>

@@ -1,0 +1,100 @@
+﻿@model Web.Principal.Model.ListaTrackingModel
+
+@{
+    ViewBag.Title = "Tracking por Embarque";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    //this.ViewData.Add("Condicion", ViewBag.Condicion);
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i class="bi bi-journal">  </i></div>
+                        @ViewBag.Title
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá visualizar la información del tracking por embarque.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container-xl px-4">
+
+    <div class="card card-header-actions mt-n10">
+        <div class="card-header ">
+            Embarque: @Model.NroEmbarque
+
+            <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+        <div class="card-body">
+
+            <div id="default">
+
+                @if (ViewBag.IdPerfil == 5) // Cliente Final
+                {
+                    await Html.RenderPartialAsync("_DetalleTrackingClienteFinal", Model, this.ViewData);
+                }
+                else if(ViewBag.IdPerfil == 7) // Forwarder
+                {
+                    await Html.RenderPartialAsync("_DetalleTrackingAgenteCarga", Model, this.ViewData);
+                }
+                else if (ViewBag.IdPerfil == 8) // Broker
+                {
+                    await Html.RenderPartialAsync("_DetalleTrackingBroker", Model, this.ViewData);
+                }
+                else
+                {
+                    await Html.RenderPartialAsync("_DetalleTrackingDefault", Model);
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+
+
+    <script type="text/javascript">
+
+            $(document).ready(function () {
+
+                $(".loader").fadeOut("slow");
+
+
+
+
+
+                var defaultRangeValidator = $.validator.methods.range;
+                $.validator.methods.range = function (value, element, param) {
+                    if (element.type === 'checkbox') {
+                        // if it's a checkbox return true if it is checked
+                        return element.checked;
+                    } else {
+                        // otherwise run the default validation function
+                        return defaultRangeValidator.call(this, value, element, param);
+                    }
+                }
+
+            });
+
+    </script>
+
+}
+

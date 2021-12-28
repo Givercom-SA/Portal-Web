@@ -1,0 +1,58 @@
+﻿@model ViewModel.Datos.Embarque.CobroPendienteFacturar.ListCobrosPendienteEmbarqueVM
+
+
+
+<h2 class="small"> Listado de Clientes</h2>
+
+<input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.ClienteSeleccionado" id="hidenClienteSeleccionado" />
+<input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.ClienteNroDocumento" id="hidenClienteNroDocumento" />
+<input type="hidden" asp-for="@Model.SolicitarFacturacionTercero.ClienteRazonNombre" id="hidenClienteRazonNombre" />
+
+
+<div class="table-responsive table-billing-history">
+
+
+
+
+
+    <table id="dtClientesFactTercero" class="table">
+        <thead>
+            <tr>
+                <th>Seleccionar</th>
+                <th>Nro. Documento</th>
+                <th>Nombres</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model.SolicitarFacturacionTercero.ClientesFacturarTerceros)
+            {
+                <tr>
+                    <td class="text-center">
+
+                        <input class="form-check-input cssSelectClienteExterno"
+                               onchange="SeleccionarCliente(this)"
+                               asp-for="@Model.SolicitarFacturacionTercero.ClienteSeleccionado"
+                               value="@item.CodigoClienteFacturarTercero"
+                               data-clientenumero="@item.NroDocumentoClienteFacturarTercero"
+                               data-clienteid="@item.CodigoClienteFacturarTercero"
+                               data-clienterazonnombre="@item.NombresClienteFacturarTercero"
+                               type="radio">
+
+
+                        
+
+
+
+
+                    </td>
+                    <td>@item.NroDocumentoClienteFacturarTercero</td>
+                    <td>@item.NombresClienteFacturarTercero</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

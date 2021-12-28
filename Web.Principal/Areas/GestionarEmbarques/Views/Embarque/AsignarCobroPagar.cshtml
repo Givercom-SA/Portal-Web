@@ -1,0 +1,371 @@
+﻿@model ViewModel.Datos.Embarque.CobroPendienteFacturar.ListCobrosPendienteEmbarqueVM
+
+@{
+    ViewBag.Title = "Asignación de Cobros a Pagar";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i class="bi bi-ui-checks">  </i> </div>
+                        @ViewBag.Title
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá asignar cobros por pagar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container-xl px-4">
+
+    <div class="card card-header-actions mt-n10">
+        <div class="card-header ">
+            Nro. Embarque: @Model.BL
+
+            <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+        <div class="card-body">
+
+            <div id="default">
+
+                <form asp-action="AsignarCobroPagar"
+                      asp-controller="Embarque" asp-area="GestionarEmbarques"
+                      id="formAginarCobroPagar"
+                      method="post" onsubmit="AJAXSubmit(this);return false;">
+
+
+
+
+                    <input id="KeyBLD" type="hidden" asp-for="@Model.KEYBL" />
+                    <input id="BL" type="hidden" asp-for="@Model.BL" />
+
+
+                  
+
+
+
+
+
+                    <div class="table-responsive table-billing-history" id="divListAsignarCobros">
+
+                        <partial name="_ResultadoBusquedaCobrosPagar" model="@Model" />
+
+                    </div>
+                    <br />
+
+                    <div class="alert alert-success alert-icon" id="alertInfo" role="alert" style="display:none">
+
+                        <div class="alert-icon-aside">
+                            <i class="far fa-flag"></i>
+                        </div>
+                        <div class="alert-icon-content">
+                            <h6 class="alert-heading">Información</h6>
+                            <output id="outputDetalleOK"></output>
+                        </div>
+                    </div>
+
+
+                    <div class="alert alert-warning alert-icon" id="alertWarning" role="alert" style="display:none">
+
+                        <div class="alert-icon-aside">
+                            <i data-feather="feather"></i>
+                        </div>
+                        <div class="alert-icon-content">
+                            <h6 class="alert-heading">Alerta</h6>
+                            <output id="outputDetalleAlerta"></output>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger alert-icon" id="alertError" role="alert" style="display:none">
+
+                        <div class="alert-icon-aside">
+                            <i data-feather="feather"></i>
+                        </div>
+                        <div class="alert-icon-content">
+                            <h6 class="alert-heading">Error</h6>
+                            <output id="outputDetalleError"></output>
+                        </div>
+                    </div>
+
+
+                    <hr />
+                    <div class="mb-2 text-right">
+                        @if (Model.existeDesglosePendiente > 0) 
+                        { 
+
+                        <button class="btn btn-primary" type="submit" id="btnRegistrarCobroPagar">Registrar</button>
+
+                        }
+
+                            
+
+                    </div>
+
+
+
+                </form>
+
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script type="text/javascript">
+
+
+        let outputDetalleOK = $("#outputDetalleOK");
+        let outputDetalleAlerta = $("#outputDetalleAlerta");
+        let outputDetalleError = $("#outputDetalleError");
+        let outputMensaje = $("#outputMensaje");
+        let outputMensajeOk = $("#outputMensajeOk");
+        
+        
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            DataTableListCobroPagar();
+
+
+            var defaultRangeValidator = $.validator.methods.range;
+            $.validator.methods.range = function (value, element, param) {
+                if (element.type === 'checkbox') {
+                    // if it's a checkbox return true if it is checked
+                    return element.checked;
+                } else {
+                    // otherwise run the default validation function
+                    return defaultRangeValidator.call(this, value, element, param);
+                }
+            }
+
+        });
+
+
+        function ListarCobrosPagar(BLNieto) {
+            if (BLNieto !== "0") {
+                let KeyBLD = $("#KeyBLD").val();
+                let BL = $("#ddlAsignarCobrosPagar").find("option:selected").text();
+                $("#BL").val(BL);
+                $.ajax({
+                    url: '@Url.Action("ListarCobrosPagar", "Embarque",new { area="GestionarEmbarques"})',
+                    data: { KeyBLD: KeyBLD, BL:BL, BLNieto: BLNieto},
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function () {
+
+                        $(".loader").fadeIn("slow");
+                        $("#divListAsignarCobros").html("Procesando...")
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+                        $("#divListAsignarCobros").html("Ocurrio un error inesperado, por favor buscar nuevamente");
+                    },
+                    success: function (response) {
+
+                        $("#divListAsignarCobros").html(response);
+                        DataTableListCobroPagar();
+
+                    },
+                    complete: function (data) {
+
+                        $(".loader").fadeOut("slow");
+                    }
+                });
+            }
+
+
+        }
+
+        function DataTableListCobroPagar() {
+            let dtAsignarCobrosPagar = new simpleDatatables.DataTable("#dtAsignarCobrosPagar", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+
+        }
+
+
+        function AJAXSubmit(oFormElement) {
+
+            $("#alertWarning").hide();
+            $("#alertInfo").hide();
+            $("#alertInfo").hide();
+
+            try {
+
+                var formSerialize = $(oFormElement).serialize();
+
+                if (ValidarCobroPagar()) {
+
+
+
+                    $.ajax({
+                        url: oFormElement.action,
+                        data: formSerialize,
+                        type: 'POST',
+                        //contentType: false,
+                        //processData: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $('#alertError').show();
+
+
+                            $("#dialogAlerta").modal("show");
+                            outputMensaje.html(errorThrown);
+
+                            $(".loader").fadeOut("slow");
+
+                        },
+                        success: function (response) {
+
+                            $(".loader").fadeOut("slow");
+
+                            if (response.codigo == 0) {
+
+
+                                $('#dialogOk').modal("show");
+                                outputMensajeOk.html('Se registro con éxito');
+                                $("#btnRegistrarCobroPagar").hide();
+
+                            }
+                            else if (response.codigo == -100) {
+
+                                $("#dialogAlerta").modal("show");
+                                outputMensaje.html(response.mensaje);
+                            }
+                            else {
+
+                                $("#dialogAlerta").modal("show");
+                                outputMensaje.html(response.mensaje);
+
+
+
+                            }
+
+
+
+                        },
+                        complete: function (data) {
+
+
+                            $(".loader").fadeOut("slow");
+                        }
+                    });
+
+
+                } 
+
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+
+                $('#alertError').show();
+
+                outputDetalleError.html("Resultado: Ocurrio un error interno, volver a intentar mas tarde");
+
+            }
+
+
+        }
+
+
+        function ActualizarForm() {
+
+            //window.location.reload();
+            history.go(-1)
+        }
+
+        function ValidarCobroPagar() {
+
+            let validado = true;
+
+
+
+            if ($("#hidenCantidadBlHijosNiestos").val() == "0" || $("#hidenCantidadBlHijosNiestos").val() == "") {
+
+                validado = false;
+
+                $("#dialogAlerta").modal("show");
+                outputMensaje.html("No es posible registrar los cobros a pagar porque no se encontro desgloses a pagar.");
+
+                validado = false;
+            }
+         
+            return validado;
+
+
+        }
+
+    </script>
+
+}
+

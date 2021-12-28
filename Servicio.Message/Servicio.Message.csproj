@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <UserSecretsId>ba27ecd8-26db-4176-a2aa-c333e183e750</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="MSMQ.Messaging" Version="1.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\Bootstrapper.Common\Bootstrapper.Common.csproj" />
+    <ProjectReference Include="..\00.BloqueCompiladores\BusinessLogic.Common\BusinessLogic.Common.csproj" />
+    <ProjectReference Include="..\00.BloqueCompiladores\Service.Common\Service.Common.csproj" />
+    <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />
+    <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Utils\" />
+    <Folder Include="ServiceConsumer\" />
+    <Folder Include="QueryHandler\" />
+    <Folder Include="Repositorio\" />
+    <Folder Include="Profile\" />
+  </ItemGroup>
+
+
+</Project>

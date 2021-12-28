@@ -1,0 +1,1637 @@
+﻿@model ViewModel.Datos.Embarque.SolicitudFacturacion.SolicitarFacturacionParameterVM
+
+
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"> <i class="bi bi-cart3"></i></div>
+                        Solicitud de Facturación
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá registrar tu solicitud de facturación paso a paso.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+
+    <div class="card">
+        <div class="card-header border-bottom">
+
+            <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="cardTab" role="tablist">
+
+
+                <a class="nav-item nav-link active" id="wzCobrosFacturar-tab" href="#wzCobrosFacturar" data-bs-toggle="tab" role="tab" aria-controls="wzCobrosFacturar" aria-selected="true">
+                    <div class="wizard-step-icon">1</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Concepto</div>
+                        <div class="wizard-step-text-details">Información de conceptos</div>
+                    </div>
+                </a>
+
+
+                <a class="nav-item nav-link " id="wzMetodoPago-tab" disabled href="#wzMetodoPago" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzMetodoPago" aria-selected="true">
+                    <div class="wizard-step-icon">2</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Metodo Pago </div>
+                        <div class="wizard-step-text-details">Información de método de pago </div>
+                    </div>
+                </a>
+
+                <a class="nav-item nav-link " id="wzResumen-tab" disabled href="#wzResumen" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzResumen" aria-selected="true">
+                    <div class="wizard-step-icon">3</div>
+                    <div class="wizard-step-text">
+                        <div class="wizard-step-text-name">Resumen </div>
+                        <div class="wizard-step-text-details">Información de resumen </div>
+                    </div>
+                </a>
+
+           
+
+            </div>
+        </div>
+        <div class="card-body">
+
+            <form id="formSolicitudFacturacion" asp-action="SolicitudFacturacion" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+
+                <div class="tab-content" id="cardTabContent">
+                    <!-- Wizard tab pane item 1-->
+                    <div class="tab-pane py-5 py-xl-5 fade show active" id="wzCobrosFacturar" role="tabpanel" aria-labelledby="wzCobrosFacturar-tab">
+                        <div class="row justify-content-center">
+                            <div class="col-xxl-10 col-xl-10">
+                                <h3 class="text-primary">Paso 1</h3>
+                                <h5 class="card-title mb-4">Favor verificar la información para continuar con el siguiente paso.</h5>
+
+                                <input type="hidden" asp-for="@Model.KEYBLD" />
+                                <input type="hidden" asp-for="@Model.NroBl" />
+                                <input type="hidden" id="ProvicionClienteCantidad" value="@Model.CobrosPendientesCliente.Count()" />
+
+
+                                @{
+
+
+                                    for (var itemCliente = 0; itemCliente < Model.CobrosPendientesCliente.Count(); itemCliente++)
+                                    {
+
+                                                                <div id="contenedorProvosion_@itemCliente" class="cssContenedorProvision" style="        padding: 5px;
+        margin: 2px;
+        margin-top: 10px;
+        border: 2px #afa5a5 solid">
+
+                                                                    @if (Model.CobrosPendientesCliente.Count() > 1)
+                                                                    {
+                                                                        <div class="form-check form-check-solid small">
+                                                                            <input asp-for="@Model.ProvisionSeleccionado" onchange="OnChangeProvision(this,'@itemCliente')" class="form-check-input cssClienteProvision" type="radio" value="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
+                                                                            <label class="form-check-label">
+                                                                                Seleccionar
+                                                                            </label>
+                                                                        </div>
+                                                                    }
+
+
+                                                                    <br />
+                                                                    <input type="hidden" id="hidenProvisionIdFacturacionTercero_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
+                                                                    <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdCliente" />
+                                                                    <input type="hidden" id="hidenProvisionRazonSocial_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente" />
+                                                                    <input type="hidden" id="hidenProvisionTipoDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente" />
+                                                                    <input type="hidden" id="hidenProvisionNroDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente" />
+                                                                    <input type="hidden" id="hidenProvisionMontoTotal_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].MontoTotal" />
+                                                                    
+
+                                                                    <div id="divContenedorProviosion_@itemCliente">
+
+
+                                                                        <label class="small">Cliente: <strong >  @Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente </strong></label>
+                                                                        <br />
+                                                                        <label class="small">Tipo Documento:<strong > @Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente </strong></label>
+                                                                        <br />
+                                                                        <label class="small">Número de Documento:<strong > @Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente </strong></label>
+                                                                        <br />
+                                                                        <label class="small"> Total a Pagar:<strong > @Model.CobrosPendientesCliente[itemCliente].MontoTotal </strong></label>
+
+                                                                        <div class="table-responsive table-billing-history">
+
+                                                                            <table id="dtConceptoCobro_@itemCliente" class="table cssTablaProvision">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Concepto</th>
+                                                                                        <th>Moneda</th>
+                                                                                        <th>Importe</th>
+                                                                                        <th>Igv</th>
+                                                                                        <th>Total</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @for (var item = 0; item < Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count(); item++)
+                                                                                    {
+                                                                                        <tr>
+
+
+                                                                                            <td>
+
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].RubroCodigo" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Descripcion" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].FlagAsignacion" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ID" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].IdBlPagar" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].NroBl" />
+                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].keyBl" />
+
+                                                                                                @Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion
+
+                                                                                            </td>
+                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda</td>
+                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe</td>
+                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv</td>
+                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total</td>
+
+
+                                                                                        </tr>
+                                                                                    }
+                                                                                </tbody>
+                                                                            </table>
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                    <br />
+
+                                                                </div>
+
+                                        }
+
+                                }
+
+                                <hr class="my-4" />
+                                <div class="d-flex justify-content-between">
+
+                                    <a class="btn btn-dark" href="javascript: history.go(-1)"> Volver </a>
+                                    <a class="btn btn-primary" href="javascript:IrMetodoPago()" id="btnConceptoSiguiente"> Siguiente </a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane py-5 py-xl-5 fade" id="wzMetodoPago" role="tabpanel" aria-labelledby="wzMetodoPago-tab">
+                        <div class="row justify-content-center">
+                            <div class="col-xxl-10 col-xl-10">
+
+                                <h3 class="text-primary">Paso 2</h3>
+                                <h5 class="card-title mb-4">Metodo de Pago</h5>
+
+
+                                <div id="divContenedorMetodoPago">
+
+
+
+
+
+
+
+                                    <fieldset>
+                                        <legend class="small">Tipo de Pago </legend>
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <div class="form-check form-check-solid small">
+                                                    <input asp-for="@Model.TipoPago" checked id="rbtnContado" onchange="CambiarTipoPago(this,'CO')" class="form-check-input" type="radio" value="CO" />
+                                                    <label class="form-check-label">Contado</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6" id="divContenedorCredito">
+
+                                                @if (Model.AplicaCredito == true)
+                                                {
+
+                                                    <div class="form-check form-check-solid small">
+                                                        <input asp-for="@Model.TipoPago" id="rbtnCredito" onchange="CambiarTipoPago(this,'CR')" class="form-check-input" type="radio" value="CR" />
+                                                        <label class="form-check-label">Crédito</label>
+                                                    </div>
+
+                                                }
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <input asp-for="@Model.TipoPago" id="hidenTipoPago" type="hidden" />
+                                    <input asp-for="@Model.MetodoPago" id="hidenMetodoPago" type="hidden" />
+                                    <br />
+                                    <div id="divCredito" style="display:none">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="small mb-1"> Forma de Crédito </label>
+
+                                                    <select class="form-select small" id="cmbCredito"
+                                                            asp-for="@Model.CodigoCredito"
+                                                            asp-items="@ViewBag.ListaCredito"
+                                                            onchange="verificarCredito('@Model.KEYBLD','@Model.NroBl', this)">
+                                                        <option value="-1">SELECCIONAR</option>
+                                                    </select>
+
+
+
+                                                    <input type="hidden" asp-for="@Model.CreditoDescripcion" id="hidenCreditoDescripcion" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <br />
+                                    <div id="divContado" style="display:block">
+
+                                        <fieldset>
+                                            <legend class="small"> Método de Pago </legend>
+
+                                            <div class="row">
+
+
+
+
+                                                <div class="col-md-6">
+
+                                                    <div class="form-check form-check-solid small">
+                                                        <input asp-for="@Model.MetodoPago" id="rbtnTransferencia" onchange="CambiarMetodoPago(this,'TR')" class="form-check-input" type="radio" value="TR" />
+                                                        <label class="form-check-label">Transferencia</label>
+                                                    </div>
+
+                                                </div>
+
+                                               
+
+                                                <div class="col-md-6">
+
+                                                    <div class="form-check form-check-solid small">
+                                                        <input asp-for="@Model.MetodoPago" id="btnPagoTarjeta" onchange="CambiarMetodoPago(this,'PT')" class="form-check-input" type="radio" value="PT" />
+                                                        <label class="form-check-label">Pago con Tarjeta</label>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                    </div>
+
+                                    <br />
+                             
+                                    <div id="divPagoTransferencia" style="display:none">
+
+                                        <div class="row">
+
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+
+                                                    <label class="small mb-1"> Banco Transferencia </label>
+
+                                                    <select class="form-select small" id="cmbBancoTransferencia"
+                                                            asp-for="@Model.BancoTransferencia">
+                                                        <option value="-1">SELECCIONAR</option>
+                                                        <option value="BCP">BANCO DE CREDITO</option>
+                                                        <option value="SKB">SCOTIABANK</option>
+                                                        <option value="IBK">INTERBANK</option>
+                                                    </select>
+
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+
+
+                                                    <label class="small mb-1"> Código de Transferencia </label>
+                                                    <input asp-for="@Model.CodigoOperacionTransferencia" id="txtCodigoOperacion" maxlength="50" class="form-control" type="text" placeholder="Ingrese código de operación" />
+                                                    <span asp-validation-for="@Model.CodigoOperacionTransferencia" id="spanValidarCodigoTrasnferencia" class="small text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.CodigoOperacionTransferencia" />
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+
+                                                    <label class="small mb-1"> Fecha de Transferencia </label>
+                                                    <input asp-for="@Model.FechaTransferencia" asp-format="{0:dd'/'MM'/'yyyy}" id="txtFechaTransferencia" maxlength="10" class="form-control" type="date" placeholder="Ingrese fecha de transferencia" />
+                                                    <span asp-validation-for="@Model.FechaTransferencia" id="spanValidarFechaTrasnferencia" class="small text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.FechaTransferencia" class="small" />
+                                                    <input type="hidden" asp-for="@Model.FechaTope" id="hidenFechaTope" />
+                                                </div>
+
+
+
+
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+
+
+                                                    <label class="small mb-1"> Importe </label>
+                                                    <input asp-for="@Model.ImporteTransferencia" id="txtImporteTransferencia" maxlength="50" min="0" class="form-control" type="number" value="0.00" placeholder="Ingrese importe" />
+                                                    <span asp-validation-for="@Model.ImporteTransferencia" id="spanValidarImportaTransferencia" class="small text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.ImporteTransferencia" class="small" />
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <input type="hidden" id="hidenMontoTotal" />
+
+                                    <br />
+                                </div>
+          
+                                <br />
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-dark" href="javascript:RegresarConcepto()"> Regresar </a>
+                                    <a class="btn btn-primary" href="javascript:VerificarMetodoPago()" id="btnMetodoPagoSiguiente"> Siguiente </a>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane py-5 py-xl-5 fade" id="wzResumen" role="tabpanel" aria-labelledby="wzResumen-tab">
+                        <div class="row justify-content-center">
+                            <div class="col-xxl-10 col-xl-10">
+
+                                <h3 class="text-primary">Paso 3</h3>
+                                <h5 class="card-title mb-4">Información detallado de la solicitud</h5>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="mb-3">
+                                        
+                                            <div id="divContenedorResumenCliente">
+
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="mb-3">
+                                            <h5>Método de Pago</h5>
+
+                                            <div id="divContenedorResumenMetodoPagoAll">
+
+
+                                                <div class="row mb-3">
+                                                    <div class="col-6 col-sm-6  small ">
+
+                                                        <div class="row">
+
+                                                            <div class="col-6 col-sm-6 ">
+
+
+                                                                @Html.Raw("Tipo de Pago:")
+
+                                                            </div>
+                                                            <div class="col-6 col-sm-6 ">
+
+                                                                <input id="lblTipoPago" class="form-control  small" type="text" disabled value="" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-6 col-sm-6  small " id="divContentResumenMetodoPago">
+
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-6">
+
+
+                                                                @Html.Raw("Método de Pago: ")
+
+                                                            </div>
+                                                            <div class="col-6">
+
+                                                                <input class="form-control  small" id="lblMetodoPago" type="text" disabled />
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row mb-3" id="divContentResumenTrasnferenciaDetalle1">
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+                                                        <div class="row">
+
+                                                            <div class="col-6 col-sm-6 ">
+
+
+                                                                @Html.Raw("Banco Transferencia:")
+
+                                                            </div>
+                                                            <div class="col-6 col-sm-6 ">
+
+                                                                <input id="lblBancoTransferencia" class="form-control  small" type="text" disabled value="" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-6">
+
+
+                                                                @Html.Raw("Código de Transferencia: ")
+
+                                                            </div>
+                                                            <div class="col-6">
+
+                                                                <input class="form-control  small" id="lblCodigoTransferencia" type="text" disabled />
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row mb-3" id="divContentResumenTrasnferenciaDetalle2">
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+                                                        <div class="row">
+
+                                                            <div class="col-6 col-sm-6 ">
+
+
+                                                                @Html.Raw("Fecha de Transferencia:")
+
+                                                            </div>
+                                                            <div class="col-6 col-sm-6 ">
+
+                                                                <input id="lblFechaTransferencia" class="form-control  small" type="text" disabled value="" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-6">
+
+
+                                                                @Html.Raw("Importe de Transferencia: ")
+
+                                                            </div>
+                                                            <div class="col-6">
+
+                                                                <input class="form-control  small" id="lblImporteTransferencia" type="text" disabled />
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row mb-3" id="divContentResumenCreditoDetalle">
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+                                                        <div class="row">
+
+                                                            <div class="col-6 col-sm-6 ">
+
+
+                                                                @Html.Raw("Forma de Crédito:")
+
+                                                            </div>
+                                                            <div class="col-6 col-sm-6 ">
+
+                                                                <input id="lblCreditoDisponible" class="form-control  small" type="text" disabled value="" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-6 col-sm-6  small ">
+
+
+
+                                                        <div class="row">
+
+                                                            <div class="col-6">
+
+
+                                                                @Html.Raw("Acepto Términos y Condiciones: ")
+
+                                                            </div>
+                                                            <div class="col-6">
+
+                                                                <input class="form-control  small" id="lblAceptarFormulario" type="text" disabled />
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <br />
+                                <div id="divPagoTarjeta" style="display:none">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+
+                                                <center>
+
+                                                    <a class="btn btn-success" href="javascript:void()" id="btnPagoConTarjeta"> PAGO CON TARJETA </a>
+                                                </center>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-dark" href="javascript:RegresarMetodoPago()"> Regresar </a>
+                                    <a class="btn btn-primary" href="javascript:RegistrarFac()"> Registrar </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+
+
+                <div class="modal fade" id="dialogTerminoCondicionAceptacionCredito" tabindex="1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Términos y Condiciones</h5>
+       
+            </div>
+            <div class="modal-body">
+
+                <ul class="small">
+
+                    <li>
+                        El crédito es otorgado en días calendarios.
+                    </li>
+
+                    <li>
+                        <strong>EL CLIENTE</strong> acepta proporcionar toda la información necesaria para un correcto análisis de riesgo crediticio.
+                    </li>
+
+                    <li>
+                        El crédito podrá ser prorrogado, modificado o cancelado de manera unilateral sin previo aviso.
+                    </li>
+
+                    <li>
+                        En caso <strong>EL CLIENTE</strong> no cumpla con efectuar el pago dentro del plazo otorgado, quedará automáticamente constituido en mora y se devengarán los intereses moratorios a la tasa más alta permitida por ley.
+                    </li>
+
+                    <li>
+                        Independientemente del vencimiento de la vigencia del crédito, <strong>EL CLIENTE</strong> deberá pagar las sumas de los otorgados pendientes de pago, conforme al plazo pactado por la línea de crédito aprobada.
+                    </li>
+
+                    <li>
+                        Queda expresamente prohibido ceder las obligaciones contraídas; salvo que medie un acuerdo por escrito entre las partes en dicho sentido.
+                    </li>
+
+                    <li>
+                        Las partes acuerdan que lo que no se encuentra expresamente pactado, se rige supletoriamente por las normas del Código Civil y la normatividad aplicable en el Perú.
+                    </li>
+
+                    <li>
+                        Ante cualquier disputa o controversia, las partes renuncian al fuero de sus domicilios sometiéndose a los Tribunales y Jueces del Distrito Judicial de Lima.
+                    </li>
+
+
+                </ul>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input asp-for="@Model.AceptoFormulario" class="form-check-input" id="chkAceptarFormulario" type="checkbox" />
+                        <label asp-for="@Model.AceptoFormulario" class="small mb-1"></label>
+                        <span asp-validation-for="@Model.AceptoFormulario" id="spanValidarTipoDocumento" class="small text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="AceptarTerminoCondicionCredito()" type="button">Aceptar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+
+    
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solicitud Creada</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
+    <script>
+
+
+
+        let outputDetalleOK = $("#outputDetalleOK");
+        let outputDetalleAlerta = $("#outputDetalleAlerta");
+        let outputDetalleError = $("#outputDetalleError");
+        let outputMensaje = $("#outputMensaje");
+
+
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+            $(".cssTablaProvision").each(function (index) {
+
+                TriggerClienteProvisionTable($(this).prop("id"));
+
+            });
+
+
+            $.extend($.validator.messages, {
+
+
+
+                //Required: "This field is required.",
+
+                //Remote: "Please fix this field.",
+
+                //Email: "Please enter a valid E-mail address.",
+
+                //Url: "Please enter a valid URL.",
+
+                //date: "Please enter a valid date.",
+
+                //DateISO: "Please enter a valid date (ISO).",
+
+                //Number: "enable please enter a number ",
+
+                //    digits: " please enter a number only ",
+
+                //        Creditcard: " please enter a valid credit card number ",
+
+                //            EqualTo: " please enter the same value again . ",
+
+                //extension: " Please enter a value that contains a valid extension ",
+
+                maxlength: $.validator.format(" Favor ingresar máximo {0} caracteres"),
+
+                //Minlength: $.Validator.format("{0} please enter at least characters."
+                //),
+                //Range: $.Validator.Format("Please enter a value of up to {1} {0}."),
+
+                //rangelength: $.validator.format("{0 } Please enter a value of up to {1} characters from the character."),
+
+                step: $.validator.format(" Por favor ingresar valores como mínimo 0.01"),
+
+                //Max: $.Validator.Format(". Please enter the following values: 0} {"),
+
+                //Min: $.validator.format("{0} Please enter the above values.")
+
+
+            });
+
+
+            $('#txtImporteTransferencia').blur(function () {
+                var num = parseFloat($(this).val());
+                var cleanNum = num.toFixed(2);
+
+                $(this).val(cleanNum);
+                if (num / cleanNum < 1) {
+
+                  alert('Por favor solo ingrese 2 decimales, hemos truncado puntos adicionales');
+                }
+
+            });
+
+
+            $('#txtFechaTransferencia').blur(function () {
+
+                var regEx = /^\d{4}-\d{2}-\d{2}$/;
+
+                var dateString =$(this).val();
+
+                if (!dateString.match(regEx)) {
+                    
+                    $(this).val("");
+                    return false;
+                }
+
+
+
+                var d = new Date(dateString);
+
+                if (Number.isNaN(d.getTime())) {
+                    alert("No se permite formato inválido");
+                    $(this).val("");
+                    return false;
+                }
+
+
+
+                return d.toISOString().slice(0, 10) === dateString;
+
+            });
+        });
+
+
+        function AceptarTerminoCondicionCredito() {
+
+            if ($("#chkAceptarFormulario").is(":checked") == false) {
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Estimado cliente, favor de aceptar los términos y condiciones para continuar.");
+
+            } else {
+                $("#dialogTerminoCondicionAceptacionCredito").modal("hide");
+                ValidarMetodoPagoSolicFacturacion();
+            }
+        }
+
+        function TriggerClienteProvisionTable(idTabla) {
+
+            new simpleDatatables.DataTable("#" + idTabla, {
+                searchable: false,
+                paging: false,
+                bSort: false,
+                labels: {
+                    "noRows": "No hay información",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                },
+            });
+
+        }
+
+        function RegistrarFac() {
+
+            let valPagoTrasnferencia = $("#rbtnTransferencia").is(":checked");
+            let valTipoPago = $("#rbtnContado").is(":checked");
+
+            if (valTipoPago==true && valPagoTrasnferencia==false) {
+                  $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html("Debe realizar el pago por el servicio de pasarela de pago.");
+                    return false;
+            }
+
+            $("#formSolicitudFacturacion").submit();
+
+
+
+        }
+
+        function ValidarPasoCobroPendiente() {
+
+            let blSeleccionado = false;
+            $(".cssClienteProvision").each(function (index) {
+
+                if ($(this).is(':checked')) {
+                    blSeleccionado = true;
+                }
+
+            });
+
+
+            if (blSeleccionado == false) {
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar provisión por cliente.");
+            }
+
+        }
+
+        function IrMetodoPago() {
+
+            let blSeleccionado = false;
+            let intCantidadProvicionCliente = 0;
+            let valor = $("#ProvicionClienteCantidad").val()
+
+            $(".cssClienteProvision").each(function (index) {
+
+                if ($(this).is(':checked')) {
+                    blSeleccionado = true;
+                }
+
+                intCantidadProvicionCliente = intCantidadProvicionCliente + 1;
+            });
+
+            if (valor== "1") {
+                blSeleccionado = true;
+
+               let divContenedorProviosion_ = $('#divContenedorProviosion_0').clone();
+
+                $('#divContenedorResumenCliente').html(divContenedorProviosion_);
+
+                let hidenProvisionMontoTotal_ = $("#hidenProvisionMontoTotal_0").val();
+
+                $("#hidenMontoTotal").val(hidenProvisionMontoTotal_);
+
+            }
+
+
+            if (blSeleccionado == false) {
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar provisión por cliente.");
+
+
+            } else {
+
+                $("#wzCobrosFacturar-tab").removeClass("active");
+                $("#wzMetodoPago-tab").addClass("active");
+                $("#wzCobrosFacturar").removeClass("active show");
+                $("#wzMetodoPago").addClass("active show");
+
+
+                $("#rbtnContado").prop("checked", false);
+                $("#rbtnCredito").prop("checked", false);
+         
+
+                $("#txtImporteTransferencia").val("");
+                $("#txtFechaTransferencia").val("");
+                $("#txtCodigoOperacion").val("");
+                $("#cmbBancoTransferencia option[value='-1'").prop("selected", "selected");
+
+                $("#cmbCredito option[value='-1'").prop("selected", "selected");
+                $("#btnPagoTarjeta").prop("checked", false);
+                $("#rbtnTransferencia").prop("checked", false);
+
+                $("#divCredito").hide();
+                $("#divContado").hide();
+                $("#divPagoTransferencia").hide();
+           
+
+            }
+
+        }
+
+        function validarMetodoPago() {
+
+            var cmbCredito = $("#cmbCredito").val();
+            let valTipoPago = $("#rbtnContado").is(":checked");
+            let valCredito = $("#rbtnCredito").is(":checked");
+
+
+
+            if (valCredito == true) {
+
+                if (cmbCredito == "-1") {
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html("Debe seleccionar una forma de crédito.");
+                    return false;
+
+                } else if (cmbCredito > 0) {
+                    $("#chkAceptarFormulario").prop("checked", false);
+                    $("#dialogTerminoCondicionAceptacionCredito").modal("show");
+                    return false;
+                }
+            }
+            else if (valTipoPago == true) {
+
+                let txtImporteTransferencia = $("#txtImporteTransferencia").val().replace(/\s/g, "");
+                let txtFechaTransferencia = $("#txtFechaTransferencia").val().replace(/\s/g, "");
+
+                let valPagoTrasnferencia = $("#rbtnTransferencia").is(":checked");
+                let valPagoTarjeta = $("#btnPagoTarjeta").is(":checked");
+
+                if (valPagoTrasnferencia == false && valPagoTarjeta == false) {
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html("Se requiere seleccionar un método de pago.");
+
+                    return false;
+                }
+
+
+                if (valPagoTrasnferencia == true) {
+
+                    let validarCampos = true;
+                    let strMensajeCampos = "<ul>";
+
+
+
+                    if ($("#cmbBancoTransferencia").val() == "-1") {
+
+
+                        strMensajeCampos = strMensajeCampos + "<li>Se requiere seleccionar un banco de transferencia.</li>";
+
+                        validarCampos = false;
+                    }
+
+                    if ($("#txtCodigoOperacion").val() == "") {
+
+
+                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el código de operación.</li>";
+                        validarCampos = false;
+                    }
+
+                    if (txtImporteTransferencia == "" || parseFloat(txtImporteTransferencia) < 1) {
+
+
+                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el importe.</li>";
+                        validarCampos = false;
+                    }
+
+                    if (txtFechaTransferencia == "") {
+
+
+                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar la fecha de transferencia.</li>";
+                        validarCampos = false;
+                    } else {
+
+
+                        let dtFechaTop = $("#hidenFechaTope").val();
+
+                        if (Date.parse(txtFechaTransferencia) > Date.parse(dtFechaTop)) {
+                            strMensajeCampos = strMensajeCampos + " <li>La fecha de transferencia no puede ser mayor que la fecha actual.</li>";
+                            validarCampos = false;
+                        }
+
+                    }
+
+
+
+                    if (parseFloat(txtImporteTransferencia) != parseFloat($("#hidenMontoTotal").val())) {
+                        strMensajeCampos = strMensajeCampos + " <li>El importe ingresado debe ser igual que el monto total de la provisión.</li>";
+                        validarCampos = false;
+                    }
+
+                    if (validarCampos == false) {
+                        strMensajeCampos = strMensajeCampos + "</ul>";
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(strMensajeCampos);
+
+
+                        return validarCampos;
+                    }
+
+
+
+
+                } else {
+
+                    // $("#dialogAlerta").modal("show");
+                    //  $("#outputMensaje").html("Debe realizar el pago por el servicio de pasarale de pago.");
+                    // return false;
+                }
+
+
+            } else {
+
+
+                strMensajeCampos = "<ul><li>Seleccionar un tipo de pago.</li></ul>";
+
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html(strMensajeCampos);
+
+
+                return false;
+
+            }
+
+            return true;
+        }
+
+        function setearResumenMetodoPago() {
+
+            $("#lblTipoPago").val("");
+            $("#lblMetodoPago").val("");
+
+            var cmbCredito = $("#cmbCredito").val();
+            let valTipoPago = $("#rbtnContado").is(":checked");
+            let valCredito = $("#rbtnCredito").is(":checked");
+            let creditoText = $("#cmbCredito").children("option:selected").html();
+
+
+            if (valCredito== true) {
+                $("#lblTipoPago").val("Credito");
+                $("#divContentResumenMetodoPago").hide();
+                $("#divContentResumenTrasnferenciaDetalle1").hide();
+                $("#divContentResumenTrasnferenciaDetalle2").hide();
+                $("#divContentResumenCreditoDetalle").show();
+                $("#lblCreditoDisponible").val(creditoText);
+                $("#lblAceptarFormulario").val("SI");
+            }
+            else {
+
+                let txtImporteTransferencia = $("#txtImporteTransferencia").val().replace(/\s/g, "");
+                let txtFechaTransferencia = $("#txtFechaTransferencia").val().replace(/\s/g, "");
+                let valPagoTrasnferencia = $("#rbtnTransferencia").is(":checked");
+                let valBancoTransferencia = $("#cmbBancoTransferencia").children("option:selected").html();
+
+                let valPagoTarjeta = $("#btnPagoTarjeta").is(":checked");
+
+                $("#divContentResumenMetodoPago").show();
+                $("#divContentResumenCreditoDetalle").hide();
+                $("#lblTipoPago").val("Contado");
+
+                if (valPagoTrasnferencia == true) {
+
+                    $("#divContentResumenTrasnferenciaDetalle1").show();
+                    $("#divContentResumenTrasnferenciaDetalle2").show();
+
+                    $("#lblBancoTransferencia").val(valBancoTransferencia);
+                    $("#lblCodigoTransferencia").val($("#txtCodigoOperacion").val());
+
+                    var strDatos = txtFechaTransferencia.split("-");
+
+
+
+
+                    $("#lblFechaTransferencia").val(strDatos[2]+"/"+strDatos[1]+"/"+strDatos[0]);
+
+                    $("#lblImporteTransferencia").val(txtImporteTransferencia);
+                    $("#lblMetodoPago").val("Transferencia");
+
+                } else {
+
+                    $("#divContentResumenTrasnferenciaDetalle1").hide();
+                    $("#divContentResumenTrasnferenciaDetalle2").hide();
+
+                     $("#lblMetodoPago").val("Pago con Tarjeta");
+
+                }
+
+            }
+        }
+
+        function RegresarConcepto() {
+
+            $("#wzMetodoPago-tab").removeClass("active");
+            $("#wzCobrosFacturar-tab").addClass("active");
+
+            $("#wzMetodoPago").removeClass("active show");
+            $("#wzCobrosFacturar").addClass("active show");
+        }
+
+        function RegresarMetodoPago() {
+            $("#wzCobrosFacturar-tab").removeClass("active");
+            $("#wzResumen-tab").removeClass("active");
+            $("#wzMetodoPago-tab").addClass("active");
+            $("#wzCobrosFacturar").removeClass("active show");
+            $("#wzResumen").removeClass("active show");
+            $("#wzMetodoPago").addClass("active show");
+        }
+
+        function VerificarMetodoPago()
+        {
+            if (validarMetodoPago()) {
+                ValidarMetodoPagoSolicFacturacion();
+            }
+        }
+
+        function ValidarMetodoPagoSolicFacturacion() {
+
+                 const formData = new FormData(document.getElementById("formSolicitudFacturacion"));
+
+                try {
+
+                    $.ajax({
+                        url: '@Url.Action("ValidarMetodoPagoSolicFacturacion", "Facturacion",new {Area="GestionarEmbarques"})',
+                        data: formData,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $(".loader").fadeOut("slow");
+
+                            $('#alertError').show();
+                            outputDetalleError.html( errorThrown);
+                            
+
+                        },
+                        success: function (response) {
+
+                            $(".loader").fadeOut("slow");
+
+                            if (response.codigo == 0) {
+
+                                $("#wzCobrosFacturar-tab").removeClass("active");
+                                $("#wzMetodoPago-tab").removeClass("active show");
+                                $("#wzClienteTercero-tab").removeClass("active");
+                                $("#wzResumen-tab").addClass("active");
+
+                                $("#wzCobrosFacturar").removeClass("active show");
+                                $("#wzClienteTercero").removeClass("active show");
+                                $("#wzMetodoPago").removeClass("active show");
+                                $("#wzResumen").addClass("active show");
+
+                                setearResumenMetodoPago();
+
+                            }
+                            else if (response.codigo == -100)
+                            {
+                                $("#dialogError").modal("show");
+                                $("#outputMensajeError").html(response.mensaje);
+
+                            }
+                            else {
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensaje").html( response.mensaje);
+
+                            }
+                        },
+                        complete: function (data) {
+
+                            //$(".loader").fadeOut("slow");
+
+                        }
+                    });
+
+                } catch (error) {
+
+                    $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Ocurrio un error inesperado, por favor intente nuevamente.");
+                }
+        }
+
+
+
+
+        function AJAXSubmit(oFormElement) {
+
+            $("#alertWarning").hide();
+            $("#alertInfo").hide();
+            $("#alertInfo").hide();
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+
+               
+                    $.ajax({
+                        url: oFormElement.action,
+                        data: formData,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $('#alertError').show();
+                            outputDetalleError.html( errorThrown);
+                            $(".loader").fadeOut("slow");
+
+                        },
+                        success: function (response) {
+
+                            $(".loader").fadeOut("slow");
+                            if (response.codigo == 0) {
+
+
+                                $("#dialogOk").modal("show");
+                                $("#outputMensajeOk").html(response.mensaje);
+
+
+                               // irProcesoFinalizado();
+
+                            }
+                            else if (response.codigo > 0) {
+
+
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensaje").html( response.mensaje);
+
+
+                            }
+                            else {
+
+
+                                $("#dialogError").modal("show");
+                                $("#outputMensajeError").html(response.mensaje);
+
+
+
+                            }
+                        },
+                        complete: function (data) {
+                            $(".loader").fadeOut("slow");
+
+                        }
+                    });
+               
+
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html("Ocurrio un error inesperado, por favor intente nuevamente.");
+
+
+            }
+
+
+        }
+
+        function irProcesoFinalizado() {
+
+            $("#wzCobrosFacturar-tab").removeClass("active");
+            $("#wzResumen-tab").removeClass("active");
+            $("#wzMetodoPago-tab").removeClass("active");
+
+
+            $("#wzCobrosFacturar").removeClass("active show");
+            $("#wzResumen").removeClass("active show");
+            $("#wzMetodoPago").removeClass("active show");
+
+
+
+            $("#wzCobrosFacturar-tab").attr("disabled", "disabled");
+            $("#wzResumen-tab").attr("disabled", "disabled");
+            $("#wzMetodoPago-tab").attr("disabled", "disabled");
+
+
+
+        }
+
+        function SeleccionarCliente(sender) {
+
+
+            var objSeleccionado = $(sender);
+
+
+            $("#hidenClienteSeleccionado").val(objSeleccionado.data("clienteid"));
+            $("#hidenClienteNroDocumento").val(objSeleccionado.data("clientenumero"));
+            $("#hidenClienteRazonNombre").val(objSeleccionado.data("clienterazonnombre"));
+
+
+        }
+
+        function fileValidation(objThis) {
+            var fileInput = objThis;
+            var filePath = fileInput.value;
+            var allowedExtensions = /(.jpg|.jpeg)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Por favor subir archivos con extensiones .jpeg/.jpg');
+                fileInput.value = '';
+                return false;
+            } else {
+                $("#hidenArchivo").val("archivo cargado")
+            }
+
+        }
+
+        function verificarCredito(keybl, nrobl, control) {
+
+            var objCredito = $(control);
+            var objParametroVerificar = new Object();
+            objParametroVerificar.KeyBl = keybl;
+            objParametroVerificar.NroBl = nrobl;
+            objParametroVerificar.CodFormaCredito = objCredito.val();
+
+
+            $("#hidenCreditoDescripcion").val(objCredito.find('option:selected').text());
+
+            if (objParametroVerificar.CodFormaCredito > 0) {
+
+                $.ajax({
+                    url: '@Url.Action("VerificarSiAplicaCredito", "Facturacion",new { area="GestionarEmbarques"})',
+                    data: objParametroVerificar,
+                    type: 'POST',
+                    beforeSend: function () {
+
+                        $(".loader").fadeIn("slow");
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $("#cmbCredito option[value='-1'").prop("selected", "selected");
+
+                        $(".loader").fadeOut("slow");
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html("Ocurrio un error inesperado " + textStatus + " por favor intente nuevamente");
+                    },
+
+                    success: function (response) {
+
+                        $(".loader").fadeOut("slow");
+                        if (response.codigo == 0) {
+
+
+
+
+                        } else if (response.codigo > 0) {
+                            
+                            $("#dialogAlerta").modal("show");
+                            $("#outputMensaje").html(response.mensaje);
+                            $("#cmbCredito option[value='-1'").prop("selected", "selected");
+
+                            
+
+                        } else {
+                            $("#cmbCredito option[value='-1'").prop("selected", "selected");
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html(response.mensaje);
+                        }
+
+                    },
+                    complete: function (data) {
+                        $(".loader").fadeOut("slow");
+                    }
+
+                });
+
+            }
+
+        }
+
+        function CambiarMetodoPago(obj, data) {
+
+            $("#hidenMetodoPago").val(data);
+
+            if (data == "TR") {
+                $("#divPagoTransferencia").show();
+                $("#divPagoTarjeta").hide();
+
+                $("#txtImporteTransferencia").val("");
+                $("#txtFechaTransferencia").val("");
+                $("#txtCodigoOperacion").val("");
+                $("#cmbBancoTransferencia option[value='-1'").prop("selected", "selected");
+
+
+            } else {
+
+                $("#divPagoTransferencia").hide();
+                $("#divPagoTarjeta").show();
+
+            }
+
+        }
+
+        function CambiarTipoPago(obj, data) {
+
+            $("#hidenTipoPago").val(data);
+            $("#divPagoTransferencia").hide();
+            $("#divPagoTarjeta").hide();
+
+            $("#rbtnTransferencia").prop('checked', false);
+            $("#btnPagoTarjeta").prop('checked', false);
+
+            if (data == "CO") {
+                $("#divContado").show();
+                $("#divCredito").hide();
+
+            } else if (data == "CR") {
+
+                $("#divContado").hide();
+                $("#divCredito").show();
+                $("#cmbCredito option[value='-1'").prop("selected", "selected");
+            }
+
+
+        }
+
+        function OnChangeProvision(sender, posicion) {
+
+            let hidenProvisionRazonSocial_ = $("#hidenProvisionRazonSocial_" + posicion);
+            let hidenProvisionTipoDocumento_ = $("#hidenProvisionTipoDocumento_" + posicion);
+            let hidenProvisionNroDocumento_ = $("#hidenProvisionNroDocumento_" + posicion);
+            let hidenProvisionIdFacturacionTercero_ = $("#hidenProvisionIdFacturacionTercero_" + posicion);
+            let hidenProvisionMontoTotal_ = $("#hidenProvisionMontoTotal_" + posicion);
+
+
+
+            $("#txtNumeroDocumento").val(hidenProvisionNroDocumento_.val());
+            $("#txtRazonSocial").val(hidenProvisionRazonSocial_.val());
+            $("#ddlTipoDocumento").val(hidenProvisionTipoDocumento_.val()).change();
+
+            $("#hidenMontoTotal").val(hidenProvisionMontoTotal_.val());
+
+
+
+            let contenedorProvosion_ = "contenedorProvosion_" + posicion;
+
+            $(".cssContenedorProvision").css({
+                "border": "2px #afa5a5 solid"
+            });
+
+            $(".cssContenedorProvision").each(function (index) {
+                if ($(this).prop('id') == contenedorProvosion_) {
+                    $(this).css({
+                        "border": "2px #0061f2 solid"
+                    });
+                }
+            });
+
+            $("#wzMetodoPago-tab").removeAttr("disabled");
+
+            if (hidenProvisionIdFacturacionTercero_.val() == "0") {
+                $("#rbtnCredito").removeAttr("disabled");
+                $("#divContenedorCredito").show();
+                $("#rbtnCredito").show();
+
+
+
+
+            } else {
+                $("#rbtnCredito").attr("disabled", "disabled");
+                $("#rbtnCredito").hide();
+                $("#divContenedorCredito").hide();
+
+            }
+
+
+            var divContenedorProviosion_ = $('#divContenedorProviosion_' + posicion).clone();
+
+
+            $('#divContenedorResumenCliente').html(divContenedorProviosion_);
+
+
+
+
+
+        }
+
+        function ActualizarForm() {
+
+            window.location.href = "@Url.Action("Detalle", "Embarque", new { Area= "GestionarEmbarques", codigo = Model.KEYBLD })" ;
+
+
+        }
+
+
+
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>32863f40-21df-4d40-92a0-7db7b2dc3222</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\Service.Common\Service.Common.csproj" />
+    <ProjectReference Include="..\05.Utilitarios\Utilitario.Seguridad\Utilitario.Seguridad.csproj" />
+    <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />
+    <ProjectReference Include="..\TransMares.Core\TransMares.Core.csproj" />
+    <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\05.Utilitarios\Utilitario.Constante\Utilitario.Constante.csproj" />
+    <ProjectReference Include="..\..\05.Utilitarios\Utilitario.Seguridad\Utilitario.Seguridad.csproj" />
+    <ProjectReference Include="..\..\TransMares.Core\TransMares.Core.csproj" />
+  </ItemGroup>
+
+</Project>

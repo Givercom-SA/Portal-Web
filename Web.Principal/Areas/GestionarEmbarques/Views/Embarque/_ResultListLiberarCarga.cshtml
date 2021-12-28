@@ -1,0 +1,75 @@
+﻿
+@model Web.Principal.Areas.GestionarEmbarques.Models.LiberacionCargaModel
+
+
+<form id="frmLiberacionCarga" asp-action="AutorizarLiberacion" asp-area="GestionarEmbarques" asp-controller="Embarque">
+
+
+
+
+    @if (Model.listaDesglose.Count() > 0 && Model.listaDesglose.Where(x => x.FLAG_AUTORIZADO == 0).Count() > 0)
+    {
+        <input type="hidden" id="hidenTieneDatos" value="1" />
+
+
+
+        <table class="table" id="dtLiberacionCarga">
+            <thead>
+                <tr>
+                    <th>Seleccionar</th>
+                    <th style="display:none">KeyBld</th>
+                    <th>Numeración de Embarque</th>
+                    <th>Consignatario</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @for (var item = 0; item < Model.listaDesglose.Count; item++)
+                {
+                    <tr>
+                        <td>
+                            @if (Model.listaDesglose[item].FLAG_AUTORIZADO == 0)
+                            {
+
+                                <input type="checkbox" asp-for="@Model.listaDesglose[item].Check" class="cssCheckLiberacionCarga" />
+                                <input type="hidden" asp-for="@Model.listaDesglose[item].KEYBLD" />
+                                <input type="hidden" asp-for="@Model.listaDesglose[item].NROBL" />
+                                <input type="hidden" asp-for="@Model.listaDesglose[item].CONSIGNATARIO" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="groupCheck" checked disabled />
+                            }
+                        </td>
+                        <td style="display:none">@Model.listaDesglose[item].KEYBLD</td>
+                        <td>@Model.listaDesglose[item].NROBL</td>
+                        <td>@Model.listaDesglose[item].CONSIGNATARIO</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+
+
+    }
+    else
+    {
+        <input type="hidden" id="hidenTieneDatos" value="0" />
+        <div>
+            
+            El embarque ya fue autorizado.
+        </div>
+        
+
+    }
+
+
+</form>
+
+
+<script src="~/js/portalweb/instruccion.facturacion.js" ></script>

@@ -1,0 +1,74 @@
+﻿@page
+@model SolicitudAccesoRegistradoModel
+@{
+    ViewData["Title"] = "Plataforma Digital | Solicitud de acceso";
+    Layout = null;
+}
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title> @ViewData["Title"] </title>
+
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
+    <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/js/feather.min.js" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+
+</head>
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-xl px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <!-- Basic forgot password form-->
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header justify-content-center"><h3 class="fw-light my-4">Felicidades! tu solicitud se genero con éxito</h3></div>
+                                <div class="card-body">
+                                    <div class="mb-3 text-black"> Muchas gracias por registrarse, le estaremos informando sobre su acceso a este correo <u> <span style="color:black"> @Model.Input.Correo</span></u>.</div>
+                                    <!-- Forgot password form-->
+                                    <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                        <!-- Form Group (email address)-->
+                                        <!-- Form Group (submit options)-->
+                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+
+                                            <input asp-for="Input.Correo" type="hidden" />
+
+
+                                            <button type="submit" class="btn btn-primary">SALIR</button>
+
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="layoutAuthentication_footer">
+            <partial name="_Footer" />
+        </div>
+
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>

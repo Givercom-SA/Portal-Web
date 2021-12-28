@@ -1,0 +1,35 @@
+﻿@model ViewModel.Datos.Perfil.PerfilVM
+@{
+    this.ViewData.Add("ModoLectura", true);
+}
+<div class="form-group row">
+    <label asp-for="@Model.Nombre" class="col-sm-3 col-form-label"></label>
+    <div class="col-sm-9">
+        <input readonly asp-for="@Model.Nombre" class="form-control" type="text" />
+    </div>
+</div>
+<div class="form-group row">
+    <label asp-for="@Model.Activo" class="col-sm-3 col-form-label"></label>
+    <div class="col-sm-7">
+        @if (@Model.Activo)
+        {
+            <input readonly class="form-control" type="text" value="Activo" />
+        }
+        else
+        {
+            <input readonly class="form-control" type="text" value="Inactivo" />
+        }
+
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <label class="col-sm-3 col-form-label">Permisos</label>
+    <div class="col-sm-9">
+        <fieldset class="border p-2 h-100">
+            <legend class="w-auto small">Accesos</legend>
+            <div style="height:180px;" class="overflow-auto" id="MenuCheckBox">
+                @await Html.PartialAsync("_MenusPorPerfil", Model.Menus,this.ViewData)
+            </div>
+        </fieldset>
+    </div>
+</div>

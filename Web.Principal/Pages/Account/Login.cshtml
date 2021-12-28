@@ -1,0 +1,226 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Plataforma Digital | Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title> @ViewData["Title"] </title>
+
+    <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
+    <link href="@Url.Content("~/css/styles.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/style_main.css")" rel="stylesheet" />
+    <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/js/feather.min.js" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+</head>
+<body style="background-image: url('/img/backgrounds/banner-slide-1_1.webp'); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; " class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-xl px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <!-- Basic login form-->
+                            <div class="card card-header-actions mx-auto shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header justify-content-center">
+                                    <img src="@Url.Content("~/img/logo_transmaresGroup_estrella.png")" height="70px!important" />
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="fw-light my-4" align="center">Iniciar Sesión</h3>
+
+                                    <form asp-route-returnUrl="@Model.ReturnUrl" method="post" id="frmLogin" >
+                                        <div class="mb-3">
+                                            <label asp-for="Input.Empresa" class="small mb-1"></label>
+                                            <select asp-for="Input.Empresa" id="ddlEmpresa"
+                                                    asp-items="Model.Input.ListarEmpresas"
+                                                    class="form-select small">
+                                                <option value="0">SELECCIONAR</option>
+                                            </select>
+                                            <span asp-validation-for="Input.Empresa" class="small text-danger"></span>
+                                            <input type="hidden" asp-for="Input.Empresa" />
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label asp-for="Input.Correo" class="small mb-1"></label>
+                                            <input asp-for="Input.Correo" class="form-control" id="inputEmailAddress" type="email" placeholder="Ingrese su correo " />
+                                            <span asp-validation-for="Input.Correo" class="small text-danger"></span>
+                                        </div>
+
+                                        <div id="divRuc" class="mb-3" style="display:block">
+                                            <label asp-for="Input.Ruc" class="small mb-1"></label>
+                                            <input asp-for="Input.Ruc" class="form-control small" id="txtRuc" type="text" maxlength="11" placeholder="Ingrese su ruc" />
+                                            <span asp-validation-for="Input.Ruc" class="small text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label asp-for="Input.Contrasenia" class="small mb-1"></label>
+                                            <input asp-for="Input.Contrasenia" class="form-control small" id="inputPassword" maxlength="50" type="password" placeholder="Ingrese su contraseña" />
+                                            <span asp-validation-for="Input.Contrasenia" class="small text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="small mb-1" for="NombreUsuario">Digite el texto de la imagen (*)</label>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <img id="CaptchaImg" src="@Model.ImgCaptcha" style="height: 35px; width:100px; padding: 2px 0 4px 0px;"> &nbsp;
+                                                <input asp-for="@Model.Input.CodigoCaptcha" type="text" class="form-control mb-2 alfanumeric" id="txtCodigoCapcha" autocomplete="off" maxlength="4"
+                                                       onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                <input asp-for="@Model.Input.CodigoCaptchaValidate" type="hidden" value="@Model.ImgCode">
+                                            </div>
+                                            <span asp-validation-for="@Model.Input.CodigoCaptcha" class="small text-danger"></span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                            <a class="small" asp-page="RecuperarClave">¿Olvido su contraseña?</a>
+                                            <button type="button" onclick="previoSubmit()" class="btn btn-primary">Ingresar</button>
+                                        </div>
+                                    </form>
+                                    <label id="Mensaje" class="text-danger text-center small"> <br /> @Html.DisplayFor(m => m.MensajeError)</label>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <div class="small"><a asp-page="SolicitarAcceso">Si no tiene cuenta, registrese!</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="layoutAuthentication_footer">
+            <partial name="_Footer" />
+        </div>
+
+    </div>
+
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/scripts.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            validar();
+
+            $("#txtCodigoCapcha").val("");
+
+            $('#inputEmailAddress').blur(function () {
+
+                validar();
+            });
+
+
+        });
+
+
+        function validar() {
+
+            var correo = $('#inputEmailAddress').val();
+            var dominio = correo.split("@@");
+
+            if (dominio.length == 2) {
+                if (dominio[1] != "tpsac.com.pe") {
+
+
+                    $('#divRuc').show();
+
+          
+                    $("#txtRuc").focus();
+
+                   
+
+                } else {
+                    $("#inputPassword").focus();
+                    $("#txtRuc").val("");
+                
+                   
+                    $('#divRuc').hide();
+                }
+
+            } else {
+                $('#divRuc').hide();
+                $("#txtRuc").val("");
+           
+                $("#inputPassword").focus();
+            }
+
+        }
+
+
+
+        function previoSubmit() {
+
+      
+            try {
+
+            
+                if (validarCampos() == false) {
+
+                    return false;
+
+                } else {
+
+                    $("#frmLogin").submit();
+                }
+
+
+            } catch (error) {
+
+
+                Alert("Ocurrio un error interno, volver a intentar por favor.");
+
+
+            }
+
+
+        }
+
+        function validarCampos() {
+
+            var correo = $('#inputEmailAddress').val();
+            var dominio = correo.split("@@");
+
+            if (dominio.length == 2) {
+                if (dominio[1] != "tpsac.com.pe") {
+
+
+                    if ($("#txtRuc").val().trim() == "") {
+                        
+                        $("#txtRuc").focus();
+                        return false;
+                    }
+
+                    if ($("#txtRuc").val().trim().length < 11) {
+                        $("#txtRuc").focus();
+                        
+                        return false;
+                    }
+
+
+                    return true;
+
+                } else {
+                    return true;
+                }
+
+            } else {
+                return true;
+            }
+
+        }
+
+
+    </script>
+</body>
+</html>

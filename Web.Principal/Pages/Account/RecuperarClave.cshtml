@@ -1,0 +1,313 @@
+﻿@page
+@model RecuperarClaveModel
+@{
+    ViewData["Title"] = "Plataforma Digital | Recuperar Clave";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title> @ViewData["Title"] </title>
+
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
+    <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/js/feather.min.js" crossorigin="anonymous"></script>
+
+</head>
+<body style="background-image: url('/img/backgrounds/banner-slide-1_1.webp'); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; " class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container-xl px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <!-- Basic login form-->
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header justify-content-center"><h3 class="fw-light my-4">Recuperación de contraseña</h3></div>
+                                <div id="partial" class="card-body">
+                                    @if (Model.EsCodigoValido)
+                                    {
+
+                                        <div class="small mb-3 text-muted">Su código de verificación ha sido validado correctamente, ahora puede cambiar su contraseña.</div>
+                                        <!-- Forgot password form-->
+                                        <form id="frmCambiarClave">
+                                            <input asp-for="InputCodigo.Correo" type="hidden" id="Correo" />
+                                            <!-- Form Group (email address)-->
+                                            <div class="mb-3">
+                                                <label asp-for="InputClave.Contrasenia" class="small mb-1"></label>
+                                                <input asp-for="InputClave.Contrasenia" id="Clave" class="form-control" type="password" placeholder="Ingrese contraseña" />
+                                                <span asp-validation-for="InputClave.Contrasenia" class="text-danger small"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label asp-for="InputClave.ConfirmarContrasenia" class="small mb-1"></label>
+                                                <input asp-for="InputClave.ConfirmarContrasenia" class="form-control" type="password" placeholder="Repetir contraseña" />
+                                                <span asp-validation-for="InputClave.ConfirmarContrasenia" class="text-danger small"></span>
+                                            </div>
+                                            <div id="CambiarClaveResult"></div>
+                                            <!-- Form Group (submit options)-->
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                <a class="small" asp-page="Login">Volver a iniciar sesión</a>
+                                                <button id="btnCambiarClave" class="btn btn-primary" type="button">Cambiar Contraseña</button>
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <div class="small mb-3 text-muted">
+                                            Ingrese su dirección de correo electrónico y le enviaremos un código de verificación para validar su cuenta.
+                                        </div>
+                                        <!-- Forgot password form-->
+                                        <form id="frmVerificar">
+                                            <!-- Form Group (email address)-->
+                                            <div class="mb-3">
+                                                <label asp-for="InputCorreo.Correo" class="small mb-1"></label>
+                                                <input asp-for="InputCorreo.Correo" id="Correo" class="form-control" type="email" placeholder="Ingrese correo" />
+                                                <span asp-validation-for="InputCorreo.Correo" class="text-danger small"></span>
+                                            </div>
+                                            <div id="VerificarMensaje"></div>
+                                            <!-- Form Group (submit options)-->
+                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                                <a class="small" asp-page="Login">Volver a iniciar sesión</a>
+                                                <button id="btnVerificar" class="btn btn-primary" type="button">Verificar Correo</button>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                                <div class="card-footer text-center">
+                                    <div class="small"><a asp-page="SolicitarAcceso">Si no tiene cuenta, registrese!</a></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="layoutAuthentication_footer">
+            <partial name="_Footer" />
+        </div>
+
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="modal_verificacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="frmValidar" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Validar código de verificación</h5>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="result"></div>
+                        <div class="mb-3">
+                            <input asp-for="InputCodigo.Correo" type="hidden" id="CorreoVerificado" value="" />
+                            <label asp-for="InputCodigo.Codigo" class="small mb-1"></label>
+                            <input asp-for="InputCodigo.Codigo" id="Codigo" class="form-control text-center" type="text" placeholder="Ingrese Código" />
+                            <span asp-validation-for="InputCodigo.Codigo" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <a id="btnReenviar" class="small" href="#">Reenviar código</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnValidar" class="btn btn-secondary" type="button">Validar</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="modal_mensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cambio exitoso</h5>
+                </div>
+                <div class="modal-body" id="mensaje">
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCerrarMensaje" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+    <script src="@Url.Content("~/js/site.js")"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script src="~/js/scripts.js"></script>
+    <script type="text/javascript">
+        $("#btnValidar").click(function () {
+            var text = $("#btnValidar").html();
+            var isValid = $('#frmValidar').valid();
+            if (isValid) {
+                $("#btnValidar").html('Cargando...');
+                var formData = new FormData();
+                formData.append("Correo", $('#Correo').val());
+                formData.append("Codigo", $('#Codigo').val());
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ValidarCodigoVerificacionCorreo", "Autenticacion")",
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
+                .done(function (result) {
+                    $("#btnValidar").html(text);
+                    if (result != null) {
+                        if (result.codigo == 0) {
+                            $('#frmValidar').submit();
+                        }
+                        else {
+                            ShowAlertMensage('result', 'warning', '', result.mensaje,0,null);
+                        }
+                    } else {
+
+                    }
+                })
+                .fail(function (xhr, status, error) {
+
+                })
+                .always(function () {
+
+                });
+            }
+        });
+        $("#btnCambiarClave").click(function () {
+            $("#CambiarClaveResult").html("");
+            var text = $("#btnCambiarClave").html();
+            var isValid = $('#frmCambiarClave').valid();
+            if (isValid) {
+                $("#btnCambiarClave").html('Cargando...');
+                var formData = new FormData();
+                formData.append("Correo", $('#Correo').val());
+                formData.append("Clave", $('#Clave').val());
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CambiarClave", "Autenticacion")",
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
+                .done(function (result) {
+                    $("#btnCambiarClave").html(text);
+                    if (result != null) {
+                        if (result.codigo == 0) {
+                            $('#mensaje').html(result.mensaje);
+                            $('#modal_mensaje').modal('show');
+                        }
+                        else {
+                            ShowAlertMensage('CambiarClaveResult', 'warning', '', result.mensaje, 0, null);
+                        }
+                    } else {
+                        ShowAlertMensage('CambiarClaveResult', 'warning', '', "Error, no se puedo procesar la solicitud.",0,null);
+                    }
+                })
+                .fail(function (xhr, status, error) {
+
+                })
+                .always(function () {
+
+                });
+            }
+        });
+
+        $("#btnCerrarMensaje").click(function () {
+            $('#modal_mensaje').modal('hide');
+            window.location = '/';
+        });
+
+        $("#btnReenviar").click(function () {
+            $("#result").html("");
+            var text = $("#btnReenviar").html();
+            var isValid = $('#frmValidar').valid();
+            if (isValid) {
+                $("#btnReenviar").html("Cargando...");
+                var formData = new FormData();
+                formData.append("Correo", $('#CorreoVerificado').val());
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GenerarCodigoVerificacionCorreo", "Autenticacion")",
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
+                .done(function (result) {
+                    $("#btnReenviar").html(text);
+                    if (result != null) {
+                        if (result.codigo == 0) {
+                            ShowAlertMensage('result', 'success', '', result.mensaje,0,null);
+                        }
+                        else {
+                            ShowAlertMensage('result', 'warning', '', result.mensaje,0,null);
+                        }
+                    } else {
+
+                    }
+                })
+                .fail(function (xhr, status, error) {
+
+                })
+                .always(function () {
+
+                });
+            }
+
+        });
+
+
+        $("#btnVerificar").click(function () {
+            $("#VerificarMensaje").html("");
+            var text = $("#btnVerificar").html();
+            $('#CorreoVerificado').val($('#Correo').val());
+            var isValid = $('#frmVerificar').valid();
+            if (isValid) {
+                $("#btnVerificar").html("Cargando...");
+                var formData = new FormData();
+                formData.append("Correo", $('#Correo').val());
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GenerarCodigoVerificacionCorreo", "Autenticacion")",
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                })
+                .done(function (result) {
+                    $("#btnVerificar").html(text);
+                    if (result != null) {
+                        if (result.codigo == 0) {
+                            ShowAlertMensage('result', 'success', '', result.mensaje,0,null);
+                            $('#modal_verificacion').modal('show');
+                        }
+                        else {
+                            ShowAlertMensage('VerificarMensaje', 'warning', '', result.mensaje,0,null);
+                        }
+                    } else {
+
+                    }
+                })
+                .fail(function (xhr, status, error) {
+
+                })
+                .always(function () {
+
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

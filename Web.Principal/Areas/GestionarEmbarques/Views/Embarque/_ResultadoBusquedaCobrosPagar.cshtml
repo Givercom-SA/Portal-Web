@@ -1,0 +1,93 @@
+﻿@model ViewModel.Datos.Embarque.CobroPendienteFacturar.ListCobrosPendienteEmbarqueVM
+
+
+<input   value="@ViewBag.CantidadBlsHijos" id="hidenCantidadBlHijosNiestos"  hidden />
+
+
+
+@if (Model.existeDesglosePendiente > 0)
+{
+<table id="dtAsignarCobrosPagar" class="table">
+    <thead>
+        <tr>
+            <th>Nro. de Embarque</th>
+            <th>Concepto</th>
+            <th>Moneda</th>
+            <th>Importe</th>
+            <th>IGV</th>
+            <th>Total</th>
+            <th>Cliente que Asume el Pago</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.CobrosPendientesEmbarque != null && Model.CobrosPendientesEmbarque.Count > 0)
+        {
+            for (var item = 0; item < Model.CobrosPendientesEmbarque.Count; item++)
+            {
+        <tr>
+            <td>
+                @Model.CobrosPendientesEmbarque[item].NroBl
+
+
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Check" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].RubroCodigo" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Descripcion" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Moneda" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Importe" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Igv" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Total" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].FlagAsignacion" />
+
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].BlPagar" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].keyBl" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].NroBl" />
+                <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ID" />
+
+
+
+            </td>
+
+            <td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion</td>
+            <td>@Model.CobrosPendientesEmbarque[item].Moneda</td>
+            <td>@Model.CobrosPendientesEmbarque[item].Importe</td>
+            <td>@Model.CobrosPendientesEmbarque[item].Igv</td>
+            <td>@Model.CobrosPendientesEmbarque[item].Total</td>
+
+            <td>
+                @if (Model.CobrosPendientesEmbarque[item].FlagAsignacion.Equals("0"))
+                {
+
+                    <select asp-for="@Model.CobrosPendientesEmbarque[item].IdBlPagar"
+                            asp-items="ViewBag.ListaBlsHijos"
+                            class="form-select" disabled>
+                    </select>
+                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].IdBlPagar" />
+                }
+                else
+                {
+                    <select asp-for="@Model.CobrosPendientesEmbarque[item].IdBlPagar"
+                            asp-items="ViewBag.ListaBlsHijos"
+                            class="form-select">
+                    </select>
+                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].IdBlPagar" />
+
+
+
+                }
+            </td>
+            </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+}
+else { 
+
+
+    <p> No hay registros de cobros a pagar.  </p>
+
+}

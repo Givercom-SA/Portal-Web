@@ -1,0 +1,20 @@
+﻿
+@model Web.Principal.Model.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+    Layout =null;
+}
+
+
+@if (Model.ShowRequestId)
+{
+    <h2 class="text-danger">@Model.ErrorMessage</h2>
+
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+
+
+

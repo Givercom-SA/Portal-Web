@@ -1,0 +1,423 @@
+﻿@model ViewModel.Datos.Embarque.GestionarMemo.SolicitudMemoResultVM
+@{
+    ViewBag.Title = "Detalle Solicitud";
+
+}
+
+@Html.Hidden("hddCodigoSolicitud", Model.Codigo)
+@Html.Hidden("hddIdSolicitud", Model.IdSolicitud)
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Detalle de Solicitud Memo
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá visualizar el detalle de la solicitud del memo.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <!-- Custom page header alternative example-->
+
+
+    <div class="card card-header-actions mb-2">
+        <div class="card-header">
+            Solicitud: @Model.Codigo
+
+            <button class="btn btn-sm btn-primary" type="button" onclick="fnRegresarLista()">Volver</button>
+
+        </div>
+        <div class="card-body">
+
+            <div class="sbp-preview-content">
+                <div class="row mb-3">
+                    <div class="col-6 col-sm-6  small ">
+
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Estado: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6">
+                                @Html.Raw("Fecha de Registro: ")
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control  small" type="text" disabled value="@Model.FechaRegistro" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div style="position: absolute; bottom: 1rem; right: 1rem;">
+                    <!-- Toast -->
+                    <div class="toast" id="toastBasic" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                        <div class="toast-header">
+                            <i data-feather="bell"></i>
+                            <strong class="mr-auto">Estado de Documentos</strong>
+                            <button class="ml-2 mb-1 btn-close" type="button" data-bs-dismiss="toast" aria-label="Close">                                                                </button>
+                        </div>
+                        <div class="toast-body">Debe seleccionar el motivo de rechazo !!.</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row mb-2">
+        <div class="col-6">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">
+                    Documentos Adjuntados
+                    @if (Model.EstadoCodigo.Equals("SP"))
+                    {
+                        <button class="btn btn-sm btn-primary" type="button" onclick="guardarEstadoDocumento()"> Guardar </button>
+                    }
+                </div>
+                <div class="card-body px-0">
+                    <div class="table-responsive table-billing-history">
+                        @if (Model.ListaDocumentos != null && Model.ListaDocumentos.Count() > 0)
+                        {
+                            int i = 0;
+                            @foreach (var item in Model.ListaDocumentos.Where(x => x.Padre == 0))
+                            {
+                                bool disabled = (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR") ? true : false;
+                                string icon = (item.Codigo.Equals("DM01")) ? "bi-file-image" : "bi-file-pdf";
+                                @Html.Hidden("hddCodDoc_" + i, item.Codigo)
+                                <div class="d-flex align-items-center justify-content-between px-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="@icon" style="font-size: 2rem; color: cornflowerblue;"></i>
+                                        <div class="ms-4">
+                                            <div>
+                                                @if (item.Codigo.Equals("DM01"))
+                                                {
+                                                    <span class="font-weight-bold"> @item.Nombre :</span>
+                                                    <br />
+                                                    foreach (var foto in Model.ListaDocumentos.Where(x => x.Padre > 0 && x.Codigo.Equals("DM01")))
+                                                    {
+                                                        <a href="@Url.Content("~/tmpdwac/memo/" + foto.UrlDocumento)" target="_blank">
+                                                            <span class="text-primary">@foto.NombreDocumento</span>
+                                                        </a>
+                                                        <br />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Content("~/tmpdwac/memo/" + item.UrlDocumento)" target="_blank"> @item.Nombre </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ms-4 small">
+                                        <select asp-for="@item.Estado" class="form-select-sm classEstadoDoc" disabled="@disabled"
+                                                id="@("cmbEstado" + item.Codigo)"
+                                                onchange="visualizarMotRechazo(this, '@(item.Codigo)')">
+                                            <option value="SP">Pendiente</option>
+                                            <option value="SA">Aprobar</option>
+                                            <option value="SR">Rechazar</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between px-4">
+                                    <div id=@("divMotRechazo"+item.Codigo) style="display:none;">
+                                        Seleccione Motivo Rechazo:
+                                        <select class="form-select-sm" id="@("cmbRechazo"+item.Codigo)" disabled="@disabled"
+                                                asp-for="@item.CodMotivoRechazo"
+                                                asp-items="@ViewBag.ListarMotivosRechazos">
+                                            <option value="0">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr />
+                                i++;
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Historial Eventos</div>
+                <div class="card-body px-0">
+                    <div class="table-responsive table-billing-history">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-gray-200" scope="col">Usuario</th>
+                                    <th class="border-gray-200" scope="col">Descripcion</th>
+                                    <th class="border-gray-200" scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ListaEventos)
+                                {
+                                    <tr>
+                                        <td>@item.NombreUsuario</td>
+                                        <td>@item.Descripcion</td>
+                                        <td>@item.FechaRegistro</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="modal fade" data-bs-backdrop="static" id="modalResultRegistro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+            </div>
+            <div class="modal-body" id="mensaje">  </div>
+            <div class="modal-footer">
+                <button id="btnCerrar" class="btn btn-secondary" type="button" onclick="cerrarActualizar()">Ir a la bandeja</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+        $(document).ready(function () {
+
+            var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
+
+            $.each(listaEstadoSelects, function (index, obj) {
+                var codDocumento = $("#hddCodDoc_" + index).val();
+
+                if (obj.value == "SR") $("#divMotRechazo" + codDocumento).show();
+                else $("#divMotRechazo" + codDocumento).hide();
+            });
+
+        });
+
+        function visualizarMotRechazo(obj, valor) {
+
+            if (obj.value == "SR") $("#divMotRechazo" + valor).show();
+            else $("#divMotRechazo" + valor).hide();
+        }
+
+        function guardarEstadoDocumento() {
+
+            var codSolicitud = $("#hddCodigoSolicitud").val();
+            var IdSolicitud = $("#hddIdSolicitud").val();
+            
+            var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
+
+            var procesa = true;
+
+            var listDocumentos = new Object();
+            listDocumentos.CodigoSolicitud = codSolicitud;
+            listDocumentos.IdSolicitud = IdSolicitud;
+            listDocumentos.Documentos = [];
+
+
+
+            $.each(listaEstadoSelects, function (index, value) {
+
+                let codDocumento = $("#hddCodDoc_" + index).val();
+                let codEstadRechazo = $("#cmbRechazo" + codDocumento).val();
+                let codEstado = $("#cmbEstado" + codDocumento).val();
+
+                let objDocumneto = new Object();
+                objDocumneto.CodigoDocumento = codDocumento;
+                objDocumneto.CodigoEstado = codEstado;
+                objDocumneto.CodigoEstadoRechazo = codEstadRechazo;
+
+                if (codEstadRechazo == "0" && codEstado == "SR") {
+                    procesa = false;
+                }
+                else
+                {
+                    listDocumentos.Documentos.push(objDocumneto);
+                }
+
+            });
+
+            if (procesa) {
+                actualizarEstadoDocumento(listDocumentos,codSolicitud);
+            }
+            else {
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar un motivo de rechazo.");
+            }
+
+        }
+
+        function actualizarEstadoDocumento(listDocumentos, codSolicitud) {
+
+
+
+            $.ajax({
+                type: "POST",
+                url:'@Url.Action("ActualizarDocumentoPorSolicitud", "Memo", new { Area= "GestionarEmbarques" })',
+                data: listDocumentos,
+                beforeSend: function (xhr) {
+
+                    $(".loader").fadeIn("slow");
+                }
+
+            }).done(function (data) {
+
+
+                if (data.codigo == 0) {
+
+                    procesarSolicitud(codSolicitud);
+
+                } else if (data.codigo > 0) {
+                    $(".loader").fadeOut("slow");
+
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html(data.mensaje);
+
+                } else {
+                    $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html(data.mensaje);
+                }
+
+                /*
+                modalResultRegistro
+                mensaje
+
+                dialogAlerta
+                outputMensaje
+
+                dialogError
+                outputMensajeError
+                */
+
+            }).fail(function () {
+
+                $(".loader").fadeOut("slow");
+
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html("Ocurrio un error inesperado, por favor volver a intentar más tarde.");
+
+
+            });
+        }
+
+        function procesarSolicitud(codSolicitud) {
+
+            $.ajax({
+
+                url:'@Url.Action("ProcesarSolicitud", "Memo", new { Area= "GestionarEmbarques" })',
+                data: { codSolicitud: codSolicitud },
+                beforeSend: function (xhr) {
+                    $(".loader").fadeIn("slow");
+                }
+
+            }).done(function (data) {
+
+                $(".loader").fadeOut("slow");
+
+
+                if (data.codigo == 0) {
+
+
+                window.location.href = '@Url.Action("ListarSolicitudes", "Memo", new {area="GestionarEmbarques"})';
+
+                } else if (data.codigo > 0) {
+
+
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html(data.mensaje);
+
+                } else {
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html(data.mensaje);
+                }
+
+
+            }).fail(function () {
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html("Ocurrio un error inesperado, por favor volver a intentar más tarde.");
+                $(".loader").fadeOut("slow");
+
+            });
+        }
+
+
+        function fnRegresarLista() {
+
+             window.location.href = '@Url.Action("ListarSolicitudes", "Memo", new {area="GestionarEmbarques"})';
+
+        }
+
+    </script>
+
+}

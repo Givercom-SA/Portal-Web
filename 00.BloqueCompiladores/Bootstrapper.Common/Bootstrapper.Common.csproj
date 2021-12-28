@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.3" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic.Common\BusinessLogic.Common.csproj" />
+    <ProjectReference Include="..\CommandHandlers.Common\CommandHandlers.Common.csproj" />
+    <ProjectReference Include="..\Data.Common\Data.Common.csproj" />
+    <ProjectReference Include="..\Email.Common\Email.Common.csproj" />
+    <ProjectReference Include="..\EventBus.Common\EventBus.Common.csproj" />
+    <ProjectReference Include="..\EventBus.EasyNetQ\EventBus.EasyNetQ.csproj" />
+    <ProjectReference Include="..\QueryHandlers.Common\QueryHandlers.Common.csproj" />
+    <ProjectReference Include="..\Security.Common\Security.Common.csproj" />
+    <ProjectReference Include="..\Service.Common\Service.Common.csproj" />
+  </ItemGroup>
+
+</Project>

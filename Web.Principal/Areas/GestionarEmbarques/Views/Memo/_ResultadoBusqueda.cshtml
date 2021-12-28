@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ViewModel.Datos.Embarque.GestionarMemo.SolicitudMemoResultVM>
+
+<table id="datatable" class="table">
+    <thead>
+        <tr>
+            <th>Nro. de Solicitud</th>
+            <th>Nro. Embarque</th>
+            <th>Consignatario</th>
+            <th>Solicitante</th>
+            <th>Fecha de Registro</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+        <tr>
+            <td><a href='@Url.Action("VerSolicitud", "Memo", new { nroSolicitud = item.Codigo })'> #@item.Codigo </a></td>
+
+            <td>@item.NroEmbarque</td>
+            <td>@item.Consignatario</td>
+            <td>@item.Solicitante</td>
+
+            <td>@item.FechaRegistro.ToShortDateString()</td>
+
+            @if (item.EstadoCodigo.Trim().Equals("SP"))
+            {
+                <td><span class="badge bg-light text-dark">Pendiente</span></td>
+            }
+            else if (item.EstadoCodigo.Trim().Equals("SA"))
+            {
+                <td><span class="badge bg-light text-success">Aprobado</span></td>
+            }
+            else if (item.EstadoCodigo.Trim().Equals("SR"))
+            {
+                <td><span class="badge bg-light text-danger">Rechazado</span></td>
+            }
+
+        </tr>
+            }
+        }
+        else
+            Html.Raw("No existen registros");
+
+    </tbody>
+</table>

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ViewModel.Datos.Perfil.PerfilVM>
+
+<table id="datatable" class="table">
+    <thead>
+        <tr>
+            <th width="50px" class="border-gray-200" scope="col">Id</th>
+            <th class="border-gray-200" scope="col">Nombre del perfil</th>
+            <th class="border-gray-200" scope="col">Estado</th>
+            <th width="120px" class="border-gray-200" scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.IdPerfil</td>
+            <td>@item.Nombre</td>
+            <td>
+                @if (item.Activo)
+                    {
+                <span class="badge bg-light text-success">Activo</span>
+                    }
+                    else
+                    {
+                <span class="badge bg-light text-danger">No activo</span>
+                    }
+            </td>
+            <td>
+                <a href='@Url.Action("EditarPerfil","Perfil", new { area = "GestionarAutorizacion", Id=@item.IdPerfil })' title="Editar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="edit"></i></a>
+                <a onclick="VerInformacion('@item.IdPerfil')" href='javascript:void(0)' title="Ver Información" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="info"></i></a>
+                <a onclick="ConfirmarEliminar('@item.IdPerfil', '@item.Nombre')" href='javascript:void(0)' title="Eliminar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="trash-2"></i></a>
+            </td>
+        </tr>
+        }
+
+    </tbody>
+</table>

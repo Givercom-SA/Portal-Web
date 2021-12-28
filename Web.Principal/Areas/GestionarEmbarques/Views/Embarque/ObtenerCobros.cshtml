@@ -1,0 +1,121 @@
+﻿@model Web.Principal.Model.ListaCobrosModel
+
+@{
+    ViewBag.Title = "Cobros por Embarque";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i class="bi bi-cash-coin">  </i></div>
+                        @ViewBag.Title
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá visualizar los cobros a realizar por el embarque en consulta.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container-xl px-4">
+
+    <div class="card card-header-actions mt-n10">
+        <div class="card-header ">
+          Embarque: @Model.NroEmbarque
+            <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+        <div class="card-body">
+
+
+            <div class="table-responsive table-billing-history">
+                <table id="dtObtenerCobros" class="table">
+                    <thead>
+                        <tr>
+                            <th>Tipo Provisión</th>
+                            <th>Concepto</th>
+                            
+                            <th>Moneda</th>
+                            <th>Importe</th>
+                            <th>IGV</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Web.Principal.Model.EmbarqueCobrosModel item in Model.listaCobros)
+                        {
+                        <tr>
+                            <td>@item.DESCRIPCION</td>
+                            <td>@item.CONCEP_C_DESCRIPCION_COBRO</td>
+                            <td>@item.MONEDA</td>
+                            <td>@item.IMPORTE</td>
+                            <td>@item.IGV</td>
+                            <td>@item.TOTAL</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+
+
+    <script type="text/javascript">
+
+            $(document).ready(function () {
+
+                $(".loader").fadeOut("slow");
+
+
+                let dtObtenerCobros = new simpleDatatables.DataTable("#dtObtenerCobros", {
+                    searchable: false,
+                    labels: {
+                        "noRows": "No hay información",
+                        perPage: "{select} Registros por página",
+                        "info": "Mostrando {start} a {end} de {rows} Registros",
+                    },
+                });
+
+
+
+
+
+
+
+                var defaultRangeValidator = $.validator.methods.range;
+                $.validator.methods.range = function (value, element, param) {
+                    if (element.type === 'checkbox') {
+                        // if it's a checkbox return true if it is checked
+                        return element.checked;
+                    } else {
+                        // otherwise run the default validation function
+                        return defaultRangeValidator.call(this, value, element, param);
+                    }
+                }
+
+            });
+
+    </script>
+
+}
+

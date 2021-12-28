@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Error";
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<link href="~/diseno-v01/css/base.css" rel="stylesheet" />
+
+<style>
+    .alert-danger-alt {
+        border-color: #B63E5A;
+        background: #F44336;
+        color: #ffffff;
+    }
+</style>
+
+
+<div class="container-fluid">
+   
+
+    <br />
+    <img src="~/img/logo_transmaresGroup_estrella.png" height="150px" />
+    <br /><br />
+    <div class="card mb-3" style="border:1px solid #1C3997;">
+        <div class="card-header" style="background-color:#1C3997;color:#ffffff;"> MENSAJE DE ERROR </div>
+        <div class="card-body">
+            <h7>Sucedió un error al procesar la solicitud, por favor comunicarse con la Central de Consultas de Transmares Group.</h7>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12" style="text-align:right;">
+            <form method="post" asp-area="" asp-controller="Seguridad" asp-action="CerrarSesionAsync">
+                <button type="button" class="btn btn-sm btn-info" onclick= "history.go(-1)">Volver</button>
+                <button type="submit" class="btn btn-sm btn-secondary">Cerrar Sesión</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+﻿@model ViewModel.Datos.Embarque.AsignarAgente.ListarAsignarAgenteResultVM
+
+@if (Model.AsignacionAduanas != null && Model.AsignacionAduanas.Count() > 0)
+{
+
+
+
+    @functions{
+        string MostrarEstado(string Estado, string EstadoNombre, string id)
+        {
+            string strEstado = string.Empty;
+            switch (Estado)
+            {
+                case "1": //Pendiente
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge badge-light text-body'>{1}</span></a>", id, EstadoNombre);
+                    break;
+                case "2": //Aprobado
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-success'>{1}</span></a>", id, EstadoNombre);
+                    break;
+                case "3": //Rechazado
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-danger'>{1}</span></a>", id, EstadoNombre);
+                    break;
+                case "4": //Anulado
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-danger'><del>{1}</del></span></a>", id, EstadoNombre);
+                    break;
+            }
+            return strEstado;
+        }
+    }
+
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th scope="col">Númeración de Embarque</th>
+                <th scope="col">Fecha de Registro</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Puerto de Carga</th>
+                <th scope="col">Puerto de Descarga</th>
+                <th scope="col">Fecha de Descarga</th>
+                <th scope="col">Asignado A</th>
+                <th scope="col">Estado</th>
+                <th width="30px" class="border-gray-200" scope="col">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AsignacionAduanas)
+            {
+            <tr>
+                <td><a href="@Url.Action("Detalle","Embarque",new { codigo=item.KEYBLD })">@item.NROBL</a></td>
+                <td>@item.FechaRegistro</td>
+                <td>@item.ORIGEN</td>
+                <td>@item.POL</td>
+                <td>@item.POD</td>
+                <td>@item.ETAPOD</td>
+                <td>@item.NombreUsuarioAsignado</td>
+                <td>@Html.Raw(MostrarEstado(item.Estado, item.EstadoNombre, item.Id.ToString()))</td>
+                <td>
+                    @if (item.Estado == "2" || item.Estado == "1")
+                    {
+                        <a onclick="ConfirmarAnular('@item.Id','@item.KEYBLD','@item.NROBL')" href="javascript:void(0)" title="Anular asignación" class="btn btn-datatable btn-icon btn-transparent-dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+
+                        </a>
+                    }
+                    else
+                    {
+
+                    }
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+}
+else
+{
+    @Html.Raw("No existen registros...");
+}

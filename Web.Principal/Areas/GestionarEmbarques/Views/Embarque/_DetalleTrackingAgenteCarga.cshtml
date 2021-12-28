@@ -1,0 +1,127 @@
+﻿@model Web.Principal.Model.ListaTrackingModel
+
+<div class="row">
+    <div class="col small">
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Fecha de Embarque en Origen: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.ETAPOD" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Fecha Envió del Aviso de LLegada: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.APROBACION_FLETE" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Plazos para Envió de Desgloses: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.DESGLOSES" />
+            </div>
+        </div>
+        @if (ViewBag.Condicion == "FCL")
+        {
+            <div class="row mb-3">
+                <div class="col-6">
+                    @Html.Raw("Días Libres Sobre Estadía: ")
+                </div>
+                <div class="col-6">
+                    <input class="form-control  small" type="text" disabled value="@Model.Tracking.FECVENSOBRESTADIA" />
+                </div>
+            </div>
+        }
+        @if (ViewBag.Condicion == "FCL")
+        {
+            <div class="row mb-3">
+                <div class="col-6">
+                    @Html.Raw("Fecha Recepción Memo Devolución: ")
+                </div>
+                <div class="col-6">
+                    <input class="form-control  small" type="text" disabled value="@Model.Tracking.FECRECMEMO" />
+                </div>
+            </div>
+        }
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw(" Días Libres Almacenaje: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.DIASLIBRESALMACENAJE" />
+            </div>
+        </div>
+        @if (ViewBag.Condicion == "LCL")
+        {
+            <div class="row mb-3">
+                <div class="col-6">
+                    @Html.Raw("Número Acta Inventario: ")
+                </div>
+                <div class="col-6">
+                    <input class="form-control  small" type="text" disabled value="@Model.Tracking.NROINVENTARIO" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col small">
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw(" Fecha de Arribo a Destino: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.ETDPOL" />
+            </div>
+        </div>
+        @if (ViewBag.Condicion == "FCL")
+        {
+            <div class="row mb-3">
+                <div class="col-6">
+                    @Html.Raw("Plazos para Direccionamiento : ")
+                </div>
+                <div class="col-6">
+                    <input class="form-control  small" type="text" disabled value="@Model.Tracking.DIRECCIONAMIENTOS" />
+                </div>
+            </div>
+        }
+        @if (ViewBag.Condicion == "FCL")
+        {
+            <div class="row mb-3">
+                <div class="col-6">
+                    @Html.Raw("Confirmación Aceptación Direccionamiento: ")
+                </div>
+                <div class="col-6">
+                    <input class="form-control  small" type="text" disabled value="@Model.Tracking.ACEPTACION_DIRECCIONAMIENTO" />
+                </div>
+            </div>
+        }
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Fecha Endose: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.FECENDOSE" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Fecha de Ingreso al Almacén: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.FECINGRESO" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                @Html.Raw("Fecha Salida del Almacén: ")
+            </div>
+            <div class="col-6">
+                <input class="form-control  small" type="text" disabled value="@Model.Tracking.FECSALIDA" />
+            </div>
+        </div>
+    </div>
+</div>

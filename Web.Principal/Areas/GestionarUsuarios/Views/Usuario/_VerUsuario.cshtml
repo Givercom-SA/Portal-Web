@@ -1,0 +1,59 @@
+﻿@model ViewModel.Datos.UsuarioRegistro.UsuarioSecundarioResultVM
+@{
+    this.ViewData.Add("ModoLectura", true);
+}
+<div class="form-group row">
+    <label asp-for="@Model.usuario.Correo" class="col-sm-3 col-form-label"></label>
+    <div class="col-sm-9">
+        <input readonly asp-for="@Model.usuario.Correo" class="form-control" type="text" />
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-3 col-form-label">Nombres</label>
+    <div class="col-sm-9">
+        <input readonly class="form-control" type="text" value="@Model.usuario.getNombre()" />
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-sm-3 col-form-label">Perfil</label>
+    <div class="col-sm-9">
+        <input readonly asp-for="@Model.usuario.PerfilNombre" class="form-control" type="text" />
+    </div>
+</div>
+<div class="form-group row pb-2">
+    <label class="col-sm-3 col-form-label">Estado</label>
+    <div class="col-sm-3">
+        @if (@Model.usuario.Activo)
+        {
+            <input readonly class="form-control" type="text" value="Activo" />
+        }
+        else
+        {
+            <input readonly class="form-control" type="text" value="Inactivo" />
+        }
+
+    </div>
+    <label class="col-sm-3 col-form-label">Es Admin</label>
+    <div class="col-sm-3">
+        @if (@Model.usuario.EsAdmin)
+        {
+            <input readonly class="form-control" type="text" value="Si" />
+        }
+        else
+        {
+            <input readonly class="form-control" type="text" value="No" />
+        }
+
+    </div>
+</div>
+<div class="form-group row mb-3">
+    <div class="col-sm-12">
+        <fieldset class="border p-2 h-100">
+            <legend class="w-auto small">Accesos</legend>
+            <div style="height:180px;" class="overflow-auto" id="MenuCheckBox">
+                @*@await Html.PartialAsync("_MenusPorPerfil", Model.usuario.Menus)*@
+                <partial name="_MenusPorPerfil" for="@Model.usuario.Menus" view-data="this.ViewData" />
+            </div>
+        </fieldset>
+    </div>
+</div>

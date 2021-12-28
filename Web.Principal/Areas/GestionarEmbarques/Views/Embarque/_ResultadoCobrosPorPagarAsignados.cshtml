@@ -1,0 +1,59 @@
+﻿@model ViewModel.Datos.Embarque.CobrosPagar.ListarCobrosPagarResultVM
+
+
+
+
+@functions{
+    string MostrarEstado(string Estado, string EstadoNombre)
+    {
+        string strEstado = string.Empty;
+        switch (Estado)
+        {
+            case "01": //Asignado
+                strEstado = string.Format("<span class='badge bg-light text-success'>{0}</span>", EstadoNombre);
+                break;
+            case "02": //Anulado
+                strEstado = string.Format("<span class='badge bg-light text-danger'><del>{0}</del></span>", EstadoNombre);
+                break;
+        }
+        return strEstado;
+    }
+}
+
+<table id="dtAsignarCobrosPagar" class="table">
+    <thead>
+        <tr>
+            <th>Nro. de Embarque</th>
+            <th>Cliente que Asume el Pago</th>
+            <th>Concepto</th>
+            <th>Moneda</th>
+            <th>Importe</th>
+            <th>IGV</th>
+            <th>Total</th>
+            <th>Estado</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.CodigoResultado == 0)
+        {
+            foreach (var item in Model.ListaCobrosPagar)
+            {
+        <tr>
+            <td>@item.EmbarqueNroBl</td>
+            <td>@item.EmbarqueSelectBLPagar</td>
+            <td>@item.Concepto</td>
+            <td>@item.Moneda</td>
+            <td>@item.Importe</td>
+            <td>@item.IGV</td>
+            <td>@item.Total</td>
+            <td>@Html.Raw(MostrarEstado(item.Estado, item.EstadoNombre))</td>
+
+        </tr>
+            }
+        }
+
+    </tbody>
+</table>
+
+

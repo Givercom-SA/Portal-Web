@@ -1,0 +1,76 @@
+﻿@model ViewModel.Datos.Embarque.SolicitudFacturacion.ListarSolicitudFacturacionBandejaResultVM
+
+
+<div class="table-responsive table-billing-history">
+
+
+    <table id="dtSolicitudFacturacion" class="table">
+        <thead>
+            <tr>
+                <th>Código de Solicitud</th>
+                <th>Nro.de BL</th>
+                <th>Fecha de Registro</th>
+                <th>Consignatario</th>
+                <th>Tipo de Pago</th>
+                <th>Metodo de Pago</th>
+                <th>Estado</th>
+                 @if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                    {
+                        <th>Acción</th>
+                    }
+                    </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model.SolicitudesFacturacion)
+            {
+            <tr>
+                <td class="text-center">
+
+
+                    <a href="@Url.Action("VerSolicitud","Facturacion",new { area="GestionarEmbarques", codigoSolicitud= item.IdSolicitudFacturacion})">   @item.CodigoSolicitud</a>
+                </td>
+                <td>@item.NroBl</td>
+                <td>@item.FechaRegistro</td>
+                <td>@item.SolicitanteEmpresaPersona</td>
+                <td>@item.TipoPagoDescripcion</td>
+                <td>@item.MetodoPagoDescripcion</td>
+                @if (item.Estado.Trim().Equals("SP"))
+                {
+                    <td><span class="badge bg-light text-dark">Pendiente</span></td>
+                }
+                else if (item.Estado.Trim().Equals("SA"))
+                {
+                    <td><span class="badge bg-light text-success">Aprobado</span></td>
+                }
+                else if (item.Estado.Trim().Equals("SR"))
+                {
+                    <td><span class="badge bg-light text-danger">Rechazado</span></td>
+                }
+
+
+                @{
+
+
+                    if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                    {
+
+
+                        <td>
+                            @if (item.Estado.Equals("SP"))
+                            {
+                                <a onclick="ConfirmarAprobrarRechazar(@item.IdSolicitudFacturacion, 'SA', '@item.SolicitanteCorreo')" href="javascript:void(0)" title="Aprobar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="check-circle"></i></a>
+                                <a onclick="ConfirmarAprobrarRechazar(@item.IdSolicitudFacturacion,'SR','@item.SolicitanteCorreo')" href="javascript:void(0)" title="Rechazar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="x-circle"></i></a>
+                            }
+
+                        </td>
+                    }
+
+                }
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

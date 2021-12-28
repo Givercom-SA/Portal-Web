@@ -1,0 +1,738 @@
+﻿@model Web.Principal.Areas.GestionarSolicitudes.Models.AsignacionEvaluacionModel
+@{
+    ViewBag.Title = "Detalle Solicitud";
+
+    var documentosPermitidos = ViewBag.listaDocumentoPermitidos;
+}
+
+@Html.Hidden("hddCodigoSolicitud", Model.SolicitudVM.CodigoSolicitud)
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="arrow-right-circle"></i></div>
+                        Detalle de Solicitud de Acceso
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá ver el detalle de una solicitud de acceso.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+<div class="container-xl px-4 mt-n10">
+
+
+    <div class="card card-header-actions mb-2">
+        <div class="card-header">
+            Solicitud: @Model.SolicitudVM.CodigoSolicitud
+            <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+        <div class="card-body">
+
+            <div class="sbp-preview-content">
+
+
+                <fieldset>
+
+                    <legend class="small" style="font-weight:bold">Datos Generales</legend>
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Estado:")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.NombreEstado" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Fecha Registro: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.FechaRegistro" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw(Model.SolicitudVM.TipoDocumento + ": ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.NumeroDocumento" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Fecha Evaluación: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.FechaEvaluacion" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Razon Social: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.RazonSocial" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Usuario Evalua: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.UsuarioEvalua" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Tipo(s) Entidad(es) : ")
+                                </div>
+                                <div class="col-6">
+
+                                    @{
+
+                                        <ul>
+
+                                            @foreach (var item in Model.SolicitudVM.ListaTipoEntidad)
+                                            {
+
+
+                                            <li>@item.NombreEntidad </li>
+
+
+                                            }
+                                        </ul>
+
+                                        @for (var item=0; item < Model.SolicitudVM.ListaTipoEntidad.Count(); item++)
+                                        {
+
+                                        <input type="checkbox"
+                                               data-codtipoentidad="@Model.SolicitudVM.ListaTipoEntidad.ElementAt(item).CodigoEntidad"
+                                               checked="checked"
+                                               style="display:none" class="cssTipoEntidad" />
+                                            }
+
+                                    }
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Motivo de Rechazo: ")
+                                </div>
+                                <div class="col-6">
+                                    <textarea class="form-control  small" disabled /> @Model.SolicitudVM.MotivoRechazo </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+
+                <hr />
+                <fieldset>
+
+                    <legend class="small" style="font-weight:bold">Datos de Representante legal</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Contacto : ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value=" @Html.Raw(string.Format("{0} {1} {2}", Model.SolicitudVM.NombreRepresentanteL, Model.SolicitudVM.ApellidoPatRepresentanteL, Model.SolicitudVM.ApellidoMatRepresentanteL))" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Correo: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.Correo" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+
+                @if (Model.SolicitudVM.ListaTipoEntidad.ToList().Exists(x => x.CodigoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS)))
+                {
+
+                <hr />
+
+                <fieldset>
+
+                    <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Habilitar Servicio de Proceso de Facturación : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.ProcesoFacturacion" />
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Términos y Condiciones Generales de Contratación - T&CGC : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.TerminoCondicionGeneralContracion" />
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Código de Sunat: ")
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.CodigoSunat" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 small">
+                            <div class="row">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </fieldset>
+                }
+
+
+                <hr />
+                <fieldset>
+
+                    <legend class="small" style="font-weight:bold">Otros Datos</legend>
+
+
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Se Brindara Operaciones con Cargas FCL : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.BrindaCargaFCL" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-6 small" id="divCadenaSuministro" style="display:none">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Acuerdo de Seguridad de la Cadena de Suministro : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.AcuerdoCadenaSuministro" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6 small">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Se Brindara Agenciamiento de Aduanas : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.BrindaAgenciamientoAduanas" />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="col-6 small" id="divVeracidadInfo" style="display:none">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Declaración Jurada de Veracidad de la Información : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.DeclaracionJuaradVerecidad" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row mb-3">
+
+                        <div class="col-6 small" id="divEndose" style="display:none">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Acuerdo para el Correcto Uso de los Endoses Electrónicos : ")
+                                </div>
+                                <div class="col-6">
+
+                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.AcuerdoEndoceElectronico" />
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+
+
+
+                @{
+
+                    if (Model.SolicitudVM.CodigoEstado.Equals(Utilitario.Constante.EmbarqueConstante.EstadoGeneral.PENDIENTE))
+                    { <hr />
+                    <button class="btn btn-sm btn-primary" type="button" onclick="procesarSolicitud()"> Aceptar </button>
+
+                    <button class="btn btn-sm btn-primary" type="button" onclick="MostrarModalMotivoRechazo()"> Rechazar </button>
+                    }
+
+
+                }
+
+
+
+
+
+
+
+                <div style="position: absolute; bottom: 1rem; right: 1rem;">
+                    <div class="toast" id="toastBasic" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+                        <div class="toast-header">
+                            <i data-feather="bell"></i>
+                            <strong class="mr-auto">Estado de Documentos</strong>
+                            <button class="ml-2 mb-1 btn-close" type="button" data-bs-dismiss="toast" aria-label="Close">                                                                </button>
+                        </div>
+                        <div class="toast-body">Debe seleccionar el motivo de rechazo !!.</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <form id="frmEvaluarSolicitud" asp-action="RechazarSolicitud" asp-controller="Solicitudes" asp-area="GestionarSolicitudes" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+
+        <div class="modal fade" id="dialogMotivoRechazo" tabindex="-1" role="dialog" aria-labelledby="dialogMotivoRechazoTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Rechazar Solicitud</h5>
+                    </div>
+                    <div class="modal-body">
+                        <label>Ingresar motivo de rechazo</label>
+                        <textarea id="txtMotivoRechazo" asp-for="@Model.MotivoRechazo" class="form-control" maxlength="250"> </textarea>
+                        <span asp-validation-for="@Model.MotivoRechazo" id="spanMotivoRechazo" class="small text-danger"></span> 
+                        <input type="hidden" asp-for="@Model.CodigoSolicitud" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="CerrarModalMotivoRechazo()">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" >Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header page-header-dark">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeAlerta"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+
+   
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+        });
+
+        $(document).ready(function () {
+
+            var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
+            OtrosDatos();
+            $.each(listaEstadoSelects, function (index, obj) {
+                var codDocumento = $("#hddCodDoc_" + index).val();
+
+                if (obj.value == "SR") $("#divMotRechazo" + codDocumento).show();
+                else $("#divMotRechazo" + codDocumento).hide();
+            });
+
+        });
+
+
+        function OtrosDatos(obj) {
+
+  
+
+
+            $(".cssTipoEntidad").each(function (index) {
+
+                if ($(this).is(':checked')) {
+
+
+                   
+                    let objTipoEntidad = new Object();
+                    objTipoEntidad.CodTipoEntidad = $(this).data('codtipoentidad');
+
+       
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC03") {
+
+                        $("#divVeracidadInfo").show();
+
+                    }
+
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC02") {
+
+                        
+
+                        $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC01" || objTipoEntidad.CodTipoEntidad == "TC04") {
+
+                        $("#divEndose").show();
+                        $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                }
+
+            });
+
+
+    
+        }
+
+
+        function visualizarMotRechazo(obj, valor) {
+
+            if (obj.value == "SR") $("#divMotRechazo" + valor).show();
+            else $("#divMotRechazo" + valor).hide();
+        }
+
+       
+
+        function MostrarModalMotivoRechazo() {
+            $('#dialogMotivoRechazo').modal('show');
+        }
+
+        function CerrarModalMotivoRechazo() {
+            $('#dialogMotivoRechazo').modal('toggle');
+        }
+
+ 
+        function procesarSolicitud() {
+            var codSolicitud = $("#hddCodigoSolicitud").val();
+
+            $.ajax({
+
+                url:'@Url.Action("AprobarSolicitud", "Solicitudes", new { Area= "GestionarSolicitudes" })',
+                data: { codSolicitud: codSolicitud },
+                beforeSend: function (xhr) {
+                    $(".loader").fadeIn("slow");
+                }
+
+            }).done(function (data) {
+
+                $(".loader").fadeOut("slow");
+
+
+                if (data.codigo == 0) {
+                    $("#dialogOk").modal("show");
+                    $("#outputMensajeOk").html(data.mensaje);
+                }
+                else if (data.codigo > 0) {
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensajeAlerta").html(data.mensaje);
+                } else {
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html(data.mensaje);
+
+                }
+
+
+
+            }).fail(function (errjqXHR, textStatus, errorThrown) {
+
+                $(".loader").fadeOut("slow");
+
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html(errorThrown);
+
+            });
+        }
+
+        function ActualizarForm() {
+             window.location.href = '@Url.Action("ListarSolicitudes","Solicitudes",new {area="GestionarSolicitudes"})';
+        }
+
+         function AJAXSubmit(oFormElement) {
+
+
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+
+
+                    $.ajax({
+                        url: oFormElement.action,
+                        data: formData,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $(".loader").fadeOut("slow");
+
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html(errorThrown);
+
+                        },
+                        success: function (response) {
+
+                            $(".loader").fadeOut("slow");
+
+                            if (response.codigo == 0) {
+
+                                $("#dialogMotivoRechazo").modal("hide");
+
+                                $("#dialogOk").modal("show");
+                                $("#outputMensajeOk").html(response.mensaje);
+
+                                
+
+                            }
+                            else if (response.codigo > 0) {
+
+                               // $("#dialogAlerta").modal("show");
+                               // $("#outputMensajeAlerta").html(response.mensaje);
+
+
+                                for (var item = 0; item < response.listActionListResponse.length; item++) {
+
+                                    if (response.listActionListResponse[item].nombreCampo == "MotivoRechazo") {
+                                        $("#spanMotivoRechazo").html(response.listActionListResponse[item].mensaje);
+                                        $("#txtMotivoRechazo").focus();
+                                    }
+                                     
+                                
+
+
+                                }
+
+
+
+
+
+
+                            } else {
+
+                                $("#dialogMotivoRechazo").modal("hide");
+
+                                $("#dialogError").modal("show");
+                                $("#outputMensajeError").html(response.mensaje);
+                            }
+
+                        },
+                        complete: function (response) {
+
+
+                        }
+                    });
+
+
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html("[400] Ocurrio un error inesperado, por favor intente nuevamente.");
+
+
+            }
+
+
+        }
+
+    </script>
+
+}

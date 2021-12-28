@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\ViewModel.Common\ViewModel.Common.csproj" />
+    <ProjectReference Include="..\05.Utilitarios\Utilitario.Constante\Utilitario.Constante.csproj" />
+    <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

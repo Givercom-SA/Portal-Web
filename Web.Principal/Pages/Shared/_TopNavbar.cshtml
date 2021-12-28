@@ -1,0 +1,31 @@
+﻿@using ViewModel.Datos.UsuarioRegistro
+@{
+
+    var idperfil = ViewData["IdPerfil"].ToString();
+    bool cambioClave = bool.Parse(ViewData["CambioClave"].ToString());
+
+    List<MenuLoginVM> MenusSesion = ViewData["MenusSesion"] as List<MenuLoginVM>;
+
+}
+
+<div id="layoutSidenav_nav">
+    <nav class="sidenav shadow-right sidenav-light">
+        <div class="sidenav-menu">
+            <div class="nav accordion" id="accordionSidenav">
+
+                
+                @if (cambioClave)
+                {
+                    await Html.RenderPartialAsync("_Sidebar", MenusSesion);
+                }
+            </div>
+        </div>
+        
+        <div class="sidenav-footer">
+            <div class="sidenav-footer-content">
+                <div class="sidenav-footer-subtitle small">Version: v1</div>
+                <div class="sidenav-footer-title small">Server: 95</div>
+            </div>
+        </div>
+    </nav>
+</div>
