@@ -88,6 +88,10 @@ namespace Servicio.Embarque.ServiceExterno
                 embarque.TIPO_PADRE = item.Element("TIPO_PADRE") == null ? "" : item.Element("TIPO_PADRE").Value;
                 embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE_BL = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL") == null ? "" : item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL").Value;
                 embarque.FINANZAS_MAIL = item.Element("FINANZAS_MAIL") == null ? "" : item.Element("FINANZAS_MAIL").Value;
+                
+                embarque.FLAG_ESTADO_FACTURACION_SOLICITUD = item.Element("FLAG_ESTADO_FACTURACION_SOLICITUD") == null ? "" : item.Element("FLAG_ESTADO_FACTURACION_SOLICITUD").Value;
+                embarque.FLAG_COBROS_PENDIENTES = item.Element("FLAG_COBROS_PENDIENTES") == null ? "" : item.Element("FLAG_COBROS_PENDIENTES").Value;
+
             }
 
             return embarque;

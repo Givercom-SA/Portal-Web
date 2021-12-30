@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />
     <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
+    <ProjectReference Include="..\ViewModel.Reclamo\ViewModel.Reclamo.csproj" />
   </ItemGroup>
 
 </Project>

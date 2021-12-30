@@ -20,6 +20,7 @@
     <Folder Include="Areas\GestionarEmbarques\Data\" />
     <Folder Include="Areas\GestionarSolicitudes\Data\" />
     <Folder Include="Areas\GestionarUsuarios\Data\" />
+    <Folder Include="Pages\tarifario\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\tmpdwac\ftp\" />
     <Folder Include="wwwroot\tmpdwac\facturacion_tercero\" />

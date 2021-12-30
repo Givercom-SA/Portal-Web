@@ -1,0 +1,120 @@
+﻿@page
+@model Web.Principal.Pages.ReclamoQueja.ReclamoModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Transmares Group | Queja";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css">
+    <title>Reclamo</title>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="cabezera">
+            <h2 class="cabezera_titulo">
+                Libro de Reclamaciones
+                <img src="~/img/transmares3.jfif" alt="" srcset="">
+            </h2>
+            <div class="cabezera_header">
+                <h3>Estimado Cliente:</h3>
+                <p>
+                    Debemos informarle que  a través del Libro de Reclamaciones, usted podrá presentar únicamente
+                    insatisfacciones o disconformidades generadas por nuestro servicios,
+                    así como por la atención recibida de nuestros colaboradores.
+                </p>
+            </div>
+        </div>
+        <div class="formulario">
+            <form>
+                <h2 class="contenido_titulo">Formulario de Reclamos</h2>
+                <div class="contenido_formulario">
+                    <div class="item_formulario">
+                        <label for="">RUC</label>
+                        <input type="text" class="item_texto" name="txtNombreCompleto" id=""
+                               placeholder="RUC">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Razón Social</label>
+                        <input type="text" class="item_texto" name="txtNombreCompleto" id=""
+                               placeholder="Razón social">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Nombre Completo</label>
+                        <input type="text" class="item_texto" name="txtNombreCompleto" id=""
+                               placeholder="Nombre completo">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Email</label>
+                        <input type="email" class="item_texto" name="txtEmail" id=""
+                               placeholder="Email">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Celular</label>
+                        <input type="text" class="item_texto" name="txtCelular" id=""
+                               placeholder="Celular">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Fecha de Incidencia</label>
+                        <input type="date" class="item_texto" name="txtFechaIncidencia" id="">
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Empresa que lo Atendió</label>
+                        <select name="" id="" class="item_texto">
+                            <option value="">Seleccione</option>
+                            <option value="">Translogistics (TL)</option>
+                            <option value="">Transocean  (TO)</option>
+                            <option value="">Transitario (TP)</option>
+                            <option value="">Transmares  (TM)</option>
+                            <option value="">ECUWorldWide (ECU)</option>
+                        </select>
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Unidad de Negocio</label>
+                        <select name="" id="" class="item_texto">
+                            <option value="">Seleccione</option>
+                            <option value="">Dpto. Aéreo – carga seca. (TL)</option>
+                            <option value="">Dpto. Aéreo – perecibles (TL)</option>
+                            <option value="">Carga LCL Importación (TO, ECU) </option>
+                            <option value="">Carga LCL Exportación (TO, ECU)</option>
+                            <option value="">FCL carga seca (TO, ECU)</option>
+                            <option value="">FCL carga perecible (TL)</option>
+                            <option value="">Dpto. de Aduanas (TP)</option>
+                            <option value="">Dpto. de Logística Integral  (TL)</option>
+                            <option value="">Dpto. de Minerales (ECU)</option>
+                            <option value="">Dpto. de Productos Hidrobiológicos (ECU)</option>
+                            <option value="">Dpto. de Finanzas (TO, TL, TP, ECU, TM)</option>
+                            <option value="">Pendiente agregar: Agente Marítimo. (TM)</option>
+                        </select>
+                    </div>
+                    <div class="item_formulario">
+                        <label for="">Tipo de Documento por la Cual Reclama</label>
+                        <select name="" id="" class="item_texto">
+                            <option value="">Seleccione</option>
+                            <option value="">AWB o Guía Aérea  (TL)</option>
+                            <option value="">Bill of lading o BL N° (TO, ECU, TM)</option>
+                            <option value="">DAM (TP)</option>
+                            <option value="">Otros (TO, TL, TP, TM, ECU)</option>
+                        </select>
+                    </div>
+                    <div class="item_formulario textArea">
+                        <label for="">Mensaje (4000 caracteres)</label>
+                        <textarea name="" id="" maxlength="40000" cols="30" rows="10" class="item_texto textArea"
+                                  placeholder="Ingrese su mensaje ..."></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="botones_formulario">
+                <a href="#" class="btn btn_generar">Generar Reclamo</a>
+                <a href="javascript: history.go(-1)" class="btn btn_regresar">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

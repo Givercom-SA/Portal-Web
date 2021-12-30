@@ -1,0 +1,99 @@
+﻿@page
+@model Web.Principal.Pages.ReclamoQueja.IndexModel
+@{
+    ViewData["Title"] = "Tranmares Group | Libro de Reclamaciones";
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f26e94a7e8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css")">
+    <title>  @ViewData["Title"]</title>
+</head>
+<body>
+    <div class="contenido">
+        <div class="item">
+            <span class="titulo">Libro de reclamaciones</span>
+        </div>
+        <div class="item cuerpo">
+            <span>Estamos para ayudarte</span>
+        </div>
+        <div class="item pie">
+            <span>Registra tus disconformidades</span>
+        </div>
+    </div>
+    <div class="slider-frame">
+        <ul>
+            <li><img src="~/img/transmares4.jfif" alt="Cargando..."></li>
+            <li><img src="~/img/transmares5.jpg" alt="Cargando..."></li>
+            <li><img src="~/img/transmares4.jfif" alt="Cargando..."></li>
+            <li><img src="~/img/transmares5.jpg" alt="Cargando..."></li>
+        </ul>
+    </div>
+
+    <div class="caja">
+        <h2 class="caja-titulo">Libro de Reclamaciones</h2>
+        <h2 class="caja-subtitulo">Registra 2 tipos de insatisfacciones: quejas y reclamaciones</h2>
+    </div>
+    <div class="cajaReclamo">
+        <div class="cajaReclamo-contenido">
+            <h3>¿Qué es un reclamo?</h3>
+            <h5>Es una disconformidad respecto a:</h5>
+            <div class="cajaReclamo-cuerpo">
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-coins"></i>
+                    <label>Cobros realizados</label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-ship"></i>
+                    <label>Seguimiento de embarque </label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <label>Operaciones con la empresa </label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-truck-loading"></i>
+                    <label>Operaciones con el terminal</label>
+                </div>
+            </div>
+            <div class="cajaReclamo-boton">
+                <a asp-page="reclamo"  class="btn-reclamo">Ingresa Aquí</a>
+            </div>
+        </div>
+        <div class="cajaReclamo-contenido">
+            <h3>¿Qué es una queja?</h3>
+            <h5>Es una disconformidad respecto a:</h5>
+            <div class="cajaReclamo-cuerpo">
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-users-cog"></i>
+                    <label for="">Atención en oficina</label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-phone-volume"></i>
+                    <label for="">Atención vía telefónica</label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-user-friends"></i>
+                    <label for="">Atención preferencial</label>
+                </div>
+                <div class="cajaReclamo-item">
+                    <i class="fas fa-user-clock"></i>
+                    <label for="">Tiempo de atención en general</label>
+                </div>
+            </div>
+            <div class="cajaReclamo-boton">
+                <a asp-page="queja" class="btn-reclamo">Ingresa Aquí</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
