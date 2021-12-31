@@ -68,6 +68,12 @@ namespace Servicio.Maestro.Controllers
             var result = _repository.ListarUnidadNegocioXEmpresa(_mapper.Map<ListaUnidadNegocioXEmpresaParameter>(parameter));
             return _mapper.Map<ListaUnidadNegocioXEmpresasResultVM>(result);
         }
-
+        [HttpPost]
+        [Route("reclamo-registrar")]
+        public ActionResult<RegistrarReclamoResultVM> RegistrarReclamo(RegistrarReclamoParameterVM parameter)
+        {
+            var result = _repository.RegistrarReclamo(_mapper.Map<RegistrarReclamoParameter>(parameter));
+            return _mapper.Map<RegistrarReclamoResultVM>(result);
+        }
     }
 }

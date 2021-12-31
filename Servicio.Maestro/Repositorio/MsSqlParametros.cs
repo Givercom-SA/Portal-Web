@@ -203,7 +203,7 @@ namespace Servicio.Maestro.Repositorio
                     queryParameters.Add("@COD_TIPO_DOCUMENTO", parametro.CodigoTipoFormulario, DbType.String);
                     queryParameters.Add("@OBSERVACION", parametro.Observacion, DbType.String);
 
-                    var readyResult = cnn.Query<RegistraReclamoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure);
+                    result = cnn.Query<RegistraReclamoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
                 
                  
 

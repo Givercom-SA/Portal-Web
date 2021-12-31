@@ -50,7 +50,16 @@ namespace Web.LibroReclamaciones.ServiceConsumer
             var resultado = response.ContentAsType<ViewModel.Reclamo.ListaUnidadNegocioXEmpresasResultVM>();
             return resultado;
         }
-        
 
+        public async Task<ViewModel.Reclamo.RegistrarReclamoResultVM> RegistrarReclamo(ViewModel.Reclamo.RegistrarReclamoParameterVM parameter)
+        {
+            const string SERVICIO = "reclamo-registrar";
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<ViewModel.Reclamo.RegistrarReclamoResultVM>();
+            return resultado;
+        }
     }
 }

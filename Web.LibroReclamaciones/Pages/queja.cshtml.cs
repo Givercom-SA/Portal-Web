@@ -7,9 +7,15 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using TransMares.Core;
+using ViewModel.Datos.Message;
+using ViewModel.Reclamo;
+using Web.LibroReclamaciones.Model;
 using Web.LibroReclamaciones.ServiceConsumer;
 using Web.LibroReclamaciones.Utilitario;
+using Web.Principal.ServiceConsumer;
 
 namespace Web.Principal.Pages.libroreclamaciones
 {
@@ -19,8 +25,8 @@ namespace Web.Principal.Pages.libroreclamaciones
         private readonly ServicioMaestro _serviceMaestro;
         private readonly ILogger<quejaModel> _logger;
         private readonly IMapper _mapper;
-
-
+        private readonly ServicioMessage _servicioMessage;
+        private IConfiguration _configuration;
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -37,12 +43,16 @@ namespace Web.Principal.Pages.libroreclamaciones
 
         public quejaModel(ILogger<quejaModel> logger,
                             ServicioMaestro serviicoMaestro,
-                            IMapper mapper)
+                            IMapper mapper,
+                            ServicioMessage servicioMessage,
+                            IConfiguration configuration)
         {
 
             _logger = logger;
             _serviceMaestro = serviicoMaestro;
             _mapper = mapper;
+            _servicioMessage = servicioMessage;
+            _configuration = configuration;
 
         }
 
@@ -71,94 +81,67 @@ namespace Web.Principal.Pages.libroreclamaciones
         {
 
 
-
+            ActionResponse = new ActionResponse();
+            ActionResponse.Codigo = -1;
+            ActionResponse.Mensaje = "Estimado cliente, ocurrio un error interno por favor volver a intentar mas tarde.";
 
             if (ModelState.IsValid)
             {
 
 
+                RegistrarReclamoParameterVM registrarReclamoParameterVM = new RegistrarReclamoParameterVM();
+                registrarReclamoParameterVM.Celular = Input.Celular;
+                registrarReclamoParameterVM.CodigoEmpresa = Input.EmpresaAtiende;
+                registrarReclamoParameterVM.CodigoTipoDocumento = Input.Celular;
+                registrarReclamoParameterVM.CodigoTipoFormulario = "02";
+                registrarReclamoParameterVM.CodigoUnidadNegocio = Input.UnidadNegocio;
+                registrarReclamoParameterVM.Email = Input.Celular;
+                registrarReclamoParameterVM.FechaIncidencia = Input.FechaIncidencia;
+                registrarReclamoParameterVM.Nombre = Input.NombreCompleto;
+                registrarReclamoParameterVM.Observacion = Input.Mensaje;
+                registrarReclamoParameterVM.RazonSocial = Input.RazonSocial;
+                registrarReclamoParameterVM.Ruc = Input.Ruc;
+
+                var resultRegistrarReclamo = await _serviceMaestro.RegistrarReclamo(registrarReclamoParameterVM);
+                if (resultRegistrarReclamo.CodigoResultado == 0)
+                {
+                    ActionResponse.Codigo = resultRegistrarReclamo.CodigoResultado;
+                    ActionResponse.Mensaje = resultRegistrarReclamo.MensajeResultado;
+
+                    enviarCorreoCliente(Input.Email,Input.NombreCompleto,$"Se ha registrado tu queja exitosamente y en 24 horas te estaremos respondiendo.");
+
+                    
+
+                }
+                else {
+                    ActionResponse.Codigo = -3;
+                    ActionResponse.Mensaje = "Estimado cliente, ocurrio un error inesperado por favor volver a intentar.";
+                }
+               
+            }
+            else
+            {
+                ActionResponse.Codigo = -2;
+                ActionResponse.Mensaje = "Estimado cliente, los datos ingresados es inválido.";
             }
 
             return new JsonResult(ActionResponse);
 
         }
 
+        private async void enviarCorreoCliente(string correo, string nombreCliente, string Mensaje)
+        {
+            EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
+            enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
+            enviarMessageCorreoParameterVM.RequestMessage.Contenido =
+                new FormatoCorreoBody().formatoBodyReclamacion(nombreCliente, Mensaje,
+                _configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupoUrl.ToString()]);
+
+            enviarMessageCorreoParameterVM.RequestMessage.Correo = correo;
+            enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Registro de Queja";
+            var ressult = await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
+        }
+
 
     }
-
-    public class InputModel
-    {
-
-
-        [Display(Name = "Ruc (*)")]
-        [Required(ErrorMessage = "Ingrese  el RUC")]
-        [StringLength(11, ErrorMessage = "11 caracteres como máximo")]
-        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]
-        public string Ruc { get; set; }
-
-
-        [Display(Name = "Tipo de Documento por la Cual Reclama (*)")]
-        [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccionar un tipo de documento")]
-        public string TipoDocumento { get; set; }
-
-        [Display(Name = "Empresa que lo Atendió (*)")]
-        [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccionar empresa que lo antendió")]
-        public string EmpresaAtiende { get; set; }
-
-        [Display(Name = "Unidad de Negocio (*)")]
-        [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccionar unidad de negocio")]
-        public string UnidadNegocio { get; set; }
-
-        [Display(Name = "Razón Social")]
-        [Required(ErrorMessage = "Ingrese  el razón social")]
-        [StringLength(250, ErrorMessage = "El nombre completo no debe execeder de 250 caracteres")]
-        public string RazonSocial { get; set; }
-
-        [Display(Name = "Nombre Completo (*)")]
-        [Required(ErrorMessage = "Ingrese su nombre completo")]
-        [StringLength(250, ErrorMessage = "El nombre completo no debe execeder de 250 caracteres")]
-        public string NombreCompleto { get; set; }
-
-        [Display(Name = "Mensaje (*)")]
-        [Required(ErrorMessage = "Ingrese el mensaje")]
-        [StringLength(4000, ErrorMessage = "El mensaje no debe execeder de 4000 caracteres")]
-        public string Mensaje { get; set; }
-
-        [Display(Name = "Email (*)")]
-        [Required(ErrorMessage = "Ingrese Email")]
-        [EmailAddress(ErrorMessage = "El Email ingresado no es válido")]
-        [StringLength(150, ErrorMessage = "El Email ingresado tiene longitud invalida")]
-        [DataType(DataType.EmailAddress, ErrorMessage = "El Email ingresado no tiene el formato correcto")]
-        public string Email { get; set; }
-
-
-        [Display(Name = "Celular (*)")]
-        [Required(ErrorMessage = "Ingrese  número de celular")]
-        [StringLength(9, ErrorMessage = "11 caracteres como máximo")]
-        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]
-        public string Celular { get; set; }
-
-        [Display(Name = "Fecha Incidencia (*)")]
-        [Required(ErrorMessage = "Ingrese  fecha de incidencia")]
-        [DisplayFormat(DataFormatString = "{0:dd'/'MM'/'yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime FechaIncidencia { get; set; }
-
-
-        public string EmpresaAtiendeNombre { get; set; }
-        public string UnidadNegocioNombre { get; set; }
-        public string TipoDocumentoNombre { get; set; }
-
-        public SelectList ListEmpresaAtendio { get; set; }
-
-        public SelectList ListUnidadNegocio { get; set; }
-
-        public SelectList ListTipoDocumento { get; set; }
-
-    }
-
-    public class ValidationMethod
-    {
-      
-    }
-
 }

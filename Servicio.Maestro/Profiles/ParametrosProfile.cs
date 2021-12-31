@@ -31,6 +31,7 @@ namespace Servicio.Maestro.Profiles
 
             CreateMap< ListaEmpresasParameterVM, ListaEmpresasParameter>();
             CreateMap<ListaUnidadNegocioXEmpresaParameterVM, ListaUnidadNegocioXEmpresaParameter>();
+            CreateMap<RegistrarReclamoParameterVM, RegistrarReclamoParameter>();
 
 
             CreateMap<ListaDocumentoTipoEntidadResult, ListarDocumentoTipoEntidadVM>()
@@ -76,6 +77,11 @@ namespace Servicio.Maestro.Profiles
 
             CreateMap<UnidadNegocioReclamo, UnidadNegocioReclamoVM>();
             CreateMap<TipoDocumentoReclamo, TipoDocumentoReclamoVM>();
+
+
+            CreateMap<RegistraReclamoResult, RegistrarReclamoResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+        .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
         }
     }

@@ -12,9 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css">
+    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css?version=1">
 
-    <title>Queja</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
     <div class="contenedor">
@@ -23,7 +23,8 @@
                 Libro de Reclamaciones
                 <img src="~/img/transmares3.jfif" alt="" srcset="">
             </h2>
-            <div class="cabezera_header">
+
+            <div class="cabezera_header" id="divHeader">
                 <h3>Estimado Cliente:</h3>
                 <p>
                     Debemos informarle que  a través del Libro de Reclamaciones, usted podrá presentar únicamente
@@ -32,6 +33,7 @@
             </div>
         </div>
         <div class="formulario">
+
             <form asp-route-returnUrl="@Model.ReturnUrl" id="frmQueja" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
 
                 <div class="loader" style="">
@@ -129,9 +131,18 @@
 
 
             </form>
+
+            <div id="divResultadoRegistro" style="display:none">
+                <h3>Estimado Cliente:</h3>
+                <p id="pResultadoRegistro">
+
+
+                </p>
+            </div>
+
             <div class="botones_formulario">
-                <a href="javascript:generarQueja()" class="btn btn_generar">Generar Queja</a>
-                <a href="javascript: history.go(-1)" class="btn btn_regresar">Cancelar</a>
+                <a href="javascript:generarQueja()" id="btnRegistrar" class="btn btn_generar">Generar Queja</a>
+                <a href="javascript: history.go(-1)"  id="btnCancelar"class="btn btn_regresar">Cancelar</a>
             </div>
         </div>
     </div>
@@ -232,19 +243,35 @@
                         cache: false,
                         beforeSend: function () {
                             $(".loader").fadeIn("slow");
+                            $('#btnRegistrar').attr('disabled', 'disabled');
                         },
 
                         error: function (jqXHR, textStatus, errorThrown) {
+                            $('#btnRegistrar').removeAttr('disabled');
                             alert("Ocurrio un error inesperado, por favor intente nuevamente.");
                             $(".loader").fadeOut("slow");
 
                         },
                         success: function (response) {
-
+                            $('#btnRegistrar').removeAttr('disabled');
                             $(".loader").fadeOut("slow");
+                            if (response.codigo == 0) {
+                                $("#pResultadoRegistro").html(response.mensaje);
+                                $("#divResultadoRegistro").show();
+                                $("#frmQueja").hide();
+                                $("#divHeader").hide();
+                                $('#frmQueja').remove();
+                                $("#btnRegistrar").hide();
+                                $("#btnCancelar").html("Salir");
+
+                            } else {
+                                alert(response.mensaje);
+                            }
+                            
+
                         },
                         complete: function (data) {
-
+                            $('#btnRegistrar').removeAttr('disabled');
                             $(".loader").fadeOut("slow");
 
                         }
@@ -254,7 +281,7 @@
 
             } catch (error) {
 
-
+                $('#btnRegistrar').removeAttr('disabled');
                 alert("Ocurrio un error inesperado, por favor intente nuevamente." + error);
 
 
