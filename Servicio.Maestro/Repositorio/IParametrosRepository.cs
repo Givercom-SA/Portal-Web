@@ -17,6 +17,7 @@ namespace Servicio.Maestro.Repositorio
 
         public Servicio.Maestro.Models.LibroReclamo.ListaEmpresasResult ListEmpresasReclamo(ListaEmpresasParameter parametro);
 
+        public Servicio.Maestro.Models.LibroReclamo.ListaUnidadNegocioXEmpresasResult ListarUnidadNegocioXEmpresa(ListaUnidadNegocioXEmpresaParameter parametro);
         public Servicio.Maestro.Models.LibroReclamo.RegistraReclamoResult RegistrarReclamo(RegistrarReclamoParameter parametro);
 
     }
