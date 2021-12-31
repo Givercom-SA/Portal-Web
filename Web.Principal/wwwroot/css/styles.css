@@ -23,7 +23,7 @@
     --bs-cyan: #00cfd5;
     --bs-white: #fff;
     --bs-gray: #69707a;
-     --bs-gray-dark: #363d47;
+     --bs-gray-dark: #363d47;
     --bs-primary: #0061f2;
     --bs-secondary: #6900c7;
     --bs-success: #00ac69;
@@ -2130,6 +2130,8 @@ progress {
 
     .table > thead, .dataTable-table > thead {
         vertical-align: bottom;
+        background-color: #3F448C;
+        color: #FFF;
     }
 
     .table > :not(:last-child) > :last-child > *, .dataTable-table > :not(:last-child) > :last-child > * {
@@ -16952,8 +16954,9 @@ body {
 }
 
 .bg-gradient-primary-to-secondary {
-    background-color: #0061f2 !important;
-    background-image: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%) !important;
+    /* background-color: #0061f2 !important;
+    background-image: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%) !important; */
+    background-color: #3F448C !important;
 }
 
 .bg-transparent-light {
@@ -21984,4 +21987,45 @@ pre[class*=language-] {
 
 .token.variable {
     color: #ff6666;
+}
+
+/* NUEVAS MODIFICACIONES */
+
+.espacio{
+    height: 69px !important;
+}
+.moPaddin{
+    padding-top: 0px !important;
+}
+.letra{
+    font-weight: 600 !important;
+}
+.icono_Transmares img{
+    height: 75px ;
+}
+.sombra{
+    box-shadow: 6px 5px 9px 6px rgba(118, 111, 111, 0.24);  
+    border-width: 0;
+    border-radius: 15px;
+    transition: all 0.2s;
+    margin-bottom: 30px;
+}
+.box{
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    border-radius: 15px;
+    padding-bottom: 55px;
+}
+.bordeColor{
+    border-radius: 5px;
+    padding: 5px 10px;
+    /* background-color: #3F448C; */
+    background-image: linear-gradient(90deg, rgba(63, 68, 140, 1) 22%, rgba(112, 115, 158, 1) 100%);
+    color:#fff;
+    cursor: pointer;
+}
+.icon{
+    float: right;
+    color: black;
+    font-size: 1.2rem;
 }

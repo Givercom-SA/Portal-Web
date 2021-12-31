@@ -16,8 +16,8 @@
     <title> @ViewData["Title"] </title>
     <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
 
-    
-    <link href="@Url.Content("~/css/styles.css")" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/f26e94a7e8.js" crossorigin="anonymous"></script>
+    <link href="@Url.Content("~/css/styles.css")?version=1" rel="stylesheet" />
     <link href="@Url.Content("~/css/style_main.css")" rel="stylesheet" />
 
     <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
@@ -85,140 +85,153 @@
  
 
                                             <div class="row gx-3">
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <fieldset>
-                                                        <legend class="small" style="font-weight:bold">  Datos de Entidad</legend>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <!-- Form Group (first name)-->
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.TipoDocumento" class="small mb-1"></label>
-                                                                    <select asp-for="Input.TipoDocumento" id="ddlTipoDocumento"
-                                                                            asp-items="Model.Input.ListTipoDocumento"
-                                                                            onchange="onTipoDocumento(this)"
-                                                                            class="form-select">
-                                                                        <option value="0">Seleccionar</option>
-                                                                    </select>
+                                                    <div class="sombra">
+                                                         <div class="box">
+                                                            <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarDatosEntidad')">  Datos de Entidad <i class="fas fa-angle-down icon"></i></legend>
+                                                               <div id="ocultarDatosEntidad">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <!-- Form Group (first name)-->
+                                                                            <div class="mb-3">
+                                                                                <label asp-for="Input.TipoDocumento" class="small mb-1"></label>
+                                                                                <select asp-for="Input.TipoDocumento" id="ddlTipoDocumento"
+                                                                                        asp-items="Model.Input.ListTipoDocumento"
+                                                                                        onchange="onTipoDocumento(this)"
+                                                                                        class="form-select">
+                                                                                    <option value="0">Seleccionar</option>
+                                                                                </select>
 
-                                                                    <span asp-validation-for="Input.TipoDocumento" class="small text-danger"></span>
-                                                                    <input type="hidden" asp-for="Input.TipoDocumento" />
+                                                                                <span asp-validation-for="Input.TipoDocumento" class="small text-danger"></span>
+                                                                                <input type="hidden" asp-for="Input.TipoDocumento" />
 
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <!-- Form Group (last name)-->
-                                                                <div class="mb-3">
-
-                                                                    <label asp-for="Input.NumeroDocumento" class="small mb-1"></label>
-                                                                    <input asp-for="Input.NumeroDocumento" id="txtNumeroDocumento" maxlength="11" class="form-control" type="text" placeholder="Ingrese su número de documento" />
-                                                                    <span asp-validation-for="Input.NumeroDocumento" id="spanNumeroDocumento" class="small text-danger"></span>
-
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.RazonSocial" class="small mb-1"></label>
-                                                                    <input asp-for="Input.RazonSocial" id="txtRazonSocial" class="form-control" onkeydown="fnVerificarValidacion(this)" disabled type="text" placeholder="Ingrese la rázon social" />
-                                                                    <span id="spanInputRazonSocial" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </fieldset>
-
-
-                                                    <fieldset>
-
-                                                        <legend class="small" style="font-weight:bold">  Datos de Representante Legal</legend>
-
-                                                        <div class="row">
-
-                                                            <div class="col-md-6">
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.Nombres" class="small mb-1"></label>
-                                                                    <input asp-for="Input.Nombres" class="form-control" type="text" placeholder="Ingrese sus nombres" />
-                                                                    <span asp-validation-for="Input.Nombres" class="small text-danger"></span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <!-- Form Group (password)-->
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.ApellidoPaterno" class="small mb-1"></label>
-                                                                    <input asp-for="Input.ApellidoPaterno" class="form-control" type="text" placeholder="Ingrese su apellido paterno" />
-                                                                    <span asp-validation-for="Input.ApellidoPaterno" class="small text-danger"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-
-                                                            <div class="col-md-6">
-                                                                <!-- Form Group (confirm password)-->
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.ApellidoMaterno" class="small mb-1"></label>
-                                                                    <input asp-for="Input.ApellidoMaterno" class="form-control" type="text" placeholder="Ingrese su apellido materno" />
-                                                                    <span asp-validation-for="Input.ApellidoMaterno" class="small text-danger"></span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <!-- Form Group (email address)            -->
-                                                                <div class="mb-3">
-                                                                    <label asp-for="Input.Correo" class="small mb-1"></label>
-                                                                    <input asp-for="Input.Correo" class="form-control" id="txtCorreo" type="email" aria-describedby="emailHelp" placeholder="Ingrese su correo" />
-                                                                    <span asp-validation-for="Input.Correo" class="small text-danger"></span>
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="sbp-preview-content" style="display:none">
-                                                            <label class="small mb-1"> Adjuntar documentos (Se admite solo formatos JPG, JPEG y PDF) </label>
-
-                                                            <span id="spanFiles" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
-
-                                                            <div id="divContenedorFile" class="cssSolicitarAccesoDocumento" style="display: flex; justify-content: center; align-items: center; ">
-                                                                <div class='lds-ripple' id='divLoadTipoEntidadFile' style="display:none"><div></div><div></div></div>
-
-                                                            </div>
-
-                                                        </div>
-                                                    </fieldset>
-                                                    <fieldset>
-
-                                                        <legend class="small" style="font-weight:bold">Tipo Entidad</legend>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="sbp-preview-content">
-                                                                    @for (int i = 0; i < Model.Input.ListTipoEntidad2.TiposEntidad.Count; i++)
-                                                                    {
-
-                                                                        <div class="form-check">
-                                                                            <input asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check"
-                                                                                   data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area = "GestionarAccesos" })"
-                                                                                   data-codtipoentidad="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad"
-                                                                                   class="form-check-input cssChkTipoEntidad" onchange="onChangeTipoEntidadSelect(this)" type="checkbox" />
-
-                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check" />
-                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad" />
-                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].IdParametro" />
-                                                                            <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad" />
-                                                                            <label class="small mb-1"> @Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad </label>
+                                                                            </div>
                                                                         </div>
 
-                                                                    }
-                                                                    <span id="spanTipoEntidad" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+                                                                        <div class="col-md-6">
+                                                                            <!-- Form Group (last name)-->
+                                                                            <div class="mb-3">
+
+                                                                                <label asp-for="Input.NumeroDocumento" class="small mb-1"></label>
+                                                                                <input asp-for="Input.NumeroDocumento" id="txtNumeroDocumento" maxlength="11" class="form-control" type="text" placeholder="Ingrese su número de documento" />
+                                                                                <span asp-validation-for="Input.NumeroDocumento" id="spanNumeroDocumento" class="small text-danger"></span>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="mb-3">
+                                                                                <label asp-for="Input.RazonSocial" class="small mb-1"></label>
+                                                                                <input asp-for="Input.RazonSocial" id="txtRazonSocial" class="form-control" onkeydown="fnVerificarValidacion(this)" disabled type="text" placeholder="Ingrese la rázon social" />
+                                                                                <span id="spanInputRazonSocial" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                     </div>
+                                                    </fieldset>
+
+
+                                                    <fieldset>
+                                                         <div class="sombra">
+                                                            <div class="box"> 
+                                                                    <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarDatosRepresentanteLegal')">  Datos de Representante Legal <i class="fas fa-angle-down icon"></i></legend>
+                                                                    <div id="ocultarDatosRepresentanteLegal">
+                                                                        <div class="row">
+
+                                                                            <div class="col-md-6">
+                                                                                <div class="mb-3">
+                                                                                    <label asp-for="Input.Nombres" class="small mb-1"></label>
+                                                                                    <input asp-for="Input.Nombres" class="form-control" type="text" placeholder="Ingrese sus nombres" />
+                                                                                    <span asp-validation-for="Input.Nombres" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <!-- Form Group (password)-->
+                                                                                <div class="mb-3">
+                                                                                    <label asp-for="Input.ApellidoPaterno" class="small mb-1"></label>
+                                                                                    <input asp-for="Input.ApellidoPaterno" class="form-control" type="text" placeholder="Ingrese su apellido paterno" />
+                                                                                    <span asp-validation-for="Input.ApellidoPaterno" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row">
+
+                                                                            <div class="col-md-6">
+                                                                                <!-- Form Group (confirm password)-->
+                                                                                <div class="mb-3">
+                                                                                    <label asp-for="Input.ApellidoMaterno" class="small mb-1"></label>
+                                                                                    <input asp-for="Input.ApellidoMaterno" class="form-control" type="text" placeholder="Ingrese su apellido materno" />
+                                                                                    <span asp-validation-for="Input.ApellidoMaterno" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-6">
+                                                                                <!-- Form Group (email address)            -->
+                                                                                <div class="mb-3">
+                                                                                    <label asp-for="Input.Correo" class="small mb-1"></label>
+                                                                                    <input asp-for="Input.Correo" class="form-control" id="txtCorreo" type="email" aria-describedby="emailHelp" placeholder="Ingrese su correo" />
+                                                                                    <span asp-validation-for="Input.Correo" class="small text-danger"></span>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        <div class="sbp-preview-content" style="display:none">
+                                                                            <label class="small mb-1"> Adjuntar documentos (Se admite solo formatos JPG, JPEG y PDF) </label>
+
+                                                                            <span id="spanFiles" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+
+                                                                            <div id="divContenedorFile" class="cssSolicitarAccesoDocumento" style="display: flex; justify-content: center; align-items: center; ">
+                                                                                <div class='lds-ripple' id='divLoadTipoEntidadFile' style="display:none"><div></div><div></div></div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+
+                                                    <fieldset>
+                                                        <div class="sombra">
+                                                            <div class="box">
+                                                                <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarTipoEntidad')">Tipo Entidad <i class="fas fa-angle-down icon"></i></legend>
+                                                                <div id="ocultarTipoEntidad">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="sbp-preview-content">
+                                                                                @for (int i = 0; i < Model.Input.ListTipoEntidad2.TiposEntidad.Count; i++)
+                                                                                {
+
+                                                                                    <div class="form-check">
+                                                                                        <input asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check"
+                                                                                            data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area = "GestionarAccesos" })"
+                                                                                            data-codtipoentidad="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad"
+                                                                                            class="form-check-input cssChkTipoEntidad" onchange="onChangeTipoEntidadSelect(this)" type="checkbox" />
+
+                                                                                        <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].Check" />
+                                                                                        <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad" />
+                                                                                        <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].IdParametro" />
+                                                                                        <input type="hidden" asp-for="@Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad" />
+                                                                                        <label class="small mb-1"> @Model.Input.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad </label>
+                                                                                    </div>
+
+                                                                                }
+                                                                                <span id="spanTipoEntidad" asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
                                                                 </div>
                                                             </div>
-
-
                                                         </div>
-
                                                     </fieldset>
 
 
@@ -226,122 +239,131 @@
                                                     
                                                 </div>
 
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
 
 
                                                     <fieldset id="fsAgenteAduanas" style="display:none">
+                                                        <div class="sombra">
+                                                            <div class="box">
+                                                                <legend class="small bordeColor" style="font-weight:bold"  onClick="muestra_oculta('ocultarDatosAgenteAduanas')">Datos de Agente de Aduanas <i class="fas fa-angle-down icon"></i></legend>
+                                                                    <div id="ocultarDatosAgenteAduanas">
+                                                                        <div class="row">
 
-                                                        <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
+                                                                            <div class="col-md-12">
+                                                                                <div class="sbp-preview-content">
 
-                                                        <div class="row">
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.HabiliarProcesoFacturacion" type="checkbox" />
+                                                                                        <label class="small mb-1" asp-for="@Model.Input.HabiliarProcesoFacturacion"></label>
+                                                                                        <br>
+                                                                                        <span  asp-validation-for="@Model.Input.HabiliarProcesoFacturacion" class="small text-danger"></span>
+                                                                                    </div>
 
-                                                            <div class="col-md-12">
-                                                                <div class="sbp-preview-content">
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC"
+                                                                                            onchange="onOtrosDatos(this)"
+                                                                                            data-codigo="termino_condi_general"
+                                                                                            type="checkbox" />
+                                                                                        <a href="~/fileserver/Terminos_Condiciones_Generales_Contratacion.pdf" id="anchorTerminoCondicionGeneral" class="small" target="_blank">@Model.Input.TerminoCondicionesGeneralesContraTCGC</a>
+                                                                                        <br>
+                                                                                        <span asp-validation-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC" id="spanTerminosCondicionesGeneerales" class="small text-danger"></span>
+                                                                                    </div>
 
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.HabiliarProcesoFacturacion" type="checkbox" />
-                                                                        <label class="small mb-1" asp-for="@Model.Input.HabiliarProcesoFacturacion"></label>
-                                                                        <span  asp-validation-for="@Model.Input.HabiliarProcesoFacturacion" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                        
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="mb-3">
+                                                                                    <label asp-for="@Model.Input.CodigoSunat" class="small mb-1"></label>
+                                                                                    <input asp-for="@Model.Input.CodigoSunat" id="txtCodigoSunat" onblur="onValidarCodigoSunat(this)" class="form-control" type="text" minlength="1" maxlength="10" placeholder="Ingrese código de sunat" />
+                                                                                    <br>
+                                                                                    <span asp-validation-for="@Model.Input.CodigoSunat" id="spanCodigoSunat" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC"
-                                                                               onchange="onOtrosDatos(this)"
-                                                                               data-codigo="termino_condi_general"
-                                                                               type="checkbox" />
-                                                                        <a href="~/fileserver/Terminos_Condiciones_Generales_Contratacion.pdf" id="anchorTerminoCondicionGeneral" class="small" target="_blank">@Model.Input.TerminoCondicionesGeneralesContraTCGC</a>
-                                                                        <span asp-validation-for="@Model.Input.TerminoCondicionesGeneralesContraTCGC" id="spanTerminosCondicionesGeneerales" class="small text-danger"></span>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-
+                                                           </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="mb-3">
-                                                                    <label asp-for="@Model.Input.CodigoSunat" class="small mb-1"></label>
-                                                                    <input asp-for="@Model.Input.CodigoSunat" id="txtCodigoSunat" onblur="onValidarCodigoSunat(this)" class="form-control" type="text" minlength="1" maxlength="10" placeholder="Ingrese código de sunat" />
-                                                                    <span asp-validation-for="@Model.Input.CodigoSunat" id="spanCodigoSunat" class="small text-danger"></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
                                                     </fieldset>
 
 
                                                     <fieldset>
+                                                         <div class="sombra">
+                                                            <div class="box">
+                                                                <legend class="small bordeColor" style="font-weight:bold"  onClick="muestra_oculta('ocultarOtrosDatos')">Otros Datos <i class="fas fa-angle-down icon"></i></legend>
+                                                                <div id="ocultarOtrosDatos">
+                                                                    <div class="row">
 
-                                                        <legend class="small" style="font-weight:bold">Otros Datos</legend>
+                                                                        <div class="col-md-12">
 
+                                                                            <div class="sbp-preview-content">
 
+                                                                                <div class="form-check">
+                                                                                    <input asp-for="Input.seBrindaOperacionesCargaFCL" onchange="onOtrosDatos(this)"
+                                                                                        data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                                        data-codigo="carga_fcl"
+                                                                                        class="form-check-input" id="chkSeBrindaFCL" type="checkbox" />
+                                                                                    <a href="~/fileserver/ACUERDO_POR_SERVICIOS_FCL.pdf" class="small" target="_blank">Se Brindara Operaciones con Cargas FCL</a>
+                                                                                <br>
+                                                                                    <span asp-validation-for="Input.seBrindaOperacionesCargaFCL" id="spanOperacionCargaFCL" class="small text-danger"></span>
 
-                                                        <div class="row">
+                                                                                </div>
 
-                                                            <div class="col-md-12">
+                                                                                <div class="form-check">
+                                                                                    <input asp-for="Input.seBrinaAgenciaAdeuanas"
+                                                                                        id="chkSeBrindaAgenciaAduana"
+                                                                                        data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                                        class="form-check-input" type="checkbox" />
 
-                                                                <div class="sbp-preview-content">
+                                                                                    <label asp-for="Input.seBrinaAgenciaAdeuanas" class="small"></label>
+                                                                                    <br>
+                                                                                    <span asp-validation-for="Input.seBrinaAgenciaAdeuanas"
+                                                                                        class="small text-danger"></span>
+                                                                                </div>
 
-                                                                    <div class="form-check">
-                                                                        <input asp-for="Input.seBrindaOperacionesCargaFCL" onchange="onOtrosDatos(this)"
-                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
-                                                                               data-codigo="carga_fcl"
-                                                                               class="form-check-input" id="chkSeBrindaFCL" type="checkbox" />
-                                                                        <a href="~/fileserver/ACUERDO_POR_SERVICIOS_FCL.pdf" class="small" target="_blank">Se Brindara Operaciones con Cargas FCL</a>
+                                                                                <div class="form-check" id="divEndose" style="display:none">
+                                                                                    <input asp-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="chkEndose"
+                                                                                        onchange="onOtrosDatos(this)"
+                                                                                        data-codigo="endose"
+                                                                                        class="form-check-input" type="checkbox" />
 
-                                                                        <span asp-validation-for="Input.seBrindaOperacionesCargaFCL" id="spanOperacionCargaFCL" class="small text-danger"></span>
+                                                                                    <a href="~/fileserver/ACUERDO_DE_COOPERACION_Y_SEGURIDAD_PARA_EL_CORRECTO_US_DE_ENDOSES ELECTRONICOS.pdf" id="anchorEndose" class="small" target="_blank">Acuerdo para el Correcto Uso de los Endoses Electrónicos (*)</a>
+                                                                                    <br>
+                                                                                    <span asp-validation-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="spanEndose" class="small text-danger"></span>
 
-                                                                    </div>
+                                                                                </div>
 
-                                                                    <div class="form-check">
-                                                                        <input asp-for="Input.seBrinaAgenciaAdeuanas"
-                                                                               id="chkSeBrindaAgenciaAduana"
-                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
-                                                                               class="form-check-input" type="checkbox" />
+                                                                                <div class="form-check" id="divCadenaSuministro" style="display:none">
+                                                                                    <input asp-for="Input.acuerdoSeguridadCadenaSuministra" onchange="onOtrosDatos(this)"
+                                                                                        data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                                        data-codigo="cadena_suministro"
+                                                                                        class="form-check-input" id="chkAcuerdoCadenaSumistro" type="checkbox" />
+                                                                                    <a href="~/fileserver/Acuerdo_de_Seguridad_de_la_Cadena_de_Suministro.pdf" id="anchorAcuerdoCadenaSumini" class="small" target="_blank">Acuerdo de Seguridad de la Cadena de Suministro (*)</a>
+                                                                                        <br>
+                                                                                    <span asp-validation-for="Input.acuerdoSeguridadCadenaSuministra" id="spanAcuerdoCadenaSumistro" class="small text-danger"></span>
+                                                                                </div>
 
-                                                                        <label asp-for="Input.seBrinaAgenciaAdeuanas" class="small"></label>
-                                                                        <span asp-validation-for="Input.seBrinaAgenciaAdeuanas"
-                                                                              class="small text-danger"></span>
-                                                                    </div>
+                                                                                <div class="form-check" id="divVeracidadInfo" style="display:none">
+                                                                                    <input asp-for="Input.declaracionJUridaVeracidadInformacio" onchange="onOtrosDatos(this)"
+                                                                                        data-codigo="vericidad_informacion"
+                                                                                        class="form-check-input" id="chkVeracidadInfo" type="checkbox" />
+                                                                                    <a href="~/fileserver/Declaración_Jurada_de_Veracidad_de_Información.pdf" id="anchorVeracidadInfo" class="small" target="_blank">Declaración Jurada de Veracidad de la Información</a>
+                                                                                            <br>
+                                                                                    <span asp-validation-for="Input.declaracionJUridaVeracidadInformacio" id="spanVeracidadInfo" class="small text-danger"></span>
+                                                                                </div>
+                                                                            </div>
 
-                                                                    <div class="form-check" id="divEndose" style="display:none">
-                                                                        <input asp-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="chkEndose"
-                                                                               onchange="onOtrosDatos(this)"
-                                                                               data-codigo="endose"
-                                                                               class="form-check-input" type="checkbox" />
+                                                                        </div>
 
-                                                                        <a href="~/fileserver/ACUERDO_DE_COOPERACION_Y_SEGURIDAD_PARA_EL_CORRECTO_US_DE_ENDOSES ELECTRONICOS.pdf" id="anchorEndose" class="small" target="_blank">Acuerdo para el Correcto Uso de los Endoses Electrónicos (*)</a>
-                                                                        <span asp-validation-for="Input.acuerdoCorrectoUsoEndosesElectronico" id="spanEndose" class="small text-danger"></span>
-
-                                                                    </div>
-
-                                                                    <div class="form-check" id="divCadenaSuministro" style="display:none">
-                                                                        <input asp-for="Input.acuerdoSeguridadCadenaSuministra" onchange="onOtrosDatos(this)"
-                                                                               data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
-                                                                               data-codigo="cadena_suministro"
-                                                                               class="form-check-input" id="chkAcuerdoCadenaSumistro" type="checkbox" />
-                                                                        <a href="~/fileserver/Acuerdo_de_Seguridad_de_la_Cadena_de_Suministro.pdf" id="anchorAcuerdoCadenaSumini" class="small" target="_blank">Acuerdo de Seguridad de la Cadena de Suministro (*)</a>
-
-                                                                        <span asp-validation-for="Input.acuerdoSeguridadCadenaSuministra" id="spanAcuerdoCadenaSumistro" class="small text-danger"></span>
-                                                                    </div>
-
-                                                                    <div class="form-check" id="divVeracidadInfo" style="display:none">
-                                                                        <input asp-for="Input.declaracionJUridaVeracidadInformacio" onchange="onOtrosDatos(this)"
-                                                                               data-codigo="vericidad_informacion"
-                                                                               class="form-check-input" id="chkVeracidadInfo" type="checkbox" />
-                                                                        <a href="~/fileserver/Declaración_Jurada_de_Veracidad_de_Información.pdf" id="anchorVeracidadInfo" class="small" target="_blank">Declaración Jurada de Veracidad de la Información</a>
-
-                                                                        <span asp-validation-for="Input.declaracionJUridaVeracidadInformacio" id="spanVeracidadInfo" class="small text-danger"></span>
+                                                                
                                                                     </div>
                                                                 </div>
-
-                                                            </div>
-
-                                                    
+                                                           </div>
                                                         </div>
-
-
                                                     </fieldset>
 
 
@@ -463,6 +485,14 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 
+    <script>
+        function muestra_oculta(id){
+            if (document.getElementById){ 
+            var el = document.getElementById(id);  
+            el.style.display = (el.style.display == 'none') ? 'block' : 'none' ; 
+            }
+        }
+    </script>
 
     <script>
 

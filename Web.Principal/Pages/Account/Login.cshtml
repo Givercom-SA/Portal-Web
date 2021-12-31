@@ -16,7 +16,7 @@
     <title> @ViewData["Title"] </title>
 
     <link rel="icon" type="image/x-icon" href="~/img/favicon.png" />
-    <link href="@Url.Content("~/css/styles.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/styles.css")?version=1" rel="stylesheet" />
     <link href="@Url.Content("~/css/style_main.css")" rel="stylesheet" />
     <script data-search-pseudo-elements defer src="/js/all.min.js" crossorigin="anonymous"></script>
     <script src="/js/feather.min.js" crossorigin="anonymous"></script>
@@ -33,11 +33,11 @@
                         <div class="col-lg-5">
                             <!-- Basic login form-->
                             <div class="card card-header-actions mx-auto shadow-lg border-0 rounded-lg mt-5">
-                                <div class="card-header justify-content-center">
-                                    <img src="@Url.Content("~/img/logo_transmaresGroup_estrella.png")" height="70px!important" />
+                                <div class="card-header justify-content-center espacio">
+                                    <img src="@Url.Content("~/img/logo_transmaresGroup_estrella.png")" height="75px!important" />
                                 </div>
-                                <div class="card-body">
-                                    <h3 class="fw-light my-4" align="center">Iniciar Sesión</h3>
+                                <div class="card-body moPaddin">
+                                    <h3 class="fw-light my-4 letra" align="center">Iniciar Sesión</h3>
 
                                     <form asp-route-returnUrl="@Model.ReturnUrl" method="post" id="frmLogin" >
                                         <div class="mb-3">

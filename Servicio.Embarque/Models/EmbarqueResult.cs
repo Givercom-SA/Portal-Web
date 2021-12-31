@@ -84,5 +84,9 @@ namespace Servicio.Embarque.Models
         public string PLAZO_TERMINO_DESCARGA { get; set; }
         public string FLAG_DIRECCIONAMIENTO_PERMANENTE_BL { get; set; }
         public string FINANZAS_MAIL { get; set; }
+        public string FLAG_ESTADO_FACTURACION_SOLICITUD { get; set; }
+        public string FLAG_COBROS_PENDIENTES { get; set; }
+
+       
     }
 }

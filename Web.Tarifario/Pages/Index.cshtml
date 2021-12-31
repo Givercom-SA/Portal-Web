@@ -1,0 +1,145 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Transmares Group | Tarifario";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/estilo.css">
+    <script src="https://kit.fontawesome.com/f26e94a7e8.js" crossorigin="anonymous"></script>
+    <title>@ViewData["Title"] </title>
+</head>
+<body>
+    <div class="caja">
+        <div class="cajaCuerpo">
+            <h5 class="tituloFormulario" onClick="muestra_oculta('busqueda')">Filtros de Búsqueda <i class="fas fa-angle-down icono"></i></h5>
+            <form id="busqueda">
+                <div class="formulario">
+                    <div class="fila1 mg-3 ">
+                        <label for="validationCustom01">Rubro </label>
+                        <input type="text" class="form-control" id="validationCustom01"
+                               value="" name="txtNombrePais" required>
+                    </div>
+                    <div class="fila1 mg-3 ">
+                        <label for="validationCustom01">Servicios </label>
+                        <input type="text" class="form-control" id="validationCustom01"
+                               value="" name="txtNombrePais" required>
+                    </div>
+                    <div class="fila1 mg-3 ">
+                        <label for="validationCustom01">Fecha Inicio </label>
+                        <input type="date" class="form-control" id="validationCustom01"
+                               value="" name="txtNombrePais" required>
+                    </div>
+                    <div class="fila1 mg-3 ">
+                        <label for="validationCustom01">Fecha Fin </label>
+                        <input type="date" class="form-control" id="validationCustom01"
+                               value="" name="txtNombrePais" required>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-azul">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="caja">
+        <div class="cajaCuerpo">
+            <h5 class="cardTitulo" onClick="muestra_oculta('tablaTarifa')">Publicación de Tarifas <i class="fas fa-angle-down icono"></i> </h5>
+            <div class="tablea_responsi" id="tablaTarifa">
+                <table id="tablax" class="tabla">
+                    <thead class="tablaHeader">
+                        <tr>
+                            <th>Ítem</th>
+                            <th>Rubro</th>
+                            <th>Servicio</th>
+                            <th>Tarifa - US$ (Sin IGV)</th>
+                            <th>Vigencia</th>
+                            <th>Tiempo de Atención</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>General</td>
+                            <td>Servicio Administrativo</td>
+                            <td>20.00</td>
+                            <td>30/06/2022</td>
+                            <td>1 día</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Administrativo</td>
+                            <td>Financiero</td>
+                            <td>% de factura</td>
+                            <td>30/06/2022</td>
+                            <td>1 día</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Administrativo</td>
+                            <td>Courier</td>
+                            <td>90.00</td>
+                            <td>30/06/2022</td>
+                            <td>1 día</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>General</td>
+                            <td>Aforo</td>
+                            <td>150.00</td>
+                            <td>30/06/2022</td>
+                            <td>2 día</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Aduanero</td>
+                            <td>Certificaciones</td>
+                            <td>50.00</td>
+                            <td>30/06/2022</td>
+                            <td>1 día</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>General</td>
+                            <td>Gasto Administrativo</td>
+                            <td>250.00</td>
+                            <td>30/06/2022</td>
+                            <td>2 día</td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tablaBoton">
+        <button type="button" class="btn btn-azul" onclick="javascript: history.go(-1)">Cerrar</button>
+    </div>
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
+    </script>
+    <!-- DATATABLES -->
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js">
+    </script>
+    <!-- BOOTSTRAP -->
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js">
+    </script>
+    <script src="~/js/script.js"></script>
+    <script src="~/js/tabla.js"></script>
+</body>
+</html>

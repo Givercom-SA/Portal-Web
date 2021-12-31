@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
 using Servicio.Maestro.Models;
+using Servicio.Maestro.Models.LibroReclamo;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -118,5 +119,106 @@ namespace Servicio.Maestro.Repositorio
 
             return result;
         }
+
+
+        public Servicio.Maestro.Models.LibroReclamo.ListaEmpresasResult ListEmpresasReclamo(ListaEmpresasParameter parametro) {
+
+            var result = new Servicio.Maestro.Models.LibroReclamo.ListaEmpresasResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "[dbo].[RECLAMO_SP_EMPRESAS_LISTAR]";
+                    
+                    result.Empresas = cnn.Query<EmpresaReclamo>(spName, null, commandType: CommandType.StoredProcedure).ToList();
+
+
+
+                    result.IN_CODIGO_RESULTADO = 0;
+
+                }
+
+            }
+            catch (Exception err)
+            {
+                result.IN_CODIGO_RESULTADO = 2;
+                result.STR_MENSAJE_BD = err.Message;
+            }
+
+            return result;
+        }
+        public Servicio.Maestro.Models.LibroReclamo.ListaUnidadNegocioXEmpresasResult ListarUnidadNegocioXEmpresa(ListaUnidadNegocioXEmpresaParameter parametro) {
+            var result = new Servicio.Maestro.Models.LibroReclamo.ListaUnidadNegocioXEmpresasResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "[dbo].[RECLAMO_SP_UNIDAD_NEGOCIO_POR_EMPRESA]";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@CodEmpresa", parametro.CodigoEmpresa, DbType.String);
+
+                    var readyResult = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure);
+                    result.UnidadNegociosReclamo = readyResult.Read<UnidadNegocioReclamo>().ToList();
+                   result.TiposDocumentos = readyResult.Read<TipoDocumentoReclamo>().ToList();
+                     
+                    
+
+                    result.IN_CODIGO_RESULTADO = 0;
+
+                }
+
+            }
+            catch (Exception err)
+            {
+                result.IN_CODIGO_RESULTADO = 2;
+                result.STR_MENSAJE_BD = err.Message;
+            }
+
+            return result;
+        }
+
+        public Servicio.Maestro.Models.LibroReclamo.RegistraReclamoResult RegistrarReclamo(RegistrarReclamoParameter parametro) {
+            var result = new Servicio.Maestro.Models.LibroReclamo.RegistraReclamoResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "[dbo].[RECLAMO_SP_REGISTRAR]";
+                    var queryParameters = new DynamicParameters();
+                    /*
+        
+                     */
+                    queryParameters.Add("@COD_TIPO_FORMULARIO", parametro.CodigoTipoFormulario, DbType.String);
+                    queryParameters.Add("@RUC", parametro.Ruc, DbType.String);
+                    queryParameters.Add("@RAZON_SOCIAL", parametro.RazonSocial, DbType.String);
+                    queryParameters.Add("@NOMBRE", parametro.Nombre, DbType.String);
+                    queryParameters.Add("@EMAIL", parametro.Email, DbType.String);
+                    queryParameters.Add("@NRO_CELULAR", parametro.Celular, DbType.String);
+                    queryParameters.Add("@FEC_INCIDENCIA", parametro.FechaIncidencia, DbType.Date);
+                    queryParameters.Add("@COD_EMPRESA", parametro.CodigoEmpresa, DbType.String);
+                    queryParameters.Add("@COD_UNIDAD_NEGOCIO", parametro.CodigoUnidadNegocio, DbType.String);
+                    queryParameters.Add("@COD_TIPO_DOCUMENTO", parametro.CodigoTipoFormulario, DbType.String);
+                    queryParameters.Add("@OBSERVACION", parametro.Observacion, DbType.String);
+
+                    result = cnn.Query<RegistraReclamoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                
+                 
+
+                }
+
+            }
+            catch (Exception err)
+            {
+                result.IN_CODIGO_RESULTADO = 2;
+                result.STR_MENSAJE_BD = err.Message;
+            }
+
+            return result;
+        }
+
     }
 }
+

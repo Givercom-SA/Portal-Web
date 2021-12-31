@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Servicio.Maestro.Models;
+using Servicio.Maestro.Models.LibroReclamo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using ViewModel.Datos.Documento;
 using ViewModel.Datos.Entidad;
 using ViewModel.Datos.ListaCorreos;
 using ViewModel.Datos.Parametros;
+using ViewModel.Reclamo;
 
 namespace Servicio.Maestro.Profiles
 {
@@ -25,6 +27,11 @@ namespace Servicio.Maestro.Profiles
                 .ForMember(s => s.IdParametro, o => o.MapFrom(s => s.PRMT_ID))
                 .ForMember(s => s.NombreDescripcion, o => o.MapFrom(s => s.PRMT_NOMBRE))
                 .ForMember(s => s.ValorCodigo, o => o.MapFrom(s => s.PRMT_VALOR));
+
+
+            CreateMap< ListaEmpresasParameterVM, ListaEmpresasParameter>();
+            CreateMap<ListaUnidadNegocioXEmpresaParameterVM, ListaUnidadNegocioXEmpresaParameter>();
+            CreateMap<RegistrarReclamoParameterVM, RegistrarReclamoParameter>();
 
 
             CreateMap<ListaDocumentoTipoEntidadResult, ListarDocumentoTipoEntidadVM>()
@@ -54,6 +61,27 @@ namespace Servicio.Maestro.Profiles
                 .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
                 .ForMember(s => s.ListaCorreos, o => o.MapFrom(s => s.ListaCorreos));
 
+            CreateMap<ListaEmpresasResult, ListaEmpresasResultVM>()
+       .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+       .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
+       .ForMember(s => s.Empresas, o => o.MapFrom(s => s.Empresas));
+
+            CreateMap<EmpresaReclamo, EmpresasReclamoVM>();
+
+            
+            CreateMap<ListaUnidadNegocioXEmpresasResult, ListaUnidadNegocioXEmpresasResultVM>()
+       .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+       .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
+       .ForMember(s => s.UnidadNegociosReclamo, o => o.MapFrom(s => s.UnidadNegociosReclamo))
+       .ForMember(s => s.TiposDocumentos, o => o.MapFrom(s => s.TiposDocumentos));
+
+            CreateMap<UnidadNegocioReclamo, UnidadNegocioReclamoVM>();
+            CreateMap<TipoDocumentoReclamo, TipoDocumentoReclamoVM>();
+
+
+            CreateMap<RegistraReclamoResult, RegistrarReclamoResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+        .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
         }
     }

@@ -1,0 +1,386 @@
+﻿@page
+@model Web.Principal.Pages.ReclamoQueja.ReclamoModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Transmares Group | Reclamo";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css?version=1">
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="cabezera">
+            <h2 class="cabezera_titulo">
+                Libro de Reclamaciones
+                <img src="~/img/transmares3.jfif" alt="" srcset="">
+            </h2>
+            <div class="cabezera_header" id="divHeader">
+                <h3>Estimado Cliente:</h3>
+                <p>
+                    Debemos informarle que  a través del Libro de Reclamaciones, usted podrá presentar únicamente
+                    insatisfacciones o disconformidades generadas por nuestro servicios,
+                    así como por la atención recibida de nuestros colaboradores.
+                </p>
+            </div>
+        </div>
+        <div class="formulario">
+            <form asp-route-returnUrl="@Model.ReturnUrl" id="frmQueja" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+
+                <div class="loader" style="">
+                    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+                </div>
+
+
+                <h2 class="contenido_titulo">Formulario de Reclamos</h2>
+                <div class="contenido_formulario">
+                    <div class="item_formulario">
+                        <label>RUC (*)</label>
+                        <input asp-for="Input.Ruc" type="text" id="txtRuc" class="item_texto" maxlength="11"
+                               placeholder="RUC">
+
+                        <span asp-validation-for="Input.Ruc" class="small text-danger"></span>
+
+                    </div>
+                    <div class="item_formulario">
+                        <label>Razón Social</label>
+                        <input type="text" class="item_texto" maxlength="250" asp-for="Input.RazonSocial"
+                               placeholder="Razón social">
+                        <span asp-validation-for="Input.RazonSocial" class="small text-danger"></span>
+
+                    </div>
+                    <div class="item_formulario">
+                        <label>Nombre Completo</label>
+                        <input type="text" class="item_texto" maxlength="250" asp-for="Input.NombreCompleto"
+                               placeholder="Nombre completo">
+                        <span asp-validation-for="Input.NombreCompleto" class="small text-danger"></span>
+                    </div>
+                    <div class="item_formulario">
+                        <label>Email</label>
+                        <input type="email" class="item_texto" maxlength="150" asp-for="Input.Email"
+                               placeholder="Email">
+                        <span asp-validation-for="Input.Email" class="small text-danger"></span>
+                    </div>
+                    <div class="item_formulario">
+                        <label>Celular</label>
+                        <input type="text" class="item_texto" maxlength="9" asp-for="Input.Celular"
+                               placeholder="Celular" id="txtCelular">
+                        <span asp-validation-for="Input.Celular" class="small text-danger"></span>
+                    </div>
+                    <div class="item_formulario">
+                        <label>Fecha de Incidencia</label>
+                        <input type="date" class="item_texto" asp-for="Input.FechaIncidencia" id="txtFechaIncidencia" asp-format="{0:dd'/'MM'/'yyyy}">
+                        <span asp-validation-for="Input.FechaIncidencia" class="small text-danger"></span>
+                    </div>
+
+                    <div class="item_formulario">
+                        <label>Empresa que lo Atendió</label>
+                        <select class="item_texto"
+                                asp-for="Input.EmpresaAtiende" id="ddlEmpresaAtendio"
+                                asp-items="Model.Input.ListEmpresaAtendio" onchange="listarUnidadNegocio()">
+                            <option value="0">Seleccione</option>
+
+                        </select>
+                        <span asp-validation-for="Input.EmpresaAtiende" class="small text-danger"></span>
+                    </div>
+                    <div class="item_formulario">
+                        <label>Unidad de Negocio</label>
+                        <select class="item_texto"
+                                asp-for="Input.UnidadNegocio" id="ddlUnidadNegocio" onchange="onChangeUnidadNegocio()"
+                                asp-items="Model.Input.ListUnidadNegocio">
+                            <option value="0">Seleccione</option>
+
+                        </select>
+                        <span asp-validation-for="Input.UnidadNegocio" class="small text-danger"></span>
+                    </div>
+
+                    <div class="item_formulario">
+                        <label>Tipo de Documento por la Cual Reclama</label>
+                        <select class="item_texto"
+                                asp-for="Input.TipoDocumento" id="ddlTupoDocumento" onchange="onChangeTipoDocumento()"
+                                asp-items="Model.Input.ListTipoDocumento">
+                            <option value="0">Seleccione</option>
+
+                        </select>
+                        <span asp-validation-for="Input.TipoDocumento" class="small text-danger"></span>
+                    </div>
+
+                    <div class="item_formulario textArea">
+
+                        <label>Mensaje (4000 caracteres)</label>
+
+                        <textarea asp-for="Input.Mensaje" maxlength="40000" cols="30" rows="10" class="item_texto textArea"
+                                  placeholder="Ingrese su mensaje ..."></textarea>
+                        <span asp-validation-for="Input.Mensaje" class="small text-danger"></span>
+                    </div>
+                </div>
+
+                <input type="hidden" asp-for="Input.EmpresaAtiendeNombre" id="hidenEmpresaAtiende">
+                <input type="hidden" asp-for="Input.UnidadNegocioNombre" id="hidenUnidadNegocio">
+                <input type="hidden" asp-for="Input.TipoDocumentoNombre" id="hidenTipoDocumento">
+
+
+
+            </form>
+
+            <div id="divResultadoRegistro" style="display:none">
+                <h3>Estimado Cliente:</h3>
+                <p id="pResultadoRegistro">
+
+
+                </p>
+            </div>
+
+            <div class="botones_formulario">
+                <a href="javascript:generarQueja()" id="btnRegistrar" class="btn btn_generar">Generar Reclamo</a>
+                <a href="javascript: history.go(-1)" id="btnCancelar" class="btn btn_regresar">Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+            $("#txtRuc").keydown(function (event) {
+                //alert(event.keyCode);
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                    return false;
+                }
+            });
+            $("#txtCelular").keydown(function (event) {
+                //alert(event.keyCode);
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                    return false;
+                }
+            });
+
+
+            $('#txtFechaIncidencia').blur(function () {
+
+                var regEx = /^\d{4}-\d{2}-\d{2}$/;
+
+                var dateString = $(this).val();
+
+                if (!dateString.match(regEx)) {
+
+                    $(this).val("");
+                    return false;
+                }
+
+
+
+                var d = new Date(dateString);
+
+                if (Number.isNaN(d.getTime())) {
+                    alert("No se permite formato inválido");
+                    $(this).val("");
+                    return false;
+                }
+
+
+
+                return d.toISOString().slice(0, 10) === dateString;
+
+            });
+
+
+        });
+
+
+        function  generarQueja(){
+
+            $("#frmQueja").submit();
+        }
+
+
+
+
+        function AJAXSubmit(oFormElement) {
+
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+
+                var isValid = $('#frmQueja').valid();
+
+                if (isValid) {
+
+                    $.ajax({
+                        url: oFormElement.action,
+                        data: formData,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function () {
+                            $('#btnRegistrar').attr('disabled', 'disabled');
+                            $(".loader").fadeIn("slow");
+                        },
+
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $('#btnRegistrar').removeAttr('disabled');
+                            alert("Ocurrio un error inesperado, por favor intente nuevamente.");
+                            $(".loader").fadeOut("slow");
+
+                        },
+                        success: function (response) {
+                            $('#btnRegistrar').removeAttr('disabled');
+                            $(".loader").fadeOut("slow");
+                            if (response.codigo == 0) {
+                                $("#pResultadoRegistro").html(response.mensaje);
+                                $("#divResultadoRegistro").show();
+                                $("#frmQueja").hide();
+                                $("#divHeader").hide();
+                                $('#frmQueja').remove();
+                                $("#btnRegistrar").hide();
+                                $("#btnCancelar").html("Salir");
+
+                            } else {
+                                alert(response.mensaje);
+                            }
+
+
+                        },
+                        complete: function (data) {
+                            $('#btnRegistrar').removeAttr('disabled');
+                            $(".loader").fadeOut("slow");
+
+                        }
+                    });
+
+                }
+
+            } catch (error) {
+                $('#btnRegistrar').removeAttr('disabled');
+
+                alert("Ocurrio un error inesperado, por favor intente nuevamente." + error);
+
+
+            }
+
+
+        }
+
+
+        function onChangeUnidadNegocio() {
+            $("#hidenUnidadNegocio").val($("#ddlUnidadNegocio").children("option:selected").html());
+        }
+        function onChangeTipoDocumento() {
+            $("#hidenTipoDocumento").val($("#ddlTupoDocumento").children("option:selected").html());
+        }
+
+        function listarUnidadNegocio() {
+
+
+            try {
+
+
+                $("#hidenEmpresaAtiende").val($("#ddlEmpresaAtendio").children("option:selected").html());
+
+                var formData = new FormData();
+
+                formData.append("CodigoEmpresa", $("#ddlEmpresaAtendio").val());
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.RouteUrl("maestro_unidadnegocio_x_empresa")',
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+
+                        $('#ddlEmpresaAtendio').attr('disabled', 'disabled');
+
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+
+                        $('#ddlEmpresaAtendio').removeAttr('disabled');
+                        $(".loader").fadeOut("slow");
+
+                    },
+                    success: function (result) {
+
+                        $('#ddlEmpresaAtendio').removeAttr('disabled');
+
+                        $(".loader").fadeOut("slow");
+
+                        if (result != null) {
+
+                            if (result.codigoResultado == 0) {
+
+                                $("#ddlUnidadNegocio").html("");
+                                $("#ddlUnidadNegocio").append(new Option("Seleccionar", "0"));
+
+                                for (i = 0; i < result.unidadNegociosReclamo.length; i++) {
+
+                                    $("#ddlUnidadNegocio").append(new Option(result.unidadNegociosReclamo[i].nombreUnidadNegocio, result.unidadNegociosReclamo[i].codigoUnidadNegocio));
+
+                                }
+
+
+                                $("#ddlTupoDocumento").html("");
+                                $("#ddlTupoDocumento").append(new Option("Seleccionar", "0"));
+
+                                for (i = 0; i < result.tiposDocumentos.length; i++) {
+
+                                    $("#ddlTupoDocumento").append(new Option(result.tiposDocumentos[i].nombreTipoDocumento, result.tiposDocumentos[i].codigoTipoDocumento));
+
+                                }
+
+
+
+
+                            }
+
+
+
+                        }
+
+                    },
+                    complete: function (data) {
+
+                        $(".loader").fadeOut("slow");
+
+                    }
+                });
+
+            }
+            catch (error) {
+                $('#ddlEmpresaAtendio').removeAttr('disabled');
+            }
+
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>

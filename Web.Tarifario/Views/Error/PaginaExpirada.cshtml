@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = null;
+    ViewData["Title"] = "Pagina Expirada";
+}
+
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+
+<style>
+    .alert-danger-alt {
+        border-color: #B63E5A;
+        background: #F44336;
+        color: #ffffff;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <br />
+    <img src="~/img/logo_transmaresGroup_estrella.png" height="150px"/>
+    <br /><br />
+    <div class="card mb-3" style="border:1px solid #1C3997;">
+        <div class="card-header" style="background-color:#1C3997;color:#ffffff;">Aviso</div>
+        <div class="card-body">
+            <p align="justify">
+                La sesión en Portal web ha expirado o se ha intentado ingresar desde una página no autorizada.<br>
+                Para iniciar una nueva sesión ingrese sus datos en la página de inicio de Portal web: portalweb.tpsac.com.pe.<br>
+                Para mayor información contáctese con nuestro Centro de Consultas al correo electrónico <a href="mailto:consultas@pdsac.com.pe">consultas@tpsac.com.pe</a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12" style="text-align:right;">
+            <form method="post" action="@Url.RouteUrl("CerrarSesionAsync")" >
+                <button type="submit" class="btn btn-sm btn-secondary">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+</div>
