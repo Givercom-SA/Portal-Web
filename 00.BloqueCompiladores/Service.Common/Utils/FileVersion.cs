@@ -40,8 +40,7 @@ namespace Service.Common.Utils
             var ips = new List<string>();
             try
             {
-                var servers = new Dictionary<string, string> { { "211",""},{ "215","" }, { "219",""  }, { "210",""  }, { "216",""  }, { "218",""  },
-                { "196",""  }, { "195",""}, { "198",""}, { "199" ,""} ,{ "21","DESA"}, {"6", "CERTI"},{ "35","QA"},{ "36","QA"},{ "7","LOCAL"}  };
+                var servers = new Dictionary<string, string> { { "4",""},{ "5","" }, { "6","" }, { "20", "DES" } };
                 var host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (var ip in host.AddressList)
                 {
@@ -68,8 +67,7 @@ namespace Service.Common.Utils
             var ips = new List<string>();
             try
             {
-                var servers = new Dictionary<string, string> { { "211","PROD"},{ "215","PROD" }, { "219","PROD"  }, { "210","PROD"  },{ "216","PROD"  }, { "218","PROD"  },
-                { "196","PROD"  }, { "195","PROD"}, { "198","PROD"}, { "199" ,"PROD"} ,{ "21","DESA"}, {"6", "CERTI"},{ "35","QA"},{ "36","QA"} };
+                var servers = new Dictionary<string, string> { { "4", "PROD" }, { "5", "PROD" }, { "6", "PROD" }, { "20", "DES" } };
                 var host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (var ip in host.AddressList)
                 {

@@ -22,6 +22,7 @@ using ViewModel.Datos.ListaExpressRelease;
 using Utilitario.Constante;
 using TransMares.Core;
 using ViewModel.Datos.Message;
+using ViewModel.Datos.Parametros;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -68,7 +69,21 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
                 var listServiceAnios = await _servicMaestro.ObtenerParametroPorIdPadre(53);
+                var anioActual = DateTime.Now.Year;
+                List<ParametrosVM >listaParametroAniosVM = new List<ParametrosVM>();
+            
+
+                for (var itemAnios = Convert.ToInt32(listServiceAnios.ListaParametros.ElementAt(0).ValorCodigo); itemAnios <= anioActual; itemAnios++) {
+
+                    listaParametroAniosVM.Add(new ParametrosVM() {  ValorCodigo= itemAnios.ToString() ,NombreDescripcion= itemAnios.ToString() });
+                }
+
+                listServiceAnios.ListaParametros = listaParametroAniosVM;
+
                 model.ListAnios = new SelectList(listServiceAnios.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+       
+
 
                 var listServiceTipoFiltro = await _servicMaestro.ObtenerParametroPorIdPadre(49);
                 model.TipoFiltros = new SelectList(listServiceTipoFiltro.ListaParametros, "ValorCodigo", "NombreDescripcion");
@@ -79,8 +94,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (model.Anio != "" && model.TipoFiltro != "")
                 {
                     model.listEmbarques = await _serviceEmbarques.ListarEmbarques(resultSesion.Sesion.CodigoTransGroupEmpresaSeleccionado,
-                                                                            short.Parse(model.Anio), short.Parse(model.TipoFiltro), model.Filtro == null ? "" : model.Filtro,
-                                                                            resultSesion.obtenerTipoEntidadTransmares(), resultSesion.Sesion.RucIngresadoUsuario);
+                                                                            short.Parse(model.Anio), 
+                                                                            short.Parse(model.TipoFiltro),
+                                                                            model.Filtro == null ? "" : model.Filtro,
+                                                                            resultSesion.obtenerTipoEntidadTransmares(), 
+                                                                            resultSesion.Sesion.RucIngresadoUsuario);
                 }
 
             }

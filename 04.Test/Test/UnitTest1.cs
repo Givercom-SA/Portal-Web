@@ -22,5 +22,22 @@ namespace Test
 
 
         }
+
+        [Test]
+        public void TestSplitArchivo()
+        {
+            //Assert.Pass();
+
+
+
+            string nombreArchivo = "jfloersninaco.pdf";
+            string[] listNombreArchivo = nombreArchivo.Split(".");
+
+            if (listNombreArchivo.Length > 0) {
+                string soloNombreSinExtension=listNombreArchivo[0];
+            }
+
+
+        }
     }
 }

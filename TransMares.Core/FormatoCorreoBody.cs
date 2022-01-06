@@ -531,7 +531,7 @@ namespace TransMares.Core
                                                  <img src='{imagen}'
                                                     style='height: auto;    width: 40%;'><br/>
                                                     <b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b>
-                                                <p style='font-family:Arial, Helvetica, sans-serif;'>{Mensaje}.</p>
+                                                <p style='font-family:Arial, Helvetica, sans-serif;'>{Mensaje}</p>
                                                 <center>
                                                     <p style = 'font-family:Arial, Helvetica, sans-serif;' >
                                                         ¡Estamos felices que cuentes con nosotros!
@@ -1093,7 +1093,7 @@ namespace TransMares.Core
                                                                        {mensaje}
 </p>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                                Nor. de Embarque: {nroEmbarque} <br/>
+                                                                Nro. de Embarque: {nroEmbarque} <br/>
                                                                 
      
                                                 </p>";

@@ -153,5 +153,27 @@ namespace Servicio.Embarque.ServiceExterno
             return result;
         }
 
+        public async Task<int> ActualizatMemoEnviadoEmbarque(string pKeybld, string pNomArchivo)
+        {
+            int result = 0;
+
+            // TM_WS_ActualizarBLTrabajadoEnviado
+
+            WebService_TM_PWSoapClient client =
+                new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
+
+            TM_WS_ActualizarMemoEnviadoEmbarqueRequest request = new TM_WS_ActualizarMemoEnviadoEmbarqueRequest(pKeybld, pNomArchivo);
+
+            TM_WS_ActualizarMemoEnviadoEmbarqueResponse response = client.TM_WS_ActualizarMemoEnviadoEmbarque(request);
+
+            await client.CloseAsync();
+
+            var res = response.TM_WS_ActualizarMemoEnviadoEmbarqueResult.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
+            result = string.IsNullOrEmpty(res.Element("RESPUESTA").Value) ? 0 : int.Parse(res.Element("RESPUESTA").Value);
+
+            return result;
+        }
+        
+
     }
 }

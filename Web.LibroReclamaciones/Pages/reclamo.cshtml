@@ -10,10 +10,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css?version=1">
+    <link rel="stylesheet" href="~/css/estilo_reclamo_queja.css?version=3">
     <title>@ViewData["Title"]</title>
 </head>
 <body>
+      <div class="header">
+        <div class="header_logo">
+            <img src="~/img/logo_tp_blanco.png" alt="Cargando...">
+        </div>
+    </div>
+
     <div class="contenedor">
         <div class="cabezera">
             <h2 class="cabezera_titulo">
@@ -74,7 +80,7 @@
                     </div>
                     <div class="item_formulario">
                         <label>Fecha de Incidencia</label>
-                        <input type="date" class="item_texto" asp-for="Input.FechaIncidencia" id="txtFechaIncidencia" asp-format="{0:dd'/'MM'/'yyyy}">
+                        <input type="date" class="item_texto" asp-for="Input.FechaIncidencia" onchange="verificarFecha(this)" id="txtFechaIncidencia" asp-format="{0:dd'/'MM'/'yyyy}">
                         <span asp-validation-for="Input.FechaIncidencia" class="small text-danger"></span>
                     </div>
 
@@ -111,28 +117,24 @@
                     </div>
 
                     <div class="item_formulario textArea">
-
                         <label>Mensaje (4000 caracteres)</label>
-
                         <textarea asp-for="Input.Mensaje" maxlength="40000" cols="30" rows="10" class="item_texto textArea"
                                   placeholder="Ingrese su mensaje ..."></textarea>
                         <span asp-validation-for="Input.Mensaje" class="small text-danger"></span>
                     </div>
+
                 </div>
 
                 <input type="hidden" asp-for="Input.EmpresaAtiendeNombre" id="hidenEmpresaAtiende">
                 <input type="hidden" asp-for="Input.UnidadNegocioNombre" id="hidenUnidadNegocio">
                 <input type="hidden" asp-for="Input.TipoDocumentoNombre" id="hidenTipoDocumento">
-
-
+                <input type="hidden" asp-for="Input.FechaTope" id="hidenFechaTope" />
 
             </form>
 
             <div id="divResultadoRegistro" style="display:none">
                 <h3>Estimado Cliente:</h3>
                 <p id="pResultadoRegistro">
-
-
                 </p>
             </div>
 
@@ -193,13 +195,14 @@
                 var d = new Date(dateString);
 
                 if (Number.isNaN(d.getTime())) {
+
                     alert("No se permite formato inválido");
                     $(this).val("");
+
                     return false;
                 }
 
-
-
+           
                 return d.toISOString().slice(0, 10) === dateString;
 
             });
@@ -207,6 +210,21 @@
 
         });
 
+        function verificarFecha(obj) {
+
+            var dateString = $(obj).val();
+
+            var d = new Date(dateString);
+
+            let dtFechaTop = $("#hidenFechaTope").val();
+
+            if (d > Date.parse(dtFechaTop)) {
+                alert("La fecha de incidencia no puede ser mayor que la fecha actual.");
+                $(obj).val("");
+        
+            }
+
+        }
 
         function  generarQueja(){
 

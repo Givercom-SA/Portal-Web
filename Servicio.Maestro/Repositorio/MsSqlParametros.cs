@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Servicio.Maestro.Models;
 using Servicio.Maestro.Models.LibroReclamo;
+using Servicio.Maestro.Models.Tarifario;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -219,6 +220,35 @@ namespace Servicio.Maestro.Repositorio
             return result;
         }
 
+        public ListarTarifarioResult ListarTarifario(ListarTarifarioParameter parametro) {
+            var result = new ListarTarifarioResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "TARIFARIO_SP_LISTAR_TARIFARIO_WEB";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@DES_RUBRO", parametro.Rubro, DbType.String);
+                    queryParameters.Add("@DES_SERVICIO", parametro.Servicio, DbType.String);
+                    queryParameters.Add("@FEC_INICIO", parametro.FechaInicio, DbType.DateTime);
+                    queryParameters.Add("@FEC_FIN", parametro.FechaFin, DbType.DateTime);
+                    result.Tarifarios = cnn.Query<Tarifario>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
+           
+                    result.IN_CODIGO_RESULTADO = 0;
+
+                }
+
+            }
+            catch (Exception err)
+            {
+                result.IN_CODIGO_RESULTADO = 2;
+                result.STR_MENSAJE_BD = err.Message;
+            }
+
+            return result;
+        }
+    
     }
 }
 

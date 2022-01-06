@@ -30,7 +30,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private readonly ServicioEmbarque _serviceEmbarque;
         private readonly ServicioMaestro _serviceMaestro;
         private readonly ServicioMessage _servicioMessage;
-
         private readonly IMapper _mapper;
         private static ILogger _logger = ApplicationLogging.CreateLogger("MemoController");
 
@@ -260,8 +259,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return Json(ActionResponse);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> ListarSolicitudes(ListarSolicitudesMemoModel model)
         {
@@ -287,6 +284,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(28);
             ViewBag.ListarMotivosRechazos = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
+
+
             return View(viewModel);
         }
 
@@ -299,18 +298,19 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 parameterVM.IdUsuarioEvalua =usuario.idUsuario;
 
                 var mensajeResult = await _serviceEmbarque.ActualizarEstadoDocumentoMemo(parameterVM);
-
                 actionResponse.Codigo = mensajeResult.CodigoResultado;
                 actionResponse.Mensaje = mensajeResult.MensajeResultado;
 
+                if (mensajeResult.CodigoResultado == 0) {
+                    actionResponse= await ProcesarSolicitud(parameterVM.CodigoSolicitud,this.usuario.idUsuario, parameterVM.codigoEstadoEvalua, parameterVM.CodigoMotivoRechazo);
+                }
+                
 
             } catch (Exception err)
             {
                 _logger.LogError(err,"ActualizarEstadoDocumento");
                 actionResponse.Codigo =-100;
                 actionResponse.Mensaje = "Ocurrio un error inesperado, por favor volver a intentar más tarde.";
-
-
             }
 
 
@@ -318,17 +318,19 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
         }
 
-        public async Task<JsonResult> ProcesarSolicitud(string codSolicitud)
+        private async Task<ActionResponse> ProcesarSolicitud(string codSolicitud, int IdUsuarioEvalua, string codigoEstadoEvaua,string codigoMotivoRechazo)
         {
             ActionResponse actionResponse = new ActionResponse();
 
             try
             {
                 SolicitudMemoEstadoParameterVM parameterVM = new SolicitudMemoEstadoParameterVM();
-            parameterVM.CodigoSolicitud = codSolicitud;
-            parameterVM.ImagenEmpresaLogo = $"{this.GetUriHost()}/img/{this.usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}";
-            var mensajeResult = await _serviceEmbarque.ProcesarSolicitudMemo(parameterVM);
-
+                parameterVM.CodigoSolicitud = codSolicitud;
+                parameterVM.IdUsuarioModifica = IdUsuarioEvalua;
+                parameterVM.CodigoMotivoRechazo = codigoMotivoRechazo;
+                parameterVM.CodigoEstadoEvalua = codigoEstadoEvaua;
+                parameterVM.ImagenEmpresaLogo = $"{this.GetUriHost()}/img/{this.usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}";
+                var mensajeResult = await _serviceEmbarque.ProcesarSolicitudMemo(parameterVM);
 
                 actionResponse.Codigo = mensajeResult.CodigoResultado;
                 actionResponse.Mensaje = mensajeResult.MensajeResultado;
@@ -339,16 +341,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 _logger.LogError(err, "ActualizarEstadoDocumento");
                 actionResponse.Codigo = -100;
                 actionResponse.Mensaje = "Ocurrio un error inesperado";
-
-
             }
 
-
-            return Json(actionResponse);
-
-
-
-
+            return actionResponse;
 
         }
 

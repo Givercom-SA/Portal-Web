@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Servicio.Maestro.Models;
 using Servicio.Maestro.Models.LibroReclamo;
+using Servicio.Maestro.Models.Tarifario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using ViewModel.Datos.Entidad;
 using ViewModel.Datos.ListaCorreos;
 using ViewModel.Datos.Parametros;
 using ViewModel.Reclamo;
+using ViewModel.Tarifario;
 
 namespace Servicio.Maestro.Profiles
 {
@@ -32,6 +34,7 @@ namespace Servicio.Maestro.Profiles
             CreateMap< ListaEmpresasParameterVM, ListaEmpresasParameter>();
             CreateMap<ListaUnidadNegocioXEmpresaParameterVM, ListaUnidadNegocioXEmpresaParameter>();
             CreateMap<RegistrarReclamoParameterVM, RegistrarReclamoParameter>();
+            CreateMap<ListarTarifarioParameterVM, ListarTarifarioParameter>();
 
 
             CreateMap<ListaDocumentoTipoEntidadResult, ListarDocumentoTipoEntidadVM>()
@@ -82,6 +85,14 @@ namespace Servicio.Maestro.Profiles
             CreateMap<RegistraReclamoResult, RegistrarReclamoResultVM>()
         .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
         .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<ListarTarifarioResult, ListarTarifarioResultVM>()
+  .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+  .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
+  .ForMember(s => s.Tarifarios, o => o.MapFrom(s => s.Tarifarios));
+
+            CreateMap<Tarifario, TarifarioVM>();
+
 
         }
     }

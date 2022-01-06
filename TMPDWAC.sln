@@ -84,11 +84,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "04.Test\Test\Test.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicio.Notificacion", "Servicio.Notificacion\Servicio.Notificacion.csproj", "{B8CAD2E5-9751-4EB5-A14A-A769D8FD0B59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Tarifario", "Web.Tarifario\Web.Tarifario.csproj", "{023C3965-3526-4B05-868C-2F6E5A8E65BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Tarifario", "Web.Tarifario\Web.Tarifario.csproj", "{023C3965-3526-4B05-868C-2F6E5A8E65BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.LibroReclamaciones", "Web.LibroReclamaciones\Web.LibroReclamaciones.csproj", "{42D94209-CCDB-4FA0-BA69-BC0F937002BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.LibroReclamaciones", "Web.LibroReclamaciones\Web.LibroReclamaciones.csproj", "{42D94209-CCDB-4FA0-BA69-BC0F937002BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel.Reclamo", "ViewModel.Reclamo\ViewModel.Reclamo.csproj", "{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel.Reclamo", "ViewModel.Reclamo\ViewModel.Reclamo.csproj", "{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel.Tarifario", "ViewModel.Tarifario\ViewModel.Tarifario.csproj", "{C2CBC6D7-C744-4486-A676-FD330AAE2620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -216,6 +218,10 @@ Global
 		{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2CBC6D7-C744-4486-A676-FD330AAE2620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2CBC6D7-C744-4486-A676-FD330AAE2620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2CBC6D7-C744-4486-A676-FD330AAE2620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2CBC6D7-C744-4486-A676-FD330AAE2620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,6 +259,7 @@ Global
 		{023C3965-3526-4B05-868C-2F6E5A8E65BE} = {6EC7DA23-593F-48B2-8CEA-2A24F8DD53DA}
 		{42D94209-CCDB-4FA0-BA69-BC0F937002BA} = {6EC7DA23-593F-48B2-8CEA-2A24F8DD53DA}
 		{2FECB0D9-DECD-4E7F-BA58-B106D5C909F6} = {C20874C8-2356-47DE-B225-53B351BD122A}
+		{C2CBC6D7-C744-4486-A676-FD330AAE2620} = {C20874C8-2356-47DE-B225-53B351BD122A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FB6AA25B-6CE3-4680-9F9C-49074FC72DAA}

@@ -96,6 +96,9 @@ namespace Servicio.Embarque.Profiles
             CreateMap<ListarEventosMemoResult, ListarEventosMemoResultVM>();
             CreateMap<ListarSolicitudesMemoResult, ListarSolicitudesMemoResultVM>();
             CreateMap<SolicitudMemoParameter, SolicitudMemoParameterVM>().ReverseMap();
+            CreateMap<SolicitudMemoEstadoresult, SolicitudMemoEstadoresultVM>().ReverseMap();
+            
+
             CreateMap<ProcesarSolicitudMemoResult, ProcesarSolicitudMemoResultVM>()
                 .ForMember(s => s.VH_CODSOLICITUD, o => o.MapFrom(s => s.VH_CODSOLICITUD))
                 .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))

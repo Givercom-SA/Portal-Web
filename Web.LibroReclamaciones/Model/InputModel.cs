@@ -47,9 +47,12 @@ namespace Web.LibroReclamaciones.Model
 
         [Display(Name = "Email (*)")]
         [Required(ErrorMessage = "Ingrese Email")]
-        [EmailAddress(ErrorMessage = "El Email ingresado no es válido")]
+        //[EmailAddress(ErrorMessage = "El Email ingresado no es válido")]
         [StringLength(150, ErrorMessage = "El Email ingresado tiene longitud invalida")]
-        [DataType(DataType.EmailAddress, ErrorMessage = "El Email ingresado no tiene el formato correcto")]
+         [DataType(DataType.EmailAddress, ErrorMessage = "El Email ingresado no tiene el formato correcto")]
+        //[DataType(DataType.EmailAddress)]
+         //[RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+         //  ErrorMessage = "Dirección de Correo electrónico incorrecta.")]
         public string Email { get; set; }
 
 
@@ -68,7 +71,8 @@ namespace Web.LibroReclamaciones.Model
         public string EmpresaAtiendeNombre { get; set; }
         public string UnidadNegocioNombre { get; set; }
         public string TipoDocumentoNombre { get; set; }
-
+        public string FechaTope { get; set; }
+        
         public SelectList ListEmpresaAtendio { get; set; }
 
         public SelectList ListUnidadNegocio { get; set; }

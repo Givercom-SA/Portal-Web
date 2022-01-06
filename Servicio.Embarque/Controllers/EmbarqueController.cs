@@ -34,6 +34,7 @@ namespace Servicio.Embarque.Controllers
         private readonly INotificacionArriboRepository _repositoryNotificacion;
         private readonly IMemoRepository _repositoryMemo;
         private readonly ICobroPagarRepository _repositoryCobroPagar;
+        private readonly ServiceExterno.ServicioEmbarques _servicioEmbarques;
         private readonly IMapper _mapper;
         private readonly ServicioMessage _servicioMessage;
         
@@ -44,7 +45,8 @@ namespace Servicio.Embarque.Controllers
             ICobroPagarRepository repositoryCobroPagar,
             IMapper mapper,
             IConfiguration configuration,
-            ServicioMessage servicioMessage)
+            ServicioMessage servicioMessage,
+            ServiceExterno.ServicioEmbarques servicioEmbarques)
         {
             _repository = repository;
             _repositoryNotificacion = repositoryNotificacion;
@@ -53,7 +55,9 @@ namespace Servicio.Embarque.Controllers
             _mapper = mapper;
             _configuration = configuration;
             _servicioMessage = servicioMessage;
-            
+            _servicioEmbarques =servicioEmbarques;
+
+
         }
 
         [HttpGet]
@@ -213,20 +217,7 @@ namespace Servicio.Embarque.Controllers
 
             if (result.IN_CODIGO_RESULTADO == 0)
             {
-               // Enviar Correo a usuario
-                //enviarCorreo(parameter.Correo,
-                //            "Transmares Group - Solicitud Memo",
-                //            new FormatoCorreoBody().formatoBodySolicitudCreada(result.VH_CODSOLICITUD,
-                //            "La solicitud se ha creado correctamente.",
-                //            parameter.ImagenEmpresaLogo));
-
-                //Enviar Correo a usuarios de  operaciones
-
-                //enviarCorreo(parameter.Correo,
-                //    "Transmares Group - Solicitud Memo",
-                //    new FormatoCorreoBody().formatoBodySolicitudCreada(result.VH_CODSOLICITUD,
-                //    "La solicitud se ha creado correctamente.", 
-                //    parameter.ImagenEmpresaLogo));
+             
             }
             return _mapper.Map<ProcesarSolicitudMemoResultVM>(result);
         }
@@ -270,22 +261,31 @@ namespace Servicio.Embarque.Controllers
 
         [HttpPost]
         [Route("procesar-solicitud-memo")]
-        public ActionResult<SolicitudMemoEstadoresultVM> ProcesarSolicitudMemo(SolicitudMemoEstadoParameterVM parameter)
+        public async Task<ActionResult<SolicitudMemoEstadoresultVM>> ProcesarSolicitudMemo(SolicitudMemoEstadoParameterVM parameter)
         {
             SolicitudMemoEstadoresultVM solicitudMemoEstadoresultVM = new SolicitudMemoEstadoresultVM();
 
-            solicitudMemoEstadoresultVM.CodigoResultado = 0;
-            solicitudMemoEstadoresultVM.MensajeResultado = "Proceso con éxito";
+            solicitudMemoEstadoresultVM.CodigoResultado = 50;
+            solicitudMemoEstadoresultVM.MensajeResultado = "";
 
             try
             {
-                _repositoryMemo.ProcesarSolicitudMemo(parameter.CodigoSolicitud);
+             var resultProcesaSolicitudMemo=   _repositoryMemo.ProcesarSolicitudMemo(parameter.CodigoSolicitud,parameter.IdUsuarioModifica,parameter.CodigoEstadoEvalua, parameter.CodigoMotivoRechazo);
+
+
+                solicitudMemoEstadoresultVM.CodigoResultado = resultProcesaSolicitudMemo.IN_CODIGO_RESULTADO;
+                solicitudMemoEstadoresultVM.MensajeResultado = resultProcesaSolicitudMemo.STR_MENSAJE_BD;
+
+
+
                 var solicitud = _repositoryMemo.ObtenerSolicitudMemoPorCodigo(parameter.CodigoSolicitud);
 
                 if (!solicitud.EstadoCodigo.Trim().Equals("SP"))
                 {
                     if (solicitud.EstadoCodigo.Trim().Equals("SA"))
                     {
+
+
                         // ENVIAR CORREO APROBADO
                         enviarCorreo(solicitud.Correo,
                                 "Transmares Group - Solicitud Memo Aprobada",
@@ -293,6 +293,8 @@ namespace Servicio.Embarque.Controllers
                     }
                     else if (solicitud.EstadoCodigo.Trim().Equals("SR"))
                     {
+
+
                         var listaDoc = _repositoryMemo.ObtenerDocumentosSolicitudMemo(solicitud.Codigo);
                         IList<string> listadocumentos = new List<string>();
 
@@ -308,6 +310,7 @@ namespace Servicio.Embarque.Controllers
 
             }
             catch (Exception err) {
+
                 solicitudMemoEstadoresultVM.CodigoResultado = -100;
                 solicitudMemoEstadoresultVM.MensajeResultado = err.Message;
 
@@ -403,18 +406,28 @@ namespace Servicio.Embarque.Controllers
 
                 if (archivo != null)
                 {
+                    string soloNombreSinExtension = "";
+                    string[] listNombreArchivo = parameter.NombreArchivo.Split(".");
 
-                    EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
-                    enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
-                    enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificarMemo($"Se adjunta documento por el Memo del BL {parameter.NroBL}.", parameter.LogoEmpresa);
-                    enviarMessageCorreoParameterVM.RequestMessage.Correo = parameter.Correo;
-                    enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group – Documento por el Memo";
-                    enviarMessageCorreoParameterVM.RequestMessage.Archivos = new string[1];
-                    enviarMessageCorreoParameterVM.RequestMessage.Archivos[0]= archivo.FullName;
-                   await   _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
-                    CorreoEnviado = 1;
+                    if (listNombreArchivo.Length > 0)
+                    {
+                         soloNombreSinExtension = listNombreArchivo[0];
+                    }
 
+                    var resultMemoEnviado =  await _servicioEmbarques.ActualizatMemoEnviadoEmbarque(parameter.KeyBLD, soloNombreSinExtension);
 
+                    if (resultMemoEnviado == 1)
+                    {
+                        EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
+                        enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
+                        enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificarMemo($"Se adjunta documento por el Memo del BL {parameter.NroBL}.", parameter.LogoEmpresa);
+                        enviarMessageCorreoParameterVM.RequestMessage.Correo = parameter.Correo;
+                        enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group – Documento por el Memo";
+                        enviarMessageCorreoParameterVM.RequestMessage.Archivos = new string[1];
+                        enviarMessageCorreoParameterVM.RequestMessage.Archivos[0] = archivo.FullName;
+                        await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
+                        CorreoEnviado = 1;
+                    }
                 }
             }
             catch (Exception)

@@ -63,6 +63,7 @@ namespace Web.Principal.Pages.libroreclamaciones
             var parameterEmpresas = new ViewModel.Reclamo.ListaEmpresasParameterVM();
 
             var listTipoDocumnentoResult = await _serviceMaestro.ListarEmpresas(parameterEmpresas);
+            Input.FechaTope = DateTime.Now.ToString("yyyy-MM-dd");
 
             if (listTipoDocumnentoResult.CodigoResultado == 0)
             {
@@ -110,7 +111,23 @@ namespace Web.Principal.Pages.libroreclamaciones
 
                     enviarCorreoCliente(Input.Email,Input.NombreCompleto,$"Se ha registrado tu queja exitosamente y en 24 horas te estaremos respondiendo.");
 
-                    
+                    // enviar usuario atiende
+
+                    var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(74);
+                    string correo = listaEstado.ListaParametros.ElementAt(0).ValorCodigo;
+
+                    string contenido = "";
+                    contenido = $"Se ha registrado una queja, a continuación el detalle. <br/><br/>";
+                    contenido = contenido + $" Ruc: {Input.Ruc}<br/>";
+                    contenido = contenido + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenido = contenido + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenido = contenido + $" Email: {Input.Email}<br/>";
+                    contenido = contenido + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenido = contenido + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenido = contenido + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
+                    contenido = contenido + $" Tipo Documento: {Input.TipoDocumentoNombre}<br/>";
+                    contenido = contenido + $" Mensaje: {Input.Mensaje}<br/>";
+                    enviarCorreoCliente(correo, "usuario", contenido);
 
                 }
                 else {

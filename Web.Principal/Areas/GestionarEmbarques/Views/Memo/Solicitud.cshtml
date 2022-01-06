@@ -50,40 +50,33 @@
 
                                             <div class="form-group row">
                                                 <label for="File_@item.Value" class="col-sm-2 col-form-label small">@item.Text</label>
-
                                                 <div class="col-sm-6">
                                                     <input data-val="true" data-val-required="Seleccione archivo." id="File_@item.Value" name="File_@item.Value" type="file" @multiple onchange="fileValidation(this,'@item.Value')" class="form-control small" accept="@acept">
                                                     <span data-valmsg-for="File_@item.Value" data-valmsg-replace="true" class="small text-danger"></span>
                                                     @if (item.Value.Equals("DM01"))
                                                     {
-
                                                         <div id="divContentDetalleArchivos" style="padding-left: 14px; max-height: 200px; overflow: visible auto;" class="row">
                                                             <ul id='lListImagenes' class="small">
                                                             </ul>
                                                         </div>
-
                                                     }
                                                 </div>
 
                                                 <div class="col-sm-2">
                                                     <label class="col-form-label small" id="lbTamano_@item.Value"> 0.00MB</label>
-
                                                 </div>
                                             </div>
-
                                         }
 
                                         <div class="form-group row">
                                             <label  class="col-sm-2 col-form-label small">Total de Peso </label>
 
                                             <div class="col-sm-6">
-               
                                                 <label class="col-form-label small" id="lbTamano_total"> 0.00MB</label>
                                             </div>
 
                                             <div class="col-sm-2">
                                                 <label class="col-form-label small" > </label>
-
                                             </div>
                                         </div>
 
@@ -101,14 +94,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <!-- Sticky Navigation-->
-
-
         </div>
-
     </div>
 
 </div>
@@ -193,8 +180,7 @@
                     data: formData,
                     contentType: false,
                     processData: false
-                })
-                    .done(function (result) {
+                }).done(function (result) {
                         if (result != null) {
                             if (result.codigo == 0) {
 
@@ -243,9 +229,7 @@
 
         function CargarControles(modalidad, flagCargaPeligrosa, flagLOI, TipoConsignatario) {
 
-
         }
-
 
         function fileValidation(objThis, itemValue) {
 
@@ -265,7 +249,7 @@
 
                     intTotalTamano = intTotalTamano + fileInput.size;
 
-                    mensaje += "<li> <div class='row'> <div class='col-md-8'> " + fileInput.name + " </div> <div class='col-md-4' style=' text-align: right;'> " + parseFloat(Math.round((fileInput.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
+                    mensaje += "<li> <div class='row'> <div class='col-md-10'>Estimado cliente, considerar que no puede adjuntar el archivo “<strong>" + fileInput.name +"</strong>”. Sólo se pueden adjuntar archivos .jpg, .pdf, .jpeg.</div> <div class='col-md-2' style=' text-align: right;'> " + parseFloat(Math.round((fileInput.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
 
                     if (!allowedExtensions.exec(filePath)) {
                         listNoPermitidos.push("Extension no permitido= " + fileInput.name);
@@ -281,7 +265,7 @@
 
                 if (listNoPermitidos.length > 0) {
 
-                    $('#outputMensaje').html("<ul>" + mensaje + mensajeTotal + "</ul>");
+                    $('#outputMensaje').html("<ul> "+ mensaje  + mensajeTotal + "</ul>");
                     $('#dialogAlerta').modal('show');
                     $("#lListImagenes").html('');
                     document.getElementById("File_" + itemValue).value = "";
@@ -311,7 +295,7 @@
 
                 intTotalTamano_DM2 = intTotalTamano_DM2 + fileInput_DM2.size;
 
-                mensaje += "<li> <div class='row'> <div class='col-md-8'> " + fileInput_DM2.name + " </div> <div class='col-md-4' style=' text-align: right;'> " + parseFloat(Math.round((fileInput_DM2.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
+                mensaje += "<li> <div class='row'> <div class='col-md-10'>Estimado cliente, considerar que no puede adjuntar el archivo “<strong>" + fileInput_DM2.name + "</strong>”. Sólo se pueden adjuntar archivos .jpg, .pdf, .jpeg.</div> <div class='col-md-2' style=' text-align: right;'> " + parseFloat(Math.round((fileInput_DM2.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
 
                 if (!allowedExtensions_DM2.exec(filePath_DM2)) {
                     listNoPermitidos.push("Extension no permitido= " + fileInput_DM2.name);
@@ -327,7 +311,7 @@
 
                 if (listNoPermitidos.length > 0) {
 
-                    $('#outputMensaje').html("<ul>" + mensaje + mensajeTotal + "</ul>");
+                    $('#outputMensaje').html(  " <ul>" + mensaje + mensajeTotal + "</ul>");
                     $('#dialogAlerta').modal('show');
               
                     document.getElementById("File_" + itemValue).value = "";
@@ -354,7 +338,7 @@
 
                 intTotalTamano_DM3 = intTotalTamano_DM3 + fileInput_DM3.size;
 
-                mensaje += "<li> <div class='row'> <div class='col-md-8'> " + fileInput_DM3.name + " </div> <div class='col-md-4' style=' text-align: right;'> " + parseFloat(Math.round((fileInput_DM3.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
+                mensaje += "<li> <div class='row'> <div class='col-md-10'>Estimado cliente, considerar que no puede adjuntar el archivo “<strong>" + fileInput_DM3.name + "</strong>”. Sólo se pueden adjuntar archivos .jpg, .pdf, .jpeg.</div> <div class='col-md-2' style=' text-align: right;'> " + parseFloat(Math.round((fileInput_DM3.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
 
                 if (!allowedExtensions_DM3.exec(filePath_DM3)) {
                     listNoPermitidos.push("Extension no permitido= " + fileInput_DM3.name);
@@ -370,7 +354,7 @@
 
                 if (listNoPermitidos.length > 0) {
 
-                    $('#outputMensaje').html("<ul>" + mensaje + mensajeTotal + "</ul>");
+                    $('#outputMensaje').html(" <ul>" + mensaje + mensajeTotal + "</ul>");
                     $('#dialogAlerta').modal('show');
 
                     document.getElementById("File_" + itemValue).value = "";

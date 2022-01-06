@@ -320,9 +320,9 @@ namespace Servicio.Embarque.Repositorio
             return result;
         }
 
-        public BaseResult ProcesarSolicitudMemo(string codSolicitud)
+        public SolicitudMemoEstadoresult ProcesarSolicitudMemo(string codSolicitud, int IdUsuarioEvalua, String codigoEstadoEvalua, string codigoMotivoRechazo)
         {
-            var result = new BaseResult();
+            var result = new SolicitudMemoEstadoresult();
 
             try
             {
@@ -331,13 +331,12 @@ namespace Servicio.Embarque.Repositorio
                     string spName = "TM_PDWAC_SP_PROCESAR_SOLICITUDMEMO";
 
                     var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@COD_SOLICITUD", codSolicitud);
-
-                    cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
-                    result.IN_CODIGO_RESULTADO = 0;
-
-                    if (result.STR_MENSAJE_BD != null)
-                        result.IN_CODIGO_RESULTADO = 1;
+                    queryParameters.Add("@COD_SOLICITUD", codSolicitud, DbType.String);
+                    queryParameters.Add("@IdUsuarioEvalua", IdUsuarioEvalua,DbType.Int32);
+                    queryParameters.Add("@CodigoEstadoEvalua", codigoEstadoEvalua, DbType.String);
+                    queryParameters.Add("@CodigoRechazo", codigoMotivoRechazo, DbType.String);
+                    result = cnn.Query<SolicitudMemoEstadoresult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+              
                 }
             }
             catch (Exception ex)

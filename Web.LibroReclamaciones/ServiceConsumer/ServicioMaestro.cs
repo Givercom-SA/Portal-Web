@@ -28,7 +28,17 @@ namespace Web.LibroReclamaciones.ServiceConsumer
             this.URL_BASE = $"{configuration["ConfiguracionServicios:Maestros"]}";
         }
 
-    
+        public async Task<ListaParametrosVM> ObtenerParametroPorIdPadre(int idParam)
+        {
+            const string SERVICIO = "obtenerParametrosIdPadre";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}?idParam={idParam}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<ListaParametrosVM>();
+
+            return resultado;
+        }
+
         public async Task<ViewModel.Reclamo.ListaEmpresasResultVM> ListarEmpresas(ViewModel.Reclamo.ListaEmpresasParameterVM parameter)
         {
             const string SERVICIO = "reclamo-empresas";

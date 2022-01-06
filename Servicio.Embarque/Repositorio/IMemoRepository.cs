@@ -20,8 +20,8 @@ namespace Servicio.Embarque.Repositorio
         public ListarDocumentoMemoResult ObtenerDocumentosSolicitudMemo(string codSol);
         public ListarEventosMemoResult ObtenerEventosSolicitudMemo(string codSolicitud);
         public DocumentoEstadoMemoResult ActualizarSolicitudMemo(DocumentoEstadoMemoParameter parameter);
- 
-        public BaseResult ProcesarSolicitudMemo(string codSolicitud);
+
+        public SolicitudMemoEstadoresult ProcesarSolicitudMemo(string codSolicitud, int IdUsuarioEvalua, string codigoEstadoEvalua, string codigoMotivoRechazo);
         public ListarUsuarioResult ObtenerUsuariosPorPerfil(int IdPerfil);
         public NotificacionesMemoResult VerificarNotificacionMemo(NotificacionMemoParameter parameter);
     }

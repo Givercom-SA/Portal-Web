@@ -1,4 +1,7 @@
-﻿@using ViewModel.Datos.UsuarioRegistro
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Service.Common.Utils.IVersionService version
+
+@using ViewModel.Datos.UsuarioRegistro
 @{
 
     var idperfil = ViewData["IdPerfil"].ToString();
@@ -23,8 +26,8 @@
         
         <div class="sidenav-footer">
             <div class="sidenav-footer-content">
-                <div class="sidenav-footer-subtitle small">Version: v1</div>
-                <div class="sidenav-footer-title small">Server: 95</div>
+                <div class="sidenav-footer-subtitle small">GTRM - @version.GetVersion() SE @version.GetIp() </div>
+                
             </div>
         </div>
     </nav>

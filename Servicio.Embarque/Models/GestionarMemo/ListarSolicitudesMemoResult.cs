@@ -21,7 +21,7 @@ namespace Servicio.Embarque.Models.GestionarMemo
         public string EstadoNombre { get; set; }
         public string Correo { get; set; }
 
-
+        public string CodMotivoRechazo { get; set; }
 
         public string Solicitante { get; set; }
 

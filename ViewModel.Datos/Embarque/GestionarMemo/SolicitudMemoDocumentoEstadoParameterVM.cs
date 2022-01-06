@@ -11,6 +11,8 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
         public string CodigoSolicitud { get; set; }
         public int IdSolicitud { get; set; }
         public int IdUsuarioEvalua { get; set; }
+        public string codigoEstadoEvalua { get; set; }
+        public string CodigoMotivoRechazo { get; set; }
 
     }
 
