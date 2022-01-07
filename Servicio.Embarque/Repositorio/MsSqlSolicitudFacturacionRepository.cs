@@ -73,7 +73,7 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@SOFA_IDSOLICITUDFACTURACION", parameter.IdSolicitudFacturacion, dbType: DbType.Int32);
                     queryParameters.Add("@SOFA_IDUSUAIO_EVALUA", parameter.IdUsuarioEvalua, dbType: DbType.Int32 );
                     queryParameters.Add("@SOFA_OBSERVACION_RECHAZO", parameter.ObservacionRechazo, dbType: DbType.String);
-                    
+                    queryParameters.Add("@SOFA_IDSOLICITUD_TAF", parameter.IdSolicitudTAFF, dbType: DbType.String);
                     result = cnn.Query<SolicitarFacturacionEstadoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }

@@ -397,6 +397,7 @@ namespace Web.Principal.ServiceExterno
                     request.pIdSolicitudPW,
                     request.pNroSolicitudPW,
                     request.pFechaSolicitud,
+                    request.pFechaEvaluacion,
                     request.pUsuarioPW,
                     request.pEmpresa, 
                     request.pKeybld, 

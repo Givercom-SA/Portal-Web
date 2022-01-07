@@ -34,10 +34,11 @@ namespace Servicio.Embarque.Models.GestionarMemo
         public DateTime? FechaEvalua { get; set; }
 
         public string EstadoEvalua { get; set; }
+        public string Motivorechazo { get; set; }
+
+        
 
 
-
-    
 
         public IEnumerable<DocumentoMemoResult> ListaDocumentos { get; set; }
 

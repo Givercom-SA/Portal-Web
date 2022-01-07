@@ -427,7 +427,7 @@ namespace TransMares.Core
                                                         </center>
                                                     </center>
                                                     <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                        El equipo de Transmares se lo agradece
+                                                        El equipo de Transmares te lo agradece
                                                     </p>
                                                 </td>
                                             </tr>
@@ -805,7 +805,7 @@ namespace TransMares.Core
                                                                        {mensaje}
                                                         </p>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                                Nor. de Embarque: {nroEmbarque} <br/>
+                                                                Nro. de Embarque: {nroEmbarque} <br/>
                                                                 Fecha de Registro: {DateTime.Now.ToString("dd/MM/yyyy")} <br/>
                                                                 Tipo de Pago: {model.TipoPagoString()} <br/>
                                                                 Moneda de Solicitud: {cobroClienteProvosionSeleleccionado.CobrosPendientesEmbarque.ElementAt(0)?.Moneda} <br/>
@@ -988,7 +988,7 @@ namespace TransMares.Core
                                                                        {mensaje}
 </p>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                                Nor. de Embarque: {nroEmbarque} <br/>
+                                                                Nro. de Embarque: {nroEmbarque} <br/>
                                                                 Fecha de Registro: {DateTime.Now.ToString("dd/MM/yyyy")} <br/>
                                                                 Tipo de Pago: {model.TipoPagoString()} <br/>
                                                                 Moneda de Solicitud: {cobroClienteProvosionSeleleccionado.CobrosPendientesEmbarque.ElementAt(0)?.Moneda} <br/>
@@ -1131,18 +1131,14 @@ namespace TransMares.Core
         public string formatoBodySolicitudAprobada(string pNroSolicitud, string nombreLogoEmpresa)
         {
             String HtmlSend = "";
-
             string imagen = nombreLogoEmpresa;
-
             HtmlSend = $@"
                 <!DOCTYPE html>
                 <html xmlns='http://www.w3.org/1999/xhtml'>
-
                     <head runat='server'>
                         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
                         <title></title>
                     </head>
-
                     <body>
                         <center>
                             <div class='col-lg-12'>
@@ -1150,19 +1146,16 @@ namespace TransMares.Core
                             </div>
                             <div style='width:500px;background:#133bf0;border-radius:  10px 10px 10px 10px;border: 0px solid #000000; '>
                                 <div style='height:30px'></div>
-
                                 <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
                                     <tbody style=' background:#ffffff '>
                                         <tr>
                                             <td style='padding: 12px;' colspan='3'>
-                                                                                      <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
+                                              <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
                                                 <img src='{imagen}'
                                                     style='height: auto;    width: 40%;'>
-                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b></h4>
-                                                <p style='font-family:Arial, Helvetica, sans-serif;'>La solicitud de memo ha sido APROBADO correctamente.</p>
-                                                <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                   <br /> <strong>Nro. Solicitud:</strong>{pNroSolicitud}
-
+                                                    <br/>        <br/>
+                                                <strong><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b></strong><br/>
+                                                <p style='font-family:Arial, Helvetica, sans-serif;'>Le informamos que su solicitud Nro. <strong>{pNroSolicitud}</strong> ha sido <strong>APROBADA</strong>.</p>
                                                 <center>
                                                     <p style = 'font-family:Arial, Helvetica, sans-serif;' >
                                                         ¡Estamos felices que cuentes con nosotros!
@@ -1181,7 +1174,6 @@ namespace TransMares.Core
                     </body>
                 </html>";
             return HtmlSend;
-
         }
 
         public string formatoBodySolicitudDireccionamientoRechazada(string pNroSolicitud, string MotivoRechazo, string nombreLogoEmpresa)
@@ -1244,7 +1236,7 @@ namespace TransMares.Core
             return HtmlSend;
         }
 
-        public string formatoBodySolicitudMemoRechazada(string pNroSolicitud, IEnumerable<string> listaDocumento,string nombreLogoEmpresa)
+        public string formatoBodySolicitudMemoRechazada(string pNroSolicitud,string nombreLogoEmpresa, string MotivoRechazo)
         {
             String HtmlSend = "";
             string imagen = nombreLogoEmpresa;
@@ -1259,7 +1251,7 @@ namespace TransMares.Core
                     </head>
 
                     <body>
-                    <center>
+                        <center>
                             <div class='col-lg-12'>
                                 <p class='card-text' style='height: 20px;'></p>
                             </div>
@@ -1269,36 +1261,30 @@ namespace TransMares.Core
                                 <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
                                     <tbody style=' background:#ffffff '>
                                         <tr>
-                                            <td align='center' style='padding: 12px;' colspan='3'>
+                                            <td  style='padding: 12px;' colspan='3'>
                                                 <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
                                                 <img src='{imagen}'
                                                     style='height: auto;    width: 40%;'>
-                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b></h4>
+                                                <br/>        <br/>
+                                                <strong><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b></strong><br/>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                    Le informamos que su solicitud {pNroSolicitud} ha sido <strong>RECHAZADA</strong> debido a observaciones de los siguientes documentos.
-                                                </p>
-                                                        <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                            <hr/>";
-                                                        foreach (var item in listaDocumento)
-                                                        {
-                                                            var arr = item.Split('|');
-                                                            HtmlSend += string.Format(
-                                                                "<strong>{0}</strong> <br /> Rechazada por {1} <br /> <br />",
-                                                                arr[0].Trim(),
-                                                                arr[1]).Trim();
-                                                        }
-                                                        HtmlSend += @"<hr/>
+                                                    Le informamos que su solicitud Nro. <strong>{pNroSolicitud}</strong> ha sido <strong>RECHAZADA</strong> debido al siguiente motivo:  
+                                                   <br/><br/>  <strong> - { MotivoRechazo}</strong> 
+                                                    </p>
                                                         <p style='font-family:Arial, Helvetica, sans-serif;'>
                                                             Deberá corregir las observaciones indicadas y volver a presentar su solicitud.
                                                         </p>
-                                                    <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                        El equipo de Transmares se lo agradece
-                                                    </p>
+                                                <center>
+                                                    <p style = 'font-family:Arial, Helvetica, sans-serif;' >
+                                                        ¡Estamos felices que cuentes con nosotros!
+                                                        <br /> El equipo de Transmares te lo agradece
+                                                     </p>
+                                                 </center>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style='background-color: #424141; color: white;'
-                                                    align='center' colspan='3'>
+                                                 colspan='3'>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -1308,7 +1294,7 @@ namespace TransMares.Core
                                         <p class='card-text' style='height: 20px;'></p>
                                     </div>
                                 </div>
-                      </center>
+                       </center>
                         </body>
                     </html>";
 

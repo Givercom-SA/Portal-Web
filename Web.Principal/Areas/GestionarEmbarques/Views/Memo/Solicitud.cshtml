@@ -235,6 +235,7 @@
 
             let listNoPermitidos = [];
             let mensaje = "";
+            let mensaje_list = "";
             let mensajeTotal = "";
 
 
@@ -249,8 +250,9 @@
 
                     intTotalTamano = intTotalTamano + fileInput.size;
 
-                    mensaje += "<li> <div class='row'> <div class='col-md-10'>Estimado cliente, considerar que no puede adjuntar el archivo “<strong>" + fileInput.name +"</strong>”. Sólo se pueden adjuntar archivos .jpg, .pdf, .jpeg.</div> <div class='col-md-2' style=' text-align: right;'> " + parseFloat(Math.round((fileInput.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
-
+                    mensaje += "<li> <div class='row'> <div class='col-md-10'>Estimado cliente, considerar que no puede adjuntar el archivo “<strong>" + fileInput.name + "</strong>”. Sólo se pueden adjuntar archivos .jpg, .pdf, .jpeg.</div> <div class='col-md-2' style=' text-align: right;'> " + parseFloat(Math.round((fileInput.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
+                    mensaje_list += "<li> <div class='row'> <div class='col-md-8'>" + fileInput.name + "</div> <div class='col-md-4' style=' text-align: right;'> " + parseFloat(Math.round((fileInput.size / 1024.00) * 100) / 100).toFixed(2) + "KB </div> </div></li>";
+                    
                     if (!allowedExtensions.exec(filePath)) {
                         listNoPermitidos.push("Extension no permitido= " + fileInput.name);
                     }
@@ -274,7 +276,7 @@
                 } else {
 
                     $("#divContentDetalleArchivos").css({ "padding-top": "5px", "padding-botton": "5px" });;
-                    $("#lListImagenes").html(mensaje);
+                    $("#lListImagenes").html(mensaje_list);
                     let totalMB = intTotalTamano / 1048576;
                     $("#lbTamano_" + itemValue).html(parseFloat(Math.round(totalMB * 100) / 100).toFixed(2) + "MB");
 

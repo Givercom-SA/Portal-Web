@@ -272,11 +272,8 @@ namespace Servicio.Embarque.Controllers
             {
              var resultProcesaSolicitudMemo=   _repositoryMemo.ProcesarSolicitudMemo(parameter.CodigoSolicitud,parameter.IdUsuarioModifica,parameter.CodigoEstadoEvalua, parameter.CodigoMotivoRechazo);
 
-
                 solicitudMemoEstadoresultVM.CodigoResultado = resultProcesaSolicitudMemo.IN_CODIGO_RESULTADO;
                 solicitudMemoEstadoresultVM.MensajeResultado = resultProcesaSolicitudMemo.STR_MENSAJE_BD;
-
-
 
                 var solicitud = _repositoryMemo.ObtenerSolicitudMemoPorCodigo(parameter.CodigoSolicitud);
 
@@ -284,27 +281,20 @@ namespace Servicio.Embarque.Controllers
                 {
                     if (solicitud.EstadoCodigo.Trim().Equals("SA"))
                     {
-
-
                         // ENVIAR CORREO APROBADO
                         enviarCorreo(solicitud.Correo,
-                                "Transmares Group - Solicitud Memo Aprobada",
+                                "Transmares Group - Solicitud de Devolución de Cobro de Garantía Aprobada",
                                 new FormatoCorreoBody().formatoBodySolicitudAprobada(solicitud.Codigo, parameter.ImagenEmpresaLogo));
                     }
                     else if (solicitud.EstadoCodigo.Trim().Equals("SR"))
                     {
-
-
-                        var listaDoc = _repositoryMemo.ObtenerDocumentosSolicitudMemo(solicitud.Codigo);
-                        IList<string> listadocumentos = new List<string>();
-
-                        foreach (var item in listaDoc.ListaDocumentos.Where(w => w.Estado.Trim().Equals("SR")))
-                            listadocumentos.Add(string.Format("{0}|{1}", item.Nombre, item.NombreMotivoRechazo));
+                        //var listaDoc = _repositoryMemo.ObtenerDocumentosSolicitudMemo(solicitud.Codigo);
+                    
 
                         // ENVIAR CORREO RECHAZO
                         enviarCorreo(solicitud.Correo,
-                                "Transmares Group - Solicitud Memo Rechazada",
-                                new FormatoCorreoBody().formatoBodySolicitudMemoRechazada(solicitud.Codigo, listadocumentos, parameter.ImagenEmpresaLogo));
+                                "Transmares Group - Solicitud de Devolución de Cobro de Garantía Rechazada",
+                                new FormatoCorreoBody().formatoBodySolicitudMemoRechazada(solicitud.Codigo, parameter.ImagenEmpresaLogo, solicitud.Motivorechazo));
                     }
                 }
 

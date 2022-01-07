@@ -750,50 +750,70 @@ namespace ServiceReference1
         public string pFechaSolicitud;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=3)]
-        public string pUsuarioPW;
+        public string pFechaEvaluacionSolicitud;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=4)]
-        public string pEmpresa;
+        public string pUsuarioPW;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=5)]
-        public string pKeybld;
+        public string pEmpresa;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=6)]
-        public string pTipoCliente;
+        public string pKeybld;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=7)]
-        public string pRucCliente;
+        public string pTipoCliente;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=8)]
-        public string pTipoPago;
+        public string pRucCliente;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=9)]
-        public string pFormaPago;
+        public string pTipoPago;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=10)]
-        public string pId_Transaccion;
+        public string pFormaPago;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=11)]
-        public string pNumeroOperacion;
+        public string pId_Transaccion;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=12)]
-        public string pFecha;
+        public string pNumeroOperacion;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=13)]
-        public double pImporte;
+        public string pFecha;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=14)]
+        public double pImporte;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=15)]
         public string pUsuarioFinPW;
         
         public TM_WS_RegistrarSolicitudFacturacionRequest()
         {
         }
         
-        public TM_WS_RegistrarSolicitudFacturacionRequest(string pIdSolicitudPW, string pNroSolicitudPW, string pFechaSolicitud, string pUsuarioPW, string pEmpresa, string pKeybld, string pTipoCliente, string pRucCliente, string pTipoPago, string pFormaPago, string pId_Transaccion, string pNumeroOperacion, string pFecha, double pImporte, string pUsuarioFinPW)
+        public TM_WS_RegistrarSolicitudFacturacionRequest(
+                    string pIdSolicitudPW, 
+                    string pNroSolicitudPW, 
+                    string pFechaSolicitud, 
+                    string pFechaEvaluacionSolicitud, 
+                    string pUsuarioPW, 
+                    string pEmpresa, 
+                    string pKeybld, 
+                    string pTipoCliente, 
+                    string pRucCliente, 
+                    string pTipoPago, 
+                    string pFormaPago, 
+                    string pId_Transaccion, 
+                    string pNumeroOperacion, 
+                    string pFecha, 
+                    double pImporte, 
+                    string pUsuarioFinPW)
         {
             this.pIdSolicitudPW = pIdSolicitudPW;
             this.pNroSolicitudPW = pNroSolicitudPW;
             this.pFechaSolicitud = pFechaSolicitud;
+            this.pFechaEvaluacionSolicitud = pFechaEvaluacionSolicitud;
             this.pUsuarioPW = pUsuarioPW;
             this.pEmpresa = pEmpresa;
             this.pKeybld = pKeybld;

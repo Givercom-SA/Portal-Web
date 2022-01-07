@@ -173,7 +173,30 @@ namespace Servicio.Embarque.ServiceExterno
 
             return result;
         }
-        
+
+        public async Task<ObtenerEstadoSolicitudFacturacioResult> ObtenerEstadoSolicitudFacturacion(string IdSolicitudTaf)
+        {
+            ObtenerEstadoSolicitudFacturacioResult embarque = new ObtenerEstadoSolicitudFacturacioResult();
+
+            WebService_TM_PWSoapClient client =
+                new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
+
+            TM_WS_ObtenerEstadoSolicitudFacturacionRequest request = new TM_WS_ObtenerEstadoSolicitudFacturacionRequest(IdSolicitudTaf);
+
+            TM_WS_ObtenerEstadoSolicitudFacturacionResponse response = client.TM_WS_ObtenerEstadoSolicitudFacturacion(request);
+
+            await client.CloseAsync();
+
+            if (!response.TM_WS_ObtenerEstadoSolicitudFacturacionResult.Nodes[1].IsEmpty)
+            {
+                var item = response.TM_WS_ObtenerEstadoSolicitudFacturacionResult.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
+                embarque.FLAG_ESTADO_FACTURACION_SOLICITUD = item.Element("FLAG_ESTADO_FACTURACION_SOLICITUD") == null ? "" : item.Element("FLAG_ESTADO_FACTURACION_SOLICITUD").Value;
+                embarque.FLAG_COBROS_PENDIENTES = item.Element("FLAG_COBROS_PENDIENTES") == null ? "" : item.Element("FLAG_COBROS_PENDIENTES").Value;
+
+            }
+
+            return embarque;
+        }
 
     }
 }

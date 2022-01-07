@@ -189,7 +189,7 @@
                             @foreach (var item in Model.ListaDocumentos.Where(x => x.Padre == 0))
                             {
                                 bool disabled = (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR") ? true : false;
-                                string icon = (item.Codigo.Equals("DM01")) ? "bi-file-image" : "bi-file-pdf";
+                                string icon = (item.Codigo.Equals("DM01")) ? "bi-file-image" : "bi-file-image";
                                 @Html.Hidden("hddCodDoc_" + i, item.Codigo)
                                 <div class="d-flex align-items-center justify-content-between px-4">
                                     <div class="d-flex align-items-center">
@@ -244,7 +244,7 @@
                                 @foreach (var item in Model.ListaEventos)
                                 {
                                     <tr>
-                                        <td>@item.NombreUsuario</td>
+                                        <td>@item.CorreoUsuario</td>
                                         <td>@item.FechaRegistro</td>
                                         <td>@item.Descripcion</td>
                                     </tr>
