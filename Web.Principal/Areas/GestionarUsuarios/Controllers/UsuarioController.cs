@@ -35,8 +35,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             PerfilParameterVM parameter = new PerfilParameterVM();
             parameter.Activo = 1;
             var result = await _serviceAcceso.ObtenerPerfiles(parameter);
+            ViewBag.Perfiles = result.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO));
 
-            ViewBag.Perfiles = result.Perfiles;
             return View();
         }
 
@@ -49,9 +49,19 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             PerfilParameterVM parameterPerfil = new PerfilParameterVM();
             parameterPerfil.Activo = 1;
+
             var resultPerfiles = await _serviceAcceso.ObtenerPerfiles(parameterPerfil);
             ViewBag.Perfiles = resultPerfiles.Perfiles;
 
+            if (result.usuario.IdEntidad == 0)
+            {
+                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO));
+            }
+            else {
+                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
+            }
+            
+       
 
             EditarUsuarioInternoModel model = new EditarUsuarioInternoModel();
             model.Correo = result.usuario.Correo;

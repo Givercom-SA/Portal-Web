@@ -189,7 +189,7 @@ namespace TransMares.Core
         }
 
 
-        public string formatoBodyNotificacionFacturacion(string pNombreClienteEmpresa, string pNumeracionEmbarque, string ImagenGrupo)
+        public string formatoBodyNotificacionFacturacion(string pCodigoSolicitud, string pNumeracionEmbarque, string ImagenGrupo)
         {
             String HtmlSend = "";
 
@@ -217,9 +217,9 @@ namespace TransMares.Core
                                                 <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
                                                 <img src='{ImagenGrupo}'
                                                     style='height: auto;    width: 40%;'>
-                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado {pNombreClienteEmpresa} </b></h4>
+                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado cliente, </b></h4>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                    Se adjunta notificación de facturación correspodiente al Nro. de embarque {pNumeracionEmbarque}.
+                                                 Se adjunta BL trabajado correspondiente al Nro. de Embarque {pNumeracionEmbarque} – Solicitud de Facturación {pCodigoSolicitud}.
                                                 </p>
                                                 
                                                 <center>

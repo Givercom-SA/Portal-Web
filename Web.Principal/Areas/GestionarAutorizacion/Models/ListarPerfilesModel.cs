@@ -16,7 +16,7 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
 
         public string ReturnUrl { get; set; }
 
-        public List<PerfilVM> Perfiles { get; set; }
+        public IEnumerable<PerfilVM> Perfiles { get; set; }
 
 
     }

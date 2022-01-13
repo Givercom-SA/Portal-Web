@@ -16,7 +16,7 @@ namespace Servicio.Embarque.Repositorio
         public NotificacionesMemoResult ProcesarNotificacionesMemo();
         public ProcesarSolicitudMemoResult CrearSolicitudMemo(SolicitudMemoParameter parameter);
         public SolicitudMemoResult ObtenerSolicitudMemoPorCodigo(string codSol);
-        public ListarSolicitudesMemoResult ObtenerSolicitudesMemo(string nroSolicitud, string codEstado, string strRuc);
+        public ListarSolicitudesMemoResult ObtenerSolicitudesMemo(ListarSolicitudesMemoParameter parameter);
         public ListarDocumentoMemoResult ObtenerDocumentosSolicitudMemo(string codSol);
         public ListarEventosMemoResult ObtenerEventosSolicitudMemo(string codSolicitud);
         public DocumentoEstadoMemoResult ActualizarSolicitudMemo(DocumentoEstadoMemoParameter parameter);

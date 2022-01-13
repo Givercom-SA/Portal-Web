@@ -42,7 +42,7 @@ namespace ViewModel.Datos.UsuarioRegistro
 
         public int IdUsuario { get; set; }
         public int IdPerfil { get; set; }
-        public int IdEntidad { get; set; }
+        public int? IdEntidad { get; set; }
         public string Correo { get; set; }
         public string Nombres { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -56,6 +56,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string EntidadNroDocumneto { get; set; }
         public string EntidadTipoDocumento { get; set; }
 
+        public string TipoPerfil { get; set; }
 
         public string EntidadRazonSocial { get; set; }
         public string EntidadRepresentanteNombre { get; set; }

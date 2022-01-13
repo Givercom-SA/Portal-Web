@@ -46,16 +46,17 @@
                     <div class="col-6 col-sm-6  small ">
 
                         <div class="row">
-                            <div class="col-6">
-                                @Html.Raw("Estado: ")
+                            <div class="col-6 col-sm-6 ">
+                                @Html.Raw("Número de Embarque :")
                             </div>
-                            <div class="col-6">
-                                <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+                            <div class="col-6 col-sm-6 ">
+                                <input class="form-control  small" type="text" disabled value="@Model.NroEmbarque" />
                             </div>
                         </div>
                     </div>
 
                     <div class=" col-6 col-sm-6  small ">
+
                         <div class="row">
                             <div class="col-6">
                                 @Html.Raw("Fecha de Registro: ")
@@ -72,6 +73,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-6 col-sm-6  small ">
+
                         <div class="row">
                             <div class="col-6 col-sm-6 ">
                                 @Html.Raw("Estado :")
@@ -100,7 +102,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-6 col-sm-6  small ">
                         <div id="divMotRechazo" style="display:none;">
                             <div class="row">

@@ -12,7 +12,7 @@ namespace ViewModel.Datos.Perfil
         {
 
         }
-        public List<PerfilVM> Perfiles { get; set; }
+        public IEnumerable<PerfilVM> Perfiles { get; set; }
     }
 
 }

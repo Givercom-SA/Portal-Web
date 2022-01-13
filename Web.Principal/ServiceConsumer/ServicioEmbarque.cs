@@ -401,15 +401,20 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
-        public async Task<ListarSolicitudesMemoResultVM> ObtenerSolicitudesMemo(string nroSolicitud, string codEstado, string strRUC)
+        public async Task<ListarSolicitudesMemoResultVM> ObtenerSolicitudesMemo(ListarSolicitudesMemoParameterVM parameter)
         {
+           
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
             const string SERVICIO = "obtener-solicitudes-memo";
-            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}/{nroSolicitud}/{codEstado}/{strRUC}";
-            var response = await client.GetAsync(uri);
+            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
 
             var resultado = response.ContentAsType<ListarSolicitudesMemoResultVM>();
 
             return resultado;
+
         }
 
         public async Task<SolicitudMemoResultVM> ObtenerSolicitudMemo(string codSol)

@@ -7,6 +7,24 @@
     var listaAgentes = ViewBag.Agentes as List<ViewModel.Datos.Embarque.AsignarAgente.UsuarioEntidadVM>;
 }
 
+@functions{
+    string ParseHito(string strDatos)
+    {
+        string strEstado = string.Empty;
+
+        if (string.IsNullOrEmpty(strDatos))
+        {
+
+            return strEstado;
+        }
+        else {
+            strEstado = string.Concat(" - ", strDatos);
+        }
+
+        return strEstado;
+    }
+}
+
 <link href="/css/estilo.css" rel="stylesheet" />
 
 <div class="loader" style="">
@@ -156,231 +174,112 @@
 
 
                                             </div>
-
-
-
                                         </div>
-
                                         <div class="row mb-3">
                                             <div class="col-6 col-sm-6  small ">
-
-
                                                 <div class="row">
-
-
-
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Condición: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.DES_CONDICION" />
-
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
                                             <div class=" col-6 col-sm-6  small ">
-
-
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Puerto de Carga: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POL" />
-
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
-
-
-
-
-
-
-
-
                                         </div>
-
                                         <div class="row mb-3">
                                             <div class="col-6 col-sm-6  small ">
-
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Puerto de Descarga: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POD" />
-
-
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
                                             <div class=" col-6 col-sm-6  small ">
-
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Fecha de Descarga: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ETAPOD" />
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
-
                                         <div class="row mb-3">
-
                                             <div class="col-6 col-sm-6  small ">
-
-
                                                 <div class="row">
-
-
-
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Equipamiento: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.EQUIPAMIENTO" />
-
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
                                             <div class=" col-6 col-sm-6  small ">
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Nro. de Manifiesto: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.MANIFIESTO" />
-
                                                     </div>
                                                 </div>
-
                                             </div>
-
-
                                         </div>
-
-
-
-
-
                                         <div class="row mb-3">
-
                                             <div class="col-6 col-sm-6  small ">
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Nombre de la Línea: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.DES_LINEA" />
-
                                                     </div>
                                                 </div>
-
                                             </div>
-
-
-
                                             <div class="col-6 col-sm-6  small ">
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Consignatario: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.CONSIGNATARIO" />
-
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
-
                                         </div>
                                         <div class="row mb-3">
                                             <div class=" col-6 col-sm-6  small ">
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Instrucción de Embarque: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value=" @Model.EmbarqueDetalle.DES_INSTRUCCION " />
-
-
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <div class="col-6 col-sm-6  small ">
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Carga Peligrosa: ")
-
                                                     </div>
                                                     <div class="col-6">
-
-
-
                                                         @if (Model.EmbarqueDetalle.FLAG_CARGA_PELIGROSA == "1")
                                                         {
                                                             <input class="form-control  small" type="text" disabled value="SI" />
@@ -406,159 +305,103 @@
                                     }
                                     else
                                     {
-
                                         <p> Aun no registro asignación de cobros a pagar. </p>
-
                                     }
                                 </div>
                             </div>
-
                             <div class="tab-pane fade" id="Estado" role="tabpanel" aria-labelledby="Estado-pill">
-
-
                                 <div class="row">
                                     <div class="col-6">
-
-
                                         <aside>
                                             <div class="contenedor-temario small">
-
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Origen: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control " type="text" disabled value="@Model.EmbarqueDetalle.ORIGEN" />
-
                                                     </div>
                                                 </div>
-
                                                 <div class="row mb-3">
-
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Condición: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control" type="text" disabled value="@Model.EmbarqueDetalle.DES_CONDICION" />
-
                                                     </div>
                                                 </div>
-
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Numeración de Embarque: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NROBL" />
-
                                                     </div>
                                                 </div>
-
-
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Nro. de Routing Order: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NRORO" />
                                                     </div>
                                                 </div>
-
-
-
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Puerto de Carga: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POL" />
-
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Puerto de Descarga: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POD" />
-
-
                                                     </div>
                                                 </div>
-
                                                 <div class="row mb-3">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Fecha de Descarga: ")
-
                                                     </div>
                                                     <div class="col-6">
-
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ETAPOD" />
                                                     </div>
                                                 </div>
-
                                             </div>
-                                          </aside>
+                                        </aside>
                                     </div>
-                                        <div class="col-6">
-
-                                            <div class="cajaDerecha">
-
-
-                                                <div class="caja_linea">
-
-                                                    <aside>
-                                                        <div class="contenedor-temario small" id="temario">
+                                    <div class="col-6">
+                                        <div class="cajaDerecha">
+                                            <div class="caja_linea">
+                                                <aside>
+                                                    <div class="contenedor-temario small" id="temario">
+                                                        @{
                                                             <ul class="lista">
-                                                                <li class="activo"><a href="#">Primer Hito / Fecha de creacion del RO</a></li>
-                                                                <li><a href="#">Segundo Hito / Booking - ETD</a></li>
-                                                                <li><a href="#">Tercer Hito / ETA</a></li>
-                                                                <li><a href="#">Cuarto Hito / Transmision Aduanera</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </aside>
-                                                </div>
+                                                               <li id="aCreacionBooking"><a href="javascript:void()">Creación Routing Order @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
+                                                                <li id="aETD"><a href="javascript:void()">ETD @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETD))</a></li>
+                                                                <li id="aTA"><a href="javascript:void()">Transmisión Aduanas @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS))</a></li>
+                                                                <li id="aETA"><a href="javascript:void()">ETA @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETA))</a></li>
+                                                              @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
+                                                                {
+                                                               <li id="aICA"><a href="javascript:void()">Ingreso de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
+                                                               <li id="aRCA"><a href="javascript:void()">Retiro de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
+                                                                }
+                                                          </ul>
+                                                        }
+                                                    </div>
+                                                </aside>
                                             </div>
                                         </div>
-
-
                                     </div>
+                                </div>
                                 </div>
                             </div>
                     </div>
                 </div>
             </div>
-
         </div>
                 <div class="col-lg-3">
                     <div class="nav-sticky">
@@ -796,14 +639,9 @@
                         </div>
                     </div>
 
-                </div>
-
-
-          
-   
+                </div>   
     </div>
 </div>
-
 
 <div class="modal fade" data-bs-backdrop="static" id="modal_asignar" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -848,7 +686,6 @@
 
 </div>
 
-
 <div class="modal fade" data-bs-backdrop="static" id="modal_notificar_arribo" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -867,7 +704,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" data-bs-backdrop="static" id="modal_aceptacion_condicion_emision" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1017,7 +853,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1032,8 +867,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal fade" data-bs-backdrop="static" id="modal_confirmar_direccionamiento" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1054,8 +887,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal fade" data-bs-backdrop="static" id="modal_mensaje_validacion_facturacion_tercero" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1114,29 +945,68 @@
     </div>
 </div>
 
-
-
 @section Scripts{
-
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
-
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
-
-
     <script>
 
         $(document).ready(function () {
 
             $(".loader").fadeOut("slow");
 
-
             DataTableAnularAsignacionCobrosPagar();
 
+            let strCreacionBoking = "@Model.EmbarqueDetalle.FEC_CREATE_RO";
+            let strETD = "@Model.EmbarqueDetalle.FEC_ETD";
+            let strTA = "@Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS";
+            let strETA = "@Model.EmbarqueDetalle.FEC_ETA";
+            let strICA = "@Model.EmbarqueDetalle.FEC_ING_CARGA";
+            let strRCA = "@Model.EmbarqueDetalle.FEC_RET_CARGA";
+
+            let strCondicion="@Model.EmbarqueDetalle.CONDICION.Trim()";
+            if (strCondicion == "@Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL") {
+
+                if (strRCA != "") {
+
+                    $("#aRCA").addClass("activo");
+
+                } else if (strICA != "") {
+                    $("#aICA").addClass("activo");
+                }
+                else if (strETA != "") {
+                    $("#aETA").addClass("activo");
+                }
+                else if (strTA != "") {
+                    $("#aTA").addClass("activo");
+                }
+                
+                else if (strETD != "") {
+                    $("#aETD").addClass("activo");
+                }
+                else if (strCreacionBoking != "") {
+                    $("#aCreacionBooking").addClass("activo");
+                }
+
+            }
+            else {
+                 if (strETA != "") {
+                    $("#aETA").addClass("activo");
+                }
+                else if (strTA != "") {
+                    $("#aTA").addClass("activo");
+                }
+                
+                else if (strETD != "") {
+                    $("#aETD").addClass("activo");
+                }
+                else if (strCreacionBoking != "") {
+                    $("#aCreacionBooking").addClass("activo");
+                }
+
+            }
 
         });
-
-
 
         function DataTableAnularAsignacionCobrosPagar() {
 

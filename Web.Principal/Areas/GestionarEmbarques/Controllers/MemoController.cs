@@ -204,6 +204,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             
             var embarque = await _serviceEmbarques.ObtenerEmbarque(parameter.KeyBL);
             parameter.NroEmbarque = embarque.NROBL;
+            parameter.CodigoEmpresaServicio =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
 
             var result = await _serviceEmbarque.CrearSolicitudMemo(parameter);
 
@@ -267,7 +268,15 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(34);
             ViewBag.ListarEstado = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
-            var listaSolicitud = await _serviceEmbarque.ObtenerSolicitudesMemo(viewModel.CodSolicitud ?? "0", viewModel.CodEstado ?? "0", viewModel.Ruc ?? "0");
+
+            ListarSolicitudesMemoParameterVM parameter = new ListarSolicitudesMemoParameterVM();
+
+            parameter.nroSolicitud = viewModel.CodSolicitud ?? "0";
+            parameter.codEstado = viewModel.CodEstado ?? "0";
+            parameter.strRuc = viewModel.Ruc ?? "0";
+            parameter.CodigoEmpresaServicio =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+
+            var listaSolicitud = await _serviceEmbarque.ObtenerSolicitudesMemo(parameter);
 
 
             viewModel.listaResultado = listaSolicitud.ListaSolicitudes;

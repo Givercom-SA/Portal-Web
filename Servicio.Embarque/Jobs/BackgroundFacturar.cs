@@ -140,7 +140,7 @@ namespace Servicio.Embarque.Jobs
                                             EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
                                             enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
                                             enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificacionFacturacion(
-                                                 resultFacturacion.SolicitudFacturaciones.ElementAt(0).SolicitanteEmpresaPersona,
+                                                 resultFacturacion.SolicitudFacturaciones.ElementAt(0).CodigoSolicitud,
                                                 resultFacturacion.SolicitudFacturaciones.ElementAt(0).NroBl,
                                                _configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupoUrl.ToString()]);
 
@@ -154,21 +154,17 @@ namespace Servicio.Embarque.Jobs
                                         }
                                         else
                                         {
-
                                             regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                                         }
-
                                     }
                                     else
                                     {
                                         regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                                     }
-
                                 }
                                 else
                                 {
                                     regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
-
                                 }
                             }
                             else
@@ -179,7 +175,6 @@ namespace Servicio.Embarque.Jobs
                         else {
                             regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                         }
-                        //Se envia la información al servicio que se ha actualizado y enviado
                     }
                     catch (Exception ex)
                     {

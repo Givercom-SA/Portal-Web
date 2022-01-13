@@ -18,9 +18,7 @@ namespace Web.LibroReclamaciones.Model
         public string Ruc { get; set; }
 
 
-        [Display(Name = "Tipo de Documento por la Cual Reclama (*)")]
-        [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccionar un tipo de documento")]
-        public string TipoDocumento { get; set; }
+  
 
         [Display(Name = "Empresa que lo Atendió (*)")]
         [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccionar empresa que lo antendió")]
@@ -70,7 +68,7 @@ namespace Web.LibroReclamaciones.Model
 
         public string EmpresaAtiendeNombre { get; set; }
         public string UnidadNegocioNombre { get; set; }
-        public string TipoDocumentoNombre { get; set; }
+        
         public string FechaTope { get; set; }
         
         public SelectList ListEmpresaAtendio { get; set; }

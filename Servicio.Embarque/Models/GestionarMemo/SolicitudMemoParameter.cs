@@ -11,7 +11,7 @@ namespace Servicio.Embarque.Models.GestionarMemo
         public string Correo { get; set; }
         public string NroEmbarque { get; set; }
         public int IdUsuarioCrea { get; set; }
-        
+        public string CodigoEmpresaServicio { get; set; }
         public List<DocumentoMemo> Documentos { get; set; }
 
     }

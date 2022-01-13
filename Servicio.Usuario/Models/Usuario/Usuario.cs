@@ -9,7 +9,7 @@ namespace Servicio.Usuario.Models.Usuario
     {
         public int IdUsuario { get; set; }
         public int IdPerfil { get; set; }
-        public int IdEntidad { get; set; }
+        public int? IdEntidad { get; set; }
         public string Correo { get; set; }
         public string Nombres { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -25,7 +25,8 @@ namespace Servicio.Usuario.Models.Usuario
 
         public string EntidadRazonSocial { get; set; }
         public string EntidadRepresentanteNombre { get; set; }
-  
+        public string TipoPerfil { get; set; }
+        
         public List<UsuarioMenu> Menus { get; set; }
     }
 }

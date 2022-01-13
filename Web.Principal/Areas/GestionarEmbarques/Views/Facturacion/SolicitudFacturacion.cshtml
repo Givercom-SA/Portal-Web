@@ -23,13 +23,9 @@
 </header>
 
 <div class="container-xl px-4 mt-n10">
-
     <div class="card">
         <div class="card-header border-bottom">
-
             <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="cardTab" role="tablist">
-
-
                 <a class="nav-item nav-link active" id="wzCobrosFacturar-tab" href="#wzCobrosFacturar" data-bs-toggle="tab" role="tab" aria-controls="wzCobrosFacturar" aria-selected="true">
                     <div class="wizard-step-icon">1</div>
                     <div class="wizard-step-text">
@@ -37,8 +33,6 @@
                         <div class="wizard-step-text-details">Información de conceptos</div>
                     </div>
                 </a>
-
-
                 <a class="nav-item nav-link " id="wzMetodoPago-tab" disabled href="#wzMetodoPago" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzMetodoPago" aria-selected="true">
                     <div class="wizard-step-icon">2</div>
                     <div class="wizard-step-text">
@@ -46,7 +40,6 @@
                         <div class="wizard-step-text-details">Información de método de pago </div>
                     </div>
                 </a>
-
                 <a class="nav-item nav-link " id="wzResumen-tab" disabled href="#wzResumen" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzResumen" aria-selected="true">
                     <div class="wizard-step-icon">3</div>
                     <div class="wizard-step-text">
@@ -54,9 +47,6 @@
                         <div class="wizard-step-text-details">Información de resumen </div>
                     </div>
                 </a>
-
-           
-
             </div>
         </div>
         <div class="card-body">
@@ -70,16 +60,11 @@
                             <div class="col-xxl-10 col-xl-10">
                                 <h3 class="text-primary">Paso 1</h3>
                                 <h5 class="card-title mb-4">Favor verificar la información para continuar con el siguiente paso.</h5>
-
                                 <input type="hidden" asp-for="@Model.KEYBLD" />
                                 <input type="hidden" asp-for="@Model.NroBl" />
                                 <input type="hidden" id="ProvicionClienteCantidad" value="@Model.CobrosPendientesCliente.Count()" />
-                                
-
-
+                               
                                 @{
-
-
                                     for (var itemCliente = 0; itemCliente < Model.CobrosPendientesCliente.Count(); itemCliente++)
                                     {
 
@@ -181,13 +166,9 @@
 
                                 <hr class="my-4" />
                                 <div class="d-flex justify-content-between">
-
                                     <a class="btn btn-dark" href="javascript: history.go(-1)"> Volver </a>
                                     <a class="btn btn-primary" href="javascript:IrMetodoPago()" id="btnConceptoSiguiente"> Siguiente </a>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -195,19 +176,9 @@
                     <div class="tab-pane py-5 py-xl-5 fade" id="wzMetodoPago" role="tabpanel" aria-labelledby="wzMetodoPago-tab">
                         <div class="row justify-content-center">
                             <div class="col-xxl-10 col-xl-10">
-
                                 <h3 class="text-primary">Paso 2</h3>
                                 <h5 class="card-title mb-4">Metodo de Pago</h5>
-
-
                                 <div id="divContenedorMetodoPago">
-
-
-
-
-
-
-
                                     <fieldset>
                                         <legend class="small">Tipo de Pago </legend>
                                         <div class="row">
@@ -263,15 +234,9 @@
 
                                     <br />
                                     <div id="divContado" style="display:block">
-
                                         <fieldset>
                                             <legend class="small"> Método de Pago </legend>
-
                                             <div class="row">
-
-
-
-
                                                 <div class="col-md-6">
 
                                                     <div class="form-check form-check-solid small">
@@ -327,8 +292,8 @@
                                                 <div class="mb-3">
 
 
-                                                    <label class="small mb-1"> Código de Transferencia </label>
-                                                    <input asp-for="@Model.CodigoOperacionTransferencia" id="txtCodigoOperacion" maxlength="50" class="form-control" type="text" placeholder="Ingrese código de operación" />
+                                                    <label class="small mb-1"> Número de Operación </label>
+                                                    <input asp-for="@Model.CodigoOperacionTransferencia" id="txtCodigoOperacion" maxlength="50" class="form-control" type="text" placeholder="Ingrese número de operación" />
                                                     <span asp-validation-for="@Model.CodigoOperacionTransferencia" id="spanValidarCodigoTrasnferencia" class="small text-danger"></span>
                                                     <input type="hidden" asp-for="@Model.CodigoOperacionTransferencia" />
 
@@ -504,7 +469,7 @@
                                                             <div class="col-6">
 
 
-                                                                @Html.Raw("Código de Transferencia: ")
+                                                                @Html.Raw("Número de Operación: ")
 
                                                             </div>
                                                             <div class="col-6">
@@ -820,6 +785,13 @@
 
             });
 
+            $("#txtCodigoOperacion").keydown(function (event) {
+               
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                    return false;
+                }
+              });
+
 
             $.extend($.validator.messages, {
 
@@ -1022,7 +994,7 @@
                 if (cantProvisionCliente == "" || cantProvisionCliente == "0" || cantProvisionCliente==NaN) {
 
                     $("#dialogAlerta").modal("show");
-                    $("#outputMensaje").html("Estimado cliente, no se encontre registros de concepto de la provisión seleccionada.");
+                    $("#outputMensaje").html("Estimado cliente, favor considerar que el BL no tiene cobros asignados. En caso de consulta comunicarse con el operador o CS asignado.");
 
 
                 } else {
@@ -1113,7 +1085,7 @@
                     if ($("#txtCodigoOperacion").val() == "") {
 
 
-                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el código de operación.</li>";
+                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el número de operación.</li>";
                         validarCampos = false;
                     }
 

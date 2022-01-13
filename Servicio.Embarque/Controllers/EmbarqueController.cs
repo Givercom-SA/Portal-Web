@@ -222,11 +222,11 @@ namespace Servicio.Embarque.Controllers
             return _mapper.Map<ProcesarSolicitudMemoResultVM>(result);
         }
 
-        [HttpGet]
-        [Route("obtener-solicitudes-memo/{nroSolicitud}/{codEstado}/{strRuc}")]
-        public ActionResult<ListarSolicitudesMemoResultVM> ObtenerSolicitudes(string nroSolicitud, string codEstado, string strRuc)
+        [HttpPost]
+        [Route("obtener-solicitudes-memo")]
+        public ActionResult<ListarSolicitudesMemoResultVM> ObtenerSolicitudes(ListarSolicitudesMemoParameterVM parameter)
         {
-            var result = _repositoryMemo.ObtenerSolicitudesMemo(nroSolicitud, codEstado, strRuc);
+            var result = _repositoryMemo.ObtenerSolicitudesMemo(_mapper.Map<ListarSolicitudesMemoParameter>(parameter));
             return _mapper.Map<ListarSolicitudesMemoResultVM>(result);
         }
 

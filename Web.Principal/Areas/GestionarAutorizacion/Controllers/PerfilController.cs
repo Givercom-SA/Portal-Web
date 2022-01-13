@@ -37,10 +37,9 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
             PerfilParameterVM parameter = new();
             parameter.Nombre = model.Nombre;
             parameter.Activo = model.Activo;
-            var result = await _serviceAcceso.ObtenerPerfiles(parameter);
+            var resultPerfiles= await _serviceAcceso.ObtenerPerfiles(parameter);
 
-            model.Perfiles = result.Perfiles;
-
+            model.Perfiles = resultPerfiles.Perfiles;
             return View(model);
         }
 

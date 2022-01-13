@@ -127,6 +127,7 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@SOME_CORREO", parameter.Correo);
                     queryParameters.Add("@SOME_IDUSUARIO_CREA", parameter.IdUsuarioCrea);
                     queryParameters.Add("@SOME_NROBL", parameter.NroEmbarque);
+                    queryParameters.Add("@SOME_CODEMPRESA_SERVICIO", parameter.CodigoEmpresaServicio);
                     queryParameters.Add("@ListDocumentos", dtDocumentos, DbType.Object);
 
                     result = cnn.Query<ProcesarSolicitudMemoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -172,7 +173,7 @@ namespace Servicio.Embarque.Repositorio
             return result;
         }
 
-        public ListarSolicitudesMemoResult ObtenerSolicitudesMemo(string nroSolicitud, string codEstado, string strRuc)
+        public ListarSolicitudesMemoResult ObtenerSolicitudesMemo(ListarSolicitudesMemoParameter parameter)
         {
             var result = new ListarSolicitudesMemoResult();
 
@@ -183,10 +184,11 @@ namespace Servicio.Embarque.Repositorio
                     string spName = "TM_PDWAC_SP_SOLICITUDMEMO_LISTAR";
 
                     var queryParameters = new DynamicParameters();
-                    queryParameters.Add("SOME_CODIGO", nroSolicitud);
-                    queryParameters.Add("SODI_RUC", strRuc);
-                    queryParameters.Add("SODI_ESTADO", codEstado);
-                 
+                    queryParameters.Add("SOME_CODIGO", parameter.nroSolicitud, DbType.String);
+                    queryParameters.Add("SODI_RUC", parameter.strRuc, DbType.String);
+                    queryParameters.Add("SODI_ESTADO", parameter.codEstado, DbType.String);
+                    queryParameters.Add("SOME_CODIGOEMPRESA_SERVICIO", parameter.CodigoEmpresaServicio, DbType.String);
+                    
 
                     result.ListaSolicitudes = cnn.Query<SolicitudMemoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                     result.IN_CODIGO_RESULTADO = 0;

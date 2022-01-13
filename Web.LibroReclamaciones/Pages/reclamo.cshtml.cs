@@ -90,10 +90,10 @@ namespace Web.Principal.Pages.ReclamoQueja
                 RegistrarReclamoParameterVM registrarReclamoParameterVM = new RegistrarReclamoParameterVM();
                 registrarReclamoParameterVM.Celular = Input.Celular;
                 registrarReclamoParameterVM.CodigoEmpresa = Input.EmpresaAtiende;
-                registrarReclamoParameterVM.CodigoTipoDocumento = Input.Celular;
+                registrarReclamoParameterVM.CodigoTipoDocumento = Input.TipoDocumento;
                 registrarReclamoParameterVM.CodigoTipoFormulario = "01";
                 registrarReclamoParameterVM.CodigoUnidadNegocio = Input.UnidadNegocio;
-                registrarReclamoParameterVM.Email = Input.Celular;
+                registrarReclamoParameterVM.Email = Input.Email;
                 registrarReclamoParameterVM.FechaIncidencia = Input.FechaIncidencia;
                 registrarReclamoParameterVM.Nombre = Input.NombreCompleto;
                 registrarReclamoParameterVM.Observacion = Input.Mensaje;
@@ -107,7 +107,17 @@ namespace Web.Principal.Pages.ReclamoQueja
                     ActionResponse.Mensaje = resultRegistrarReclamo.MensajeResultado;
 
                     // enviar cliente
-                    enviarCorreoCliente(Input.Email, Input.NombreCompleto, $"Se ha registrado exitosamente tu reclamo y en 24 horas te estaremos respondiendo.");
+                    string contenidoCliente = "";
+                    contenidoCliente = $"Se ha registrado tu reclamo exitosamente y en 24 horas te estaremos respondiendo, a continuación el detalle. <br/><br/>";
+                    contenidoCliente = contenidoCliente + $" Ruc: {Input.Ruc}<br/>";
+                    contenidoCliente = contenidoCliente + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenidoCliente = contenidoCliente + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenidoCliente = contenidoCliente + $" Email: {Input.Email}<br/>";
+                    contenidoCliente = contenidoCliente + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenidoCliente = contenidoCliente + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenidoCliente = contenidoCliente + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
+
+                    enviarCorreoCliente(Input.Email, Input.NombreCompleto, contenidoCliente);
 
 
 

@@ -155,21 +155,48 @@
 
     <script>
         $(function () {
+
             $(".loader").fadeOut("slow");
-            let dataTable = new simpleDatatables.DataTable("#datatable", {
-                searchable: false,
-                labels: {
-                    "noRows": "No hay información",
-                    perPage: "{select} Registros por página",
-                    "info": "Mostrando {start} a {end} de {rows} Registros",
-                },
-            });
+
+
+            cargarLista();
+           
+
 
         });
+
+
+
+        function cargarLista() {
+
+
+
+            try {
+
+
+                let dataTable = new simpleDatatables.DataTable("#datatable", {
+                    searchable: true,
+                    labels: {
+                        "noRows": "No hay información",
+                        perPage: "{select} Registros por página",
+                        "info": "Mostrando {start} a {end} de {rows} Registros",
+                        placeholder: "Filtro rápido...",
+                    },
+                });
+
+
+            } catch (erro) {
+
+            }
+
+        }
+
+
         function VerInformacion(IdUsuario) {
+
             $.ajax({
                 type: "GET",
-                url: "/GestionarUsuarios/Usuario/VerUsuario?Id=" + IdUsuario,
+                url: "@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios"})?Id=" + IdUsuario,
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'html'

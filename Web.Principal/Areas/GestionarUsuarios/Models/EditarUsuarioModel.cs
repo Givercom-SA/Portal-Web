@@ -25,8 +25,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Display(Name = "Apellido Paterno")]
         [Required(ErrorMessage = "Debe ingresar Apellido Paterno")]
         public string ApellidoPaterno { get; set; }
+        
         [Required(ErrorMessage = "Debe ingresar Apellido Materno")]
+        [Display(Name = "Apellido Materno")]
         public string ApellidoMaterno { get; set; }
+        
         [Display(Name = "Correo")]
         [Required(ErrorMessage = "Debe ingresar el correo")]
         [EmailAddress(ErrorMessage = "El correo ingresado no es válido")]
@@ -41,9 +44,10 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "Seleccione Estado")]
         public bool Activo { get; set; }
+        
         public bool EsAdmin { get; set; }
 
-        public int IdEntidad { get; set; }
+        public int? IdEntidad { get; set; }
 
         public string PerfilNombre { get; set; }
         public int[] Menus { get; set; }

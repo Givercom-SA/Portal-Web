@@ -731,7 +731,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                         EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
                             resultSolicitudFacturacion.SolicitudFacturacion.NroBl,
-                            "rechazada", 
+                            "Rechazada", 
                             resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                             $"Motivo: {model.Mensaje}");
 
@@ -841,7 +841,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                               DateTime.Now.ToString("dd/MM/yyyy"));
 
                             EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
-                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "aprobada", 
+                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "Aprobada", 
                                 resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                                 "");
 
@@ -874,12 +874,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private async Task  EnviarAlerta (string titulo, string mensaje, string fecha) {
 
             //await  _notificationHubContext.Clients.All.SendAsync("sendToUser", titulo, mensaje, fecha);
-
             try
             {
-
-
-
                 var connections = _userConnectionManager.GetConnections();
                 if (connections != null && connections.Count > 0)
                 {
@@ -888,7 +884,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         await _notificationUserHubContext.Clients.Client(connectionId).SendAsync("sendToUser", titulo, mensaje, fecha);
                     }
                 }
-
             }
             catch (Exception err) {
 
@@ -906,7 +901,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 pEstado, $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}",
                 MotivoRechazo);
             enviarMessageCorreoParameterVM.RequestMessage.Correo = pCorreo;
-            enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Solicitud de Facturación";
+            enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Solicitud de Facturación {pEstado}";
             await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
         }
 
