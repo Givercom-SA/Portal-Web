@@ -1264,8 +1264,9 @@
 
                             $(".loader").fadeOut("slow");
 
-                            $('#alertError').show();
-                            outputDetalleError.html( errorThrown);
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html("Estimado cliente, ocurrio un error de sistema, por favor vovler a intentar más tarde. detalle del error: ", errorThrown);
+
                             
 
                         },

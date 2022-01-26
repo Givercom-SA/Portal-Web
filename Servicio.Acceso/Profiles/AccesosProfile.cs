@@ -122,6 +122,9 @@ namespace Servicio.Acceso.Profiles
                 .ForMember(s => s.FechaRegistro, o => o.MapFrom(s => s.FechaRegistro))
                 .ForMember(s => s.FechaModifica, o => o.MapFrom(s => s.FechaModifica))
                 .ForMember(s => s.Tipo, o => o.MapFrom(s => s.Tipo))
+                .ForMember(s => s.TipoPerfil, o => o.MapFrom(s => s.TipoPerfil))
+                .ForMember(s => s.UsuarioCrea, o => o.MapFrom(s => s.UsuarioCrea))
+                .ForMember(s => s.UsuarioModifica, o => o.MapFrom(s => s.UsuarioModifica))
                 .ForMember(s => s.Menus, o => o.MapFrom(s => s.Menus));
 
             CreateMap<PerfilParameterVM, PerfilParameter>();

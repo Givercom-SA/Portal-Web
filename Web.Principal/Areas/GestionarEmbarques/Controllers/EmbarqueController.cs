@@ -38,7 +38,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private readonly IMapper _mapper;
         private static ILogger _logger = ApplicationLogging.CreateLogger("EmbarqueController");
 
-
         public EmbarqueController(ServicioEmbarques serviceEmbarques,
                                     ServicioMaestro servicMaestro,
                                     ServicioEmbarque serviceEmbarque,
@@ -67,11 +66,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (model.TipoFiltro == null)
                     model.TipoFiltro = "";
 
-
                 var listServiceAnios = await _servicMaestro.ObtenerParametroPorIdPadre(53);
                 var anioActual = DateTime.Now.Year;
-                List<ParametrosVM >listaParametroAniosVM = new List<ParametrosVM>();
-            
+                List<ParametrosVM >listaParametroAniosVM = new List<ParametrosVM>();            
 
                 for (var itemAnios = Convert.ToInt32(listServiceAnios.ListaParametros.ElementAt(0).ValorCodigo); itemAnios <= anioActual; itemAnios++) {
 
@@ -81,13 +78,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 listServiceAnios.ListaParametros = listaParametroAniosVM;
 
                 model.ListAnios = new SelectList(listServiceAnios.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
-       
-
-
+                
                 var listServiceTipoFiltro = await _servicMaestro.ObtenerParametroPorIdPadre(49);
                 model.TipoFiltros = new SelectList(listServiceTipoFiltro.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
 
                 var resultSesion = HttpContext.Session.GetUserContent();
 

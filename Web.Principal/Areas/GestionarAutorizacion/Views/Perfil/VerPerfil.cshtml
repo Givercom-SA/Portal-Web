@@ -1,0 +1,144 @@
+﻿@model ViewModel.Datos.Perfil.PerfilVM
+@{
+    ViewData["Title"] = "Detalle Perfil";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", true);
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Detalle Perfil
+                    </h1>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Detalle Perfil
+            <button id="btnVolver"  class="btn btn-sm btn-primary" type="button"  onclick="javascript: history.go(-1)" >Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+
+
+                <div class="form-group row small">
+                    <label asp-for="@Model.Nombre" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.Nombre" class="form-control" readonly type="text" />
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Tipo</label>
+                    <div class="col-sm-3">
+                        <input asp-for="@Model.TipoPerfil" class="form-control" readonly type="text" />
+                    </div>
+                </div>
+
+              
+
+                <div class="form-group row small">
+                    <label  class="col-sm-2 col-form-label">Usuario de Creación</label>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.UsuarioCrea" class="form-control" readonly type="text" />
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Fecha de Creación</label>
+                    <div class="col-sm-3">
+                        <input asp-for="@Model.FechaRegistro" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
+                    </div>
+                </div>
+
+
+                <div class="form-group row small">
+                    <label a class="col-sm-2 col-form-label">Ultimo Usuario que Modifica</label>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.UsuarioModifica" class="form-control" readonly type="text" />
+                    </div>
+
+                    <label class="col-sm-2 col-form-label">Ultima Fecha de Modificación</label>
+                    <div class="col-sm-3">
+                        <input asp-for="@Model.FechaModifica" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
+                    </div>
+                </div>
+
+
+                <div class="form-group row mb-3">
+
+                    <label a class="col-sm-2 col-form-label"></label>
+
+
+                    <div class="col-sm-2 small">
+
+                        <fieldset class="border p-2  h-100">
+                            <legend class="w-auto text-sm"> Estado</legend>
+                            <div class="form-check form-check-solid">
+                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" disabled type="radio" value="true">
+                                <label class="form-check-label" for="Radio1">Activo</label>
+                            </div>
+                            <div class="form-check form-check-solid">
+                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" disabled type="radio" value="false">
+                                <label class="form-check-label" for="Radio2">Inactivo</label>
+                            </div>
+                        </fieldset>
+
+                    </div>
+
+
+                    <div class="col-sm-7 small">
+
+
+                        <fieldset class="border p-2 h-100">
+                            <legend class="w-auto text-sm"> Accesos</legend>
+                            <div style="height:250px;" class="overflow-auto" id="MenuCheckBox">
+                                @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+
+                <div id="MensajeResult"></div>
+                <hr />
+
+                <div class="mb-2 text-right">
+                    <button id="btnEditar"  class="btn btn-primary" type="button">Editar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".loader").fadeOut("slow");
+
+
+            $("#btnEditar").on("click", function (){
+
+                window.location = "@Url.Action("EditarPerfil","Perfil",new { area="GestionarAutorizacion", Id=Model.IdPerfil})";
+
+            });
+
+        });
+
+    </script>
+}

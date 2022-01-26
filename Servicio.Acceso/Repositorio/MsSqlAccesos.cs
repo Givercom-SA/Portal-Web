@@ -193,7 +193,7 @@ namespace Servicio.Acceso.Repositorio
             return cambiarContrasenaResult;
         }
 
-        public ListarPerfilesResult ObtenerPerfiles(string _nombre, int _activo)
+        public ListarPerfilesResult ObtenerPerfiles(string _nombre, int _activo, string tipo)
         {
             var result = new ListarPerfilesResult();
             int Modo = 0; // Listar Todos los Perfiles
@@ -209,11 +209,12 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@Nombre", _nombre, DbType.String);
                     queryParameters.Add("@IdEntidad", 0, DbType.Int32);
                     queryParameters.Add("@IsActivo", _activo, DbType.Int32);
+                    queryParameters.Add("@Tipo", tipo, DbType.String);
                     result.Perfiles = cnn.Query<Perfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
                     {
-                        result.STR_MENSAJE_BD = "Error interno al recuperar la información.";
+                        result.STR_MENSAJE_BD = "Estimado usuario, ocurrio un error interno al recuperar la información.";
                         result.IN_CODIGO_RESULTADO = -1;
                     }
                     else
@@ -237,10 +238,10 @@ namespace Servicio.Acceso.Repositorio
             {
                 using (var cnn = new SqlConnection(strConn))
                 {
-                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_PREFIL_ACTIVOS]";
-                    result.Perfiles = cnn.Query<Perfil>(spName, null, commandType: CommandType.StoredProcedure).ToList();
-
-                
+                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_ACTIVOS]";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@Tipo", parameter.Tipo, DbType.String);
+                    result.Perfiles = cnn.Query<Perfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
             }
             catch (Exception ex)
@@ -332,9 +333,9 @@ namespace Servicio.Acceso.Repositorio
 
                     var queryParameters = new DynamicParameters();
                     queryParameters.Add("@Modo", Modo, DbType.Int32);
-                    queryParameters.Add("@IdPerfil", 0);
-                    queryParameters.Add("@Nombre", string.Empty);
-                    queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
+                    queryParameters.Add("@IdPerfil", 0, DbType.Int32);
+                    queryParameters.Add("@Nombre", string.Empty, DbType.String);
+                    queryParameters.Add("@Tipo", string.Empty, DbType.String);
                     result.Perfiles = cnn.Query<Perfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
@@ -413,6 +414,8 @@ namespace Servicio.Acceso.Repositorio
 
                     var queryParameters = new DynamicParameters();
                     queryParameters.Add("@Nombre", parameter.Nombre);
+                    queryParameters.Add("@Tipo", parameter.Tipo);
+                    queryParameters.Add("@IdUsuarioCrea", parameter.IdUsuarioCrea);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
 
                     result= cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -453,8 +456,10 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", parameter.IdPerfil);
                     queryParameters.Add("@Nombre", parameter.Nombre);
                     queryParameters.Add("@Activo", parameter.Activo);
+                    queryParameters.Add("@Tipo", parameter.Tipo,DbType.String);
+                    queryParameters.Add("@IdUsuarioModifica", parameter.IdUsuarioModifica, DbType.Int32);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
-
+                
                     cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                     result.IN_CODIGO_RESULTADO = 0;
@@ -491,7 +496,30 @@ namespace Servicio.Acceso.Repositorio
 
             return result;
         }
+        public PerfilResult VerificarAccesoPerfil(int IdPerfil)
+        {
+            var result = new PerfilResult();
 
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_VERIFICAR]";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@IdPerfil", IdPerfil);
+                    result = cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IN_CODIGO_RESULTADO = -1;
+                result.STR_MENSAJE_BD = ex.Message;
+            }
+
+            return result;
+        }
+
+        
         public ListarTransGroupEmpresaResult ObtenerTransGroupEmpresa()
         {
             var result = new ListarTransGroupEmpresaResult();

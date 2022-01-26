@@ -113,7 +113,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.Contrasenia = new Utilitario.Seguridad.Encrypt().GetSHA256(usuario.Contrasenia);
                     parameterVM.RequiereConfirmacion = true;
                     parameterVM.IdUsuarioCrea = Convert.ToInt32(ViewData["IdUsuario"]);
-                    parameterVM.UrlConfirmacion = string.Format("{0}://{1}/{2}", UrlInfo.Scheme, UrlInfo.Host, "Account/ConfirmarCorreo");
+                    parameterVM.UrlConfirmacion = string.Format("{0}/{1}", this.GetUriHost(), "Account/ConfirmarCorreo");
                     parameterVM.ImagenGrupoTrans=$"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}";
                     var result = await _serviceUsuario.CrearUsuarioSecundario(parameterVM);
                     if (result.CodigoResultado > 0)

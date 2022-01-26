@@ -1,9 +1,11 @@
-﻿@model IEnumerable<ViewModel.Datos.Perfil.MenuPerfilVM>
+﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioMenuVM>
+
 @{
     string Disabled = string.Empty;
     if (ViewData.ContainsKey("ModoLectura"))
         Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
 }
+
 @if (Model != null)
 {
     <div class="list-group">

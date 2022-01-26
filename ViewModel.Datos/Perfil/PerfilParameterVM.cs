@@ -10,6 +10,7 @@ namespace ViewModel.Datos.Perfil
         public PerfilParameterVM() { }
         public int IdPerfil { get; set; }
         public string Nombre { get; set; }
+        public string UsuarioCrea { get; set; }
         public int Activo { get; set; }
         public int IdSesion { get; set; }
         public int IdUsuarioCrea { get; set; }

@@ -9,7 +9,7 @@ namespace Servicio.Acceso.Models.Perfil
     {
 
         public bool Activos { get; set; }
-       
+        public string Tipo { get; set; }
     }
 
 }

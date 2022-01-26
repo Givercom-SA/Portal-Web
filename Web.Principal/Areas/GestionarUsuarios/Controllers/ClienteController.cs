@@ -14,7 +14,7 @@ using Web.Principal.Utils;
 namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 {
     [Area("GestionarUsuarios")]
-    public class UsuarioController : BaseController
+    public class ClienteController : BaseController
     {
         private readonly ServicioAcceso _serviceAcceso;
         private readonly ServicioUsuario _serviceUsuario;
@@ -22,7 +22,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         private readonly IConfiguration _configuration;
 
 
-        public UsuarioController(
+        public ClienteController(
             ServicioAcceso serviceAcceso,
             ServicioUsuario serviceUsuario,
             IMapper mapper,
@@ -105,11 +105,27 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             listarUsuarioParameterVM.RegistroInicio = 1;
             listarUsuarioParameterVM.RegistroFin = 100;
             var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
-            await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
+            await cargarListas();
             model.ListUsuarios = result;
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Listar()
+        {
+            Models.ListarUsuariosModel model = new Models.ListarUsuariosModel();
+            ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
+            listarUsuarioParameterVM.ApellidoMaterno = "";
+            listarUsuarioParameterVM.ApellidoPaterno = "";
+            listarUsuarioParameterVM.Nombres = "";
+            listarUsuarioParameterVM.Correo = "";
+            listarUsuarioParameterVM.RegistroInicio = 1;
+            listarUsuarioParameterVM.RegistroFin = 100;
+            var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
+            await cargarListas();
+            model.ListUsuarios = result;
+            return View(model);
+        }
 
         [HttpPost]
         public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
@@ -126,17 +142,15 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
 
             model.ListUsuarios = result;
-
-          await  cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
+          await  cargarListas();
 
             return View(model);
         }
 
 
-        private async Task  cargarListas(string tipo) {
-            ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
-            parameter.Tipo = tipo;
-            var resultPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(parameter);
+        private async Task  cargarListas() {
+
+            var resultPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(new ListarPerfilActivosParameterVM());
 
             ViewBag.ListaPerfilActivos = resultPerfiles;
         }

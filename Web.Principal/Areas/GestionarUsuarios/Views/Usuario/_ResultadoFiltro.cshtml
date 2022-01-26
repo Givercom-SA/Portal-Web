@@ -4,11 +4,13 @@
     <thead>
         <tr>
             <th class="border-gray-200" scope="col">Id</th>
-            <th class="border-gray-200" scope="col">Correo</th>
+
             <th class="border-gray-200" scope="col">Nombre Completo</th>
+            <th class="border-gray-200" scope="col">Apellido Paterno</th>
+            <th class="border-gray-200" scope="col">Apellido Materno</th>
+            <th class="border-gray-200" scope="col">Correo</th>
             <th class="border-gray-200" scope="col">Perfil</th>
-            <th class="border-gray-200" scope="col">Es Admin</th>
-            <th class="border-gray-200" scope="col">Tipo Perfil</th>
+            <th class="border-gray-200" scope="col">Fecha de Creación</th>
             <th class="border-gray-200" scope="col">Estado</th>
             <th width="100px" class="border-gray-200" scope="col">Acción</th>
         </tr>
@@ -17,23 +19,16 @@
         @foreach (var item in Model)
         {
         <tr>
-            <td>@item.getCodigoUsuario()</td>
+            <td ><a href="@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios", Id=item.IdUsuario})" title="Detalle del usuario" >@item.getCodigoUsuario()</a></td>
 
-            <td>@item.Correo</td>
             <td title="@item.getNombre()">@item.getNombreCorto()</td>
+            <td>@item.ApellidoPaterno</td>
+            <td>@item.ApellidoMaterno</td>
+            <td>@item.Correo</td>
 
-
-            <td>@item.PerfilNombre </td>
-
-            @if (item.EsAdmin == true)
-            {
-                <td><span class="badge bg-light text-success">Si</span>  </td>
-            }
-            else
-            {
-                <td><span class="badge bg-light text-danger">No</span> </td>
-            }
-            <td>  <span class="">@item.TipoPerfil</span> </td>
+            <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" title="Detalle del perfil">@item.PerfilNombre </a></td>
+         
+            <td>@item.FechaRegistro</td>
             @if (item.Activo == true)
             {
                 <td>  <span class="badge bg-light text-success">Activo</span>  </td>
@@ -42,22 +37,15 @@
             {
                 <td>  <span class="badge bg-light text-danger">No activo</span> </td>
             }
-
-
-        <td>
-     
-            <div class="dropdown no-caret">
-                <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
-                <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
-                    <a class="dropdown-item" href='@Url.Action("EditarUsuario","Usuario", new { Id=@item.IdUsuario })'>Editar</a>
-                    <a class="dropdown-item" onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">Ver Informacion</a>
-                    <a class="dropdown-item" href="#!">Bloquear</a>
-                    <a class="dropdown-item" href="#!">Desbloquear</a>
-                    <a class="dropdown-item" href="#!">Restablecer Contraseña</a>
+            <td>
+                <div class="dropdown no-caret">
+                    <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                    <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
+                        <a class="dropdown-item" href='@Url.Action("EditarUsuario","Usuario", new { Id=@item.IdUsuario })'>Editar</a>
+                        <a class="dropdown-item" onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">Ver Informacion</a>
+                    </div>
                 </div>
-            </div>
-
-        </td>
+            </td>
 
         </tr>
         }

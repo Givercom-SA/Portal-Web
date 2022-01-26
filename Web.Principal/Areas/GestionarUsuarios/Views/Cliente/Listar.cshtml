@@ -192,30 +192,30 @@
         }
 
 
-        //function VerInformacion(IdUsuario) {
+        function VerInformacion(IdUsuario) {
 
-        //    $.ajax({
-        //        type: "GET",
-        //        url: "" + IdUsuario,
-        //        contentType: 'application/html; charset=utf-8',
-        //        type: 'GET',
-        //        dataType: 'html'
-        //    })
-        //        .done(function (result) {
-        //            if (result != null) {
-        //                $('#ContentVerUsuario').html(result);
-        //                $('#modal_usuario').modal('show');
-        //            } else {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios"})?Id=" + IdUsuario,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    if (result != null) {
+                        $('#ContentVerUsuario').html(result);
+                        $('#modal_usuario').modal('show');
+                    } else {
 
-        //            }
-        //        })
-        //        .fail(function (xhr, status, error) {
+                    }
+                })
+                .fail(function (xhr, status, error) {
 
-        //        })
-        //        .always(function () {
+                })
+                .always(function () {
 
-        //        });
-        //}
+                });
+        }
     </script>
 }
 

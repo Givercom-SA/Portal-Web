@@ -25,6 +25,10 @@
                 countdownBar: true
             });
 
+
+
+        //$("#modalClientes").modal("show");
+        //listarClientes();
     });
 
         function sessionKeepAlive() {
@@ -32,6 +36,27 @@
             $.get("@Url.RouteUrl("KeepAlive")", function (data) { });
         }
 
+
+
+    function listarClientes() {
+
+        try {
+            let dtsClientes = new simpleDatatables.DataTable("#dtsClientes", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+        } catch (err) {
+
+
+        }
+
+    }
+    
 
 
 </script>
