@@ -5,11 +5,11 @@
         <tr>
             <th>Nro. Orden de Trabajo</th>
             <th>Numeración de Embarque</th>
-            @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+            @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
             {   <th>Nro. de Routing Order</th>
-            }else if(Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEE01"))
+            }else if(Model.Servicio.Equals("M") && Model.Origen.Equals("E"))
             {   <th>Nro. de Booking</th>                
-            }else if(Model.Servicio.Equals("SEA01"))
+            }else if(Model.Servicio.Equals("A"))
             {   <th>Nro. de Instrucción</th>    }
             <th>Origen</th>
             <th>Puerto de Carga</th>
@@ -22,11 +22,11 @@
         <tr>
             <th>Nro. Orden de Trabajo</th>
             <th>Numeración de Embarque</th>
-            @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+            @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
             {   <th>Nro. de Routing Order</th>
-            }else if(Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEE01"))
+            }else if(Model.Servicio.Equals("M") && Model.Origen.Equals("E"))
             {   <th>Nro. de Booking</th>                
-            }else if(Model.Servicio.Equals("SEA01"))
+            }else if(Model.Servicio.Equals("A"))
             {   <th>Nro. de Instrucción</th>    }
             <th>Origen</th>
             <th>Puerto de Carga</th>

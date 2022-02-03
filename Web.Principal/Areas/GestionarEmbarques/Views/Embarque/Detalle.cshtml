@@ -48,7 +48,7 @@
                         <!-- Dashboard card navigation-->
                         <ul class="nav nav-tabs card-header-tabs" id="dashboardNav" role="tablist">
                             <li class="nav-item me-1"><a class="nav-link active" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos</a></li>
-                            @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                            @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                             {
                                 <li class="nav-item"><a class="nav-link" id="cobros_pagar-pill" href="#cobros_pagar" data-bs-toggle="tab" role="tab" aria-controls="cobros_pagar" aria-selected="false">Cobros a Pagar </a></li>
                             }
@@ -123,15 +123,15 @@
 
                                                     <div class="col-6">
 
-                                                        @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                                                        @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                                                         {
                                                             @Html.Raw("Nro. de Routing Order: ")
                                                         }
-                                                        else if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEE01"))
+                                                        else if (Model.Servicio.Equals("M") && Model.Origen.Equals("E"))
                                                         {
                                                             @Html.Raw("Nro. de Booking: ")
                                                         }
-                                                        else if (Model.Servicio.Equals("SEA01"))
+                                                        else if (Model.Servicio.Equals("A"))
                                                         {
                                                             @Html.Raw("Nro. de Instrucción: ")
                                                         }
@@ -342,7 +342,7 @@
 
                                                     <div class="col-6">
 
-                                                        @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                                                        @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                                                         {
                                                             @Html.Raw("Consignatario: ")
                                                         }
@@ -363,7 +363,7 @@
 
                                         </div>
 
-                                        @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                                        @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                                         {
                                             <div class="row mb-3">
                                                 <div class=" col-6 col-sm-6  small ">
@@ -487,15 +487,15 @@
                                                     <div class="col-6">
 
 
-                                                        @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                                                        @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                                                         {
                                                             @Html.Raw("Nro. de Routing Order: ")
                                                         }
-                                                        else if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEE01"))
+                                                        else if (Model.Servicio.Equals("M") && Model.Origen.Equals("E"))
                                                         {
                                                             @Html.Raw("Nro. de Booking: ")
                                                         }
-                                                        else if (Model.Servicio.Equals("SEA01"))
+                                                        else if (Model.Servicio.Equals("A"))
                                                         {
                                                             @Html.Raw("Nro. de Instrucción: ")
                                                         }
@@ -604,7 +604,7 @@
                                 </a>
                             </li>
 
-                            @if (Model.Servicio.Equals("SEM01") && Model.Origen.Equals("OEI01"))
+                            @if (Model.Servicio.Equals("M") && Model.Origen.Equals("I"))
                             {
                                 <li class="list-group-item" style="padding: 0.5rem 0rem;">
                                     <a class="nav-link" href="@Url.Action("ObtenerTracking", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD })">
