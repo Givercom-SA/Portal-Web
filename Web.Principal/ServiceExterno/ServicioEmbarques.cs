@@ -239,7 +239,7 @@ namespace Web.Principal.ServiceExterno
         }
 
 
-        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad)
+        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, string pServicio, string pOrigen, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad)
         {
             ListaEmbarqueModel listaResult = new ListaEmbarqueModel();
 

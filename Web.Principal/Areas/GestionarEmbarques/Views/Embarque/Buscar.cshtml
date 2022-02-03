@@ -9,8 +9,6 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
-
-
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
         <div class="page-header-content pt-4">
@@ -36,6 +34,39 @@
             <div class="card-body">
                 <div class="sbp-preview-content">
 
+                    <div class="row gx-3">
+                        
+                        <div class="col-md-3">
+                            <div class="mb-3">
+
+                                <label asp-for="@Model.Servicio" class="small mb-1"></label>
+                                <select asp-for="@Model.Servicio" id="ddlServicio"
+                                        asp-items="Model.ListaServicios" onchange="onChangeAnio(this)"
+                                        class="form-select small">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                               
+                                <span asp-validation-for="@Model.Servicio" id="spanValidarAnio" class="small text-danger"></span>
+                                
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="@Model.Origen" class="small mb-1"></label>
+                                <select asp-for="@Model.Origen" onchange="onChangeTipoCriterio(this)"
+                                        asp-items="Model.ListaOrigen" id="ddlOrigen"
+                                        class="form-select small">
+                                    <option value="a">Seleccionar</option>
+                                </select>
+
+                                <span asp-validation-for="@Model.Origen"class="small text-danger"  id="spanValidarFiltro"></span>
+                                
+
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row gx-3">
 
@@ -81,7 +112,6 @@
                         </div>
 
                     </div>
-
 
                 </div>
             </div>

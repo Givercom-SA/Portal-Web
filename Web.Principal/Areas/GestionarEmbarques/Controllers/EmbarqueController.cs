@@ -73,13 +73,22 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 var listServiceTipoFiltro = await _servicMaestro.ObtenerParametroPorIdPadre(49);
                 model.TipoFiltros = new SelectList(listServiceTipoFiltro.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
+                var listServicios = await _servicMaestro.ObtenerParametroPorIdPadre(12);
+                model.ListaServicios = new SelectList(listServicios.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+                var listOrigen = await _servicMaestro.ObtenerParametroPorIdPadre(79);
+                model.ListaOrigen = new SelectList(listOrigen.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
 
                 var resultSesion = HttpContext.Session.GetUserContent();
 
                 if (model.Anio != "" && model.TipoFiltro != "")
                 {
                     model.listEmbarques = await _serviceEmbarques.ListarEmbarques(resultSesion.Sesion.CodigoTransGroupEmpresaSeleccionado,
-                                                                            short.Parse(model.Anio), short.Parse(model.TipoFiltro), model.Filtro == null ? "" : model.Filtro,
+                                                                            short.Parse(model.Anio), 
+                                                                            model.Servicio,
+                                                                            model.Origen,
+                                                                            short.Parse(model.TipoFiltro), model.Filtro == null ? "" : model.Filtro,
                                                                             resultSesion.obtenerTipoEntidadTransmares(), resultSesion.Sesion.RucIngresadoUsuario);
                 }
 
@@ -93,12 +102,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro)
+        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro, string servicio, string origen)
         {
             var resultSesion = HttpContext.Session.GetUserContent();
 
             EmbarqueDetalleModel model = new EmbarqueDetalleModel();
             model.EmbarqueDetalle = new Model.EmbarqueModel();
+            model.Servicio = servicio;
+            model.Origen = origen;
 
             try
             {

@@ -87,8 +87,6 @@ namespace Web.Principal.Model
         public string FINANZAS_MAIL { get; set; }
 
 
-        
-
     }
 
     public class ListaEmbarqueModel : DataRequestViewModelResponse
