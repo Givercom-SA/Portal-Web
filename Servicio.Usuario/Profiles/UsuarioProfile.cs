@@ -40,9 +40,12 @@ namespace Servicio.Usuario.Profiles
             .ForMember(s => s.PerfilNombre, o => o.MapFrom(s => s.PerfilNombre))
             .ForMember(s => s.EntidadNroDocumneto, o => o.MapFrom(s => s.EntidadNroDocumneto))
             .ForMember(s => s.EntidadTipoDocumento, o => o.MapFrom(s => s.EntidadTipoDocumento))
-
                .ForMember(s => s.EntidadRazonSocial, o => o.MapFrom(s => s.EntidadRazonSocial))
             .ForMember(s => s.EntidadRepresentanteNombre, o => o.MapFrom(s => s.EntidadRepresentanteNombre))
+            .ForMember(s => s.UsuarioCrea, o => o.MapFrom(s => s.UsuarioCrea))
+            .ForMember(s => s.UsuarioModifica, o => o.MapFrom(s => s.UsuarioModifica))
+            .ForMember(s => s.CorreoConfirmado, o => o.MapFrom(s => s.CorreoConfirmado))
+            .ForMember(s => s.CambioContrasenia, o => o.MapFrom(s => s.CambioContrasenia))
             ;
 
             CreateMap<ListarUsuarioParameterVM, ListarUsuariosParameter>()

@@ -52,6 +52,21 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public string PerfilNombre { get; set; }
         public int[] Menus { get; set; }
 
+
+        [Display(Name = "Usuario de Creación")]
+        public string UsuarioCrea { get; set; }
+        [Display(Name = "Ultima Usuario que Modifico")]
+        public string UsuarioModifica { get; set; }
+        [Display(Name = "Fecha de Creación")]
+        public DateTime? FechaCrea { get; set; }
+        [Display(Name = "Ultima fecha de Modificación")]
+        public DateTime? FechaModifica { get; set; }
+
+        [Display(Name = "Confirmo Cuenta")]
+        public bool ConfirmarCuenta { get; set; }
+        [Display(Name = "Cambio Contraseña")]
+        public bool CambioContrasenia { get; set; }
+
         public List<UsuarioMenuVM> Items { get; set; }
 
         public string getNombre()

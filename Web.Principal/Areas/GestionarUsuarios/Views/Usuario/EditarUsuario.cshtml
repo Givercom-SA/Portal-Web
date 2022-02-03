@@ -14,7 +14,7 @@
             <div class="row align-items-center justify-content-between">
                 <div class="col-auto mt-4">
                     <h1 class="page-header-title">
-                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        <div class="page-header-icon"><i data-feather="user"></i></div>
                         Editar Usuario
                     </h1>
                     <div class="page-header-subtitle">Con esta opción usted podrá modificar los datos del usuario o perfiles.</div>
@@ -30,7 +30,7 @@
     <div class="card card-header-actions mb-4">
         <div class="card-header">
             Editar registro
-            <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
         </div>
 
         <div class="card-body">
@@ -92,7 +92,7 @@
                                 <label asp-for="@Model.Correo" class="col-sm-2 col-form-label"></label>
                                 <div class="col-sm-6">
                                     <input readonly asp-for="@Model.Correo" class="form-control small" type="text" placeholder="Ingresar Correo" />
-                                    <span asp-validation-for="@Model.Correo" class="text-danger"></span>
+                                    
                                 </div>
                             </div>
 
@@ -252,9 +252,9 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Usuario Creado</h5>
+                <h5 class="modal-title">Usuario Actualizado</h5>
             </div>
-            <div class="modal-body" id="mensaje"></div>
+            <div class="modal-body" id="mensaje_ok"></div>
             <div class="modal-footer">
                 <button id="btnCerrar" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
             </div>
@@ -390,23 +390,25 @@
                 .done(function (result) {
                     $(".loader").fadeOut("slow");
 
-                if (result != null) {
-                    if (result.codigo == 0)
-                    {
-                        $('#modal_restablecer').modal('hide');
-                        $('#modal_mensaje_result').modal('show');
+                    if (result != null) {
 
-                    } else {
+                        if (result.codigo == 0) {
 
-                        $('#divMensajeWarning').html(result.mensaje);
-                        $('#divModalWarning').modal('show');
-              
+                            $('#modal_mensaje').modal('show');
+                            $("#mensaje_ok").html(result.mensaje);
+
+                        } else {
+
+                            $('#divMensajeWarning').html(result.mensaje);
+                            $('#divModalWarning').modal('show');
+
+                        }
                     }
-                }else{
-                    $(".loader").fadeOut("slow");
-                    $('#divMensajeDanger').html(error.mensaje);
-                    $('#divModalDanger').modal('show');
-                }
+                    else {
+                        $(".loader").fadeOut("slow");
+                        $('#divMensajeDanger').html(error.mensaje);
+                        $('#divModalDanger').modal('show');
+                    }
             })
                 .fail(function (xhr, status, error) {
 
@@ -480,10 +482,7 @@
             $('#modal_restablecer').modal('show');
         });
 
-        $("#btnVolver").click(function () {
-            window.location.href = "/GestionarUsuarios/Usuario/ListarUsuarios";
-        });
-
+       
 
 
     </script>

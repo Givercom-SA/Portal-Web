@@ -16,8 +16,14 @@ namespace Servicio.Usuario.Models.Usuario
         public string ApellidoMaterno { get; set; }
         public bool EsAdmin { get; set; }
         public bool Activo { get; set; }
-        public string FechaRegistro { get; set; }
-        public string FechaModificacion { get; set; }
+        public string UsuarioCrea { get; set; }
+        public string UsuarioModifica { get; set; }
+
+        public DateTime? FechaRegistro { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+
+        public bool CorreoConfirmado { get; set; }
+        public bool CambioContrasenia { get; set; }
         public string PerfilNombre { get; set; }
 
         public string EntidadNroDocumneto { get; set; }

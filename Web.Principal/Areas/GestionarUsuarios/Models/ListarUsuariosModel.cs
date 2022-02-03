@@ -21,7 +21,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Display(Name = "Apellido Materno")]
         public string ApellidoMaterno { get; set; }
 
-
         [Display(Name = "Perfil")]
         public int IdPerfil { get; set; } = -1;
 
@@ -30,12 +29,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
 
         [Display(Name = "Estado")]
         public int isActivo { get; set; } = -1;
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList ListEstado { get; set; }
 
         public String ReturnUrl { get; set; }
 
         public ListarUsuariosResultVM ListUsuarios { get; set; }
-
-       
 
     }
 }

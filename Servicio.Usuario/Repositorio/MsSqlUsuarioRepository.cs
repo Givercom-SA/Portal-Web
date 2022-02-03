@@ -8,18 +8,20 @@ using System.Data;
 using System.Data.SqlClient;
 using Servicio.Usuario.Models.Usuario;
 using Dapper;
-
+using Microsoft.Extensions.Logging;
 
 namespace Servicio.Usuario.Repositorio
 {
     public class MsSqlUsuarioRepository : IUsuarioRepository
     {
         private IConfiguration _configuration;
+        private readonly ILogger<MsSqlUsuarioRepository> _logger;
         private string strConn { get { return _configuration.GetConnectionString("mssqldb"); } }
 
-        public MsSqlUsuarioRepository(IConfiguration configuration)
+        public MsSqlUsuarioRepository(IConfiguration configuration, ILogger<MsSqlUsuarioRepository> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public ListarUsuariosResult ObtenerResultados(ListarUsuariosParameter parameter)
@@ -110,6 +112,7 @@ namespace Servicio.Usuario.Repositorio
             {
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
+                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
             }
             return result;
         }
@@ -249,6 +252,7 @@ namespace Servicio.Usuario.Repositorio
             {
                 result.IN_CODIGO_RESULTADO = -1;
                 result.STR_MENSAJE_BD = ex.Message;
+                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
             }
 
             return result;
@@ -287,15 +291,16 @@ namespace Servicio.Usuario.Repositorio
                     queryParameters.Add("@IdUsuarioModifica", parameter.IdUsuarioModifica);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
 
-                    cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    result= cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
-                    result.IN_CODIGO_RESULTADO = 0;
+                    
                 }
             }
             catch (Exception ex)
             {
                 result.IN_CODIGO_RESULTADO = -1;
                 result.STR_MENSAJE_BD = ex.Message;
+                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
             }
 
             return result;
@@ -344,17 +349,17 @@ namespace Servicio.Usuario.Repositorio
                     queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.String);
                     queryParameters.Add("@Activo", activo, dbType: DbType.Int32);
 
-                    cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
-                    result.IN_CODIGO_RESULTADO = 0;
+                   result= cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                  
 
-                    if (result.STR_MENSAJE_BD != null)
-                        result.IN_CODIGO_RESULTADO = 1;
+                  
                 }
             }
             catch (Exception ex)
             {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
+                _logger.LogError(ex, "HabilitarUsuario");
+                result.IN_CODIGO_RESULTADO = -200;
+                result.STR_MENSAJE_BD = "Estimado usuario, ocurrio un error inesperado por favor volver a intentar nuevamente.";
             }
 
             return result;

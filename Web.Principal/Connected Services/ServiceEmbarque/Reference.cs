@@ -23,12 +23,26 @@ namespace ServiceEmbarque
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ListarEmbarques", ReplyAction="*")]
         System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ListarEmbarquesResponse> TM_WS_ListarEmbarquesAsync(ServiceEmbarque.TM_WS_ListarEmbarquesRequest request);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ListarEmbarques_V2", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        ServiceEmbarque.TM_WS_ListarEmbarques_V2Response TM_WS_ListarEmbarques_V2(ServiceEmbarque.TM_WS_ListarEmbarques_V2Request request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ListarEmbarques_V2", ReplyAction="*")]
+        System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ListarEmbarques_V2Response> TM_WS_ListarEmbarques_V2Async(ServiceEmbarque.TM_WS_ListarEmbarques_V2Request request);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerInformacionEmbarque", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueResponse TM_WS_ObtenerInformacionEmbarque(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerInformacionEmbarque", ReplyAction="*")]
         System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueResponse> TM_WS_ObtenerInformacionEmbarqueAsync(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerInformacionEmbarque_V2", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Response TM_WS_ObtenerInformacionEmbarque_V2(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Request request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerInformacionEmbarque_V2", ReplyAction="*")]
+        System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Response> TM_WS_ObtenerInformacionEmbarque_V2Async(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Request request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerTrackingEmbarque", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -43,6 +57,13 @@ namespace ServiceEmbarque
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerCobrosEmbarque", ReplyAction="*")]
         System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerCobrosEmbarqueResponse> TM_WS_ObtenerCobrosEmbarqueAsync(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarqueRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerCobrosEmbarque_V2", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Response TM_WS_ObtenerCobrosEmbarque_V2(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Request request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_ObtenerCobrosEmbarque_V2", ReplyAction="*")]
+        System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Response> TM_WS_ObtenerCobrosEmbarque_V2Async(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Request request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/TM_WS_RegistrarDocumento", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -238,6 +259,72 @@ namespace ServiceEmbarque
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ListarEmbarques_V2", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ListarEmbarques_V2Request
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public string pEmpresa;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public short pAnio;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=2)]
+        public string pServicio;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=3)]
+        public string pOrigen;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=4)]
+        public short pTipoFiltro;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=5)]
+        public string pFiltro;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=6)]
+        public string pTipoEntidad;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=7)]
+        public string pRuc_Entidad;
+        
+        public TM_WS_ListarEmbarques_V2Request()
+        {
+        }
+        
+        public TM_WS_ListarEmbarques_V2Request(string pEmpresa, short pAnio, string pServicio, string pOrigen, short pTipoFiltro, string pFiltro, string pTipoEntidad, string pRuc_Entidad)
+        {
+            this.pEmpresa = pEmpresa;
+            this.pAnio = pAnio;
+            this.pServicio = pServicio;
+            this.pOrigen = pOrigen;
+            this.pTipoFiltro = pTipoFiltro;
+            this.pFiltro = pFiltro;
+            this.pTipoEntidad = pTipoEntidad;
+            this.pRuc_Entidad = pRuc_Entidad;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ListarEmbarques_V2Response", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ListarEmbarques_V2Response
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public ServiceEmbarque.ArrayOfXElement TM_WS_ListarEmbarques_V2Result;
+        
+        public TM_WS_ListarEmbarques_V2Response()
+        {
+        }
+        
+        public TM_WS_ListarEmbarques_V2Response(ServiceEmbarque.ArrayOfXElement TM_WS_ListarEmbarques_V2Result)
+        {
+            this.TM_WS_ListarEmbarques_V2Result = TM_WS_ListarEmbarques_V2Result;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
     [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ObtenerInformacionEmbarque", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
     public partial class TM_WS_ObtenerInformacionEmbarqueRequest
     {
@@ -271,6 +358,48 @@ namespace ServiceEmbarque
         public TM_WS_ObtenerInformacionEmbarqueResponse(ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerInformacionEmbarqueResult)
         {
             this.TM_WS_ObtenerInformacionEmbarqueResult = TM_WS_ObtenerInformacionEmbarqueResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ObtenerInformacionEmbarque_V2", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ObtenerInformacionEmbarque_V2Request
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public string pKeybld;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public string pServicio;
+        
+        public TM_WS_ObtenerInformacionEmbarque_V2Request()
+        {
+        }
+        
+        public TM_WS_ObtenerInformacionEmbarque_V2Request(string pKeybld, string pServicio)
+        {
+            this.pKeybld = pKeybld;
+            this.pServicio = pServicio;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ObtenerInformacionEmbarque_V2Response", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ObtenerInformacionEmbarque_V2Response
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerInformacionEmbarque_V2Result;
+        
+        public TM_WS_ObtenerInformacionEmbarque_V2Response()
+        {
+        }
+        
+        public TM_WS_ObtenerInformacionEmbarque_V2Response(ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerInformacionEmbarque_V2Result)
+        {
+            this.TM_WS_ObtenerInformacionEmbarque_V2Result = TM_WS_ObtenerInformacionEmbarque_V2Result;
         }
     }
     
@@ -347,6 +476,48 @@ namespace ServiceEmbarque
         public TM_WS_ObtenerCobrosEmbarqueResponse(ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerCobrosEmbarqueResult)
         {
             this.TM_WS_ObtenerCobrosEmbarqueResult = TM_WS_ObtenerCobrosEmbarqueResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ObtenerCobrosEmbarque_V2", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ObtenerCobrosEmbarque_V2Request
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public string pKeybld;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=1)]
+        public string pServicio;
+        
+        public TM_WS_ObtenerCobrosEmbarque_V2Request()
+        {
+        }
+        
+        public TM_WS_ObtenerCobrosEmbarque_V2Request(string pKeybld, string pServicio)
+        {
+            this.pKeybld = pKeybld;
+            this.pServicio = pServicio;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.0.2")]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="TM_WS_ObtenerCobrosEmbarque_V2Response", WrapperNamespace="http://tempuri.org/", IsWrapped=true)]
+    public partial class TM_WS_ObtenerCobrosEmbarque_V2Response
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://tempuri.org/", Order=0)]
+        public ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerCobrosEmbarque_V2Result;
+        
+        public TM_WS_ObtenerCobrosEmbarque_V2Response()
+        {
+        }
+        
+        public TM_WS_ObtenerCobrosEmbarque_V2Response(ServiceEmbarque.ArrayOfXElement TM_WS_ObtenerCobrosEmbarque_V2Result)
+        {
+            this.TM_WS_ObtenerCobrosEmbarque_V2Result = TM_WS_ObtenerCobrosEmbarque_V2Result;
         }
     }
     
@@ -1385,6 +1556,16 @@ namespace ServiceEmbarque
             return base.Channel.TM_WS_ListarEmbarquesAsync(request);
         }
         
+        public ServiceEmbarque.TM_WS_ListarEmbarques_V2Response TM_WS_ListarEmbarques_V2(ServiceEmbarque.TM_WS_ListarEmbarques_V2Request request)
+        {
+            return base.Channel.TM_WS_ListarEmbarques_V2(request);
+        }
+        
+        public System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ListarEmbarques_V2Response> TM_WS_ListarEmbarques_V2Async(ServiceEmbarque.TM_WS_ListarEmbarques_V2Request request)
+        {
+            return base.Channel.TM_WS_ListarEmbarques_V2Async(request);
+        }
+        
         public ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueResponse TM_WS_ObtenerInformacionEmbarque(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueRequest request)
         {
             return base.Channel.TM_WS_ObtenerInformacionEmbarque(request);
@@ -1393,6 +1574,16 @@ namespace ServiceEmbarque
         public System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueResponse> TM_WS_ObtenerInformacionEmbarqueAsync(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarqueRequest request)
         {
             return base.Channel.TM_WS_ObtenerInformacionEmbarqueAsync(request);
+        }
+        
+        public ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Response TM_WS_ObtenerInformacionEmbarque_V2(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Request request)
+        {
+            return base.Channel.TM_WS_ObtenerInformacionEmbarque_V2(request);
+        }
+        
+        public System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Response> TM_WS_ObtenerInformacionEmbarque_V2Async(ServiceEmbarque.TM_WS_ObtenerInformacionEmbarque_V2Request request)
+        {
+            return base.Channel.TM_WS_ObtenerInformacionEmbarque_V2Async(request);
         }
         
         public ServiceEmbarque.TM_WS_ObtenerTrackingEmbarqueResponse TM_WS_ObtenerTrackingEmbarque(ServiceEmbarque.TM_WS_ObtenerTrackingEmbarqueRequest request)
@@ -1413,6 +1604,16 @@ namespace ServiceEmbarque
         public System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerCobrosEmbarqueResponse> TM_WS_ObtenerCobrosEmbarqueAsync(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarqueRequest request)
         {
             return base.Channel.TM_WS_ObtenerCobrosEmbarqueAsync(request);
+        }
+        
+        public ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Response TM_WS_ObtenerCobrosEmbarque_V2(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Request request)
+        {
+            return base.Channel.TM_WS_ObtenerCobrosEmbarque_V2(request);
+        }
+        
+        public System.Threading.Tasks.Task<ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Response> TM_WS_ObtenerCobrosEmbarque_V2Async(ServiceEmbarque.TM_WS_ObtenerCobrosEmbarque_V2Request request)
+        {
+            return base.Channel.TM_WS_ObtenerCobrosEmbarque_V2Async(request);
         }
         
         public ServiceEmbarque.TM_WS_RegistrarDocumentoResponse TM_WS_RegistrarDocumento(ServiceEmbarque.TM_WS_RegistrarDocumentoRequest request)

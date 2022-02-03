@@ -33,7 +33,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         {
             String nombreCorto = this.Nombres + " "+ this.ApellidoPaterno +" "+ this.ApellidoMaterno;
             if (nombreCorto.Length > 26) {
-                nombreCorto = nombreCorto.Substring(1, 26) + " ...";
+                nombreCorto = nombreCorto.Substring(0, 25) + "...";
             }
 
             return nombreCorto;
@@ -49,9 +49,18 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string ApellidoMaterno { get; set; }
         public bool EsAdmin { get; set; }
         public bool Activo { get; set; }
-        public string FechaRegistro { get; set; }
-        public string FechaModificacion { get; set; }
+
         public string PerfilNombre { get; set; }
+
+
+        public string UsuarioCrea { get; set; }
+        public string UsuarioModifica { get; set; }
+
+        public DateTime? FechaRegistro { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+
+        public bool CorreoConfirmado { get; set; }
+        public bool CambioContrasenia { get; set; }
 
         public string EntidadNroDocumneto { get; set; }
         public string EntidadTipoDocumento { get; set; }
