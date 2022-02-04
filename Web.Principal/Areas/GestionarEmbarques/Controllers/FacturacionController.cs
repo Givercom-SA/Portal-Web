@@ -731,7 +731,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                         EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
                             resultSolicitudFacturacion.SolicitudFacturacion.NroBl,
-                            "rechazado", 
+                            "Rechazada", 
                             resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                             $"Motivo: {model.Mensaje}");
 
@@ -758,6 +758,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     registroSolicitudRequestModel.pTipoCliente =usuario.obtenerTipoEntidadTransmares(resultSolicitudFacturacion.SolicitudFacturacion.CodigoTipoEntidad);
                     registroSolicitudRequestModel.pUsuarioPW = resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo ;
                     registroSolicitudRequestModel.pUsuarioFinPW = usuario.CorreoUsuario;
+                    registroSolicitudRequestModel.pFechaEvaluacion =DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
                     if (
                         (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO) &&
@@ -775,9 +776,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     if (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CREDITO)
                     {
                         registroSolicitudRequestModel.pFormaPago = resultSolicitudFacturacion.SolicitudFacturacion.CodigoCredito;
+                    } 
 
-                    }
-                    
                     if (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO)
                     {
                         registroSolicitudRequestModel.pTipoPago = "0";
@@ -795,40 +795,33 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         }
                     }
                     else {
-
                         registroSolicitudRequestModel.pFechaTransferencia = null;
                         registroSolicitudRequestModel.pImporte = 0;
                         registroSolicitudRequestModel.pNumeroOperacion = null;
                         registroSolicitudRequestModel.pTipoPago = "1";
                     }
-                    
-
                    
-                 
                      var resultRegistrarSolicitudFacturacion = await _serviceEmbarques.RegistrarSolicitudFacturacion(registroSolicitudRequestModel);
-
                     // Registrar detalle en TAF
 
                     bool blDetalleFacturacionOk = true;
 
                     foreach (var item in resultSolicitudFacturacion.SolicitudFacturacion.DetalleFacturacion)
                     {
-
                         RegistroSolicitudFacturacionDetalleRequestModel requestFacturacionModel = new RegistroSolicitudFacturacionDetalleRequestModel();
                         requestFacturacionModel.pIdSolicitud = resultRegistrarSolicitudFacturacion.IdSolicitudTAF;
-                        requestFacturacionModel.pConcepCCodigo = item.CodigoConcepto==null ?"" : item.CodigoConcepto;
+                        requestFacturacionModel.pConcepCCodigo = item.CodigoConcepto == null ? "" : item.CodigoConcepto;
                         requestFacturacionModel.pImporte = Double.Parse(item.Importe);
                         requestFacturacionModel.pMoneda = item.Moneda == null ? "" : item.Moneda;
                         requestFacturacionModel.pRubroCCodigo = item.CodigoRubro == null ? "" : item.CodigoRubro;
 
                         var resultRegistrarSolicitudFacturacionDetalle = await _serviceEmbarques.RegistrarSolicitudFacturacionDetalle(requestFacturacionModel);
-                        if (resultRegistrarSolicitudFacturacionDetalle.Respuesta ==0) {
+                        if (resultRegistrarSolicitudFacturacionDetalle.Respuesta == 0)
+                        {
                             blDetalleFacturacionOk = false;
                             break;
                         }
-
                     }
-
 
                     if (resultRegistrarSolicitudFacturacion.Respuesta == 1 && blDetalleFacturacionOk) {
 
@@ -848,7 +841,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                               DateTime.Now.ToString("dd/MM/yyyy"));
 
                             EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
-                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "aprobado", 
+                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "Aprobada", 
                                 resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                                 "");
 
@@ -881,12 +874,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private async Task  EnviarAlerta (string titulo, string mensaje, string fecha) {
 
             //await  _notificationHubContext.Clients.All.SendAsync("sendToUser", titulo, mensaje, fecha);
-
             try
             {
-
-
-
                 var connections = _userConnectionManager.GetConnections();
                 if (connections != null && connections.Count > 0)
                 {
@@ -895,7 +884,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         await _notificationUserHubContext.Clients.Client(connectionId).SendAsync("sendToUser", titulo, mensaje, fecha);
                     }
                 }
-
             }
             catch (Exception err) {
 
@@ -913,7 +901,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 pEstado, $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}",
                 MotivoRechazo);
             enviarMessageCorreoParameterVM.RequestMessage.Correo = pCorreo;
-            enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Solicitud de Facturación";
+            enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Solicitud de Facturación {pEstado}";
             await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
         }
 
@@ -962,7 +950,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (resultCreditoDisponible.Resultado == 0)
                 {
                     ActionResponse.Codigo = 1;
-                    ActionResponse.Mensaje = $"Estimado cliente, favor considerar que la forma de crédito seleccionada no está disponible.<br/><strong>Motivo: {resultCreditoDisponible.Motivo}</strong>.";
+                    ActionResponse.Mensaje = $"Estimado cliente, favor considerar que la forma de crédito seleccionada no está disponible.<br/><br/><strong>Motivo: {resultCreditoDisponible.Motivo}</strong>.";
                 }
                 else if (resultCreditoDisponible.Resultado < 0)
                 {

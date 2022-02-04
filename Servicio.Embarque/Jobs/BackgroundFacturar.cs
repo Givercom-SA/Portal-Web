@@ -63,15 +63,28 @@ namespace Servicio.Embarque.Jobs
                 string rutaNotificacionesPendiente = _configuration["TrabajadoCarpeta:PendientePath"];
                 string rutaNotificacionesProcesadas = _configuration["TrabajadoCarpeta:ProcesadasPath"];
                 string rutaNotificacionesProcesando = _configuration["TrabajadoCarpeta:ProcesandoPath"];
-
+                string rutaNotificacionesBackup = _configuration["TrabajadoCarpeta:BackupPath"];
+                
                 List<FileFacturacion> listRutas = new List<FileFacturacion>();
                 var archivosActuales = new DirectoryInfo(rutaNotificacionesPendiente).GetFiles();
+                string strArchivoMover = "";
+                string strArchivoBackupMover = "";
 
                 foreach (var item in archivosActuales)
                 {
                     try
                     {
-                        File.Move(item.FullName, string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name));
+                         strArchivoMover=string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name);
+                        strArchivoBackupMover = string.Format("{0}/{1}", rutaNotificacionesBackup, item.Name);
+
+                        if (File.Exists(strArchivoMover)) {
+
+                            File.Move(strArchivoMover, strArchivoBackupMover);
+                            File.Delete(strArchivoMover);
+                        }
+
+                        File.Move(item.FullName, strArchivoMover);
+
                         listRutas.Add(new FileFacturacion() { Name = item.Name, FullName = item.FullName });
                     }
                     catch (Exception err)
@@ -99,68 +112,69 @@ namespace Servicio.Embarque.Jobs
                         string KeyBL = arrayKeyBl[0];
 
                         var resultFacturacion = _repositoryFacturacion.ListarSolicitudFacturacionPorKeyBl(KeyBL);
-                        var resultEmbarqueGtrm = _serviceEmbarques.ObtenerEmbarque(KeyBL);
 
-                        if (resultFacturacion?.IN_CODIGO_RESULTADO == 0)
+                        if (resultFacturacion?.SolicitudFacturaciones.Count() > 0)
                         {
-                            if (resultFacturacion.SolicitudFacturaciones.Count() == 1 && 
-                            resultFacturacion.SolicitudFacturaciones.ElementAt(0).Estado==Utilitario.Constante.EmbarqueConstante.EstadoGeneral.APROBADO.ToString())
+                            var resultEmbarqueGtrm = _serviceEmbarques.ObtenerEstadoSolicitudFacturacion(resultFacturacion.SolicitudFacturaciones.ElementAt(0).IdSolicitudTaf);
+
+                            if (resultFacturacion?.IN_CODIGO_RESULTADO == 0)
                             {
-                                if (resultEmbarqueGtrm?.Result?.FLAG_ESTADO_FACTURACION_SOLICITUD == "1" &&
-                                resultEmbarqueGtrm?.Result?.FLAG_COBROS_FACTURADOS == "0")
+
+                                if (resultFacturacion.SolicitudFacturaciones.Count() == 1 &&
+                                resultFacturacion.SolicitudFacturaciones.ElementAt(0).Estado == Utilitario.Constante.EmbarqueConstante.EstadoGeneral.APROBADO.ToString())
                                 {
-
-                                    var resultActualizarBltrabajo = _serviceEmbarques.ActualizarBlTrabajado(KeyBL, fileName);
-
-                                    if (resultActualizarBltrabajo.Result.ToString() == "1")
+                                    if (resultEmbarqueGtrm?.Result?.FLAG_ESTADO_FACTURACION_SOLICITUD == "1" &&
+                                    resultEmbarqueGtrm?.Result?.FLAG_COBROS_PENDIENTES == "0")
                                     {
-                                        //Registrar Notificacion de Facturacion
-                                        NotificacionFacturacionParameter parameterNotificacionFactu = new NotificacionFacturacionParameter();
-                                        parameterNotificacionFactu.IdUsuarioRegistra = -1;
-                                        parameterNotificacionFactu.KEYBLD = KeyBL;
-                                        parameterNotificacionFactu.Estado = "E";
-                                        var resultNotificacion = _repositoryFacturacion.NotificarFacturacion(parameterNotificacionFactu);
+                                        var resultActualizarBltrabajo = _serviceEmbarques.ActualizarBlTrabajado(KeyBL, fileName);
 
+                                        if (resultActualizarBltrabajo.Result.ToString() == "1")
+                                        {
+                                            //Registrar Notificacion de Facturacion
+                                            NotificacionFacturacionParameter parameterNotificacionFactu = new NotificacionFacturacionParameter();
+                                            parameterNotificacionFactu.IdUsuarioRegistra = -1;
+                                            parameterNotificacionFactu.KEYBLD = KeyBL;
+                                            parameterNotificacionFactu.Estado = "E";
+                                            var resultNotificacion = _repositoryFacturacion.NotificarFacturacion(parameterNotificacionFactu);
 
-                                        EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
-                                        enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
-                                        enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificacionFacturacion(
-                                             resultFacturacion.SolicitudFacturaciones.ElementAt(0).SolicitanteEmpresaPersona,
-                                            resultFacturacion.SolicitudFacturaciones.ElementAt(0).NroBl,
-                                           _configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupoUrl.ToString()]);
+                                            EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
+                                            enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
+                                            enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificacionFacturacion(
+                                                 resultFacturacion.SolicitudFacturaciones.ElementAt(0).CodigoSolicitud,
+                                                resultFacturacion.SolicitudFacturaciones.ElementAt(0).NroBl,
+                                               _configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupoUrl.ToString()]);
 
-                                        enviarMessageCorreoParameterVM.RequestMessage.Correo = resultFacturacion.SolicitudFacturaciones.ElementAt(0).SolicitanteCorreo;
-                                        enviarMessageCorreoParameterVM.RequestMessage.Asunto = "Notificación de Facturación";
-                                        enviarMessageCorreoParameterVM.RequestMessage.Archivos = new string[1];
-                                        enviarMessageCorreoParameterVM.RequestMessage.Archivos[0] = string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name);
+                                            enviarMessageCorreoParameterVM.RequestMessage.Correo = resultFacturacion.SolicitudFacturaciones.ElementAt(0).SolicitanteCorreo;
+                                            enviarMessageCorreoParameterVM.RequestMessage.Asunto = "Notificación de Facturación";
+                                            enviarMessageCorreoParameterVM.RequestMessage.Archivos = new string[1];
+                                            enviarMessageCorreoParameterVM.RequestMessage.Archivos[0] = string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name);
 
-                                        var ressult = _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
+                                            var ressult = _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
 
-
+                                        }
+                                        else
+                                        {
+                                            regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                                        }
                                     }
                                     else
                                     {
-
                                         regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                                     }
-
                                 }
-                                else {
+                                else
+                                {
                                     regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                                 }
-
                             }
                             else
                             {
                                 regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
-
                             }
                         }
-                        else { 
-                            regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name)); 
+                        else {
+                            regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
                         }
-
-                        //Se envia la información al servicio que se ha actualizado y enviado
                     }
                     catch (Exception ex)
                     {

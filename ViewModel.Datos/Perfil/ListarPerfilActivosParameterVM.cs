@@ -8,6 +8,7 @@ namespace ViewModel.Datos.Perfil
     public class ListarPerfilActivosParameterVM
     {
         public bool Activos { get; set; }
+        public string Tipo { get; set; }
 
     }
 

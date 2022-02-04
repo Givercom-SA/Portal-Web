@@ -14,8 +14,9 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
         public string ImagenEmpresaLogo { get; set; }
         public int IdUsuarioCrea { get; set; }
         public string CorreoOperador { get; set; }
+        public string CodigoEmpresaServicio { get; set; }
 
-
+        
         public List<DocumentoMemoVM> Documentos { get; set; }
 
     }

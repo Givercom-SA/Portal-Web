@@ -1,56 +1,86 @@
 
-*{
+* {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
 }
-body{
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" ;
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     font-size: 0.88rem;
     font-weight: 400;
     line-height: 1.5;
     color: rgb(73, 80, 87);
+    background-color: #E6EBED;
 }
 
-.libroImagen{
+.header {
+    background-color: #004984e3;
+    border-bottom: 1px solid #fff;
+}
+
+.header_logo {
+    width: 135px;
+    height: 80px;
+    margin-left: 60px;
+}
+
+    .header_logo img {
+        margin: 7px auto;
+        width: 132px;
+        height: 70px;
+    }
+
+.libroImagen {
     text-align: center;
 }
-.libroImagen img{
-    width: 200px;
-}
-.cabezera{
+
+    .libroImagen img {
+        width: 200px;
+    }
+
+.cabezera {
     margin-bottom: 25px;
 }
-.cabezera_titulo{
+
+.cabezera_titulo {
     font-size: 2.2rem;
     color: #00A0F4;
 }
-.contenido_titulo{
+
+.contenido_titulo {
     text-align: center;
     font-size: 2.2rem;
     color: #00A0F4;
 }
-.cabezera_titulo img{
+
+.cabezera_titulo img {
     float: right;
 }
-.cabezera_header{
+
+.cabezera_header {
     margin-top: 20px;
 }
-.cabezera_header h3{
-    margin-bottom: 12px;
-}
-.cabezera_header p{
-    font-size: 15px;
-}
-.contenido{
+
+    .cabezera_header h3 {
+        margin-bottom: 12px;
+    }
+
+    .cabezera_header p {
+        font-size: 15px;
+    }
+
+.contenido {
     position: absolute;
-    top: 90px;
+    top: 180px;
 }
-.item{
+
+.item {
     margin: 22px 35px;
-    padding: 5px ;
+    padding: 5px;
 }
-.titulo{
+
+.titulo {
     background: crimson;
     font-size: 1.2em;
     font-weight: 500;
@@ -58,35 +88,40 @@ body{
     padding: 5px 5px;
     border-radius: 3px;
 }
-.cuerpo{
-    color:black;
+
+.cuerpo {
+    color: black;
     font-weight: 500;
     font-size: 2.3em;
 }
-.pie{
-    color:black;
+
+.pie {
+    color: black;
     font-weight: 500;
     font-size: 1.5em;
 }
 
-.caja{
-    padding: 12px ;
-
+.caja {
+    padding: 12px;
 }
-.caja-titulo{
+
+.caja-titulo {
     text-align: center;
     font-size: 2.2em;
     margin-bottom: 20px
 }
-.caja-subtitulo{
+
+.caja-subtitulo {
     text-align: center;
 }
-.cajaReclamo{
+
+.cajaReclamo {
     margin: 90px 0;
     display: flex;
     flex-direction: row;
 }
-.cajaReclamo-contenido{
+
+.cajaReclamo-contenido {
     padding: 45px 0;
     width: 50%;
     margin: 10px 50px;
@@ -94,34 +129,40 @@ body{
     border-width: 0;
     border-radius: 15px;
     transition: all 0.2s;
+    background-color: #fff;
 }
-.cajaReclamo-contenido > h3{
-    text-align: center;
-    font-size: 1.95em;
-}
-.cajaReclamo-contenido  > h5{
-  text-align: center;  
-  font-size: 1.15em;
-}
-.cajaReclamo-cuerpo{
+
+    .cajaReclamo-contenido > h3 {
+        text-align: center;
+        font-size: 1.95em;
+    }
+
+    .cajaReclamo-contenido > h5 {
+        text-align: center;
+        font-size: 1.15em;
+    }
+
+.cajaReclamo-cuerpo {
     margin: 40px 40px;
     font-size: 1.35em;
 }
-.cajaReclamo-item{
+
+.cajaReclamo-item {
     display: flex;
     margin: 15px auto;
     width: 350px;
 }
-.cajaReclamo-item label{
-    margin-left: 15px;
-}
 
-.cajaReclamo-boton{
+    .cajaReclamo-item label {
+        margin-left: 15px;
+    }
+
+.cajaReclamo-boton {
     text-align: center;
     padding: 30px;
-    
 }
-.btn-reclamo{
+
+.btn-reclamo {
     color: #fff;
     text-decoration: none;
     background: #00A0F4;
@@ -129,10 +170,12 @@ body{
     border-radius: 5px;
     font-weight: 600;
 }
-.btn-reclamo:hover{
-    background: #026ea8;
-}
-i{
+
+    .btn-reclamo:hover {
+        background: #026ea8;
+    }
+
+i {
     color: rgba(25, 136, 247, 1);
     float: left;
     font-size: 25px;
@@ -140,30 +183,33 @@ i{
     height: 30px;
 }
 
-.contenedor{
+.contenedor {
     width: 90%;
     margin: 50px auto;
     padding: 50px 50px;
     box-shadow: 3px 3px 12px 14px rgba(45, 50, 52, 0.27);
     border-radius: 10px;
+    background-color: #fff;
 }
-.contenido_formulario{
+
+.contenido_formulario {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     margin: 0 62px;
 }
 
-.item_formulario{
+.item_formulario {
     margin: 15px;
     width: 300px;
 }
 
-.item_texto{
+.item_texto {
     display: block;
     width: 100%;
     height: calc(2.25rem + 2px);
-    padding: 0.375rem 0.75rem;;
+    padding: 0.375rem 0.75rem;
+    ;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -173,14 +219,16 @@ i{
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-.item_texto:focus{
-    color: #495057;
-    background-color: #fff;
-    border-color: #a9bcee;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-.textArea{
+
+    .item_texto:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #a9bcee;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+.textArea {
     margin-top: 5px;
     font-size: 1rem;
     font-weight: 400;
@@ -188,13 +236,15 @@ i{
     width: 100% !important;
     height: 150px;
     resize: none;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" ;;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    ;
 }
-.botones_formulario{
+
+.botones_formulario {
     margin-top: 60px;
 }
 
-.btn{
+.btn {
     margin: 0 40px;
     padding: 10px 10px;
     font-size: 1rem;
@@ -203,111 +253,144 @@ i{
     border-radius: 5px;
     text-align: center;
 }
-.btn_generar{
+
+.btn_generar {
     background: rgb(11, 161, 11);
 }
-.btn_generar:hover{
-    background: rgb(3, 129, 3);
-}
-.btn_regresar{
+
+    .btn_generar:hover {
+        background: rgb(3, 129, 3);
+    }
+
+.btn_regresar {
     background: #00A0F4;
 }
-.btn_regresar:hover{
-    background: #127cb4;
-}
 
-.formulario{
+    .btn_regresar:hover {
+        background: #127cb4;
+    }
+
+.formulario {
     width: 100%;
 }
+
 .slider-frame {
-	width: 100%;
-    height: auto;
-	margin: 50px auto 0;
-	overflow: hidden;
-}
-
-.slider-frame ul {
-	display: flex;
-	padding: 0;
-	width: 400%;
-	animation: slide 10s infinite alternate ease-in-out;
-}
-
-.slider-frame li {
-	width: 100%;
-	list-style: none;
-}
-
-.slider-frame img {
-	width: 100%;
+    width: 100%;
     height: 550px;
+    overflow: hidden;
+    background-color: #004984;
 }
+
+    .slider-frame ul {
+        display: flex;
+        padding: 0;
+        width: 400%;
+        animation: slide 10s infinite alternate ease-in-out;
+    }
+
+    .slider-frame li {
+        width: 100%;
+        list-style: none;
+    }
+
+    .slider-frame img {
+        width: 100%;
+        height: 550px;
+    }
 
 @keyframes slide {
-	0% {margin-left: 0;}
-	20% {margin-left: 0;}
-	
-	25% {margin-left: -100%;}
-	45% {margin-left: -100%;}
-	
-	50% {margin-left: -200%;}
-	70% {margin-left: -200%;}
-	
-	75% {margin-left: -300%;}
-	100% {margin-left: -300%;}
+    0% {
+        margin-left: 0;
+    }
+
+    20% {
+        margin-left: 0;
+    }
+
+    25% {
+        margin-left: -100%;
+    }
+
+    45% {
+        margin-left: -100%;
+    }
+
+    50% {
+        margin-left: -200%;
+    }
+
+    70% {
+        margin-left: -200%;
+    }
+
+    75% {
+        margin-left: -300%;
+    }
+
+    100% {
+        margin-left: -300%;
+    }
 }
 
 
 
 @media (max-width: 1070px) {
-    .cajaReclamo{
-       display: flex;
-       flex-direction: column;
+    .cajaReclamo {
+        display: flex;
+        flex-direction: column;
     }
-    .cajaReclamo-contenido{
+
+    .cajaReclamo-contenido {
         width: 90%;
         margin-bottom: 45px;
     }
-    .item_formulario{
+
+    .item_formulario {
         width: 250px;
     }
-    .btn{
+
+    .btn {
         margin: 12px;
-       
     }
 }
 
-@media (max-width: 450px){
-    .cajaReclamo{
+@media (max-width: 450px) {
+    .cajaReclamo {
         font-size: 14px;
     }
-    .cajaReclamo-contenido{
+
+    .cajaReclamo-contenido {
         width: 85%;
         margin: 30px auto;
     }
-    .cajaReclamo-item{
+
+    .cajaReclamo-item {
         width: 100%;
     }
-    .cabezera_titulo{
+
+    .cabezera_titulo {
         font-size: 2.2rem;
     }
-    .contenido_titulo{
+
+    .contenido_titulo {
         font-size: 2.2rem;
     }
-    
-    .botones_formulario{
+
+    .botones_formulario {
         display: flex;
         flex-direction: column;
         margin-top: 60px;
     }
-    .btn{
+
+    .btn {
         margin: 12px;
-       
     }
+
     .contenido_formulario {
         margin: 0 0;
     }
 }
+
 
 .lds-ripple {
     display: inline-block;
@@ -345,6 +428,7 @@ i{
         opacity: 0;
     }
 }
+
 .loader {
     position: fixed;
     left: 0px;
@@ -360,6 +444,5 @@ i{
 }
 
 .text-danger {
-
-color:#ff0000;
+    color: #ff0000;
 }

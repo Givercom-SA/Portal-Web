@@ -20,8 +20,9 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
         public string EstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
         public string Correo { get; set; }
+        public string CodMotivoRechazo { get; set; }
 
-
+        public string Motivorechazo { get; set; }
         public string Solicitante { get; set; }
 
         public string NroEmbarque { get; set; }

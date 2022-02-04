@@ -82,7 +82,7 @@ namespace Servicio.Usuario.Controllers
             {
                 if (result.IN_CODIGO_RESULTADO > 0)
                 {
-                    parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
+                    parameter.UrlConfirmacion =  string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
                 }
                 enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
                  new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));

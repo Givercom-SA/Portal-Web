@@ -1,0 +1,221 @@
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.ListarUsuariosModel
+
+
+
+@{
+    ViewData["Title"] = "Listado de Usuarios";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+
+
+    var resultPefilesActivos = ViewBag.ListaPerfilActivos as ViewModel.Datos.Perfil.ListarPerfilesActivosResultVM;
+}
+
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="arrow-right-circle"></i></div>
+                        Gestionar Usuarios
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá revisar los usuarios internos y externos.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+    <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+
+        <!-- Payment methods card-->
+        <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                Filtros para Búsqueda
+                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
+            </div>
+
+            <div class="card-body">
+                <div class="sbp-preview-content">
+                    <div class="row gx-3">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="@Model.Correo" class="small mb-1"></label>
+                                <input asp-for="@Model.Correo" class="form-control" type="text" maxlength="50" placeholder=" Ingrese su correo" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- Form Group (last name)-->
+                            <div class="mb-3">
+                                <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                                <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingrese su nombre" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <!-- Form Group (first name)-->
+                            <div class="mb-3">
+                                <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                                <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder=" Ingrese su apellido paterno" />
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                                <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder=" Ingrese su apellido materno" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gx-3">
+
+                        <div class="col-3">
+                            <label asp-for="@Model.isActivo" class="small mb-1"></label>
+                            <select class="form-select small" asp-for="@Model.isActivo">
+                                <option value="-1">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">No activo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label asp-for="@Model.IdPerfil" class="small mb-1"></label>
+                            
+                            <select class="form-select small" asp-for="@Model.IdPerfil">
+
+                                <option value="0">Todos</option>
+                                @foreach (var item in resultPefilesActivos.Perfiles)
+                                {
+                                <option value="@item.IdPerfil"> @item.Nombre</option>
+                                
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Billing history card-->
+    <div class="card card-header-actions mb-4">
+        <div class="card-header ">
+            Registros encontrados
+            @Html.ActionLink("Nuevo", "CrearUsuario", "Usuario", new { area = "GestionarUsuarios" }, new { @class = "btn btn-sm btn-primary" })
+        </div>
+        <div class="card-body">
+            <!-- Billing history table-->
+            <div class="table-responsive table-billing-history">
+                @if (Model.ListUsuarios.Usuarios != null && Model.ListUsuarios.Usuarios.Count() > 0)
+                {
+                    <partial name="_ResultadoFiltro" model="@Model.ListUsuarios.Usuarios" />
+                }
+                else
+                {
+                    @Html.Raw("No existen registros...");
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_usuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ver Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="ContentVerUsuario"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
+
+
+
+    <script>
+        $(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            cargarLista();
+           
+
+
+        });
+
+
+
+        function cargarLista() {
+
+
+
+            try {
+
+
+                let dataTable = new simpleDatatables.DataTable("#datatable", {
+                    searchable: true,
+                    labels: {
+                        "noRows": "No hay información",
+                        perPage: "{select} Registros por página",
+                        "info": "Mostrando {start} a {end} de {rows} Registros",
+                        placeholder: "Filtro rápido...",
+                    },
+                });
+
+
+            } catch (erro) {
+
+            }
+
+        }
+
+
+        function VerInformacion(IdUsuario) {
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios"})?Id=" + IdUsuario,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+                .done(function (result) {
+                    if (result != null) {
+                        $('#ContentVerUsuario').html(result);
+                        $('#modal_usuario').modal('show');
+                    } else {
+
+                    }
+                })
+                .fail(function (xhr, status, error) {
+
+                })
+                .always(function () {
+
+                });
+        }
+    </script>
+}
+

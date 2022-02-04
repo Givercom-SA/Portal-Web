@@ -63,6 +63,7 @@ namespace Web.Principal.Pages.libroreclamaciones
             var parameterEmpresas = new ViewModel.Reclamo.ListaEmpresasParameterVM();
 
             var listTipoDocumnentoResult = await _serviceMaestro.ListarEmpresas(parameterEmpresas);
+            Input.FechaTope = DateTime.Now.ToString("yyyy-MM-dd");
 
             if (listTipoDocumnentoResult.CodigoResultado == 0)
             {
@@ -72,30 +73,23 @@ namespace Web.Principal.Pages.libroreclamaciones
 
             else
                 MensajeError = MensajeError + " " + listTipoDocumnentoResult.MensajeResultado;
-
         }
-
-
 
         public async Task<IActionResult> OnPost()
         {
-
-
             ActionResponse = new ActionResponse();
             ActionResponse.Codigo = -1;
             ActionResponse.Mensaje = "Estimado cliente, ocurrio un error interno por favor volver a intentar mas tarde.";
 
             if (ModelState.IsValid)
             {
-
-
                 RegistrarReclamoParameterVM registrarReclamoParameterVM = new RegistrarReclamoParameterVM();
                 registrarReclamoParameterVM.Celular = Input.Celular;
                 registrarReclamoParameterVM.CodigoEmpresa = Input.EmpresaAtiende;
-                registrarReclamoParameterVM.CodigoTipoDocumento = Input.Celular;
+                registrarReclamoParameterVM.CodigoTipoDocumento = "";
                 registrarReclamoParameterVM.CodigoTipoFormulario = "02";
                 registrarReclamoParameterVM.CodigoUnidadNegocio = Input.UnidadNegocio;
-                registrarReclamoParameterVM.Email = Input.Celular;
+                registrarReclamoParameterVM.Email = Input.Email;
                 registrarReclamoParameterVM.FechaIncidencia = Input.FechaIncidencia;
                 registrarReclamoParameterVM.Nombre = Input.NombreCompleto;
                 registrarReclamoParameterVM.Observacion = Input.Mensaje;
@@ -108,16 +102,40 @@ namespace Web.Principal.Pages.libroreclamaciones
                     ActionResponse.Codigo = resultRegistrarReclamo.CodigoResultado;
                     ActionResponse.Mensaje = resultRegistrarReclamo.MensajeResultado;
 
-                    enviarCorreoCliente(Input.Email,Input.NombreCompleto,$"Se ha registrado tu queja exitosamente y en 24 horas te estaremos respondiendo.");
+                    string contenidoCliente = "";
+                    contenidoCliente = $"Se ha registrado tu queja exitosamente y en 24 horas te estaremos respondiendo, a continuación el detalle. <br/><br/>";
+                    contenidoCliente = contenidoCliente + $" Ruc: {Input.Ruc}<br/>";
+                    contenidoCliente = contenidoCliente + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenidoCliente = contenidoCliente + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenidoCliente = contenidoCliente + $" Email: {Input.Email}<br/>";
+                    contenidoCliente = contenidoCliente + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenidoCliente = contenidoCliente + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenidoCliente = contenidoCliente + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
 
-                    
+                    enviarCorreoCliente(Input.Email,Input.NombreCompleto, contenidoCliente);
+
+                    // enviar usuario atiende
+
+                    var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(74);
+                    string correo = listaEstado.ListaParametros.ElementAt(0).ValorCodigo;
+
+                    string contenido = "";
+                    contenido = $"Se ha registrado una queja, a continuación el detalle. <br/><br/>";
+                    contenido = contenido + $" Ruc: {Input.Ruc}<br/>";
+                    contenido = contenido + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenido = contenido + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenido = contenido + $" Email: {Input.Email}<br/>";
+                    contenido = contenido + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenido = contenido + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenido = contenido + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
+                    contenido = contenido + $" Mensaje: {Input.Mensaje}<br/>";
+                    enviarCorreoCliente(correo, "usuario", contenido);
 
                 }
                 else {
                     ActionResponse.Codigo = -3;
                     ActionResponse.Mensaje = "Estimado cliente, ocurrio un error inesperado por favor volver a intentar.";
                 }
-               
             }
             else
             {
@@ -126,7 +144,6 @@ namespace Web.Principal.Pages.libroreclamaciones
             }
 
             return new JsonResult(ActionResponse);
-
         }
 
         private async void enviarCorreoCliente(string correo, string nombreCliente, string Mensaje)

@@ -139,6 +139,16 @@ namespace Utilitario.Constante
             public static string CLIENTE_FORWARDER = "TC04";
 
         }
+ 
+        public static class TipoPerfil
+        {
+            public static string INTERNO = "TP01";
+            public static string EXTERNO = "TP02";
+            public static string SISTEMAS = "TC03";
+      
+
+        }
+
 
         public static class TipoEntidadTransmares
         {

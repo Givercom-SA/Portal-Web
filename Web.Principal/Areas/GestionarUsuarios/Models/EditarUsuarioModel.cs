@@ -25,8 +25,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Display(Name = "Apellido Paterno")]
         [Required(ErrorMessage = "Debe ingresar Apellido Paterno")]
         public string ApellidoPaterno { get; set; }
+        
         [Required(ErrorMessage = "Debe ingresar Apellido Materno")]
+        [Display(Name = "Apellido Materno")]
         public string ApellidoMaterno { get; set; }
+        
         [Display(Name = "Correo")]
         [Required(ErrorMessage = "Debe ingresar el correo")]
         [EmailAddress(ErrorMessage = "El correo ingresado no es válido")]
@@ -41,12 +44,28 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "Seleccione Estado")]
         public bool Activo { get; set; }
+        
         public bool EsAdmin { get; set; }
 
-        public int IdEntidad { get; set; }
+        public int? IdEntidad { get; set; }
 
         public string PerfilNombre { get; set; }
         public int[] Menus { get; set; }
+
+
+        [Display(Name = "Usuario de Creación")]
+        public string UsuarioCrea { get; set; }
+        [Display(Name = "Ultima Usuario que Modifico")]
+        public string UsuarioModifica { get; set; }
+        [Display(Name = "Fecha de Creación")]
+        public DateTime? FechaCrea { get; set; }
+        [Display(Name = "Ultima fecha de Modificación")]
+        public DateTime? FechaModifica { get; set; }
+
+        [Display(Name = "Confirmo Cuenta")]
+        public bool ConfirmarCuenta { get; set; }
+        [Display(Name = "Cambio Contraseña")]
+        public bool CambioContrasenia { get; set; }
 
         public List<UsuarioMenuVM> Items { get; set; }
 

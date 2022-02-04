@@ -46,16 +46,17 @@
                     <div class="col-6 col-sm-6  small ">
 
                         <div class="row">
-                            <div class="col-6">
-                                @Html.Raw("Estado: ")
+                            <div class="col-6 col-sm-6 ">
+                                @Html.Raw("Número de Embarque :")
                             </div>
-                            <div class="col-6">
-                                <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+                            <div class="col-6 col-sm-6 ">
+                                <input class="form-control  small" type="text" disabled value="@Model.NroEmbarque" />
                             </div>
                         </div>
                     </div>
 
                     <div class=" col-6 col-sm-6  small ">
+
                         <div class="row">
                             <div class="col-6">
                                 @Html.Raw("Fecha de Registro: ")
@@ -65,9 +66,93 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
+
+
+
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6 col-sm-6  small ">
+
+                        <div class="row">
+                            <div class="col-6 col-sm-6 ">
+                                @Html.Raw("Estado :")
+                            </div>
+                            <div class="col-6 col-sm-6 ">
+                                @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                {
+                                    <select asp-for="@Model.EstadoCodigo" class="form-select small" disabled
+                                            id="cmbEstado"
+                                            onchange="visualizarMotRechazo(this)">
+                                        <option value="SP">Pendiente</option>
+                                        <option value="SA">Aprobar</option>
+                                        <option value="SR">Rechazar</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select asp-for="@Model.EstadoCodigo" class="form-select small"
+                                            id="cmbEstado"
+                                            onchange="visualizarMotRechazo(this)">
+                                        <option value="0">Seleccionar</option>
+                                        <option value="SA">Aprobar</option>
+                                        <option value="SR">Rechazar</option>
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-6  small ">
+                        <div id="divMotRechazo" style="display:none;">
+                            <div class="row">
+                                <div class="col-6">
+                                    @Html.Raw("Motivo Rechazo: ")
+                                </div>
+
+                                <div class="col-6">
+                                    @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                    {
+
+                                        <select class="form-select small" id="cmbRechazo" disabled
+                                                asp-for="@Model.CodMotivoRechazo"
+                                                asp-items="@ViewBag.ListarMotivosRechazos">
+                                            <option value="0">Seleccione</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-select small" id="cmbRechazo"
+                                                asp-for="@Model.CodMotivoRechazo"
+                                                asp-items="@ViewBag.ListarMotivosRechazos">
+                                            <option value="0">Seleccione</option>
+                                        </select>
+                                    }
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <hr />
+
+                <div class="row mb-3">
+                    <div class="col-6 col-sm-6  small ">
+                        <div class="row">
+                            <div class="col-6 col-sm-6 ">
+                                @if (Model.EstadoCodigo.Equals("SP"))
+                                {
+                                    <button class="btn btn-sm btn-primary" type="button" onclick="RegistrarEstado()"> Guardar </button>
+                                }
+                            </div>
+                            <div class="col-6 col-sm-6 ">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
 
                 <div style="position: absolute; bottom: 1rem; right: 1rem;">
                     <!-- Toast -->
@@ -94,11 +179,9 @@
             <div class="card card-header-actions mb-4">
                 <div class="card-header">
                     Documentos Adjuntados
-                    @if (Model.EstadoCodigo.Equals("SP"))
-                    {
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardarEstadoDocumento()"> Guardar </button>
-                    }
+
                 </div>
+
                 <div class="card-body px-0">
                     <div class="table-responsive table-billing-history">
                         @if (Model.ListaDocumentos != null && Model.ListaDocumentos.Count() > 0)
@@ -107,13 +190,13 @@
                             @foreach (var item in Model.ListaDocumentos.Where(x => x.Padre == 0))
                             {
                                 bool disabled = (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR") ? true : false;
-                                string icon = (item.Codigo.Equals("DM01")) ? "bi-file-image" : "bi-file-pdf";
+                                string icon = (item.Codigo.Equals("DM01")) ? "bi-file-image" : "bi-file-image";
                                 @Html.Hidden("hddCodDoc_" + i, item.Codigo)
                                 <div class="d-flex align-items-center justify-content-between px-4">
                                     <div class="d-flex align-items-center">
                                         <i class="@icon" style="font-size: 2rem; color: cornflowerblue;"></i>
                                         <div class="ms-4">
-                                            <div>
+                                            <div class="classEstadoDoc">
                                                 @if (item.Codigo.Equals("DM01"))
                                                 {
                                                     <span class="font-weight-bold"> @item.Nombre :</span>
@@ -133,26 +216,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="ms-4 small">
-                                        <select asp-for="@item.Estado" class="form-select-sm classEstadoDoc" disabled="@disabled"
-                                                id="@("cmbEstado" + item.Codigo)"
-                                                onchange="visualizarMotRechazo(this, '@(item.Codigo)')">
-                                            <option value="SP">Pendiente</option>
-                                            <option value="SA">Aprobar</option>
-                                            <option value="SR">Rechazar</option>
-                                        </select>
-                                    </div>
+
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between px-4">
-                                    <div id=@("divMotRechazo"+item.Codigo) style="display:none;">
-                                        Seleccione Motivo Rechazo:
-                                        <select class="form-select-sm" id="@("cmbRechazo"+item.Codigo)" disabled="@disabled"
-                                                asp-for="@item.CodMotivoRechazo"
-                                                asp-items="@ViewBag.ListarMotivosRechazos">
-                                            <option value="0">Seleccione</option>
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <hr />
                                 i++;
                             }
@@ -171,17 +237,17 @@
                             <thead>
                                 <tr>
                                     <th class="border-gray-200" scope="col">Usuario</th>
-                                    <th class="border-gray-200" scope="col">Descripcion</th>
                                     <th class="border-gray-200" scope="col">Fecha</th>
+                                    <th class="border-gray-200" scope="col">Descripcion</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.ListaEventos)
                                 {
                                     <tr>
-                                        <td>@item.NombreUsuario</td>
-                                        <td>@item.Descripcion</td>
+                                        <td>@item.CorreoUsuario</td>
                                         <td>@item.FechaRegistro</td>
+                                        <td>@item.Descripcion</td>
                                     </tr>
                                 }
                             </tbody>
@@ -253,28 +319,30 @@
 
         $(document).ready(function () {
 
+            let codEstadRechazoLoad = $("#cmbEstado").val();
+            if (codEstadRechazoLoad == "SR") $("#divMotRechazo").show();
+            else $("#divMotRechazo").hide();
+
             var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
 
-            $.each(listaEstadoSelects, function (index, obj) {
-                var codDocumento = $("#hddCodDoc_" + index).val();
-
-                if (obj.value == "SR") $("#divMotRechazo" + codDocumento).show();
-                else $("#divMotRechazo" + codDocumento).hide();
-            });
+         
 
         });
 
-        function visualizarMotRechazo(obj, valor) {
 
-            if (obj.value == "SR") $("#divMotRechazo" + valor).show();
-            else $("#divMotRechazo" + valor).hide();
+        function visualizarMotRechazo(obj) {
+
+            if (obj.value == "SR") $("#divMotRechazo").show();
+            else $("#divMotRechazo").hide();
         }
 
-        function guardarEstadoDocumento() {
+        function RegistrarEstado() {
 
             var codSolicitud = $("#hddCodigoSolicitud").val();
             var IdSolicitud = $("#hddIdSolicitud").val();
-            
+            var codEstado = $("#cmbEstado").val();
+            var codEstadRechazo = $("#cmbRechazo").val();
+
             var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
 
             var procesa = true;
@@ -283,42 +351,41 @@
             listDocumentos.CodigoSolicitud = codSolicitud;
             listDocumentos.IdSolicitud = IdSolicitud;
             listDocumentos.Documentos = [];
+            listDocumentos.CodigoMotivoRechazo = codEstadRechazo;
+            listDocumentos.codigoEstadoEvalua = codEstado;
+         
+            if (codEstado == "0") {
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar un estado APROBAR o RECHAZAR.");
+
+                return false;
+            }
 
 
+            if (codEstadRechazo == "0" && codEstado=="SR") {
+                $("#dialogAlerta").modal("show");
+                $("#outputMensaje").html("Debe seleccionar un motivo de rechazo.");
+
+                return false;
+            }
 
             $.each(listaEstadoSelects, function (index, value) {
 
                 let codDocumento = $("#hddCodDoc_" + index).val();
-                let codEstadRechazo = $("#cmbRechazo" + codDocumento).val();
-                let codEstado = $("#cmbEstado" + codDocumento).val();
 
                 let objDocumneto = new Object();
                 objDocumneto.CodigoDocumento = codDocumento;
-                objDocumneto.CodigoEstado = codEstado;
+                objDocumneto.CodigoEstado = 'SA';
                 objDocumneto.CodigoEstadoRechazo = codEstadRechazo;
 
-                if (codEstadRechazo == "0" && codEstado == "SR") {
-                    procesa = false;
-                }
-                else
-                {
-                    listDocumentos.Documentos.push(objDocumneto);
-                }
-
+                listDocumentos.Documentos.push(objDocumneto);
             });
 
-            if (procesa) {
-                actualizarEstadoDocumento(listDocumentos,codSolicitud);
-            }
-            else {
-                $("#dialogAlerta").modal("show");
-                $("#outputMensaje").html("Debe seleccionar un motivo de rechazo.");
-            }
+            actualizarEstadoDocumento(listDocumentos, codSolicitud);
 
         }
 
         function actualizarEstadoDocumento(listDocumentos, codSolicitud) {
-
 
 
             $.ajax({
@@ -332,33 +399,26 @@
 
             }).done(function (data) {
 
+                $(".loader").fadeOut("slow");
 
                 if (data.codigo == 0) {
 
-                    procesarSolicitud(codSolicitud);
+                    $("#modalResultRegistro").modal("show");
+                    $("#mensaje").html(data.mensaje);
 
                 } else if (data.codigo > 0) {
-                    $(".loader").fadeOut("slow");
+
 
                     $("#dialogAlerta").modal("show");
                     $("#outputMensaje").html(data.mensaje);
 
                 } else {
-                    $(".loader").fadeOut("slow");
+
                     $("#dialogError").modal("show");
                     $("#outputMensajeError").html(data.mensaje);
                 }
 
-                /*
-                modalResultRegistro
-                mensaje
 
-                dialogAlerta
-                outputMensaje
-
-                dialogError
-                outputMensajeError
-                */
 
             }).fail(function () {
 
@@ -371,51 +431,14 @@
             });
         }
 
-        function procesarSolicitud(codSolicitud) {
-
-            $.ajax({
-
-                url:'@Url.Action("ProcesarSolicitud", "Memo", new { Area= "GestionarEmbarques" })',
-                data: { codSolicitud: codSolicitud },
-                beforeSend: function (xhr) {
-                    $(".loader").fadeIn("slow");
-                }
-
-            }).done(function (data) {
-
-                $(".loader").fadeOut("slow");
 
 
-                if (data.codigo == 0) {
-
-
-                window.location.href = '@Url.Action("ListarSolicitudes", "Memo", new {area="GestionarEmbarques"})';
-
-                } else if (data.codigo > 0) {
-
-
-                    $("#dialogAlerta").modal("show");
-                    $("#outputMensaje").html(data.mensaje);
-
-                } else {
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html(data.mensaje);
-                }
-
-
-            }).fail(function () {
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html("Ocurrio un error inesperado, por favor volver a intentar más tarde.");
-                $(".loader").fadeOut("slow");
-
-            });
+        function cerrarActualizar() {
+              window.location.href = '@Url.Action("ListarSolicitudes", "Memo", new {area="GestionarEmbarques"})';
         }
-
 
         function fnRegresarLista() {
-
              window.location.href = '@Url.Action("ListarSolicitudes", "Memo", new {area="GestionarEmbarques"})';
-
         }
 
     </script>

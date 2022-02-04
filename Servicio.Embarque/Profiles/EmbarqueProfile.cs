@@ -49,7 +49,9 @@ namespace Servicio.Embarque.Profiles
             CreateMap<AsignarAgenteCrearParameter, AsignarAgenteCrearParameterVM>();
             CreateMap<AsignarAgenteEstadoParameter, AsignarAgenteEstadoParameterVM>();
             CreateMap<AsignarAgenteListarParameter, AsignarAgenteListarParameterVM>();
-            
+
+            CreateMap<ListarSolicitudesMemoParameterVM, ListarSolicitudesMemoParameter>();
+
             CreateMap<ListarProvisionFacturacionTerceroParameterVM, ListarProvisionFacturacionTerceroParameter>()
                 .ForMember(s => s.KeyBl, o => o.MapFrom(s => s.KeyBl))
             .ForMember(s => s.Provision, o => o.MapFrom(s => s.Provision)) ;
@@ -96,6 +98,9 @@ namespace Servicio.Embarque.Profiles
             CreateMap<ListarEventosMemoResult, ListarEventosMemoResultVM>();
             CreateMap<ListarSolicitudesMemoResult, ListarSolicitudesMemoResultVM>();
             CreateMap<SolicitudMemoParameter, SolicitudMemoParameterVM>().ReverseMap();
+            CreateMap<SolicitudMemoEstadoresult, SolicitudMemoEstadoresultVM>().ReverseMap();
+            
+
             CreateMap<ProcesarSolicitudMemoResult, ProcesarSolicitudMemoResultVM>()
                 .ForMember(s => s.VH_CODSOLICITUD, o => o.MapFrom(s => s.VH_CODSOLICITUD))
                 .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))

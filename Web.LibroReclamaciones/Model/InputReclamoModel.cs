@@ -69,6 +69,7 @@ namespace Web.LibroReclamaciones.Model
         public string UnidadNegocioNombre { get; set; }
         public string TipoDocumentoNombre { get; set; }
 
+        public string FechaTope { get; set; }
         public SelectList ListEmpresaAtendio { get; set; }
 
         public SelectList ListUnidadNegocio { get; set; }

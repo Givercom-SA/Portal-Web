@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Servicio.Maestro.Models;
 using Servicio.Maestro.Models.LibroReclamo;
+using Servicio.Maestro.Models.Tarifario;
 using Servicio.Maestro.Repositorio;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using ViewModel.Datos.Documento;
 using ViewModel.Datos.ListaCorreos;
 using ViewModel.Datos.Parametros;
 using ViewModel.Reclamo;
+using ViewModel.Tarifario;
 
 namespace Servicio.Maestro.Controllers
 {
@@ -74,6 +76,14 @@ namespace Servicio.Maestro.Controllers
         {
             var result = _repository.RegistrarReclamo(_mapper.Map<RegistrarReclamoParameter>(parameter));
             return _mapper.Map<RegistrarReclamoResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("tarifario-listar")]
+        public ActionResult<ListarTarifarioResultVM> ListarTarifario(ListarTarifarioParameterVM parameter)
+        {
+            var result = _repository.ListarTarifario(_mapper.Map<ListarTarifarioParameter>(parameter));
+            return _mapper.Map<ListarTarifarioResultVM>(result);
         }
     }
 }

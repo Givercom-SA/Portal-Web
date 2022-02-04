@@ -22,6 +22,7 @@ using ViewModel.Datos.ListaExpressRelease;
 using Utilitario.Constante;
 using TransMares.Core;
 using ViewModel.Datos.Message;
+using ViewModel.Datos.Parametros;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -36,7 +37,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         
         private readonly IMapper _mapper;
         private static ILogger _logger = ApplicationLogging.CreateLogger("EmbarqueController");
-
 
         public EmbarqueController(ServicioEmbarques serviceEmbarques,
                                     ServicioMaestro servicMaestro,
@@ -66,19 +66,21 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (model.TipoFiltro == null)
                     model.TipoFiltro = "";
 
-
                 var listServiceAnios = await _servicMaestro.ObtenerParametroPorIdPadre(53);
-                model.ListAnios = new SelectList(listServiceAnios.ListaParametros, "ValorCodigo", "NombreDescripcion");
+                var anioActual = DateTime.Now.Year;
+                List<ParametrosVM >listaParametroAniosVM = new List<ParametrosVM>();            
 
+                for (var itemAnios = Convert.ToInt32(listServiceAnios.ListaParametros.ElementAt(0).ValorCodigo); itemAnios <= anioActual; itemAnios++) {
+
+                    listaParametroAniosVM.Add(new ParametrosVM() {  ValorCodigo= itemAnios.ToString() ,NombreDescripcion= itemAnios.ToString() });
+                }
+
+                listServiceAnios.ListaParametros = listaParametroAniosVM;
+
+                model.ListAnios = new SelectList(listServiceAnios.ListaParametros, "ValorCodigo", "NombreDescripcion");
+                
                 var listServiceTipoFiltro = await _servicMaestro.ObtenerParametroPorIdPadre(49);
                 model.TipoFiltros = new SelectList(listServiceTipoFiltro.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
-                var listServicios = await _servicMaestro.ObtenerParametroPorIdPadre(12);
-                model.ListaServicios = new SelectList(listServicios.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
-                var listOrigen = await _servicMaestro.ObtenerParametroPorIdPadre(79);
-                model.ListaOrigen = new SelectList(listOrigen.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
 
                 var resultSesion = HttpContext.Session.GetUserContent();
 
@@ -86,10 +88,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 {
                     model.listEmbarques = await _serviceEmbarques.ListarEmbarques(resultSesion.Sesion.CodigoTransGroupEmpresaSeleccionado,
                                                                             short.Parse(model.Anio), 
-                                                                            model.Servicio,
-                                                                            model.Origen,
-                                                                            short.Parse(model.TipoFiltro), model.Filtro == null ? "" : model.Filtro,
-                                                                            resultSesion.obtenerTipoEntidadTransmares(), resultSesion.Sesion.RucIngresadoUsuario);
+                                                                            short.Parse(model.TipoFiltro),
+                                                                            model.Filtro == null ? "" : model.Filtro,
+                                                                            resultSesion.obtenerTipoEntidadTransmares(), 
+                                                                            resultSesion.Sesion.RucIngresadoUsuario);
                 }
 
             }
@@ -102,14 +104,12 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro, string servicio, string origen)
+        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro)
         {
             var resultSesion = HttpContext.Session.GetUserContent();
 
             EmbarqueDetalleModel model = new EmbarqueDetalleModel();
             model.EmbarqueDetalle = new Model.EmbarqueModel();
-            model.Servicio = servicio;
-            model.Origen = origen;
 
             try
             {
@@ -656,7 +656,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado, string servicio, string origen)
+        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado)
         {
             ActionResponse = new ActionResponse();
 

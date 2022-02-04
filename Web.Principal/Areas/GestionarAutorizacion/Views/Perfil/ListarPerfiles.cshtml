@@ -27,35 +27,51 @@
 
 <!-- Main page content-->
 <div class="container-xl px-4 mt-n10">
-    <form asp-route-returnUrl="@Model.ReturnUrl" method="get" enctype="multipart/form-data">
 
-        <!-- Payment methods card-->
-        <div class="card card-header-actions mb-4">
-            <div class="card-header">
-                Filtros para búsqueda
-                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
-            </div>
 
-            <div class="card-body">
-                <div class="sbp-preview-content">
-                    <div class="row col-12">
-                        <div class="col-5">
+    <!-- Payment methods card-->
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Filtros para búsqueda
+            <button class="btn btn-sm btn-primary" type="button" onclick="filtrarPerfil()">Buscar</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+                <form asp-route-returnUrl="@Model.ReturnUrl" id="frmFiltrarPerfil" method="get" enctype="multipart/form-data">
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-4">
                             <label class="small mb-1">Nombre</label>
                             <input class="form-control" asp-for="@Model.Nombre" type="text" placeholder="Ingresa nombre" />
                         </div>
-                        <div class="col-4">
+
+                        <div class="col-md-4">
                             <label class="small mb-1">Estado</label>
-                            <select class="form-select small" asp-for="@Model.Activo">
+                            <select asp-for="@Model.Activo"
+                                    asp-items="Model.ListEstado"
+                                    class="form-select small">
                                 <option value="-1">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">No activo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="small mb-1">Tipo</label>
+                            <select asp-for="@Model.Tipo"
+                                    asp-items="Model.ListTipo"
+                                    class="form-select small">
+                                <option value="0">Todos</option>
                             </select>
                         </div>
                     </div>
-                </div>
+
+
+
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 
     <!-- Billing history card-->
     <div class="card card-header-actions mb-4">
@@ -98,7 +114,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmar</h5>
+                <h5 class="modal-title">Eliminar Perfil</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -106,8 +122,8 @@
                 <div id="ResultConfirmar"></div>
             </div>
             <div class="modal-footer">
-                <button id="btnEliminar" class="btn btn-primary" type="button">Desactivar</button>
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                <button id="btnEliminar" class="btn btn-primary" type="button">SI</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
@@ -128,38 +144,91 @@
     </div>
 </div>
 
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
 @section Scripts{
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" type="text/javascript"></script>
     <script type="text/javascript">
 
-
-
         $(document).ready(function () {
-
-
             $(".loader").fadeOut("slow");
-
             let dataTable = new simpleDatatables.DataTable("#datatable", {
-                searchable: false,
+                searchable: true,
                 labels: {
                     "noRows": "No hay información",
                     perPage: "{select} Registros por página",
                     "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
                 },
+            });
+
+            $("#btnEliminar").click(function () {
+                EliminarPerfil();
             });
 
         });
 
 
-        function VerInformacion(IdPerfil) {
+        @*function VerInformacion(IdPerfil) {
+
             $.ajax({
                 type: "GET",
-                url: "/GestionarAutorizacion/Perfil/VerPerfil?Id=" + IdPerfil,
+                url: "@Url.Action("VerPerfil", "Perfil", new { area= "GestionarAutorizacion" })/?Id=" + IdPerfil,
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'html'
             })
                 .done(function (result) {
+
                     if (result != null) {
                         $('#ContentVerPerfil').html(result);
                         $('#modal_perfil').modal('show');
@@ -173,42 +242,104 @@
                 .always(function () {
 
                 });
-        }
+        }*@
 
-        $("#btnEliminar").click(function () {
-            $("#ResultConfirmar").html("");
-            var IdPerfil = $('#ContentConfirmar').data('data-idperfil');
+
+        function EliminarPerfil() {
+
+           var IdPerfil = $('#ContentConfirmar').data('data-idperfil');
+
             var formData = new FormData();
             formData.append("IdPerfil", IdPerfil);
+
             $.ajax({
                 type: "POST",
-                url: "/GestionarAutorizacion/Perfil/EliminarPerfil",
+                url: "@Url.Action("EliminarPerfil", "Perfil", new { area= "GestionarAutorizacion" })",
                 data: formData,
                 contentType: false,
-                processData: false
-            })
-                .done(function (result) {
+                processData: false,
+                beforeSend: function () {
 
-                    if (result != null) {
-                        if (result.codigo == 0) {
-                            $('#modal_confirmar').modal('hide');
-                            $('#modal_mensaje_result').modal('show');
-                            
-                        } else {
-                            ShowAlertMensage('ResultConfirmar', 'warning', '', result.mensaje, 0, null);
-                        }
-                    } else {
-                        ShowAlertMensage('ResultConfirmar', 'warning', '', "Error inesperado, volver a intentar por favor.", 0, null);
+                    $("#modal_confirmar").modal("hide");
+
+                    $(".loader").fadeIn("slow");
+
+                },
+            })
+                .done(function (response) {
+                    $(".loader").fadeOut("slow");
+
+                    if (response.codigo == 0) {
+
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(response.mensaje);
                     }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    }
+                    else if (response.codigo < 0) {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+
                 })
                 .fail(function (xhr, status, error) {
-
+                    $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar mas tarde. Detalle: " + error);
                 })
                 .always(function () {
 
                 });
+        }
 
-        });
+
+        function VerificarSiTieneAccesos(idPerfil, nombrePerfil) {
+
+
+            var formData = new FormData();
+            formData.append("IdPerfil", idPerfil);
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("VerificarSiTieneAccesos", "Perfil", new { area= "GestionarAutorizacion" })",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+            })
+                .done(function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+                        $("#ResultConfirmar").html("");
+                        $('#ContentConfirmar').data('data-idperfil', idPerfil);
+                        $('#ContentConfirmar').html('¿Desea eliminar el perfil: <b>' + nombrePerfil + '</b>?');
+                        $('#modal_confirmar').modal('show');
+                    }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+                    }
+                    else if (response.codigo < 0) {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar más tarde. Detalle: " + error);
+                })
+                .always(function () {
+
+                });
+        }
 
 
         function cerrarActualizarPoup() {
@@ -218,10 +349,19 @@
         }
 
         function ConfirmarEliminar(IdPerfil, Nombre) {
-            $("#ResultConfirmar").html("");
-            $('#ContentConfirmar').data('data-idperfil', IdPerfil);
-            $('#ContentConfirmar').html('¿Desea desactivar el perfil: <b>' + Nombre + '</b>?');
-            $('#modal_confirmar').modal('show');
+            VerificarSiTieneAccesos(IdPerfil, Nombre);
         }
+
+        function filtrarPerfil() {
+
+            $("#frmFiltrarPerfil").submit();
+        }
+
+        function ActualizarForm() {
+            window.location.reload();
+        }
+
+
+
     </script>
 }

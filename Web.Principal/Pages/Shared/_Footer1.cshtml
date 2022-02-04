@@ -1,0 +1,15 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Service.Common.Utils.IVersionService version
+
+@using ViewModel.Datos.UsuarioRegistro
+
+<footer class="footer-admin mt-auto footer-light">
+    <div class="container-xl px-4">
+        <div class="row">
+            <div class="col-md-6 small">Copyright &copy; Portal Transmares Group @DateTime.Now.Year - Version. @version.GetVersion() SE @version.GetIp()</div>
+            <div class="col-md-6 text-md-end small">
+
+            </div>
+        </div>
+    </div>
+</footer>

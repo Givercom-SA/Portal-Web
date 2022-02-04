@@ -56,7 +56,7 @@ namespace Web.Principal.Interface
                 foreach (var item in userConnectionMap)
                 {
                     if (item.Value.Count > 0) {
-                        if (string.IsNullOrEmpty(item.Value[0])) {
+                        if (!string.IsNullOrEmpty(item.Value[0])) {
                             conn.Add(item.Value[0]);
                         }           
                     }

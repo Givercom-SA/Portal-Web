@@ -6,7 +6,7 @@
 }
 @if (Model != null)
 {
-    <div class="list-group small">
+    <div class="list-group">
         @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
         {
             <label class="list-group-item"><b>@grupo</b></label>

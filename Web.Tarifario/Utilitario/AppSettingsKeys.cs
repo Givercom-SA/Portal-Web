@@ -7,7 +7,7 @@ namespace Web.Tarifario.Utilitario
 {
     public static class AppSettingsKeys
     {
-        public static class ConnectionStrings
+      public static class ConnectionStrings
         {
             public const string AFPnet = "ConnectionStrings:AFPnet";
         }
@@ -40,7 +40,25 @@ namespace Web.Tarifario.Utilitario
             public static readonly string SessionTimeExpired = "Session:TimeExpired";
         }
 
-      
+        public static class Servicio
+        {
+
+            public static readonly string Seguridad = "ConfiguracionServicios:Seguridad";
+            public static readonly string Maestro = "ConfiguracionServicios:Maestro";
+            public static readonly string Usuario = "ConfiguracionServicios:Usuario";
+            public static readonly string Afiliado = "ConfiguracionServicios:Afiliado";
+            public static readonly string Afiliacion = "ConfiguracionServicios:Afiliacion";
+            public static readonly string Empleador = "ConfiguracionServicios:Empleador";
+            public static readonly string Perfil = "ConfiguracionServicios:Perfil";
+            public static readonly string Planilla = "ConfiguracionServicios:Planilla";
+            public static readonly string RENIEC = "ConfiguracionServicios:RENIEC";
+            public static readonly string LiquidacionPrevia = "ConfiguracionServicios:LiquidacionPrevia";
+            public static readonly string ObligacionPago = "ConfiguracionServicios:ObligacionPago";
+            public static readonly string Regularizaciones = "ConfiguracionServicios:Regularizaciones";
+            public static readonly string Pagos = "ConfiguracionServicios:Pagos";
+            public static readonly string Notificacion = "ConfiguracionServicios:Notificacion";
+        }
+
         public static class RequestsConfig
         {
             public const string MultipartBodyLengthLimit = "RequestsConfig:MultipartBodyLengthLimit";

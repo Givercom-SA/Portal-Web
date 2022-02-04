@@ -21,7 +21,7 @@ namespace Servicio.Embarque.Models.GestionarMemo
         public string EstadoNombre { get; set; }
         public string Correo { get; set; }
 
-
+        public string CodMotivoRechazo { get; set; }
 
         public string Solicitante { get; set; }
 
@@ -34,10 +34,11 @@ namespace Servicio.Embarque.Models.GestionarMemo
         public DateTime? FechaEvalua { get; set; }
 
         public string EstadoEvalua { get; set; }
+        public string Motivorechazo { get; set; }
+
+        
 
 
-
-    
 
         public IEnumerable<DocumentoMemoResult> ListaDocumentos { get; set; }
 

@@ -36,6 +36,7 @@
     <ProjectReference Include="..\05.Utilitarios\Utilitario.Constante\Utilitario.Constante.csproj" />
     <ProjectReference Include="..\05.Utilitarios\Utilitario.Seguridad\Utilitario.Seguridad.csproj" />
     <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
+    <ProjectReference Include="..\ViewModel.Tarifario\ViewModel.Tarifario.csproj" />
   </ItemGroup>
 
 </Project>

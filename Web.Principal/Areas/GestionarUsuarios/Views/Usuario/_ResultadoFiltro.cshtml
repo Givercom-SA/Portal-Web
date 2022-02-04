@@ -4,10 +4,13 @@
     <thead>
         <tr>
             <th class="border-gray-200" scope="col">Id</th>
-            <th class="border-gray-200" scope="col">Correo</th>
+
             <th class="border-gray-200" scope="col">Nombre Completo</th>
+            <th class="border-gray-200" scope="col">Apellido Paterno</th>
+            <th class="border-gray-200" scope="col">Apellido Materno</th>
+            <th class="border-gray-200" scope="col">Correo</th>
             <th class="border-gray-200" scope="col">Perfil</th>
-            <th class="border-gray-200" scope="col">Es Admin</th>
+            <th class="border-gray-200" scope="col">Fecha de Creación</th>
             <th class="border-gray-200" scope="col">Estado</th>
             <th width="100px" class="border-gray-200" scope="col">Acción</th>
         </tr>
@@ -16,35 +19,42 @@
         @foreach (var item in Model)
         {
         <tr>
-            <td>@item.getCodigoUsuario()</td>
+            <td >@item.getCodigoUsuario()</td>
 
+            <td title="@item.getNombre()"><a href="@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios", Id=item.IdUsuario})" title="Detalle del usuario">@item.getNombreCorto()</a></td>
+            <td>@item.ApellidoPaterno</td>
+            <td>@item.ApellidoMaterno</td>
             <td>@item.Correo</td>
-            <td title="@item.getNombre()">@item.getNombreCorto()</td>
 
-
-            <td>@item.PerfilNombre </td>
-
-            @if (item.EsAdmin == true)
-            {
-        <td><span class="badge bg-light text-success">Si</span>  </td>
-            }
-            else
-            {
-                <td><span class="badge bg-light text-danger">No</span> </td>
-            }
-
+            <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" title="Detalle del perfil">@item.PerfilNombre </a></td>
+         
+            <td>@item.FechaRegistro</td>
             @if (item.Activo == true)
-                {
+            {
                 <td>  <span class="badge bg-light text-success">Activo</span>  </td>
             }
             else
             {
-        <td>  <span class="badge bg-light text-danger">No activo</span> </td>
+                <td>  <span class="badge bg-light text-danger">No activo</span> </td>
             }
-        <td>
-            <a href='@Url.Action("EditarUsuario","Usuario", new { Id=@item.IdUsuario })' title="Editar" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="edit"></i></a>
-            <a onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información" class="btn btn-datatable btn-icon btn-transparent-dark"><i data-feather="info"></i></a>
-        </td>
+            <td>
+                <div class="dropdown no-caret">
+                    <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                    <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
+                        <a class="dropdown-item" href='@Url.Action("EditarUsuario","Usuario", new { area="GestionarUsuarios",Id=item.IdUsuario })' title="Editar Usuario"><i data-feather="edit"></i> &nbsp;Editar</a>
+                        <a class="dropdown-item" href="@Url.Action("VerUsuario","Usuario",new { area="GestionarUsuarios", Id=item.IdUsuario})" title="Ver Información"><i data-feather="info"></i> &nbsp;Ver Informacion</a>
+                        @if (!item.Activo)
+                        {
+                    <a class="dropdown-item" onclick="Activar('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información"><i data-feather="circle"></i> &nbsp;Activar</a>
+                        }
+                        else
+                        {
+                    <a class="dropdown-item" onclick="Desactivar('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información"><i data-feather="minus-circle"></i> &nbsp;Desactivar</a>
+                        }
+                    <a class="dropdown-item" onclick="RestablecerContrasena('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información"><i data-feather="key"></i> &nbsp;Restablecer Contraseña</a>
+                    </div>
+                </div>
+            </td>
 
         </tr>
         }

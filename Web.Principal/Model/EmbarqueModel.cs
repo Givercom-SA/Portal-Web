@@ -86,6 +86,13 @@ namespace Web.Principal.Model
         public string FLAG_DIRECCIONAMIENTO_PERMANENTE_BL { get; set; }
         public string FINANZAS_MAIL { get; set; }
 
+        public string FEC_CREATE_RO { get; set; }
+        public string FEC_ETD { get; set; }
+        public string FEC_ETA { get; set; }
+        public string FEC_TRANSMISION_ADUANAS { get; set; }
+        public string FEC_ING_CARGA { get; set; }
+        public string FEC_RET_CARGA { get; set; }
+
 
     }
 

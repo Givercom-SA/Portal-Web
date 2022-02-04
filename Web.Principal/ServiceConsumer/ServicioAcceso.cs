@@ -268,6 +268,22 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
+
+        public async Task<PerfilResultVM> VerificarPerfil(PerfilParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "veridicar-accesos-perfil";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<PerfilResultVM>();
+
+            return resultado;
+        }
+       
+
         public async Task<ListarTransGroupEmpresaVM> ObetenerTransGroupEmpresas()
         {
             

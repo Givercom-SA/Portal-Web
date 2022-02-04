@@ -223,7 +223,7 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-perfiles")]
         public ActionResult<ListarPerfilesResultVM> ObtenerPerfiles([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.ObtenerPerfiles(parameter.Nombre, parameter.Activo);
+            var result = _repository.ObtenerPerfiles(parameter.Nombre, parameter.Activo,parameter.Tipo);
             return _mapper.Map<ListarPerfilesResultVM>(result);
         }
 
@@ -282,6 +282,14 @@ namespace Servicio.Acceso.Controllers
         public ActionResult<PerfilResultVM> EliminarPerfil([FromBody] PerfilParameterVM parameter)
         {
             var result = _repository.EliminarPerfil(parameter.IdPerfil);
+            return _mapper.Map<PerfilResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("veridicar-accesos-perfil")]
+        public ActionResult<PerfilResultVM> VerificarAccesosPerfil([FromBody] PerfilParameterVM parameter)
+        {
+            var result = _repository.VerificarAccesoPerfil(parameter.IdPerfil);
             return _mapper.Map<PerfilResultVM>(result);
         }
 

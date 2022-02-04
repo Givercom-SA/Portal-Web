@@ -9,11 +9,13 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
     {
         public string KeyBL { get; set; }
         public string CodigoSolicitud { get; set; }
+        public string CodigoEstadoEvalua { get; set; }
         public string Correo { get; set; }
 
         public string ImagenEmpresaLogo { get; set; }
         public int IdUsuarioModifica { get; set; }
-
+        public string CodigoMotivoRechazo { get; set; }
+        
 
 
     }

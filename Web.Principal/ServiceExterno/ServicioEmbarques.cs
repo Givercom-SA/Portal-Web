@@ -352,6 +352,15 @@ namespace Web.Principal.ServiceExterno
                 embarque.TIPO_PADRE = item.Element("TIPO_PADRE") == null ? "" : item.Element("TIPO_PADRE").Value;
                 embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE_BL = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL") == null ? "" : item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL").Value;
                 embarque.FINANZAS_MAIL = item.Element("FINANZAS_MAIL") == null ? "" : item.Element("FINANZAS_MAIL").Value;
+
+                embarque.FEC_CREATE_RO = item.Element("FEC_CREATE_RO") == null ? "" : item.Element("FEC_CREATE_RO").Value;
+                embarque.FEC_ETD = item.Element("FEC_ETD") == null ? "" : item.Element("FEC_ETD").Value;
+                embarque.FEC_ETA = item.Element("FEC_ETA") == null ? "" : item.Element("FEC_ETA").Value;
+                embarque.FEC_TRANSMISION_ADUANAS = item.Element("FEC_TRANSMISION_ADUANAS") == null ? "" : item.Element("FEC_TRANSMISION_ADUANAS").Value;
+                embarque.FEC_ING_CARGA = item.Element("FEC_ING_CARGA") == null ? "" : item.Element("FEC_ING_CARGA").Value;
+                embarque.FEC_RET_CARGA = item.Element("FEC_RET_CARGA") == null ? "" : item.Element("FEC_RET_CARGA").Value;
+
+
             }
 
 
@@ -397,6 +406,7 @@ namespace Web.Principal.ServiceExterno
                     request.pIdSolicitudPW,
                     request.pNroSolicitudPW,
                     request.pFechaSolicitud,
+                    request.pFechaEvaluacion,
                     request.pUsuarioPW,
                     request.pEmpresa, 
                     request.pKeybld, 

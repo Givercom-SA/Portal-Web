@@ -16,6 +16,13 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
         [Required(ErrorMessage = "Debe ingresar un nombre")]
         public string Nombre { get; set; }
         public bool Activo { get; set; }
+
+        [Display(Name = "Tipo de Perfil")]
+        [RegularExpression(@"^.{4,}$", ErrorMessage = "Debe seleccionar un tipo de perfil")]
+        public string Tipo { get; set; }
+
+        public string UsuarioCrea { get; set; }
+        
         public int[] Menus { get; set; }
     }
 }

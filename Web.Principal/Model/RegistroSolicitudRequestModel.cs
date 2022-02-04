@@ -10,6 +10,7 @@ namespace Web.Principal.Model
         
            public string pIdSolicitudPW{get;set;}
         public string pFechaSolicitud { get; set; }
+        public string pFechaEvaluacion { get; set; }
         
         public string pNroSolicitudPW { get; set; }
         public string pUsuarioPW{get;set;} 

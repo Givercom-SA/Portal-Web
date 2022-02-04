@@ -58,6 +58,7 @@ namespace Web.Principal.Pages.ReclamoQueja
             Input = new InputReclamoModel();
 
             var parameterEmpresas = new ViewModel.Reclamo.ListaEmpresasParameterVM();
+            Input.FechaTope = DateTime.Now.ToString("yyyy-MM-dd");
 
             var listTipoDocumnentoResult = await _serviceMaestro.ListarEmpresas(parameterEmpresas);
 
@@ -89,10 +90,10 @@ namespace Web.Principal.Pages.ReclamoQueja
                 RegistrarReclamoParameterVM registrarReclamoParameterVM = new RegistrarReclamoParameterVM();
                 registrarReclamoParameterVM.Celular = Input.Celular;
                 registrarReclamoParameterVM.CodigoEmpresa = Input.EmpresaAtiende;
-                registrarReclamoParameterVM.CodigoTipoDocumento = Input.Celular;
+                registrarReclamoParameterVM.CodigoTipoDocumento = Input.TipoDocumento;
                 registrarReclamoParameterVM.CodigoTipoFormulario = "01";
                 registrarReclamoParameterVM.CodigoUnidadNegocio = Input.UnidadNegocio;
-                registrarReclamoParameterVM.Email = Input.Celular;
+                registrarReclamoParameterVM.Email = Input.Email;
                 registrarReclamoParameterVM.FechaIncidencia = Input.FechaIncidencia;
                 registrarReclamoParameterVM.Nombre = Input.NombreCompleto;
                 registrarReclamoParameterVM.Observacion = Input.Mensaje;
@@ -105,7 +106,40 @@ namespace Web.Principal.Pages.ReclamoQueja
                     ActionResponse.Codigo = resultRegistrarReclamo.CodigoResultado;
                     ActionResponse.Mensaje = resultRegistrarReclamo.MensajeResultado;
 
-                    enviarCorreoCliente(Input.Email, Input.NombreCompleto, $"Se ha registrado exitosamente tu reclamo y en 24 horas te estaremos respondiendo.");
+                    // enviar cliente
+                    string contenidoCliente = "";
+                    contenidoCliente = $"Se ha registrado tu reclamo exitosamente y en 24 horas te estaremos respondiendo, a continuación el detalle. <br/><br/>";
+                    contenidoCliente = contenidoCliente + $" Ruc: {Input.Ruc}<br/>";
+                    contenidoCliente = contenidoCliente + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenidoCliente = contenidoCliente + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenidoCliente = contenidoCliente + $" Email: {Input.Email}<br/>";
+                    contenidoCliente = contenidoCliente + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenidoCliente = contenidoCliente + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenidoCliente = contenidoCliente + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
+
+                    enviarCorreoCliente(Input.Email, Input.NombreCompleto, contenidoCliente);
+
+
+
+
+
+                    // enviar usuario atiende
+
+                    var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(74);
+                    string correo = listaEstado.ListaParametros.ElementAt(0).ValorCodigo;
+
+                    string contenido = "";
+                    contenido = $"Se ha registrado un reclamo, a continuación el detalle. <br/><br/>";
+                    contenido = contenido + $" Ruc: {Input.Ruc}<br/>";
+                    contenido = contenido + $" Razón Social: {Input.RazonSocial}<br/>";
+                    contenido = contenido + $" Nombres: {Input.NombreCompleto}<br/>";
+                    contenido = contenido + $" Email: {Input.Email}<br/>";
+                    contenido = contenido + $" Fecha Incidencia: {Input.FechaIncidencia}<br/>";
+                    contenido = contenido + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
+                    contenido = contenido + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
+                    contenido = contenido + $" Tipo Documento: {Input.TipoDocumentoNombre}<br/>";
+                    contenido = contenido + $" Mensaje: {Input.Mensaje}<br/>";
+                    enviarCorreoCliente(correo,"usuario", contenido);
 
                 }
                 else

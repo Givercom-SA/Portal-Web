@@ -76,6 +76,8 @@ namespace Servicio.Embarque.Models.SolicitudFacturacion
         public decimal     MontoTotal { get; set; }
         public string CreditoDescripcion { get; set; }
         public string TipoPagoDescripcion { get; set; }
+        public string IdSolicitudTaf { get; set; }
+        
         public List<EventoSolicitudFacturacion> Enventos { get; set; }
         public List<SolicitudFacturacionDetalle> DetalleFacturacion { get; set; }
 

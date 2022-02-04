@@ -23,13 +23,9 @@
 </header>
 
 <div class="container-xl px-4 mt-n10">
-
     <div class="card">
         <div class="card-header border-bottom">
-
             <div class="nav nav-pills nav-justified flex-column flex-xl-row nav-wizard" id="cardTab" role="tablist">
-
-
                 <a class="nav-item nav-link active" id="wzCobrosFacturar-tab" href="#wzCobrosFacturar" data-bs-toggle="tab" role="tab" aria-controls="wzCobrosFacturar" aria-selected="true">
                     <div class="wizard-step-icon">1</div>
                     <div class="wizard-step-text">
@@ -37,8 +33,6 @@
                         <div class="wizard-step-text-details">Información de conceptos</div>
                     </div>
                 </a>
-
-
                 <a class="nav-item nav-link " id="wzMetodoPago-tab" disabled href="#wzMetodoPago" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzMetodoPago" aria-selected="true">
                     <div class="wizard-step-icon">2</div>
                     <div class="wizard-step-text">
@@ -46,7 +40,6 @@
                         <div class="wizard-step-text-details">Información de método de pago </div>
                     </div>
                 </a>
-
                 <a class="nav-item nav-link " id="wzResumen-tab" disabled href="#wzResumen" onclick="ValidarPasoCobroPendiente()" data-bs-toggle="tab" role="tab" aria-controls="wzResumen" aria-selected="true">
                     <div class="wizard-step-icon">3</div>
                     <div class="wizard-step-text">
@@ -54,9 +47,6 @@
                         <div class="wizard-step-text-details">Información de resumen </div>
                     </div>
                 </a>
-
-           
-
             </div>
         </div>
         <div class="card-body">
@@ -70,22 +60,16 @@
                             <div class="col-xxl-10 col-xl-10">
                                 <h3 class="text-primary">Paso 1</h3>
                                 <h5 class="card-title mb-4">Favor verificar la información para continuar con el siguiente paso.</h5>
-
                                 <input type="hidden" asp-for="@Model.KEYBLD" />
                                 <input type="hidden" asp-for="@Model.NroBl" />
                                 <input type="hidden" id="ProvicionClienteCantidad" value="@Model.CobrosPendientesCliente.Count()" />
-
-
+                               
                                 @{
-
-
                                     for (var itemCliente = 0; itemCliente < Model.CobrosPendientesCliente.Count(); itemCliente++)
                                     {
 
-                                                                <div id="contenedorProvosion_@itemCliente" class="cssContenedorProvision" style="        padding: 5px;
-        margin: 2px;
-        margin-top: 10px;
-        border: 2px #afa5a5 solid">
+                                                                <div id="contenedorProvosion_@itemCliente" data-itemcliente="@itemCliente" class="cssContenedorProvision" 
+                                                                     style="padding: 5px;margin: 2px;margin-top: 10px;border: 2px #afa5a5 solid">
 
                                                                     @if (Model.CobrosPendientesCliente.Count() > 1)
                                                                     {
@@ -99,24 +83,25 @@
 
 
                                                                     <br />
+                                                                    <input type="hidden" id="ProvicionDetalleClienteCantidad_@itemCliente" value="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count" />
                                                                     <input type="hidden" id="hidenProvisionIdFacturacionTercero_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
                                                                     <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdCliente" />
                                                                     <input type="hidden" id="hidenProvisionRazonSocial_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente" />
                                                                     <input type="hidden" id="hidenProvisionTipoDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente" />
                                                                     <input type="hidden" id="hidenProvisionNroDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente" />
                                                                     <input type="hidden" id="hidenProvisionMontoTotal_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].MontoTotal" />
-                                                                    
+
 
                                                                     <div id="divContenedorProviosion_@itemCliente">
 
 
-                                                                        <label class="small">Cliente: <strong >  @Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente </strong></label>
+                                                                        <label class="small">Cliente: <strong>  @Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente </strong></label>
                                                                         <br />
-                                                                        <label class="small">Tipo Documento:<strong > @Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente </strong></label>
+                                                                        <label class="small">Tipo Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente </strong></label>
                                                                         <br />
-                                                                        <label class="small">Número de Documento:<strong > @Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente </strong></label>
+                                                                        <label class="small">Número de Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente </strong></label>
                                                                         <br />
-                                                                        <label class="small"> Total a Pagar:<strong > @Model.CobrosPendientesCliente[itemCliente].MontoTotal </strong></label>
+                                                                        <label class="small"> Total a Pagar:<strong> @Model.CobrosPendientesCliente[itemCliente].MontoTotal </strong></label>
 
                                                                         <div class="table-responsive table-billing-history">
 
@@ -175,19 +160,15 @@
 
                                                                 </div>
 
-                                        }
+                                    }
 
                                 }
 
                                 <hr class="my-4" />
                                 <div class="d-flex justify-content-between">
-
                                     <a class="btn btn-dark" href="javascript: history.go(-1)"> Volver </a>
                                     <a class="btn btn-primary" href="javascript:IrMetodoPago()" id="btnConceptoSiguiente"> Siguiente </a>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -195,19 +176,9 @@
                     <div class="tab-pane py-5 py-xl-5 fade" id="wzMetodoPago" role="tabpanel" aria-labelledby="wzMetodoPago-tab">
                         <div class="row justify-content-center">
                             <div class="col-xxl-10 col-xl-10">
-
                                 <h3 class="text-primary">Paso 2</h3>
                                 <h5 class="card-title mb-4">Metodo de Pago</h5>
-
-
                                 <div id="divContenedorMetodoPago">
-
-
-
-
-
-
-
                                     <fieldset>
                                         <legend class="small">Tipo de Pago </legend>
                                         <div class="row">
@@ -263,15 +234,9 @@
 
                                     <br />
                                     <div id="divContado" style="display:block">
-
                                         <fieldset>
                                             <legend class="small"> Método de Pago </legend>
-
                                             <div class="row">
-
-
-
-
                                                 <div class="col-md-6">
 
                                                     <div class="form-check form-check-solid small">
@@ -327,8 +292,8 @@
                                                 <div class="mb-3">
 
 
-                                                    <label class="small mb-1"> Código de Transferencia </label>
-                                                    <input asp-for="@Model.CodigoOperacionTransferencia" id="txtCodigoOperacion" maxlength="50" class="form-control" type="text" placeholder="Ingrese código de operación" />
+                                                    <label class="small mb-1"> Número de Operación </label>
+                                                    <input asp-for="@Model.CodigoOperacionTransferencia" id="txtCodigoOperacion" maxlength="50" class="form-control" type="text" placeholder="Ingrese número de operación" />
                                                     <span asp-validation-for="@Model.CodigoOperacionTransferencia" id="spanValidarCodigoTrasnferencia" class="small text-danger"></span>
                                                     <input type="hidden" asp-for="@Model.CodigoOperacionTransferencia" />
 
@@ -504,7 +469,7 @@
                                                             <div class="col-6">
 
 
-                                                                @Html.Raw("Código de Transferencia: ")
+                                                                @Html.Raw("Número de Operación: ")
 
                                                             </div>
                                                             <div class="col-6">
@@ -820,6 +785,13 @@
 
             });
 
+            $("#txtCodigoOperacion").keydown(function (event) {
+               
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                    return false;
+                }
+              });
+
 
             $.extend($.validator.messages, {
 
@@ -976,26 +948,36 @@
             let blSeleccionado = false;
             let intCantidadProvicionCliente = 0;
             let valor = $("#ProvicionClienteCantidad").val()
+            let itemClienteSelecinado = "";
+            let cantProvisionCliente ="";
 
             $(".cssClienteProvision").each(function (index) {
 
                 if ($(this).is(':checked')) {
                     blSeleccionado = true;
+                    itemClienteSelecinado=$(this).data("itemcliente");
                 }
 
                 intCantidadProvicionCliente = intCantidadProvicionCliente + 1;
             });
 
-            if (valor== "1") {
+            if (valor == "1") {
+
                 blSeleccionado = true;
 
-               let divContenedorProviosion_ = $('#divContenedorProviosion_0').clone();
+                let divContenedorProviosion_ = $('#divContenedorProviosion_0').clone();
 
                 $('#divContenedorResumenCliente').html(divContenedorProviosion_);
 
                 let hidenProvisionMontoTotal_ = $("#hidenProvisionMontoTotal_0").val();
 
                 $("#hidenMontoTotal").val(hidenProvisionMontoTotal_);
+
+                cantProvisionCliente= $("#ProvicionDetalleClienteCantidad_0").val();
+
+            } else {
+
+                cantProvisionCliente=  $("#ProvicionDetalleClienteCantidad_" + itemClienteSelecinado).val();
 
             }
 
@@ -1008,30 +990,42 @@
 
             } else {
 
-                $("#wzCobrosFacturar-tab").removeClass("active");
-                $("#wzMetodoPago-tab").addClass("active");
-                $("#wzCobrosFacturar").removeClass("active show");
-                $("#wzMetodoPago").addClass("active show");
+
+                if (cantProvisionCliente == "" || cantProvisionCliente == "0" || cantProvisionCliente==NaN) {
+
+                    $("#dialogAlerta").modal("show");
+                    $("#outputMensaje").html("Estimado cliente, favor considerar que el BL no tiene cobros asignados. En caso de consulta comunicarse con el operador o CS asignado.");
 
 
-                $("#rbtnContado").prop("checked", false);
-                $("#rbtnCredito").prop("checked", false);
-         
+                } else {
 
-                $("#txtImporteTransferencia").val("");
-                $("#txtFechaTransferencia").val("");
-                $("#txtCodigoOperacion").val("");
-                $("#cmbBancoTransferencia option[value='-1'").prop("selected", "selected");
 
-                $("#cmbCredito option[value='-1'").prop("selected", "selected");
-                $("#btnPagoTarjeta").prop("checked", false);
-                $("#rbtnTransferencia").prop("checked", false);
 
-                $("#divCredito").hide();
-                $("#divContado").hide();
-                $("#divPagoTransferencia").hide();
-           
 
+                    $("#wzCobrosFacturar-tab").removeClass("active");
+                    $("#wzMetodoPago-tab").addClass("active");
+                    $("#wzCobrosFacturar").removeClass("active show");
+                    $("#wzMetodoPago").addClass("active show");
+
+
+                    $("#rbtnContado").prop("checked", false);
+                    $("#rbtnCredito").prop("checked", false);
+
+
+                    $("#txtImporteTransferencia").val("");
+                    $("#txtFechaTransferencia").val("");
+                    $("#txtCodigoOperacion").val("");
+                    $("#cmbBancoTransferencia option[value='-1'").prop("selected", "selected");
+
+                    $("#cmbCredito option[value='-1'").prop("selected", "selected");
+                    $("#btnPagoTarjeta").prop("checked", false);
+                    $("#rbtnTransferencia").prop("checked", false);
+
+                    $("#divCredito").hide();
+                    $("#divContado").hide();
+                    $("#divPagoTransferencia").hide();
+
+                }
             }
 
         }
@@ -1091,7 +1085,7 @@
                     if ($("#txtCodigoOperacion").val() == "") {
 
 
-                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el código de operación.</li>";
+                        strMensajeCampos = strMensajeCampos + " <li>Se requiere ingresar el número de operación.</li>";
                         validarCampos = false;
                     }
 
@@ -1270,8 +1264,9 @@
 
                             $(".loader").fadeOut("slow");
 
-                            $('#alertError').show();
-                            outputDetalleError.html( errorThrown);
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html("Estimado cliente, ocurrio un error de sistema, por favor vovler a intentar más tarde. detalle del error: ", errorThrown);
+
                             
 
                         },

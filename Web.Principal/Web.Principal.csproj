@@ -92,4 +92,8 @@
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release call &quot;$(ProjectDir)GenetareBuild.bat&quot;" />
+  </Target>
+
 </Project>
