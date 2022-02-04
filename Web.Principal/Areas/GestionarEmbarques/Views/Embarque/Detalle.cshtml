@@ -861,7 +861,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" type="button" id="btnAsignarAgenteAduanas" onclick="AsignarAgente('@ViewBag.Codigo', '@ViewBag.Anio', '@ViewBag.Filtro')">Asignar</button>
+                <button class="btn btn-primary" type="button" id="btnAsignarAgenteAduanas" onclick="AsignarAgente('@ViewBag.Codigo', '@ViewBag.Anio', '@ViewBag.Filtro', '@Model.Servicio', '@Model.Origen')">Asignar</button>
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -1359,7 +1359,7 @@
      }
 
 
-     function AsignarAgente(codigo, anio, filtro) {
+     function AsignarAgente(codigo, anio, filtro, servicio, origen) {
 
          $('#ResultMensaje').html("");
          var idusuario = $("#ddlAgente option:selected").val();
@@ -1372,8 +1372,8 @@
          formData.append("IdUsuarioAsignado", idusuario);
          formData.append("Correo", correo);
          formData.append("IdEntidadAsignado", idEntidad);
-
-
+         formData.append("servicio", servicio);
+         formData.append("origen", origen);
 
          $.ajax({
              type: "POST",

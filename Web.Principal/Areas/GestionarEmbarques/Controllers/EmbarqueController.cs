@@ -656,7 +656,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado)
+        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado, string servicio, string origen)
         {
             ActionResponse = new ActionResponse();
 
