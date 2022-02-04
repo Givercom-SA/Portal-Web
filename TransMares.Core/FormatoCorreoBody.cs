@@ -14,16 +14,13 @@ namespace TransMares.Core
         public string formatoBodyActivarCuenta(string pNombre, string pclave,string ImagenGrupo)
         {
             String HtmlSend = "";
-
             HtmlSend = $@"
                 <!DOCTYPE html>
                 <html xmlns='http://www.w3.org/1999/xhtml'>
-
                     <head runat='server'>
                         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
                         <title></title>
                     </head>
-
                     <body>
                         <center>
                             <div class='col-lg-12'>
@@ -31,7 +28,6 @@ namespace TransMares.Core
                             </div>
                             <div style='width:500px;background:#133bf0;border-radius:  10px 10px 10px 10px;border: 0px solid #000000; '>
                                 <div style='height:30px'></div>
-
                                 <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
                                     <tbody style=' background:#ffffff '>
                                         <tr>
@@ -40,24 +36,13 @@ namespace TransMares.Core
                                                 <img src='{ImagenGrupo}'
                                                     style='height: auto;    width: 40%;'>
                                                 <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado {pNombre} </b></h4>
-                                                <p style='font-family:Arial, Helvetica, sans-serif;'>Te damos la bienvenida a Transmares Group</p>
-                                            <center>
-                                                <center>
                                                     <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                        Falta poco para terminar tu solicitud, tu clave para verificación es
-                                                        <br /> 
-                                                            <strong style='text-size:12px; text-transform: uppercase;'> {pclave} </strong>
-                                                        <br />
+                                                       tu clave para verificación es  <strong style='text-size:12px; text-transform: uppercase;'> {pclave} </strong>
                                                     </p>
-
-                                                </center>
-                            
-                                                <br />
-                                                    <p style = 'font-family:Arial, Helvetica, sans-serif;' >
+                                                    <center> <p style = 'font-family:Arial, Helvetica, sans-serif;' >
                                                         ¡Estamos felices que cuentes con nosotros!
                                                         <br /> El equipo de Transmares te lo agradece
                                                      </p>
-                      
                                             </center>
                                             <div class='col-lg-12'>
                                                 <p class='card-text' style='height: 20px;'></p>
@@ -73,7 +58,56 @@ namespace TransMares.Core
                         </center>
                     </body>
                 </html>";
+            return HtmlSend;
+        }
 
+        public string formatoBodyRestablecerContrasenia(string pNombre, string pcontrasenia, string ImagenGrupo)
+        {
+            String HtmlSend = "";
+            HtmlSend = $@"
+                <!DOCTYPE html>
+                <html xmlns='http://www.w3.org/1999/xhtml'>
+                    <head runat='server'>
+                        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+                        <title></title>
+                    </head>
+                    <body>
+                        <center>
+                            <div class='col-lg-12'>
+                                <p class='card-text' style='height: 20px;'></p>
+                            </div>
+                            <div style='width:500px;background:#133bf0;border-radius:  10px 10px 10px 10px;border: 0px solid #000000; '>
+                                <div style='height:30px'></div>
+                                <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
+                                    <tbody style=' background:#ffffff '>
+                                        <tr>
+                                            <td style='padding: 12px;' colspan='3'>
+                                                <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
+                                                <img src='{ImagenGrupo}'
+                                                    style='height: auto;    width: 40%;'>
+                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado {pNombre} </b></h4>
+                                                    <p style='font-family:Arial, Helvetica, sans-serif;'>
+                                                       tu nueva contraseña es  <strong style='text-size:12px; text-transform: uppercase;'> {pcontrasenia} </strong>
+                                                    </p>
+                                                    <center> <p style = 'font-family:Arial, Helvetica, sans-serif;' >
+                                                        ¡Estamos felices que cuentes con nosotros!
+                                                        <br /> El equipo de Transmares te lo agradece
+                                                     </p>
+                                            </center>
+                                            <div class='col-lg-12'>
+                                                <p class='card-text' style='height: 20px;'></p>
+                                            </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class='col-lg-12'>
+                                    <p class='card-text' style='height: 20px;'></p>
+                                </div>
+                            </div>
+                        </center>
+                    </body>
+                </html>";
             return HtmlSend;
         }
 
@@ -134,7 +168,6 @@ namespace TransMares.Core
             return HtmlSend;
         }
 
-
         public string formatoBodyReclamacion(string pNombreCliente, string pMensaje, string ImagenGrupo)
         {
             String HtmlSend = "";
@@ -187,7 +220,6 @@ namespace TransMares.Core
 
             return HtmlSend;
         }
-
 
         public string formatoBodyNotificacionFacturacion(string pCodigoSolicitud, string pNumeracionEmbarque, string ImagenGrupo)
         {
@@ -242,7 +274,6 @@ namespace TransMares.Core
 
             return HtmlSend;
         }
-
 
         public string formatoBodyBienvendaUsuarioSecundarioRenovada(string pNombre, string pContrasenia ,string pUrl, string ImagenGrupo)
         {
@@ -629,8 +660,6 @@ namespace TransMares.Core
             String HtmlSend = "";
             string imagen = nombreLogoEmpresa;
 
-
-
             HtmlSend = $@"
                 <!DOCTYPE html>
                 <html xmlns='http://www.w3.org/1999/xhtml'>
@@ -871,7 +900,6 @@ namespace TransMares.Core
 
             return HtmlSend;
         }
-
 
         public string formatoBodySolicitudMemoInterno(string mensaje,
                                                               string nombreLogoEmpresa,
@@ -1126,7 +1154,6 @@ namespace TransMares.Core
 
             return HtmlSend;
         }
-
 
         public string formatoBodySolicitudAprobada(string pNroSolicitud, string nombreLogoEmpresa)
         {

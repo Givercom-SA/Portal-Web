@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TransMares.Core;
+using ViewModel.Datos.Message;
 using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 using Web.Principal.Areas.GestionarUsuarios.Models;
@@ -24,6 +26,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly ServicioMaestro _serviceMaestro;
+        private readonly ServicioMessage _servicioMessage;
+        
         private static ILogger _logger = ApplicationLogging.CreateLogger("UsuarioController");
 
         public UsuarioController(
@@ -31,13 +35,15 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             ServicioUsuario serviceUsuario,
             IMapper mapper,
             IConfiguration configuration,
-            ServicioMaestro serviceMaestro)
+            ServicioMaestro serviceMaestro,
+             ServicioMessage servicioMessage)
         {
             _serviceAcceso = serviceAcceso;
             _serviceUsuario = serviceUsuario;
             _mapper = mapper;
             _configuration = configuration;
             _serviceMaestro = serviceMaestro;
+            _servicioMessage = servicioMessage;
         }
 
         [HttpGet]
@@ -221,7 +227,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.UrlConfirmacion = string.Format("{0}/{1}", this.GetUriHost(), "Account/ConfirmarCorreo");
                     parameterVM.ImagenGrupoTrans = $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}"; ;
                     
-
                     var result = await _serviceUsuario.CrearUsuario(parameterVM);
                     if (result.CodigoResultado > 0)
                     {
@@ -233,7 +238,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                         ActionResponse.Codigo = -1;
                         ActionResponse.Mensaje = "Error, no se pudo crear al usuario.";
                     }
-
                 }
                 else
                 {
@@ -256,9 +260,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             CuentaUsuarioVM model = new CuentaUsuarioVM();
             usuario = HttpContext.Session.GetUserContent();
-
             model.Usuario = usuario;
-
             return View(model);
         }
 
@@ -364,15 +366,31 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             try
             {
+              var resultUsuario=await  _serviceUsuario.ObtenerUsuario(Convert.ToInt32(IdUsuario));
+
                 CrearUsuarioSecundarioParameterVM parameterVM = new CrearUsuarioSecundarioParameterVM();
                 parameterVM.IdUsuario = Convert.ToInt32(IdUsuario);
+                parameterVM.Correo = resultUsuario.Usuario.Correo;
+
                 string strContrasenia = new Utilitario.Seguridad.SeguridadCodigo().GenerarCadenaLongitud(6);
                 strContrasenia = strContrasenia.ToUpper();
-                parameterVM.Contrasenia = new Utilitario.Seguridad.Encrypt().GetSHA256(strContrasenia);
+                string strNuevaContrasenia = new Utilitario.Seguridad.Encrypt().GetSHA256(strContrasenia);
+                parameterVM.Contrasenia = strNuevaContrasenia;
                 var result = await _serviceUsuario.CambiarClaveUsuario(parameterVM);
 
                 actionResponse.Codigo = result.CodigoResultado;
                 actionResponse.Mensaje = result.MensajeResultado;
+
+                if (actionResponse.Codigo == 0) {
+                    enviarCorreo(new FormatoCorreoBody().formatoBodyRestablecerContrasenia(resultUsuario.Usuario.Nombres,
+                     strNuevaContrasenia,
+                     $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}"),
+                     resultUsuario.Usuario.Correo,
+                     "!Transmares Group! Restablecer Contraseña"
+                     
+                     );
+                }
+
             }
             catch (Exception err)
             {
@@ -441,7 +459,15 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
         }
 
+        private async void enviarCorreo(string _contenido, string _correo, string _asunto) {
 
+            EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
+            enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
+            enviarMessageCorreoParameterVM.RequestMessage.Contenido = _contenido;
+            enviarMessageCorreoParameterVM.RequestMessage.Correo = _correo;
+            enviarMessageCorreoParameterVM.RequestMessage.Asunto = _asunto;
+            await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
+        }
 
     }
 }

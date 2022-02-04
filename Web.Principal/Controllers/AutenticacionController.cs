@@ -102,7 +102,7 @@ namespace Web.Principal.Controllers
                 // Enviar Codigo de verificacion
                 CodigoGeneradoValidacionParameterVM codigoGeneradoValidacionParameterVM = new CodigoGeneradoValidacionParameterVM();
                 codigoGeneradoValidacionParameterVM.Correo = Correo;
-                codigoGeneradoValidacionParameterVM.Nombres = "Estimado Usuario";
+                codigoGeneradoValidacionParameterVM.Nombres = "Usuario";
                 codigoGeneradoValidacionParameterVM.ImagenGrupoTrans = $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}";
                 var codigoGenerado = await _serviceAcceso.GenerarCodigoVerificacionCorreo(codigoGeneradoValidacionParameterVM);
 

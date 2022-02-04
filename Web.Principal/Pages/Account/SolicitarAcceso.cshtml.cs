@@ -58,37 +58,24 @@ namespace Web.Principal.Pages.Account
 
         [BindProperty]
         public InputModel Input { get; set; }
-
-
         [TempData]
         public string MensajeError { get; set; }
 
         public ActionResponse ActionResponse { get; set; }
-
-
-
-        
 
         public string ReturnUrl { get; set; }
 
         public async Task OnGet()
         {
             Input = new InputModel();
-
             Input.ValidarCorreo = new VerificarCodigoValidacionParameterVM();
             Input.ValidarCorreo.CodigoVerificacion = "";
 
-
             var listEntidades = await _serviceMaestro.ObtenerParametroPorIdPadre(1);
-
-
 
             if (listEntidades.CodigoResultado == 0)
             {
                 var resultTipoentidad = listEntidades.ListaParametros;
-
-
-
                 Input.ListTipoEntidad2 = new ListTipoEntidadModel();
                 Input.ListTipoEntidad2.TiposEntidad = new List<TipoEntidad>();
 
@@ -107,33 +94,23 @@ namespace Web.Principal.Pages.Account
             else
                 MensajeError = MensajeError + " " + listEntidades.MensajeResultado;
 
-
             var listTipoDocumnentoResult = await _serviceMaestro.ObtenerParametroPorIdPadre(38);
 
             if (listTipoDocumnentoResult.CodigoResultado == 0)
             {
                 Input.ListTipoDocumento = new SelectList(listTipoDocumnentoResult.ListaParametros, "ValorCodigo", "NombreDescripcion");
             }
-
             else
                 MensajeError = MensajeError + " " + listTipoDocumnentoResult.MensajeResultado;
-
-
-
-
         }
 
         public async Task<IActionResult> OnPost()
         {
-
-
             bool blDocumentosValido = true;
             ActionResponse = new ActionResponse();
             ActionResponse.ListActionListResponse = new List<ActionErrorResponse>();
 
             ListDocumentoTipoEntidadParameterVM listarDocumentoTipoEntidadVM = new ListDocumentoTipoEntidadParameterVM();
-
-
             listarDocumentoTipoEntidadVM.BrindaCargaFCL = Input.seBrindaOperacionesCargaFCL;
             listarDocumentoTipoEntidadVM.AcuerdoSeguridadCadenaSuministro = Input.acuerdoSeguridadCadenaSuministra;
             listarDocumentoTipoEntidadVM.SeBrindaAgenciamientodeAduanas = Input.seBrinaAgenciaAdeuanas;
@@ -144,7 +121,6 @@ namespace Web.Principal.Pages.Account
                 listarDocumentoTipoEntidadVM.TiposEntidad.Add(new ViewModel.Datos.Entidad.TipoEntidadVM() { CodTipoEntidad = item.CodTipoEntidad });
             }
 
-
             var listDocumentosSeleccionados = await _serviceMaestro.ObtenerDocumentoPorTipoEntidad(listarDocumentoTipoEntidadVM);
 
             var listVerificar = Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true).ToList();
@@ -153,7 +129,6 @@ namespace Web.Principal.Pages.Account
             {
                 ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe seleccionar al menos un tipo de entidad", NombreCampo = "Input.TipoEntidad2" });
             }
-
 
             //if ((Input.ListDocumentoTipoEntidad == null) || (Input.ListDocumentoTipoEntidad.listarDocumentosTipoEntidad == null || Input.ListDocumentoTipoEntidad.listarDocumentosTipoEntidad.Count() <= 0))
             //{
@@ -166,8 +141,6 @@ namespace Web.Principal.Pages.Account
             //    blDocumentosValido = false;
             //    ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe adjuntar todo lo archivos", NombreCampo = "Input.Files" });
             //}
-
-
 
             if (ModelState.IsValid  && (blDocumentosValido) && (listVerificar.Count() > 0))  {
 
@@ -292,10 +265,10 @@ namespace Web.Principal.Pages.Account
 
             } else {
 
-                var erroneousFields = ModelState.Where(ms => ms.Value.Errors.Any())
+                var erroresCampos = ModelState.Where(ms => ms.Value.Errors.Any())
                                       .Select(x => new { x.Key, x.Value.Errors });
 
-                foreach (var erroneousField in erroneousFields)
+                foreach (var erroneousField in erroresCampos)
                 {
                     var fieldKey = erroneousField.Key;
                     var fieldErrors = string.Join(" | ", erroneousField.Errors.Select(e => e.ErrorMessage));
@@ -307,16 +280,10 @@ namespace Web.Principal.Pages.Account
                     }); ;
                 }
 
-
-
                 ActionResponse.Codigo = -1;
                 ActionResponse.Mensaje = "Por favor ingresar los campos requeridos.";
 
-
-
             }
-
-
 
             return new JsonResult(ActionResponse);
 

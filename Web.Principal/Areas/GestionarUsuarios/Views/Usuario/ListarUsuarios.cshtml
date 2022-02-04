@@ -247,13 +247,10 @@
 
 
 @section Scripts{
-    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
 
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
-
-
-
 
     <script>
 
@@ -264,23 +261,11 @@
             cargarLista();
         });
 
-
-
-
-
-
-
         function RestablecerContrasena(nombreUsuario, idUsuario) {
-
-
             $("#modalrestablecerContrasenia").modal("show");
             $("#strongRestablecerContrasenia").html(nombreUsuario);
+            $("#inputUsuarioSeleccionado").val(idUsuario);
         }
-
-
-
-
-
 
         function Desactivar(nombreUsuario,idUsuario) {
 

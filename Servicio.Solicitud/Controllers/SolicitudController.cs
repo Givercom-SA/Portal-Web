@@ -128,15 +128,9 @@ namespace Servicio.Solicitud.Controllers
         {
             SolicitudAccesoAprobarResultVM resultVM = new SolicitudAccesoAprobarResultVM();
 
-
             try
             {
-
-
-
                 AprobarSolicitudResult resulAprobacioSolicitud = _repository.AprobarSolicitud(_mapper.Map<AprobarSolicitudParameter>(parameter));
-
-
 
                 if (resulAprobacioSolicitud.IN_CODIGO_RESULTADO == 0)
                 {
@@ -153,14 +147,10 @@ namespace Servicio.Solicitud.Controllers
                                     parameter.ImagenGrupTransmares),
                                 UrlArchivoDocbusinessPartner,
                                 (solicitud.SOLI_ACUERDO_SEGUR_CADENA_SUMINI == 1) ? true : false);
-
                 }
 
                 resultVM.CodigoResultado = resulAprobacioSolicitud.IN_CODIGO_RESULTADO;
                 resultVM.MensajeResultado = resulAprobacioSolicitud.STR_MENSAJE_BD;
-
-
-
             }
             catch (Exception err) {
 
@@ -168,7 +158,6 @@ namespace Servicio.Solicitud.Controllers
                 resultVM.CodigoResultado = -200;
                 resultVM.MensajeResultado = err.Message;
             }
-
 
             return resultVM;
 
