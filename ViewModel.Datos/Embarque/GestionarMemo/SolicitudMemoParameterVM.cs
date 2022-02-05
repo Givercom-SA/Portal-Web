@@ -16,7 +16,7 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
         public string CorreoOperador { get; set; }
         public string CodigoEmpresaServicio { get; set; }
 
-        
+        public string Servicio { get; set; }
         public List<DocumentoMemoVM> Documentos { get; set; }
 
     }

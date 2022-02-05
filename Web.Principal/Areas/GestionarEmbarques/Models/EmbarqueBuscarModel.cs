@@ -35,6 +35,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Models
 
         public ListaEmbarqueModel listEmbarques { get; set; }
 
+        [Display(Name = "Servicio")]
+        public string Servicio { get; set; }
 
+        [Display(Name = "Origen")]
+        public string Origen { get; set; }
+
+        public SelectList ListaServicios { get; set; }
+
+        public SelectList ListaOrigen { get; set; }
     }
 }

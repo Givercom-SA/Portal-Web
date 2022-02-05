@@ -413,7 +413,7 @@
                             <div class="card-body" style="padding:0rem;">
                                 <ul class="list-group list-group-flush" id="stickyNav">
                                     <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="@Url.Action("ObtenerCobros", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD })">
+                                        <a class="nav-link" href="@Url.Action("ObtenerCobros", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
                                             <div class="d-flex align-items-center">
                                                 <div class="nav-link-icon" style="margin-right:10px">
                                                     <i class="bi bi-cash-coin">  </i>
@@ -423,7 +423,7 @@
                                         </a>
                                     </li>
                                     <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="@Url.Action("ObtenerTracking", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD })">
+                                        <a class="nav-link" href="@Url.Action("ObtenerTracking", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
 
 
                                             <div class="d-flex align-items-center">
@@ -474,7 +474,7 @@
                                     @if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString()))
                                     {
                                         <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:ValidacionAsignacionCobros('@Model.EmbarqueDetalle.KEYBLD')">
+                                            <a class="nav-link" href="javascript:ValidacionAsignacionCobros('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')">
 
                                                 <div class="d-flex align-items-center">
                                                     <div class="nav-link-icon" style="margin-right:10px">
@@ -521,7 +521,7 @@
                                     @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals("01"))
                                     {
                                         <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:GenerarSolicitudDireccionamiento('@Model.EmbarqueDetalle.KEYBLD', '@Model.EmbarqueDetalle.FLAG_PLAZO_ETA', '@Model.EmbarqueDetalle.FLAG_DIRECCIONAMIENTO_PERMANENTE')">
+                                            <a class="nav-link" href="javascript:GenerarSolicitudDireccionamiento('@Model.EmbarqueDetalle.KEYBLD', '@Model.EmbarqueDetalle.FLAG_PLAZO_ETA', '@Model.EmbarqueDetalle.FLAG_DIRECCIONAMIENTO_PERMANENTE', '@Model.Servicio')">
                                                 <div class="item-icon" style="font-style:normal!important"> </div>
 
                                                 <div class="d-flex align-items-center">
@@ -558,7 +558,7 @@
                                         else if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())))
                                         {
                                             <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal">
+                                                <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')" data-bs-toggle="modal">
 
                                                     <div class="d-flex align-items-center">
                                                         <div class="nav-link-icon" style="margin-right:10px">
@@ -600,7 +600,7 @@
                                         if (Model.EmbarqueDetalle.FLAG_LINEA_MEMO.Equals("1"))
                                         {
                                             <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD')">
+                                                <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD', '@Model.Servicio')">
 
                                                     <div class="d-flex align-items-center">
                                                         <div class="nav-link-icon" style="margin-right:10px">
@@ -678,7 +678,7 @@
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" type="button" id="btnAsignarAgenteAduanas" onclick="AsignarAgente('@ViewBag.Codigo', '@ViewBag.Anio', '@ViewBag.Filtro')">Asignar</button>
+                <button class="btn btn-primary" type="button" id="btnAsignarAgenteAduanas" onclick="AsignarAgente('@ViewBag.Codigo', '@ViewBag.Anio', '@ViewBag.Filtro', '@Model.Servicio')">Asignar</button>
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -1129,11 +1129,11 @@
         });
 
 
-        function GestionarMemo(KeyBL) {
+        function GestionarMemo(KeyBL, pServicio) {
 
             $.ajax({
                 type: "GET",
-                url:'@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL ,
+                url:'@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL + '&servicio=' + pServicio ,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 beforeSend: function () {
@@ -1143,7 +1143,7 @@
             })
             .done(function (result) {
                 if (result.codigo == 0) {
-                    location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL;
+                    location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio ,
                 } else if (result.codigo == -1) {
 
                     $("#ResultMemo").html(result.mensaje);
@@ -1171,7 +1171,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "@Url.Action("GestionarSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD })" ,
+                url: "@Url.Action("GestionarSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })" ,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 beforeSend: function () {
@@ -1182,7 +1182,7 @@
                 .done(function (result) {
 
                 if (result.codigo == 0) {
-              location.href = '@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD })';
+              location.href = '@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
 
 
                 } else if (result.codigo > 0) {
@@ -1211,7 +1211,7 @@
         }
 
 
-        function AsignarAgente(codigo, anio, filtro) {
+        function AsignarAgente(codigo, anio, filtro, servicio) {
 
             $('#ResultMensaje').html("");
             var idusuario = $("#ddlAgente option:selected").val();
@@ -1224,8 +1224,7 @@
             formData.append("IdUsuarioAsignado", idusuario);
             formData.append("Correo", correo);
             formData.append("IdEntidadAsignado", idEntidad);
-
-
+            formData.append("servicio", servicio);
 
             $.ajax({
                 type: "POST",
@@ -1598,10 +1597,10 @@
 
         }
 
-        function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente) {
+        function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente, pServicio) {
             $.ajax({
                 url: '@Url.Action("ValidarSolicitudDireccionamiento", "Direccionamiento",new { area="GestionarEmbarques"})',
-                data: { KeyBL: KeyBL},
+                data: { KeyBL: KeyBL, servicio: pServicio},
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'json',
@@ -1640,7 +1639,7 @@
         }
 
         function IrSolicitudDireccionamiento() {
-            window.location.href = '@Url.Action("Solicitud", "Direccionamiento", new { codigo = Model.EmbarqueDetalle.KEYBLD })';
+            window.location.href = '@Url.Action("Solicitud", "Direccionamiento", new { codigo = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
         }
 
         function RegistrarDireccionamientoPermanente(KeyBL, CodigoTaf, RazonSocial) {
@@ -1723,7 +1722,7 @@
                     }
                     if (response.codigo == 0) {
 
-                        window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques",  id= Model.EmbarqueDetalle.KEYBLD })";
+                        window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques",  id= Model.EmbarqueDetalle.KEYBLD, servicio= Model.Servicio })";
 
                     }
                 },
@@ -1734,11 +1733,11 @@
         }
 
 
-        function LiberarCargaMensaje(keyBl) {
+        function LiberarCargaMensaje(keyBl, pServicio) {
 
             $.ajax({
                 url: '@Url.Action("ValidarLiberacionCarga", "Embarque",new { area="GestionarEmbarques"})',
-                data: { KeyBL: keyBl },
+                data: { KeyBL: keyBl, servicio: pServicio},
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'json',

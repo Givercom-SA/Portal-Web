@@ -42,9 +42,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo)
+        public async Task<IActionResult> Solicitud(string codigo, string servicio)
         {
-            var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo);
+            var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
             var listModalidad = await _serviceMaestro.ObtenerParametroPorIdPadre(62);
 
             DireccionamientoSolicitud model = new();
@@ -143,13 +143,13 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> ValidarSolicitudDireccionamiento(string KeyBL)
+        public async Task<JsonResult> ValidarSolicitudDireccionamiento(string KeyBL, string servicio)
         {
             ActionResponse = new ActionResponse();
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
                 var result = await _serviceEmbarque.ValidarSolicitudDireccionamiento(KeyBL);
                 ActionResponse.Codigo = result.CodigoResultado;

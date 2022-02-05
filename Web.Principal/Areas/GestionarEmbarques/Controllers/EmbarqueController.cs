@@ -82,6 +82,12 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 var listServiceTipoFiltro = await _servicMaestro.ObtenerParametroPorIdPadre(49);
                 model.TipoFiltros = new SelectList(listServiceTipoFiltro.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
+                var listServicios = await _servicMaestro.ObtenerParametroPorIdPadre(12);
+                model.ListaServicios = new SelectList(listServicios.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+                var listOrigen = await _servicMaestro.ObtenerParametroPorIdPadre(79);
+                model.ListaOrigen = new SelectList(listOrigen.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
                 var resultSesion = HttpContext.Session.GetUserContent();
 
                 if (model.Anio != "" && model.TipoFiltro != "")
@@ -91,7 +97,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                                                                             short.Parse(model.TipoFiltro),
                                                                             model.Filtro == null ? "" : model.Filtro,
                                                                             resultSesion.obtenerTipoEntidadTransmares(), 
-                                                                            resultSesion.Sesion.RucIngresadoUsuario);
+                                                                            resultSesion.Sesion.RucIngresadoUsuario,
+                                                                            model.Servicio,
+                                                                            model.Origen);
                 }
 
             }
@@ -104,12 +112,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro)
+        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro, string servicio)
         {
             var resultSesion = HttpContext.Session.GetUserContent();
 
             EmbarqueDetalleModel model = new EmbarqueDetalleModel();
             model.EmbarqueDetalle = new Model.EmbarqueModel();
+            model.Servicio = servicio;
+            //model.Origen = origen;
 
             try
             {
@@ -124,7 +134,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (TempData["MensajeDesglose"] != null)
                     ViewBag.MensajeDesglose = TempData["MensajeDesglose"];
 
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
                 model.EmbarqueDetalle = embarque;
 
 
@@ -277,15 +287,15 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerCobros(string id)
+        public async Task<IActionResult> ObtenerCobros(string id, string servicio)
         {
             ListaCobrosModel model = new ListaCobrosModel();
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(id);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(id, servicio);
 
-                model = await _serviceEmbarques.ObtenerCobros(id);
+                model = await _serviceEmbarques.ObtenerCobros(id, servicio);
 
                 model.NroEmbarque = embarque.NROBL;
             }
@@ -303,13 +313,13 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerTracking(string id)
+        public async Task<IActionResult> ObtenerTracking(string id, string servicio)
         {
             ListaTrackingModel model = new ListaTrackingModel();
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(id);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(id, servicio);
 
                 model = await _serviceEmbarques.ObtenerTracking(id);
                 model.NroEmbarque = embarque.NROBL;
@@ -330,7 +340,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AsignarCobroPagar(string id)
+        public async Task<IActionResult> AsignarCobroPagar(string id, string servicio)
         {
             ViewBag.CantidadBlsHijos = 0;
             ListCobrosPendienteEmbarqueVM model = new();
@@ -338,7 +348,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             try
             {
 
-                var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(id);
+                var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(id, servicio);
 
                 var listaBls = await _serviceEmbarques.ObtenerDesglosesEmbarque(id, 0,usuario.TipoEntidad,EmbarqueConstante.ProcesoSistema.ASIGNACION_PROCESO);
                 ViewBag.ListaBlsHijos = new SelectList(listaBls.listaDesglose, "KEYBLD", "CONSIGNATARIO");
@@ -476,12 +486,12 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> ValidacionAsignacionCobros(string KeyBL)
+        public async Task<JsonResult> ValidacionAsignacionCobros(string KeyBL, string servicio)
         {
             ActionResponse = new ActionResponse();
             ActionResponse.Codigo = 0;
 
-            var embarque = _serviceEmbarques.ObtenerEmbarque(KeyBL);
+            var embarque = _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
             try
             {
@@ -533,12 +543,12 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> ValidarLiberacionCarga(string KeyBL )
+        public async Task<JsonResult> ValidarLiberacionCarga(string KeyBL, string servicio)
         {
             ActionResponse = new ActionResponse();
             ActionResponse.Codigo = 0;
 
-            var embarque = _serviceEmbarques.ObtenerEmbarque(KeyBL);
+            var embarque = _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
             try
             {
@@ -656,7 +666,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado)
+        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado, string servicio)
         {
             ActionResponse = new ActionResponse();
 
@@ -672,7 +682,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 EmbarqueDetalleModel model = new EmbarqueDetalleModel();
                 model.EmbarqueDetalle = new Model.EmbarqueModel();
 
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
 
                 var parameterCrear = new AsignarAgenteCrearParameterVM();
                 parameterCrear.KEYBLD = embarque.KEYBLD;

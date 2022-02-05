@@ -18,24 +18,24 @@ namespace Web.Principal.ServiceExterno
     {
         private static ILogger logger = ApplicationLogging.CreateLogger("ServicioEmbarques");
 
-        public async Task<ListaCobrosModel> ObtenerCobros(string val)
+        public async Task<ListaCobrosModel> ObtenerCobros(string val, string servicio)
         {
             ListaCobrosModel listaResult = new ListaCobrosModel();
 
             WebService_TM_PWSoapClient client =
                 new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ObtenerCobrosEmbarqueRequest request = new TM_WS_ObtenerCobrosEmbarqueRequest(pKeybld: val);
+            TM_WS_ObtenerCobrosEmbarque_V2Request request = new TM_WS_ObtenerCobrosEmbarque_V2Request(pKeybld: val, pServicio: servicio);
 
-            TM_WS_ObtenerCobrosEmbarqueResponse response = client.TM_WS_ObtenerCobrosEmbarque(request);
+            TM_WS_ObtenerCobrosEmbarque_V2Response response = await client.TM_WS_ObtenerCobrosEmbarque_V2Async(request);
 
             await client.CloseAsync();
 
             listaResult.listaCobros = new List<EmbarqueCobrosModel>();
 
-            if (!response.TM_WS_ObtenerCobrosEmbarqueResult.Nodes[1].IsEmpty)
+            if (!response.TM_WS_ObtenerCobrosEmbarque_V2Result.Nodes[1].IsEmpty)
             {
-                foreach (var item in response.TM_WS_ObtenerCobrosEmbarqueResult.Nodes[1].Element("NewDataSet").Elements("Table"))
+                foreach (var item in response.TM_WS_ObtenerCobrosEmbarque_V2Result.Nodes[1].Element("NewDataSet").Elements("Table"))
                 {
                     listaResult.listaCobros.Add(
                         new EmbarqueCobrosModel
@@ -239,30 +239,32 @@ namespace Web.Principal.ServiceExterno
         }
 
 
-        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad)
+        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad, string _pServicio, string _pOrigen)
         {
             ListaEmbarqueModel listaResult = new ListaEmbarqueModel();
 
             WebService_TM_PWSoapClient client =
                 new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ListarEmbarquesRequest request = new TM_WS_ListarEmbarquesRequest(
+            TM_WS_ListarEmbarques_V2Request request = new TM_WS_ListarEmbarques_V2Request(
                 pEmpresa: _pEmpresa,
                 pAnio: _pAnio,
                 pTipoFiltro: _pTipoFiltro,
                 pFiltro: _pFiltro,
                 pTipoEntidad: pTipoEntidad,
-                pRuc_Entidad: _pRucEntidad);
+                pRuc_Entidad: _pRucEntidad,
+                pServicio: _pServicio,
+                pOrigen: _pOrigen);
 
-            TM_WS_ListarEmbarquesResponse response = await client.TM_WS_ListarEmbarquesAsync(request);
+            TM_WS_ListarEmbarques_V2Response response = await client.TM_WS_ListarEmbarques_V2Async(request);
 
             await client.CloseAsync();
 
             listaResult.listaEmbarques = new List<EmbarqueModel>();
 
-            if (!response.TM_WS_ListarEmbarquesResult.Nodes[1].IsEmpty)
+            if (!response.TM_WS_ListarEmbarques_V2Result.Nodes[1].IsEmpty)
             {
-                foreach (var item in response.TM_WS_ListarEmbarquesResult.Nodes[1].Element("NewDataSet").Elements("Table"))
+                foreach (var item in response.TM_WS_ListarEmbarques_V2Result.Nodes[1].Element("NewDataSet").Elements("Table"))
                 {
                     listaResult.listaEmbarques.Add(
                         new EmbarqueModel
@@ -291,22 +293,22 @@ namespace Web.Principal.ServiceExterno
             return listaResult;
         }
 
-        public async Task<EmbarqueModel> ObtenerEmbarque(string pKeybld)
+        public async Task<EmbarqueModel> ObtenerEmbarque(string pKeybld, string pServicio)
         {
             EmbarqueModel embarque = new EmbarqueModel();
 
             WebService_TM_PWSoapClient client =
                 new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ObtenerInformacionEmbarqueRequest request = new TM_WS_ObtenerInformacionEmbarqueRequest(pKeybld);
+            TM_WS_ObtenerInformacionEmbarque_V2Request request = new TM_WS_ObtenerInformacionEmbarque_V2Request(pKeybld, pServicio);
 
-            TM_WS_ObtenerInformacionEmbarqueResponse response = client.TM_WS_ObtenerInformacionEmbarque(request);
+            TM_WS_ObtenerInformacionEmbarque_V2Response response = await client.TM_WS_ObtenerInformacionEmbarque_V2Async(request);
 
             await client.CloseAsync();
 
-            if (!response.TM_WS_ObtenerInformacionEmbarqueResult.Nodes[1].IsEmpty)
+            if (!response.TM_WS_ObtenerInformacionEmbarque_V2Result.Nodes[1].IsEmpty)
             {
-                var item = response.TM_WS_ObtenerInformacionEmbarqueResult.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
+                var item = response.TM_WS_ObtenerInformacionEmbarque_V2Result.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
 
                 embarque.KEYBLD = item.Element("KEYBLD").Value;
                 embarque.NROOT = item.Element("NROOT").Value;

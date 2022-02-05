@@ -25,10 +25,10 @@ namespace Servicio.Embarque
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureServices(services => {
+                })/*.ConfigureServices(services => {
                     services.AddHostedService<BackgroundNotificacionArribo>();
                     services.AddHostedService<BackgroundMemo>();
                     services.AddHostedService<BackgroundFacturar>();
-                });
+                })*/;
     }
 }
