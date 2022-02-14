@@ -85,10 +85,14 @@ namespace TransMares.Core
                                                 <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
                                                 <img src='{ImagenGrupo}'
                                                     style='height: auto;    width: 40%;'>
-                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado {pNombre} </b></h4>
+                                                <h4><b style='font-family:Arial, Helvetica, sans-serif;'> Estimado(a) {pNombre}, </b></h4>
                                                     <p style='font-family:Arial, Helvetica, sans-serif;'>
-                                                       tu nueva contraseña es  <strong style='text-size:12px; text-transform: uppercase;'> {pcontrasenia} </strong>
+                                                       Tu nueva contraseña es:
                                                     </p>
+                                                     <center>
+                                                        <strong style='text-size:12px; text-transform: uppercase;'> {pcontrasenia} </strong>
+                                                    </center>
+                                                        <br />              
                                                     <center> <p style = 'font-family:Arial, Helvetica, sans-serif;' >
                                                         ¡Estamos felices que cuentes con nosotros!
                                                         <br /> El equipo de Transmares te lo agradece
@@ -661,13 +665,8 @@ namespace TransMares.Core
             string imagen = nombreLogoEmpresa;
 
             HtmlSend = $@"
-                <!DOCTYPE html>
+             
                 <html xmlns='http://www.w3.org/1999/xhtml'>
-
-                    <head runat='server'>
-                        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-                        <title></title>
-                    </head>
 
                     <body>
                         <center>
@@ -678,7 +677,7 @@ namespace TransMares.Core
                                 <div style='height:30px'></div>
 
                                 <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
-                                    <tbody style=' background:#ffffff '>
+                                    <tbody style='background:#ffffff'>
                                         <tr>
                                             <td style='padding: 12px;' colspan='3'>
                                                 <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>

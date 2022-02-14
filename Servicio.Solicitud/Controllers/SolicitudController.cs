@@ -50,16 +50,19 @@ namespace Servicio.Solicitud.Controllers
         public ActionResult<SolicitudVM> obtenerSolicitudPorCodigo(string codSol)
         {
             var result = _repository.ObtenerSolicitudPorCodigo(codSol);
+            var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
 
-            /*var listaDoc = _repository.ObtenerDocumentosPorSolicitud(result.SOLI_CODIGO);
-            var listaEve = _repository.ObtenerEventosPorSolicitud(result.SOLI_CODIGO);
-            
+            if (listaTipoEntidad.IN_CODIGO_RESULTADO == 0)
+                result.ListaTipoEntidad = listaTipoEntidad.ListaEntidades;
 
-            if (listaDoc.IN_CODIGO_RESULTADO == 0)
-                result.ListaDocumentos = listaDoc.ListaDocumentos;
+            return _mapper.Map<SolicitudVM>(result);
+        }
 
-            if (listaEve.IN_CODIGO_RESULTADO == 0)
-                result.ListaEventos = listaEve.ListaEventos;*/
+        [HttpGet]
+        [Route("leer-solicitud")]
+        public ActionResult<SolicitudVM> LeerSolicitud(Int64 id)
+        {
+            var result = _repository.LeerSolicitud(id);
 
             var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
 
@@ -78,49 +81,7 @@ namespace Servicio.Solicitud.Controllers
             return string.Empty;
         }
 
-        //[HttpPut]
-        //[Route("procesarSolicitud/{codSolicitud}")]
-        //public ActionResult<string> procesarSolicitud(string codSolicitud)
-        //{
-        //    _repository.ProcesarSolicitud(codSolicitud);
-        //    var solicitud = _repository.ObtenerSolicitudPorCodigo(codSolicitud);
-
-        //    if(!solicitud.SOLI_ESTADO_CODIGO.Trim().Equals("SP"))
-        //    {
-        //        if (solicitud.SOLI_ESTADO_CODIGO.Trim().Equals("SA"))
-        //        {
-        //            enviarCorreo(solicitud.SOLI_CORREO,
-        //                "!Bienvenido a Transmares Group!",
-        //                new FormatoCorreoBody().formatoBodyBienvenidaAprobado(
-        //                    string.Format("{0}: {1}", solicitud.SOLI_TIPODOCUMENTO, solicitud.SOLI_NUMERO_DOCUMENTO),
-        //                    solicitud.SOLI_RAZON_SOCIAL,
-        //                    string.Format("{0} {1} {2}", solicitud.SOLI_RELEGAL_NOMBRE, solicitud.SOLI_RLEGAL_APELLIDO_PATERNO,
-        //                    solicitud.SOLI_RLEGAL_APELLIDO_MATERNO), solicitud.SOLI_CORREO),
-        //                UrlArchivoDocbusinessPartner,
-        //                (solicitud.SOLI_ACUERDO_SEGUR_CADENA_SUMINI == 1) ? true : false);
-        //        }
-        //        else if (solicitud.SOLI_ESTADO_CODIGO.Trim().Equals("SR"))
-        //        {
-        //            var listaDoc = _repository.ObtenerDocumentosPorSolicitud(codSolicitud);
-        //            IList<string> listadocumentos = new List<string>();
-
-        //            foreach (var item in listaDoc.ListaDocumentos.Where(w => w.SADO_ESTADO.Trim().Equals("SR")))
-        //                listadocumentos.Add(string.Format("{0}|{1}",item.SADO_NOMDOCUMENTO,item.SADO_NOMMOTIVORECHAZO));
-
-        //            enviarCorreo(solicitud.SOLI_CORREO,
-        //                "!Comunicado de Transmares Group!",
-        //                new FormatoCorreoBody().formatoBodyBienvenidaRechazada(
-        //                    string.Format("{0}: {1}", solicitud.SOLI_TIPODOCUMENTO, solicitud.SOLI_NUMERO_DOCUMENTO),
-        //                    solicitud.SOLI_RAZON_SOCIAL,
-        //                    string.Format("{0} {1} {2}", solicitud.SOLI_RELEGAL_NOMBRE, solicitud.SOLI_RLEGAL_APELLIDO_PATERNO, solicitud.SOLI_RLEGAL_APELLIDO_MATERNO),
-        //                    listadocumentos),
-        //                string.Empty,
-        //                false);
-        //        }
-        //    }
-
-        //    return string.Empty;
-        //}
+        
 
         [HttpPost]
         [Route("aprobarSolicitud")]

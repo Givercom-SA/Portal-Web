@@ -18,6 +18,7 @@ namespace Web.Principal.ServiceConsumer
     {
         private readonly string URL_BASE;
         private const string SERVICIO_ACCESOS = "Usuario/";
+        private const string SERVICIO_CLIENTE = "Cliente/";
 
         static HttpClient client = new HttpClient();
 
@@ -38,6 +39,39 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
 
+        public async Task<ListarUsuariosResultVM> ListarClienteUsuarios(ListarUsuarioParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            const string SERVICIO = "listar-cliente-usuarios";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<ListarUsuariosResultVM>();
+
+            return resultado;
+        }
+
+        
+        public async Task<ListarClientesResultVM> ListarClientes(ListarClienteParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            const string SERVICIO = "listar-clientes";
+            var uri = $"{URL_BASE}{SERVICIO_CLIENTE}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<ListarClientesResultVM>();
+
+            return resultado;
+        }
+
+        public async Task<LeerClienteResultVM> LeerCliente(Int64 id)
+        {
+            const string SERVICIO = "leer-cliente";
+            var uri = $"{URL_BASE}{SERVICIO_CLIENTE}{SERVICIO}?Id={id}";
+            var response = await client.GetAsync(uri);
+            var resultado = response.ContentAsType<LeerClienteResultVM>();
+            return resultado;
+        }
 
         public async Task<LeerUsuarioResultVM> ObtenerUsuario(Int32 id)
         {
@@ -51,8 +85,6 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
-
-
 
         public async Task<ListarUsuariosResultVM> ObtenerListadoUsuariosSecundarios(ListarUsuarioParameterVM parameter)
         {

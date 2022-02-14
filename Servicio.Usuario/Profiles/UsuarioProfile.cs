@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Servicio.Usuario.Models.Cliente;
 using Servicio.Usuario.Models.Usuario;
 using System;
 using System.Collections.Generic;
@@ -54,9 +55,11 @@ namespace Servicio.Usuario.Profiles
               .ForMember(s => s.Nombres, o => o.MapFrom(s => s.Nombres))
               .ForMember(s => s.Correo, o => o.MapFrom(s => s.Correo))
               .ForMember(s => s.IdPerdil, o => o.MapFrom(s => s.IdPerdil))
+              .ForMember(s => s.IdEntidad, o => o.MapFrom(s => s.IdEntidad))
+              .ForMember(s => s.IsAdmin, o => o.MapFrom(s => s.IsAdmin))
+              .ForMember(s => s.isActivo, o => o.MapFrom(s => s.isActivo))
               .ForMember(s => s.RegistroInicio, o => o.MapFrom(s => s.RegistroInicio))
               .ForMember(s => s.RegistroFin, o => o.MapFrom(s => s.RegistroFin));
-
 
             CreateMap<UsuarioSecundarioResult, UsuarioSecundarioResultVM>()
             .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
@@ -70,9 +73,6 @@ namespace Servicio.Usuario.Profiles
             .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
             .ForMember(s => s.Menus, o => o.MapFrom(s => s.Menus));
 
-
-
-
             CreateMap<CambiarPerfilDefectoParameterVM, CambiarPerfilDefectoParameter>()
               .ForMember(s => s.IdPerdil, o => o.MapFrom(s => s.IdPerfil))
               .ForMember(s => s.IdUsuario, o => o.MapFrom(s => s.IdUsuario));
@@ -81,8 +81,18 @@ namespace Servicio.Usuario.Profiles
            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
+            CreateMap<ListarClienteParameterVM, ListarClienteParameter>();
+
+            CreateMap<ListarClienteResult, ListarClientesResultVM>()
+           .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+           .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<LeerClienteResult, LeerClienteResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+        .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<Cliente, ClienteVM>();
+
         }
-
-
     }
 }

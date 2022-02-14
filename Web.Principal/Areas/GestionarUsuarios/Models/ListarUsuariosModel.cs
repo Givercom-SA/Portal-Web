@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Common.Request;
 using ViewModel.Datos.UsuarioRegistro;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Models
 {
-    public class ListarUsuariosModel
+    public class ListarUsuariosModel : DataRequestViewModelResponse
     {
         [Display(Name = "Correo")]
         public string Correo { get; set; }
@@ -25,11 +26,14 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public int IdPerfil { get; set; } = -1;
 
         [Display(Name = "Entidad")]
-        public int IdEntidad { get; set; }
+        public Int64 IdEntidad { get; set; }
 
         [Display(Name = "Estado")]
         public int isActivo { get; set; } = -1;
+
+        public int TipoUsuario { get; set; }
         public Microsoft.AspNetCore.Mvc.Rendering.SelectList ListEstado { get; set; }
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList Perfiles { get; set; }
 
         public String ReturnUrl { get; set; }
 

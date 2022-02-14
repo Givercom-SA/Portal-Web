@@ -25,7 +25,10 @@ namespace Servicio.Acceso.Models
         public string PEFL_NOMBRE { get; set; }
 
         public int USUA_CAMBIOCLAVE { get; set; }
+        public int EsAdmin { get; set; }
+        
         public List<MenuLogin> Menus { get; set; }
+        public List<MenuLogin> MenusUserSecundario { get; set; }
         public List<PerfilLogin> Perfiles { get; set; }
 
         public List<string> DocumentosRevisar { get; set; }
@@ -49,6 +52,8 @@ namespace Servicio.Acceso.Models
         public string Area { get; set; }
         public string Nombre { get; set; }
         public string Grupo { get; set; }
+        public bool Permiso { get; set; }
 
     }
 }
+

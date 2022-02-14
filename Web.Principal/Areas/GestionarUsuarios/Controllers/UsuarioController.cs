@@ -383,7 +383,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                 if (actionResponse.Codigo == 0) {
                     enviarCorreo(new FormatoCorreoBody().formatoBodyRestablecerContrasenia(resultUsuario.Usuario.Nombres,
-                     strNuevaContrasenia,
+                     strContrasenia,
                      $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}"),
                      resultUsuario.Usuario.Correo,
                      "!Transmares Group! Restablecer Contraseña"

@@ -61,17 +61,7 @@ namespace Servicio.Embarque.Controllers
                                                                            "SP",
                                                                            parameter.Correo);
 
-                /*
-                 Estimado usuario,
-
-Considerar que se ha registrado la solicitud de direccionamiento Nro. XXXX para que pueda proceder a evaluarla. 
-
-N° BL
-Nave/Viaje
-Consignatario
-Total Ctrs
-Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
-                 */
+       
                 string mensaje =string.Format("Considerar que se ha registrado la solicitud de direccionamiento Nro. {0} para que pueda proceder a evaluarla.", result.VH_CODSOLICITUD);
                 string mensajeCliente = string.Format("Confirmamos la recepción de su solicitud de direccionamiento Nro. {0}, considerar que tiene hasta el {1} para poder culminar con el proceso.", result.VH_CODSOLICITUD,parameter.VencimientoPlazo);
 
@@ -87,7 +77,7 @@ Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
                 }
 
                 //Enviar Correo
-                enviarCorreo(parameter.Correo,
+              await  enviarCorreo(parameter.Correo,
                             "Transmares Group - Solicitud de Direccionamiento",
                             new FormatoCorreoBody().formatoBodySolicitudDireccionamientoCreada(mensajeCliente,
                                                                                                parameter.NroBL,
@@ -96,7 +86,7 @@ Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
                                                                                                parameter.CantidadCtn,
                                                                                                strAlmacenReceptorCarga ,
                                                                                                 parameter.ImagenEmpresaLogo));
-                enviarCorreo(resultEmbarque.OPERADOR_MAIL,
+              await  enviarCorreo(resultEmbarque.OPERADOR_MAIL,
                              "Transmares Group - Solicitud de Direccionamiento",
                              new FormatoCorreoBody().formatoBodySolicitudDirrecionamientoCreadaOperador(result.VH_CODSOLICITUD, mensaje, parameter.NroBL,
                                                                                                parameter.NaveViaje,
@@ -173,17 +163,17 @@ Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
                         {
 
                             // ENVIAR CORREO APROBADO
-                            enviarCorreo(solicitud.Correo,
+                          await  enviarCorreo(solicitud.Correo,
                                     "Transmares Group - Solicitud de Direccionamiento Aprobada",
                                     new FormatoCorreoBody().formatoBodySolicitudDireccionamientoAprobada(solicitud.Codigo, parameter.nombreImagenEmpresa));
 
                         }
                         else if (solicitud.EstadoCodigo.Trim().Equals("SR"))
                         {
-                           
+
 
                             // ENVIAR CORREO RECHAZO
-                            enviarCorreo(solicitud.Correo,
+                            await enviarCorreo(solicitud.Correo,
                                     "Transmares Group - Solicitud de Direccionamiento Rechazada",
                                     new FormatoCorreoBody().formatoBodySolicitudDireccionamientoRechazada(solicitud.Codigo, solicitud.MotivoRechazo, parameter.nombreImagenEmpresa));
                         }
@@ -231,7 +221,7 @@ Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
             return _mapper.Map<SolicitudDireccionamientoResultVM>(result);
         }
 
-        private async  void enviarCorreo(string _correo, string _asunto, string _contenido)
+        private async  Task<string> enviarCorreo(string _correo, string _asunto, string _contenido)
         {
      
 
@@ -241,7 +231,7 @@ Almacén Direccionado o Receptor de Carga (según la modalidad elegida)
             enviarMessageCorreoParameterVM.RequestMessage.Correo = _correo;
             enviarMessageCorreoParameterVM.RequestMessage.Asunto = _asunto;
            await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
-
+            return "";
         }
     }
 }

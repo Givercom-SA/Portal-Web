@@ -37,6 +37,14 @@ namespace Servicio.Usuario.Controllers
             return _mapper.Map<ListarUsuariosResultVM>(result);
         }
 
+        [HttpPost]
+        [Route("listar-cliente-usuarios")]
+        public ActionResult<ListarUsuariosResultVM> ListarClienteUsuarios(Models.Usuario.ListarUsuariosParameter parameter)
+        {
+            var result = _repository.ListarClienteUsuarios(parameter);
+            return _mapper.Map<ListarUsuariosResultVM>(result);
+        }
+
         [HttpGet]
         [Route("obtener-usuario/{Id}")]
         public ActionResult<LeerUsuarioResultVM> ObtenerUsuario(int Id)

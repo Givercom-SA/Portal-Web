@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioVM>
 
-<table  id="datatable" class="table">
+<table  id="dtUsuariosExternos" class="table">
     <thead>
         <tr>
-            <th class="border-gray-200" scope="col">Id</th>
-            <th class="border-gray-200" scope="col">Correo</th>
+            <th class="border-gray-200" scope="col">Tipo Usuario</th>
+
             <th class="border-gray-200" scope="col">Nombre Completo</th>
+            <th class="border-gray-200" scope="col">Apellido Paterno</th>
+            <th class="border-gray-200" scope="col">Apellido Materno</th>
+            <th class="border-gray-200" scope="col">Correo</th>
             <th class="border-gray-200" scope="col">Perfil</th>
-            <th class="border-gray-200" scope="col">Es Admin</th>
-            <th class="border-gray-200" scope="col">Tipo Perfil</th>
+            <th class="border-gray-200" scope="col">Fecha de Creación</th>
             <th class="border-gray-200" scope="col">Estado</th>
             <th width="100px" class="border-gray-200" scope="col">Acción</th>
         </tr>
@@ -17,19 +19,24 @@
         @foreach (var item in Model)
         {
         <tr>
-            <td>@item.getCodigoUsuario()</td>
+            <td >
+               @if (item.EsAdmin)
+               {
+                <span>Principal</span>
+               }
+               else { 
+            <span>Secundario</span>
+               }
+            </td>
+
+            <td title="@item.getNombre()"><a href="@Url.Action("VerUsuario", "Cliente", new { area= "GestionarUsuarios", Id=item.IdUsuario})" target="_blank" title="Detalle del usuario">@item.getNombreCorto()</a></td>
+            <td>@item.ApellidoPaterno</td>
+            <td>@item.ApellidoMaterno</td>
             <td>@item.Correo</td>
-            <td title="@item.getNombre()">@item.getNombreCorto()</td>
-            <td>@item.PerfilNombre </td>
-            @if (item.EsAdmin == true)
-            {
-                <td><span class="badge bg-light text-success">Si</span>  </td>
-            }
-            else
-            {
-                <td><span class="badge bg-light text-danger">No</span> </td>
-            }
-            <td>  <span class="">@item.TipoPerfil</span> </td>
+
+            <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" target="_blank" title="Detalle del perfil">@item.PerfilNombre </a></td>
+         
+            <td>@item.FechaRegistro</td>
             @if (item.Activo == true)
             {
                 <td>  <span class="badge bg-light text-success">Activo</span>  </td>
@@ -38,15 +45,38 @@
             {
                 <td>  <span class="badge bg-light text-danger">No activo</span> </td>
             }
-        <td>
-            <div class="dropdown no-caret">
-                <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
-                <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
-                    <a class="dropdown-item" href='@Url.Action("EditarUsuario","Usuario", new { Id=@item.IdUsuario })'>Editar</a>
-                    <a class="dropdown-item" onclick="VerInformacion('@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">Ver Informacion</a>
+            <td>
+                <div class="dropdown no-caret">
+                    <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
+                        <a class="dropdown-item" href='@Url.Action("EditarUsuario","Cliente", new { area="GestionarUsuarios",Id=item.IdUsuario })' target="_blank" title="Editar Usuario">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        &nbsp;Editar</a>
+                        <a class="dropdown-item" href="@Url.Action("VerUsuario","Cliente",new { area="GestionarUsuarios", Id=item.IdUsuario})" target="_blank" title="Ver Información">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        &nbsp;Ver Informacion</a>
+                        @if (!item.Activo)
+                        {
+                    <a class="dropdown-item" onclick="Activar('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-circle"><circle cx="12" cy="12" r="10"></circle></svg>
+                        &nbsp;Activar
+                    </a>
+                        }
+                        else
+                        {
+                    <a class="dropdown-item" onclick="Desactivar('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        &nbsp;Desactivar</a>
+                        }
+                    <a class="dropdown-item" onclick="RestablecerContrasena('@item.getNombreCorto()','@item.IdUsuario')" href='javascript:void(0)' title="Ver Información">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+                        &nbsp;Restablecer Contraseña</a>
+                    </div>
                 </div>
-            </div>
-        </td>
+            </td>
 
         </tr>
         }

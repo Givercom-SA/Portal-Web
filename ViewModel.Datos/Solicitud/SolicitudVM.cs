@@ -10,6 +10,7 @@ namespace ViewModel.Datos.Solicitud
 {
     public class SolicitudVM
     {
+        public Int64 IdSolicitud { get; set; }
         public string CodigoSolicitud { get; set; }
         public DateTime FechaRegistro { get; set; }
         public string RazonSocial { get; set; }

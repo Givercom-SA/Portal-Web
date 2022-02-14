@@ -14,6 +14,8 @@ namespace Servicio.Acceso.Repositorio
         public CambiarContrasenaResult ActualizarContrasenia(CambiarContrasenaParameter parameter);
         public ListarPerfilesResult ObtenerPerfiles(string Nombre, int Activo, string tipo);
         public ObtenerPerfilResult ObtenerPerfil(int IdPerfil);
+        public List<PerfilLogin> ObtenerPerfilesLogin(int IdUsuario, int IdPerfil);
+         public List<MenuLogin> ObtenerMenusLogin(int IdUsuario, int IdPerfil);
         public ListarPerfilesResult ObtenerPerfilesPorEntidad(int IdEntidad);
         public ListarMenusPerfilResult ObtenerMenus();
         public PerfilResult EditarPerfil(PerfilParameter parameter);

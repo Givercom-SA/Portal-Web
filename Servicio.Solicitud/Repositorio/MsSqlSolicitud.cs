@@ -44,6 +44,38 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new ObjetoSolicitudResult();
+                result.IN_CODIGO_RESULTADO = 2;
+                result.STR_MENSAJE_BD = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ObjetoSolicitudResult LeerSolicitud(Int64 id)
+        {
+            var result = new ObjetoSolicitudResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "TM_PDWAC_SP_OBTENER_SOLICITUD_ID";
+
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@SOLI_ID", id, DbType.Int64);
+
+                    result = cnn.Query<ObjetoSolicitudResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    result.IN_CODIGO_RESULTADO = 0;
+
+                    if (result.STR_MENSAJE_BD != null)
+                        result.IN_CODIGO_RESULTADO = 1;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new ObjetoSolicitudResult();
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -142,6 +174,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new BaseResult();
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -172,6 +205,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new BaseResult();
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -208,6 +242,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new AprobarSolicitudResult();
                 result.IN_CODIGO_RESULTADO = -100;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -236,6 +271,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new AprobarSolicitudResult();
                 result.IN_CODIGO_RESULTADO = -100;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -266,6 +302,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new ListarEventosResult();
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
             }
@@ -295,6 +332,7 @@ namespace Servicio.Solicitud.Repositorio
             }
             catch (Exception ex)
             {
+                result = new ListarTipoEntidadResult();
                 result.IN_CODIGO_RESULTADO = 2;
                 result.STR_MENSAJE_BD = ex.Message;
             }

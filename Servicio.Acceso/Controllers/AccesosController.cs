@@ -64,8 +64,6 @@ namespace Servicio.Acceso.Controllers
             return _mapper.Map<UsuarioRegistroVM>(result);
         }
 
-
-
         [HttpPost]
         [Route("solicitar-acceso")]
         public ActionResult<SolicitarAccesoResultVM> SolicitarAcceso([FromBody] SolicitarAccesoParameterVM parameter)

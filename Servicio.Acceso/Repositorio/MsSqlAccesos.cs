@@ -98,7 +98,12 @@ namespace Servicio.Acceso.Repositorio
                         // Traer Menus y Perfiles
                         var resultMenus = ObtenerMenusLogin(result.USU_ID, result.PEFL_ID);
                         result.Menus = resultMenus;
-                        var resultPerfiles = ObtenerPerfilesLogin(result.USU_ID, result.PEFL_ID);
+
+                        var resultMenusUsuarioSecundario = ObtenerMenusUsuaroSecundario(result.USU_ID, result.ENTI_ID);
+                        result.MenusUserSecundario = resultMenusUsuarioSecundario;
+
+
+                           var resultPerfiles = ObtenerPerfilesLogin(result.USU_ID, result.PEFL_ID);
                         result.Perfiles = resultPerfiles;
                         result.IN_CODIGO_RESULTADO = 0;
                     }
@@ -113,7 +118,7 @@ namespace Servicio.Acceso.Repositorio
             return result;
         }
 
-        private List<MenuLogin> ObtenerMenusLogin(int IdUsuario,int IdPerfil)
+        public List<MenuLogin> ObtenerMenusLogin(int IdUsuario,int IdPerfil)
         {
             var result = new List<MenuLogin>();
             int Modo = 4; // Obtener Menus por Perfil
@@ -137,8 +142,31 @@ namespace Servicio.Acceso.Repositorio
 
             return result;
         }
+        private List<MenuLogin> ObtenerMenusUsuaroSecundario(int IdUsuario, int IdEntidad)
+        {
+            var result = new List<MenuLogin>();
+            int Modo = 5; // Obtener Menus por Perfil
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
 
-        private List<PerfilLogin> ObtenerPerfilesLogin(int IdUsuario, int IdPerfil)
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@Modo", Modo, DbType.Int32);
+                    queryParameters.Add("@IdUsuario", IdUsuario, DbType.Int32);
+                    queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
+                    result = cnn.Query<MenuLogin>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+
+            return result;
+        }
+        public List<PerfilLogin> ObtenerPerfilesLogin(int IdUsuario, int IdPerfil)
         {
             var result = new List<PerfilLogin>();
             int Modo = 3; // Obtener Perfiles Login
@@ -336,6 +364,8 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", 0, DbType.Int32);
                     queryParameters.Add("@Nombre", string.Empty, DbType.String);
                     queryParameters.Add("@Tipo", string.Empty, DbType.String);
+                    queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
+                    
                     result.Perfiles = cnn.Query<Perfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
@@ -519,7 +549,6 @@ namespace Servicio.Acceso.Repositorio
             return result;
         }
 
-        
         public ListarTransGroupEmpresaResult ObtenerTransGroupEmpresa()
         {
             var result = new ListarTransGroupEmpresaResult();

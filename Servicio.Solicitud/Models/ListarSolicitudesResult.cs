@@ -13,6 +13,8 @@ namespace Servicio.Solicitud.Models
 
     public class ObjetoSolicitudResult : BaseResult
     {
+       
+        public Int64 IdSolicitud { get; set; }
         public string SOLI_CODIGO { get; set; }
         public DateTime SOLI_FECHA_REGISTRO { get; set; }
         public string SOLI_RAZON_SOCIAL { get; set; }

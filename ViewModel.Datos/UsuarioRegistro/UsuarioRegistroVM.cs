@@ -38,12 +38,12 @@ namespace ViewModel.Datos.UsuarioRegistro
         public bool isCambioClave { get; set; }
         public List<MenuLoginVM> Menus { get; set; }
         public List<PerfilLoginVM> Perfiles { get; set; }
-        
 
+        public List<MenuLoginVM> MenusUserSecundario { get; set; }
         public SesionUsuarioVM Sesion { get; set; }
 
         public List<string> DocumentosRevisar { get; set; }
-
+        public int EsAdmin { get; set; }
         public string obtenerTipoEntidadTransmares() {
 
 
@@ -134,6 +134,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public string HttpMethod { get; set; }
+        public bool Permiso { get; set; }
 
         
     }

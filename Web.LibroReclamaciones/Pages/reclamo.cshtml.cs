@@ -117,7 +117,7 @@ namespace Web.Principal.Pages.ReclamoQueja
                     contenidoCliente = contenidoCliente + $" Empresa Atendió: {Input.EmpresaAtiendeNombre}<br/>";
                     contenidoCliente = contenidoCliente + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
 
-                    enviarCorreoCliente(Input.Email, Input.NombreCompleto, contenidoCliente);
+                   await enviarCorreoCliente(Input.Email, Input.NombreCompleto, contenidoCliente);
 
 
 
@@ -139,7 +139,7 @@ namespace Web.Principal.Pages.ReclamoQueja
                     contenido = contenido + $" Unidad de Negocio: {Input.UnidadNegocioNombre}<br/>";
                     contenido = contenido + $" Tipo Documento: {Input.TipoDocumentoNombre}<br/>";
                     contenido = contenido + $" Mensaje: {Input.Mensaje}<br/>";
-                    enviarCorreoCliente(correo,"usuario", contenido);
+                    await enviarCorreoCliente(correo,"usuario", contenido);
 
                 }
                 else
@@ -157,7 +157,7 @@ namespace Web.Principal.Pages.ReclamoQueja
             return new JsonResult(ActionResponse);
 
         }
-        private async void enviarCorreoCliente(string correo, string nombreCliente, string Mensaje)
+        private async Task<string> enviarCorreoCliente(string correo, string nombreCliente, string Mensaje)
         {
             EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
             enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
@@ -168,6 +168,7 @@ namespace Web.Principal.Pages.ReclamoQueja
             enviarMessageCorreoParameterVM.RequestMessage.Correo = correo;
             enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Registro de Reclamo";
             var ressult = await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
+            return "";
         }
     }
 }

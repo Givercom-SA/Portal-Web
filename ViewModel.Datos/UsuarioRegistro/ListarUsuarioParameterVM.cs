@@ -13,18 +13,15 @@ namespace ViewModel.Datos.UsuarioRegistro
 
         }
 
-
         public int RegistroInicio { get; set; }
         public int RegistroFin { get; set; }
-
         public string Correo { get; set; }
         public string ApellidoPaterno { get; set; }
         public string Nombres { get; set; }
         public string ApellidoMaterno { get; set; }
-
+        public int IsAdmin { get; set; }
         public int IdPerdil { get; set; }
-        public int IdEntidad { get; set; }
-
+        public Int64 IdEntidad { get; set; }
         public int isActivo { get; set; } = -1;
 
     }

@@ -12,7 +12,7 @@ namespace Servicio.Solicitud.Repositorio
         public ListarSolicitudesResult ObtenerSolicitudes(ListarSolicitudesParameter parameter);
 
         public ObjetoSolicitudResult ObtenerSolicitudPorCodigo(string codSol);
-
+        public ObjetoSolicitudResult LeerSolicitud(Int64 id);
         public ListarDocumentoResult ObtenerDocumentosPorSolicitud(string codSol);
 
         public BaseResult ActualizarSolicitudPorCodigo(string codSolicitud, string codDocumento, string CodEstado, string CodEstadoRechazo, int userId);

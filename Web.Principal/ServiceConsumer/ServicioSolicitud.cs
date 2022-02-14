@@ -52,6 +52,16 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
 
+        public async Task<SolicitudVM> leerSolicitud(Int64 id)
+        {
+            const string SERVICIO = "leer-solicitud";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}?id={id}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<SolicitudVM>();
+
+            return resultado;
+        }
         public async Task<string> ActualizarEstadoDocumento(string codSolicitud, string codDocumento, string codEstado, string codEstadoRechazo, int userId)
         {
             const string SERVICIO = "actualizarEstadoDocumento"; 

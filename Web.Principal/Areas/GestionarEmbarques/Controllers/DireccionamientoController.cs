@@ -299,7 +299,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             try
             {
                 var result = await _serviceEmbarques.RegistrarDireccionamientoPermanente(usuario.Sesion.CodigoTransGroupEmpresaSeleccionado,
-                    KeyBL,CodigoTaf,usuario.idUsuario.ToString());
+                    KeyBL,CodigoTaf,usuario.CorreoUsuario);
 
                 if(result == 1)
                 {

@@ -1,18 +1,17 @@
-﻿@model Web.Principal.Areas.GestionarUsuarios.Models.ListarUsuariosModel
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.ClienteModel
 
 
 
 @{
-    ViewData["Title"] = "Listado de Usuarios";
+    ViewData["Title"] = "Listado de Clientes";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 
 
-    var resultPefilesActivos = ViewBag.ListaPerfilActivos as ViewModel.Datos.Perfil.ListarPerfilesActivosResultVM;
 }
 
 
 <div class="loader" style="">
-    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+    <div class='lds-ripple' ><div></div><div></div></div>
 </div>
 
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
@@ -21,10 +20,10 @@
             <div class="row align-items-center justify-content-between">
                 <div class="col-auto mt-4">
                     <h1 class="page-header-title">
-                        <div class="page-header-icon"><i data-feather="arrow-right-circle"></i></div>
-                        Gestionar Usuarios
+                        <div class="page-header-icon"><i data-feather="users"></i></div>
+                        Gestionar Clientes
                     </h1>
-                    <div class="page-header-subtitle">Con esta opción usted podrá revisar los usuarios internos y externos.</div>
+                    <div class="page-header-subtitle">Con esta opción usted podrá revisar los datos de un cliente.</div>
                 </div>
             </div>
         </div>
@@ -45,57 +44,61 @@
             <div class="card-body">
                 <div class="sbp-preview-content">
                     <div class="row gx-3">
+
+                        <div class="col-3">
+                            <label asp-for="@Model.IdTipoDocumento" class="small mb-1"></label>
+
+                            <select class="form-select small" asp-for="@Model.IdTipoDocumento">
+
+                                <option value="0">Todos</option>
+                                @foreach (var item in Model.ListarTipoDocumento)
+                                {
+                                    <option value="@item.Value"> @item.Text</option>
+
+                                }
+                            </select>
+
+                        </div>
+
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <label asp-for="@Model.Correo" class="small mb-1"></label>
-                                <input asp-for="@Model.Correo" class="form-control" type="text" maxlength="50" placeholder=" Ingrese su correo" />
+                                <label asp-for="@Model.NumeroDocumento" class="small mb-1"></label>
+                                <input asp-for="@Model.NumeroDocumento" class="form-control" type="text" maxlength="15" placeholder=" Ingrese número de documento" />
                             </div>
                         </div>
+
                         <div class="col-md-3">
                             <!-- Form Group (last name)-->
                             <div class="mb-3">
-                                <label asp-for="@Model.Nombres" class="small mb-1"></label>
-                                <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingrese su nombre" />
+                                <label asp-for="@Model.RazonSocuialRepresentanteLegal" class="small mb-1"></label>
+                                <input asp-for="@Model.RazonSocuialRepresentanteLegal" class="form-control" type="text" maxlength="100" placeholder="Ingrese razon social / representante legal" />
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <!-- Form Group (first name)-->
-                            <div class="mb-3">
-                                <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
-                                <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder=" Ingrese su apellido paterno" />
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
-                                <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder=" Ingrese su apellido materno" />
-                            </div>
-                        </div>
+                       
+                    
                     </div>
                     <div class="row gx-3">
 
                         <div class="col-3">
                             <label asp-for="@Model.isActivo" class="small mb-1"></label>
-                            <select class="form-select small" asp-for="@Model.isActivo">
+                            <select asp-for="@Model.isActivo"
+                                    asp-items="Model.ListarEstado"
+                                    class="form-select small">
                                 <option value="-1">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">No activo</option>
                             </select>
                         </div>
 
                         <div class="col-3">
                             <label asp-for="@Model.IdPerfil" class="small mb-1"></label>
-                            
+
                             <select class="form-select small" asp-for="@Model.IdPerfil">
 
                                 <option value="0">Todos</option>
-                                @foreach (var item in resultPefilesActivos.Perfiles)
+                                @foreach (var item in Model.ListarPerfiles)
                                 {
-                                <option value="@item.IdPerfil"> @item.Nombre</option>
-                                
+                                    <option value="@item.Value"> @item.Text</option>
+
                                 }
                             </select>
 
@@ -109,15 +112,14 @@
     <!-- Billing history card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header ">
-            Registros encontrados
-            @Html.ActionLink("Nuevo", "CrearUsuario", "Usuario", new { area = "GestionarUsuarios" }, new { @class = "btn btn-sm btn-primary" })
+            Registros Encontrados
         </div>
         <div class="card-body">
             <!-- Billing history table-->
             <div class="table-responsive table-billing-history">
-                @if (Model.ListUsuarios.Usuarios != null && Model.ListUsuarios.Usuarios.Count() > 0)
+                @if (Model.ListarClientes.Clientes != null && Model.ListarClientes.Clientes.Count() > 0)
                 {
-                    <partial name="_ResultadoFiltro" model="@Model.ListUsuarios.Usuarios" />
+                    <partial name="_ClienteResultadoFiltro" model="@Model.ListarClientes.Clientes" />
                 }
                 else
                 {
@@ -128,48 +130,273 @@
     </div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" id="modal_usuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+
+<div class="modal fade" data-bs-backdrop="static" id="modalDesactivarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Ver Información</h5>
+                <h5 class="modal-title">Desactivar Usuario</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="ContentVerUsuario"></div>
+            <div class="modal-body">
+                <p class="small" >Estas seguro de desactivar el usuario    <strong id="strongDesactivarUsuario"></strong>.</p>
+
+            </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+                <button id="DesactivarUsuario" onclick="DesactivarUser()" class="btn btn-primary" type="button">SI</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modalActivarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Activar Usuario</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p class="small">Estas seguro de activar el usuario    <strong id="strongActivarUsuario"></strong>.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+                <button id="btnActivarUsuario" onclick="ActivarUser()" class="btn btn-primary" type="button">SI</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modalrestablecerContrasenia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Activar Usuario</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p class="small">Estas seguro de restablecer la contraseña del usuario <strong id="strongRestablecerContrasenia"></strong>.</p>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+                <button id="btnEliminar" onclick="RestablecerContrasenia()" class="btn btn-primary" type="button">SI</button>
             </div>
         </div>
     </div>
 </div>
 
 
-@section Scripts{
-    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
 
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<input type="hidden" id="inputUsuarioSeleccionado" />
+
+
+
+@section Scripts{
+
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
 
-
-
-
     <script>
-        $(function () {
 
+        $(document).ready(function () {
             $(".loader").fadeOut("slow");
 
 
             cargarLista();
-           
-
-
         });
 
+        function RestablecerContrasena(nombreUsuario, idUsuario) {
+            $("#modalrestablecerContrasenia").modal("show");
+            $("#strongRestablecerContrasenia").html(nombreUsuario);
+            $("#inputUsuarioSeleccionado").val(idUsuario);
+        }
 
+        function Desactivar(nombreUsuario,idUsuario) {
+
+
+            $("#modalDesactivarUsuario").modal("show");
+            $("#strongDesactivarUsuario").html(nombreUsuario);
+            $("#inputUsuarioSeleccionado").val(idUsuario);
+
+        }
+
+        function DesactivarUser() {
+
+
+            var formData = new FormData();
+            formData.append("IdUsuario", $('#inputUsuarioSeleccionado').val());
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DesactivarUsuario", "Usuario", new { area= "GestionarUsuarios" })",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                    $("#modal_confirmar").modal("hide");
+
+                    $(".loader").fadeIn("slow");
+
+                },
+            })
+                .done(function (response) {
+                    $(".loader").fadeOut("slow");
+                    $("#modalDesactivarUsuario").modal("hide");
+
+                    if (response.codigo == 0) {
+
+
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(response.mensaje);
+                    }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    }
+                    else if (response.codigo < 0) {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+
+                })
+                .fail(function (xhr, status, error) {
+                    $(".loader").fadeOut("slow");
+                    $("#modalDesactivarUsuario").modal("hide");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar más tarde. Detalle: " + error);
+                })
+                .always(function () {
+
+                });
+
+        }
+
+        function ActivarUser() {
+
+               var formData = new FormData();
+            formData.append("IdUsuario", $('#inputUsuarioSeleccionado').val());
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ActivarUsuario", "Usuario", new { area= "GestionarUsuarios" })",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                    $("#modal_confirmar").modal("hide");
+
+                    $(".loader").fadeIn("slow");
+
+                },
+            })
+                .done(function (response) {
+                    $(".loader").fadeOut("slow");
+                    $("#modalActivarUsuario").modal("hide");
+
+                    if (response.codigo == 0) {
+
+
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(response.mensaje);
+                    }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    }
+                    else if (response.codigo < 0) {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+
+                })
+                .fail(function (xhr, status, error) {
+                    $(".loader").fadeOut("slow");
+                    $("#modalActivarUsuario").modal("hide");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar más tarde. Detalle: " + error);
+                })
+                .always(function () {
+
+                });
+        }
+
+        function ActualizarForm() {
+            window.location.reload();
+        }
+
+        function Activar(nombreUsuario, idUsuario) {
+
+            $("#modalActivarUsuario").modal("show");
+            $("#strongActivarUsuario").html(nombreUsuario);
+            $("#inputUsuarioSeleccionado").val(idUsuario);
+
+        }
 
         function cargarLista() {
-
-
 
             try {
 
@@ -191,31 +418,58 @@
 
         }
 
+        function RestablecerContrasenia() {
 
-        function VerInformacion(IdUsuario) {
+            var formData = new FormData();
+            formData.append("IdUsuario", $('#inputUsuarioSeleccionado').val());
 
             $.ajax({
-                type: "GET",
-                url: "@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios"})?Id=" + IdUsuario,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
+                type: "POST",
+                url: "@Url.Action("RestablercContrasenia", "Usuario", new { area= "GestionarUsuarios" })",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                    $("#modal_confirmar").modal("hide");
+
+                    $(".loader").fadeIn("slow");
+
+                },
             })
-                .done(function (result) {
-                    if (result != null) {
-                        $('#ContentVerUsuario').html(result);
-                        $('#modal_usuario').modal('show');
-                    } else {
+                .done(function (response) {
+                    $(".loader").fadeOut("slow");
+                    $("#modalrestablecerContrasenia").modal("hide");
+
+                    if (response.codigo == 0) {
+
+
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(response.mensaje);
+                    }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
 
                     }
+                    else if (response.codigo < 0) {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+
                 })
                 .fail(function (xhr, status, error) {
-
+                    $(".loader").fadeOut("slow");
+                    $("#modalActivarUsuario").modal("hide");
+                    $("#dialogError").modal("show");
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar más tarde. Detalle: " + error);
                 })
                 .always(function () {
 
                 });
         }
+
     </script>
 }
 
