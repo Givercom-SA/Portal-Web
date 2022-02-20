@@ -1332,7 +1332,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
+                url: "@Url.Action("ProgramarNotificaciones", "Embarque", new { area= "GestionarEmbarques" })",
                 data: formData,
                 dataType: "json",
                 contentType: false,
@@ -1499,13 +1499,8 @@
                         if (msj.codigo == 0) {
 
                             $("#modal_autorizar_liberacion_carga").modal("hide");
-
-
                             $("#dialogOk").modal("show");
-
                             $("#outputMensajeOk").html(msj.mensaje);
-
-                           // window.location.reload();
 
                         } else {
 

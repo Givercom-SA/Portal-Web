@@ -223,11 +223,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}",
                    embarque.NROBL);
 
-                enviarMessageCorreoParameterVM.RequestMessage.Correo = embarque.FINANZAS_MAIL;
+                enviarMessageCorreoParameterVM.RequestMessage.Correo = embarque.OPERADOR_MAIL;
                 enviarMessageCorreoParameterVM.RequestMessage.Asunto = $"Transmares Group - Solicitud de Devolución de Cobro de Garantía";
                 var ressultCorreo = await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
-                // envio correo al cliente
 
+                // envio correo al cliente
                 EnviarMessageCorreoParameterVM enviarMessageCorreoClienteParameter = new EnviarMessageCorreoParameterVM();
                 enviarMessageCorreoClienteParameter.RequestMessage = new RequestMessage();
                 enviarMessageCorreoClienteParameter.RequestMessage.Contenido =

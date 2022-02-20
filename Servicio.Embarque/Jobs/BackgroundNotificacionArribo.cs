@@ -101,19 +101,22 @@ namespace Servicio.Embarque.Jobs
                                         else {
                                             strCliente = user.Result.Usuario.EntidadRazonSocial;
                                         }
+
+                                        //Los movemos a la otra ruta
+                                        File.Move(archivo.FullName, string.Format("{0}/{1}", rutaNotificacionesProcesadas, archivo.Name));
+
                                         EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
                                         enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
                                         enviarMessageCorreoParameterVM.RequestMessage.Contenido = new FormatoCorreoBody().formatoBodyNotificacionArribo(strCliente, item.NOTARR_NUMERACION_EMBARQUE, item.GTEM_NOMBRES, Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupoUrl);
                                         enviarMessageCorreoParameterVM.RequestMessage.Correo = user.Result.Usuario.Correo;
                                         enviarMessageCorreoParameterVM.RequestMessage.Asunto = string.Format("Notificación de Arribo - Numeración de  Embarque: {0}", item.NOTARR_NUMERACION_EMBARQUE);
                                         enviarMessageCorreoParameterVM.RequestMessage.Archivos = new string[1];
-                                        enviarMessageCorreoParameterVM.RequestMessage.Archivos[0]= string.Format("{0}/{1}", rutaNotificacionesPendiente, archivo.Name);
+                                        enviarMessageCorreoParameterVM.RequestMessage.Archivos[0]= string.Format("{0}/{1}", rutaNotificacionesProcesadas, archivo.Name);
                                         var ressult =  _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
                                         //Se actualiza el registro indicando que ya se proceso
                                         _repository.ActualizarEstadoNotificacion(item.NOTARR_KEYBLD, item.NOTARR_IDUSUARIO_CREA, "NA");
 
-                                        //Los movemos a la otra ruta
-                                        File.Move(archivo.FullName, string.Format("{0}/{1}", rutaNotificacionesProcesadas, archivo.Name));
+                            
                                     }
 
                                 }

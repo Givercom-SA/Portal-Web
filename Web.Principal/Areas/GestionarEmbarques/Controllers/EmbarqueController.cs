@@ -164,30 +164,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 {
                     if (model.TipoEntidad.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString()))
                     {
-                        if (model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER"))
+                        if (model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
                         {
-                            if (model.ExisteCobrosPagarRegistrado == false)
+                            if (model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER"))
                             {
-                                model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.MENSAJE;
-                                model.MensajeOpcionRegistroFacturacionTercero = "No hay cobros asignados por pagar, por favor coordinar con el forwarder.";
-                            }
-                            else
-                            {
-                                model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI;
-                            }
-                        }
-                        else
-                        {
-
-
-                            var resultCobroPagarPadereKeyBl = await _serviceEmbarque.ObtenerCobroPagarPadreKeyBL(codigo);
-
-                            if (resultCobroPagarPadereKeyBl.EmbarquePadreKeyBl != null)
-                            {
-
-                                var resultCobroPagarPadre = await VerificarEmbarqueCobroPagarRegistrado(resultCobroPagarPadereKeyBl.EmbarquePadreKeyBl.EmbarqueKeyBL);
-
-                                if (resultCobroPagarPadre.ExisteCobrosPagarRegistrado == false)
+                                if (model.ExisteCobrosPagarRegistrado == false)
                                 {
                                     model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.MENSAJE;
                                     model.MensajeOpcionRegistroFacturacionTercero = "No hay cobros asignados por pagar, por favor coordinar con el forwarder.";
@@ -196,11 +177,36 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                                 {
                                     model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI;
                                 }
+                            }
+                            else
+                            {
+                                var resultCobroPagarPadereKeyBl = await _serviceEmbarque.ObtenerCobroPagarPadreKeyBL(codigo);
 
+                                if (resultCobroPagarPadereKeyBl.EmbarquePadreKeyBl != null)
+                                {
+
+                                    var resultCobroPagarPadre = await VerificarEmbarqueCobroPagarRegistrado(resultCobroPagarPadereKeyBl.EmbarquePadreKeyBl.EmbarqueKeyBL);
+
+                                    if (resultCobroPagarPadre.ExisteCobrosPagarRegistrado == false)
+                                    {
+                                        model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.MENSAJE;
+                                        model.MensajeOpcionRegistroFacturacionTercero = "No hay cobros asignados por pagar, por favor coordinar con el forwarder.";
+                                    }
+                                    else
+                                    {
+                                        model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI;
+                                    }
+
+
+                                }
 
                             }
 
                         }
+                        else {
+                            model.MostrarOpcionRegistroFacturacionTercero = Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI;
+                        }
+
 
                     }
                     else
