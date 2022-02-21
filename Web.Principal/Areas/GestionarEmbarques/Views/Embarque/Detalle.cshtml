@@ -7,7 +7,7 @@
     var listaAgentes = ViewBag.Agentes as List<ViewModel.Datos.Embarque.AsignarAgente.UsuarioEntidadVM>;
 }
 
-@functions{
+@functions {
     string ParseHito(string strDatos)
     {
         string strEstado = string.Empty;
@@ -17,7 +17,8 @@
 
             return strEstado;
         }
-        else {
+        else
+        {
             strEstado = string.Concat(" - ", strDatos);
         }
 
@@ -380,16 +381,16 @@
                                                     <div class="contenedor-temario small" id="temario">
                                                         @{
                                                             <ul class="lista">
-                                                               <li id="aCreacionBooking"><a href="javascript:void()">Creación Routing Order @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
+                                                                <li id="aCreacionBooking"><a href="javascript:void()">Creación Routing Order @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
                                                                 <li id="aETD"><a href="javascript:void()">ETD @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETD))</a></li>
                                                                 <li id="aTA"><a href="javascript:void()">Transmisión Aduanas @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS))</a></li>
                                                                 <li id="aETA"><a href="javascript:void()">ETA @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETA))</a></li>
-                                                              @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
+                                                                @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
                                                                 {
-                                                               <li id="aICA"><a href="javascript:void()">Ingreso de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
-                                                               <li id="aRCA"><a href="javascript:void()">Retiro de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
+                                                                    <li id="aICA"><a href="javascript:void()">Ingreso de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
+                                                                    <li id="aRCA"><a href="javascript:void()">Retiro de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
                                                                 }
-                                                          </ul>
+                                                            </ul>
                                                         }
                                                     </div>
                                                 </aside>
@@ -397,249 +398,249 @@
                                         </div>
                                     </div>
                                 </div>
-                                </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-                <div class="col-lg-3">
-                    <div class="nav-sticky">
-                        <div class="card card-header-actions">
-                            <div class="card-header">
-                                Acciones
-                                <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
-                            </div>
-                            <div class="card-body" style="padding:0rem;">
-                                <ul class="list-group list-group-flush" id="stickyNav">
-                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="@Url.Action("ObtenerCobros", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
-                                            <div class="d-flex align-items-center">
-                                                <div class="nav-link-icon" style="margin-right:10px">
-                                                    <i class="bi bi-cash-coin">  </i>
-                                                </div>
-                                                Cobros por Embarque
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="@Url.Action("ObtenerTracking", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
-
-
-                                            <div class="d-flex align-items-center">
-                                                <div class="nav-link-icon" style="margin-right:10px">
-                                                    <i class="bi bi-journal">  </i>
-                                                </div>
-                                                Tracking por Embarque
-                                            </div>
-                                        </a>
-                                    </li>
-
-
-                                    @if (Model.SoyAgenteAduanas == false && Model.EstaAsginadoAgenteAduanas.Equals("0") &&
-                                     Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString()))
-                                    {
-
-
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript: void()" onclick="VerificarAsignacionAgenteAduanas('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_asignar">
-
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-check2-square">  </i>
-                                                    </div>
-
-                                                    Asignación de Agente de Aduanas
-                                                </div>
-                                            </a>
-                                        </li>
-
-                                    }
-
-
-                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="javascript:void()" data-bs-toggle="modal"
-                                           data-bs-target="#modal_notificar_arribo" onclick="registrarNotificacionArribo()">
-
-
-                                            <div class="d-flex align-items-center">
-                                                <div class="nav-link-icon" style="margin-right:10px">
-                                                    <i class="bi bi-file-earmark-text">  </i>
-                                                </div>
-                                                Notificaci&oacute;n de Arribo
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                    @if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString()))
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:ValidacionAsignacionCobros('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')">
-
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-ui-checks">  </i>
-                                                    </div>
-                                                    Asignación de Cobros a Pagar
-                                                </div>
-                                            </a>
-                                        </li>
-
-                                    }
-
-                                    @if (Model.MostrarOpcionRegistroFacturacionTercero == Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI)
-                                    {
-
-
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="@Url.Action("RegistroIntruccionFacturaTercero", "Facturacion", new { area = "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, NroBL = Model.EmbarqueDetalle.NROBL })">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-file-earmark-spreadsheet"> </i>
-                                                    </div>
-                                                    Registro de Instrucción de Facturación a Tercero
-                                                </div>
-                                            </a>
-                                        </li>
-
-
-                                    }
-                                    else if (Model.MostrarOpcionRegistroFacturacionTercero == Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.MENSAJE)
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:void()" onclick="MostrarMensajeValidacionOtros('@Model.MensajeOpcionRegistroFacturacionTercero')">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-file-earmark-spreadsheet"> </i>
-                                                    </div>
-                                                    Registro de Instrucción de Facturación a Tercero
-                                                </div>
-                                            </a>
-                                        </li>
-                                    }
-
-                                    @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals("01"))
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:GenerarSolicitudDireccionamiento('@Model.EmbarqueDetalle.KEYBLD', '@Model.EmbarqueDetalle.FLAG_PLAZO_ETA', '@Model.EmbarqueDetalle.FLAG_DIRECCIONAMIENTO_PERMANENTE', '@Model.Servicio')">
-                                                <div class="item-icon" style="font-style:normal!important"> </div>
-
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-box-seam">  </i>
-                                                    </div>
-                                                    Gestión de Direccionamientos
-                                                </div>
-                                            </a>
-                                        </li>
-                                    }
-
-
-                                    @{
-                                        if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())) &&
-                                                         Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("Y") && !Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")
-                                                         )
-                                        {
-                                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
-
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="nav-link-icon" style="margin-right:10px">
-                                                            <i class="bi bi-clipboard-check">  </i>
-                                                        </div>
-
-                                                        Confirmación de Liberación de Carga
-                                                    </div>
-
-
-                                                </a>
-                                            </li>
-                                        }
-                                        else if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())))
-                                        {
-                                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')" data-bs-toggle="modal">
-
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="nav-link-icon" style="margin-right:10px">
-                                                            <i class="bi bi-clipboard-check">  </i>
-                                                        </div>
-
-                                                        Confirmación de Liberación de Carga
-                                                    </div>
-
-
-                                                </a>
-                                            </li>
-                                        }
-                                        else if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString())
-                                              && Model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER") &&
-                                              Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("N") &&
-                                              (Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")))
-                                        {
-
-                                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
-
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="nav-link-icon" style="margin-right:10px">
-                                                            <i class="bi bi-clipboard-check">  </i>
-                                                        </div>
-                                                        Confirmación de Liberación de Carga
-                                                    </div>
-                                                </a>
-                                            </li>
-
-                                        }
-
-                                    }
-
-
-                                    @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_FCL)) // 01 = fcl | 02 = LCL
-                                    {
-                                        if (Model.EmbarqueDetalle.FLAG_LINEA_MEMO.Equals("1"))
-                                        {
-                                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                                <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD', '@Model.Servicio')">
-
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="nav-link-icon" style="margin-right:10px">
-                                                            <i class="bi bi-file-text">  </i>
-                                                        </div>
-                                                        Gestión de Memo
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        }
-                                    }
-
-
-                                    @if (!Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS.ToString()))
-                                    {
-
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="javascript:GestionarSolicitudFacturacion()">
-
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-cart3"></i>
-                                                    </div>
-
-                                                    Solicitud de Facturación
-
-                                                </div>
-
-                                            </a>
-                                        </li>
-                                    }
-
-                                </ul>
-
-                            </div>
-                        </div>
+        <div class="col-lg-3">
+            <div class="nav-sticky">
+                <div class="card card-header-actions">
+                    <div class="card-header">
+                        Acciones
+                        <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
                     </div>
+                    <div class="card-body" style="padding:0rem;">
+                        <ul class="list-group list-group-flush" id="stickyNav">
+                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                <a class="nav-link" href="@Url.Action("ObtenerCobros", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
+                                    <div class="d-flex align-items-center">
+                                        <div class="nav-link-icon" style="margin-right:10px">
+                                            <i class="bi bi-cash-coin">  </i>
+                                        </div>
+                                        Cobros por Embarque
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                <a class="nav-link" href="@Url.Action("ObtenerTracking", "Embarque", new { area = "GestionarEmbarques", id = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })">
 
-                </div>   
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="nav-link-icon" style="margin-right:10px">
+                                            <i class="bi bi-journal">  </i>
+                                        </div>
+                                        Tracking por Embarque
+                                    </div>
+                                </a>
+                            </li>
+
+
+                            @if (Model.SoyAgenteAduanas == false && Model.EstaAsginadoAgenteAduanas.Equals("0") &&
+                            Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString()))
+                            {
+
+
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="javascript: void()" onclick="VerificarAsignacionAgenteAduanas('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_asignar">
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-check2-square">  </i>
+                                            </div>
+
+                                            Asignación de Agente de Aduanas
+                                        </div>
+                                    </a>
+                                </li>
+
+                            }
+
+
+                            <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                <a class="nav-link" href="javascript:void()" data-bs-toggle="modal"
+                                   data-bs-target="#modal_notificar_arribo" onclick="registrarNotificacionArribo()">
+
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="nav-link-icon" style="margin-right:10px">
+                                            <i class="bi bi-file-earmark-text">  </i>
+                                        </div>
+                                        Notificaci&oacute;n de Arribo
+                                    </div>
+                                </a>
+                            </li>
+
+                            @if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString()))
+                            {
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="javascript:ValidacionAsignacionCobros('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')">
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-ui-checks">  </i>
+                                            </div>
+                                            Asignación de Cobros a Pagar
+                                        </div>
+                                    </a>
+                                </li>
+
+                            }
+
+                            @if (Model.MostrarOpcionRegistroFacturacionTercero == Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.SI)
+                            {
+
+
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="@Url.Action("RegistroIntruccionFacturaTercero", "Facturacion", new { area = "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, NroBL = Model.EmbarqueDetalle.NROBL })">
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-file-earmark-spreadsheet"> </i>
+                                            </div>
+                                            Registro de Instrucción de Facturación a Tercero
+                                        </div>
+                                    </a>
+                                </li>
+
+
+                            }
+                            else if (Model.MostrarOpcionRegistroFacturacionTercero == Utilitario.Constante.EmbarqueConstante.EmbarqueOpcionRegFacturacionTercero.MENSAJE)
+                            {
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="javascript:void()" onclick="MostrarMensajeValidacionOtros('@Model.MensajeOpcionRegistroFacturacionTercero')">
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-file-earmark-spreadsheet"> </i>
+                                            </div>
+                                            Registro de Instrucción de Facturación a Tercero
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+
+                            @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals("01"))
+                            {
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="javascript:GenerarSolicitudDireccionamiento('@Model.EmbarqueDetalle.KEYBLD', '@Model.EmbarqueDetalle.FLAG_PLAZO_ETA', '@Model.EmbarqueDetalle.FLAG_DIRECCIONAMIENTO_PERMANENTE', '@Model.Servicio')">
+                                        <div class="item-icon" style="font-style:normal!important"> </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-box-seam">  </i>
+                                            </div>
+                                            Gestión de Direccionamientos
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+
+
+                            @{
+                                if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())) &&
+            Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("Y") && !Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")
+            )
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
+
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
+                                                </div>
+
+                                                Confirmación de Liberación de Carga
+                                            </div>
+
+
+                                        </a>
+                                    </li>
+                                }
+                                else if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())))
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')" data-bs-toggle="modal">
+
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
+                                                </div>
+
+                                                Confirmación de Liberación de Carga
+                                            </div>
+
+
+                                        </a>
+                                    </li>
+                                }
+                                else if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString())
+                                && Model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER") &&
+                                Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("N") &&
+                                (Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")))
+                                {
+
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
+
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
+                                                </div>
+                                                Confirmación de Liberación de Carga
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                }
+
+                            }
+
+
+                            @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_FCL)) // 01 = fcl | 02 = LCL
+                            {
+                                if (Model.EmbarqueDetalle.FLAG_LINEA_MEMO.Equals("1"))
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD', '@Model.Servicio')">
+
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-file-text">  </i>
+                                                </div>
+                                                Gestión de Memo
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+
+                            @if (!Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS.ToString()))
+                            {
+
+                                <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                    <a class="nav-link" href="javascript:GestionarSolicitudFacturacion()">
+
+                                        <div class="d-flex align-items-center">
+                                            <div class="nav-link-icon" style="margin-right:10px">
+                                                <i class="bi bi-cart3"></i>
+                                            </div>
+
+                                            Solicitud de Facturación
+
+                                        </div>
+
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -771,8 +772,6 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="divContentLiberarCarga">
-
-
             </div>
             <div class="modal-footer">
 
@@ -935,7 +934,6 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="outputMensajeCobros" class="modal-body p-2">
-
             </div>
             <div id="direccionamiento_buttons" class="modal-footer">
 
@@ -946,516 +944,439 @@
 </div>
 
 @section Scripts{
-    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
-    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
-    <script>
+<script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+<script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+<script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+<script>
 
-        $(document).ready(function () {
+     $(document).ready(function () {
 
-            $(".loader").fadeOut("slow");
+         $(".loader").fadeOut("slow");
 
-            DataTableAnularAsignacionCobrosPagar();
+         DataTableAnularAsignacionCobrosPagar();
 
-            let strCreacionBoking = "@Model.EmbarqueDetalle.FEC_CREATE_RO";
-            let strETD = "@Model.EmbarqueDetalle.FEC_ETD";
-            let strTA = "@Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS";
-            let strETA = "@Model.EmbarqueDetalle.FEC_ETA";
-            let strICA = "@Model.EmbarqueDetalle.FEC_ING_CARGA";
-            let strRCA = "@Model.EmbarqueDetalle.FEC_RET_CARGA";
+         let strCreacionBoking = "@Model.EmbarqueDetalle.FEC_CREATE_RO";
+         let strETD = "@Model.EmbarqueDetalle.FEC_ETD";
+         let strTA = "@Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS";
+         let strETA = "@Model.EmbarqueDetalle.FEC_ETA";
+         let strICA = "@Model.EmbarqueDetalle.FEC_ING_CARGA";
+         let strRCA = "@Model.EmbarqueDetalle.FEC_RET_CARGA";
 
-            let strCondicion="@Model.EmbarqueDetalle.CONDICION.Trim()";
-            if (strCondicion == "@Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL") {
+         let strCondicion="@Model.EmbarqueDetalle.CONDICION.Trim()";
+         if (strCondicion == "@Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL") {
 
-                if (strRCA != "") {
+             if (strRCA != "") {
 
-                    $("#aRCA").addClass("activo");
+                 $("#aRCA").addClass("activo");
 
-                } else if (strICA != "") {
-                    $("#aICA").addClass("activo");
-                }
-                else if (strETA != "") {
-                    $("#aETA").addClass("activo");
-                }
-                else if (strTA != "") {
-                    $("#aTA").addClass("activo");
-                }
-                
-                else if (strETD != "") {
-                    $("#aETD").addClass("activo");
-                }
-                else if (strCreacionBoking != "") {
-                    $("#aCreacionBooking").addClass("activo");
-                }
+             } else if (strICA != "") {
+                 $("#aICA").addClass("activo");
+             }
+             else if (strETA != "") {
+                 $("#aETA").addClass("activo");
+             }
+             else if (strTA != "") {
+                 $("#aTA").addClass("activo");
+             }
 
-            }
-            else {
-                 if (strETA != "") {
-                    $("#aETA").addClass("activo");
-                }
-                else if (strTA != "") {
-                    $("#aTA").addClass("activo");
-                }
-                
-                else if (strETD != "") {
-                    $("#aETD").addClass("activo");
-                }
-                else if (strCreacionBoking != "") {
-                    $("#aCreacionBooking").addClass("activo");
-                }
+             else if (strETD != "") {
+                 $("#aETD").addClass("activo");
+             }
+             else if (strCreacionBoking != "") {
+                 $("#aCreacionBooking").addClass("activo");
+             }
 
-            }
+         }
+         else {
+              if (strETA != "") {
+                 $("#aETA").addClass("activo");
+             }
+             else if (strTA != "") {
+                 $("#aTA").addClass("activo");
+             }
 
-        });
+             else if (strETD != "") {
+                 $("#aETD").addClass("activo");
+             }
+             else if (strCreacionBoking != "") {
+                 $("#aCreacionBooking").addClass("activo");
+             }
 
-        function DataTableAnularAsignacionCobrosPagar() {
+         }
 
-            try {
+     });
 
-                new simpleDatatables.DataTable("#dtAsignarCobrosPagar", {
-                    searchable: true,
-                    labels: {
-                        "noRows": "No hay información",
-                        perPage: "{select} Registros por página",
-                        "info": "Mostrando {start} a {end} de {rows} Registros",
-                        placeholder: "Filtro rápido...",
-                    },
-                });
+     function DataTableAnularAsignacionCobrosPagar() {
 
-            } catch (erro) {
+         try {
 
-            }
+             new simpleDatatables.DataTable("#dtAsignarCobrosPagar", {
+                 searchable: true,
+                 labels: {
+                     "noRows": "No hay información",
+                     perPage: "{select} Registros por página",
+                     "info": "Mostrando {start} a {end} de {rows} Registros",
+                     placeholder: "Filtro rápido...",
+                 },
+             });
+
+         } catch (erro) {
+
+         }
 
 
+     }
+
+     function DataTableLiberacionCarga() {
+
+         try {
+
+
+
+
+
+             new simpleDatatables.DataTable("#dtLiberacionCarga", {
+                 searchable: true,
+                 labels: {
+                     "noRows": "No hay información",
+                     perPage: "{select} Registros por página",
+                     "info": "Mostrando {start} a {end} de {rows} Registros",
+                     placeholder: "Filtro rápido...",
+                 },
+             });
+         }
+         catch (Erro) {
+
+
+         }
+
+     }
+
+
+     function ConfirmarAnularCobro(IdAsignado, Concepto) {
+         $('#IdAsignado').val(IdAsignado);
+         $("#MensajeConfirmarAnularCobro").html("¿Desea anular el cobro por pagar por concepto de: "+ Concepto +"?");
+         $('#modal_confirmar_anular_cobro').modal('show');
+     }
+
+     function ListarCobrosPorPagar(KeyBLD) {
+         $.ajax({
+             url: '@Url.Action("ListarCobrosPorPagarAsignados", "Embarque",new { area="GestionarEmbarques"})',
+             data: { KeyBLD: KeyBLD},
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'html',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+                 $("#divResultCobrosPorPagarAsignados").html("Procesando...")
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+                 $("#divResultCobrosPorPagarAsignados").html("Error inesperado, por favor volver a intentar mas tarde.");
+             },
+             success: function (response) {
+                 $("#divResultCobrosPorPagarAsignados").html(response);
+
+                 DataTableAnularAsignacionCobrosPagar();
+                // feather.replace();
+             },
+             complete: function (data) {
+                 $(".loader").fadeOut("slow");
+             }
+         });
+     }
+
+     $("#btnAnularCobro").click(function () {
+         var formData = new FormData();
+         var KeyBLD = $('#EmbarqueDetalle_KEYBLD').val();
+         formData.append("Id", $('#IdAsignado').val());
+         $.ajax({
+             type: "POST",
+             url:'@Url.Action("AnularCobroPorPagarAsignado", "Embarque", new { area= "GestionarEmbarques" })',
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false,
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+             },
+             success: function (result) {
+                 if (result != null) {
+                     if (result.codigo == 0) {
+                         $('#modal_confirmar_anular_cobro').modal('hide');
+                         ListarCobrosPorPagar(KeyBLD);
+                     } else {
+                         ShowAlertMensage('MensajeConfirmarAnularCobro', 'warning', '', result.mensaje, 0, null);
+                     }
+                 } else {
+                     ShowAlertMensage('MensajeConfirmarAnularCobro', 'warning', '', 'Error inesperado, por favor volver a intentar mas tarde', 0, null);
+                 }
+
+             },
+             complete: function (data) {
+
+                 $(".loader").fadeOut("slow");
+
+             }
+         });
+
+
+     });
+
+
+     function GestionarMemo(KeyBL, pServicio) {
+
+         $.ajax({
+             type: "GET",
+             url:'@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL + '&servicio=' + pServicio ,
+             contentType: 'application/json; charset=utf-8',
+             dataType: 'json',
+             beforeSend: function () {
+
+                 $(".loader").fadeIn("slow");
+             }
+         })
+         .done(function (result) {
+             if (result.codigo == 0) {
+                 location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio;
+             } else if (result.codigo == -1) {
+
+                 $("#ResultMemo").html(result.mensaje);
+                 $('#modal_gestionar_memo').modal('show');
+                 $("#dialogGestionMamo_Titulo").html(result.titulo);
+
+             } else {
+
+
+                 $('#modal_gestionar_memo').modal('show');
+                 $("#dialogGestionMamo_Titulo").html(result.titulo);
+             }
+
+         })
+         .fail(function (xhr, status, error) {
+             $("#dialogError").modal("show");
+             $("#outputMensajeError").html(error);
+         })
+         .always(function () {
+             $(".loader").fadeOut("slow");
+         });
+     }
+
+     function GestionarSolicitudFacturacion(){
+
+         var keyLb = '@Model.EmbarqueDetalle.KEYBLD';
+         var servicio = '@Model.Servicio';
+
+         debugger;
+         $.ajax({
+             type: "GET",
+             url: "@Url.Action("GestionarSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques"})?keyBl=" + keyLb + "&servicio=" + servicio,
+             contentType: 'application/json; charset=utf-8',
+             dataType: 'json',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             }
+         })
+             .done(function (result) {
+
+             if (result.codigo == 0) {
+                location.href = "@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques"})?keyBl=" + keyLb + "&servicio=" + servicio;
+             } else if (result.codigo > 0) {
+
+                 $("#dialogAlerta").modal("show");
+                 $("#outputMensaje").html(result.mensaje);
+
+             } else {
+
+                 $("#dialogError").modal("show");
+                 $("#outputMensajeError").html(result.mensaje);
+             }
+
+         })
+         .fail(function (xhr, status, error) {
+             $("#dialogError").modal("show");
+             $("#outputMensajeError").html(error);
+         })
+         .always(function () {
+             $(".loader").fadeOut("slow");
+         });
+
+     }
+
+
+     function AsignarAgente(codigo, anio, filtro, servicio) {
+
+         $('#ResultMensaje').html("");
+         var idusuario = $("#ddlAgente option:selected").val();
+         var correo = $("#ddlAgente option:selected").data("correo");
+         var idEntidad = $("#ddlAgente option:selected").data("entidad");
+         var textAgenteSelect = $("#ddlAgente option:selected").text();
+         var formData = new FormData();
+
+         formData.append("codigo", codigo);
+         formData.append("IdUsuarioAsignado", idusuario);
+         formData.append("Correo", correo);
+         formData.append("IdEntidadAsignado", idEntidad);
+         formData.append("servicio", servicio);
+
+         $.ajax({
+             type: "POST",
+             url: "@Url.Action("AsignarAgente", "Embarque", new { area= "GestionarEmbarques" })",
+             data: formData,
+             contentType: false,
+             processData: false,
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+
+                 $(".loader").fadeOut("slow");
+
+             },
+             success: function (result) {
+
+                 if (result != null) {
+                     if (result.codigo == 0) {
+
+                         $('#modal_asignar').modal('hide');
+                         $("#dialogOk").modal("show");
+                         $("#outputMensajeOk").html(result.mensaje);
+
+                     } else {
+                         ShowAlertMensage('ResultMensaje', 'warning', '', result.mensaje, 0, null);
+                     }
+
+                 } else {
+
+                 }
+
+             },
+             complete: function (data) {
+
+
+                 $(".loader").fadeOut("slow");
+             }
+         });
+
+     }
+
+     function CloseModalAsignar() {
+         $('#modal_asignar').modal('hide');
+
+
+
+     }
+
+     $("#btnVolver").click(function () {
+         window.location.href = "@Url.Action("Buscar","Embarque",new { area="GestionarEmbarques"})";
+     });
+
+     $("#btnNotificar").click(function () {
+
+         var formData = new FormData();
+         formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
+
+         $.ajax({
+             type: "POST",
+             url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false
+         })
+             .done(function (msj) {
+
+                 $("#msj").html(msj);
+
+             })
+             .fail(function (xhr, status, error) {
+
+             })
+             .always(function () {
+
+             });
+
+     });
+
+     function CloseModalAsignar() {
+         $('#modal_asignar').modal('hide');
+     }
+
+     $("#btnVolver").click(function () {
+         window.location.href = "@Url.Action("Buscar","Embarque",new { area="GestionarEmbarques"})";
+     });
+
+     function registrarNotificacionArribo() {
+
+         $(".loader").fadeIn("slow");
+
+         var formData = new FormData();
+         formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
+         formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
+         formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
+
+         $.ajax({
+             type: "POST",
+             url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false
+         })
+             .done(function (msj) {
+                 $("#msj").html(msj);
+             })
+             .fail(function (xhr, status, error) {
+
+             })
+             .always(function () {
+                 $(".loader").fadeOut("slow");
+             });
+     }
+
+
+
+    function AceptarExpressRelease() {
+
+
+        if ($("#ckExpressRelease").is(':checked')==false) {
+
+            $("#dialogAlerta").modal("show");
+            $("#outputMensaje").html("Favor de aceptar la condición de Express Release.");
+
+            return;
         }
 
-        function DataTableLiberacionCarga() {
 
-            try {
+         var formData = new FormData();
+         formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
+         formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
 
+         $.ajax({
+             type: "POST",
+             url: "/GestionarEmbarques/Embarque/AceptarExpressRelease",
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false,
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             }
 
+         }).done(function (msj) {
 
+             $("#modal_aceptacion_condicion_emision").modal("hide");
+             $("#dialogOk").modal("show");
+             $("#outputMensajeOk").html(msj);
 
+             }).fail(function (xhr, status, error) {
 
-                new simpleDatatables.DataTable("#dtLiberacionCarga", {
-                    searchable: true,
-                    labels: {
-                        "noRows": "No hay información",
-                        perPage: "{select} Registros por página",
-                        "info": "Mostrando {start} a {end} de {rows} Registros",
-                        placeholder: "Filtro rápido...",
-                    },
-                });
-            }
-            catch (Erro) {
-
-
-            }
-
-        }
-
-
-        function ConfirmarAnularCobro(IdAsignado, Concepto) {
-            $('#IdAsignado').val(IdAsignado);
-            $("#MensajeConfirmarAnularCobro").html("¿Desea anular el cobro por pagar por concepto de: "+ Concepto +"?");
-            $('#modal_confirmar_anular_cobro').modal('show');
-        }
-
-        function ListarCobrosPorPagar(KeyBLD) {
-            $.ajax({
-                url: '@Url.Action("ListarCobrosPorPagarAsignados", "Embarque",new { area="GestionarEmbarques"})',
-                data: { KeyBLD: KeyBLD},
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                    $("#divResultCobrosPorPagarAsignados").html("Procesando...")
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                    $("#divResultCobrosPorPagarAsignados").html("Error inesperado, por favor volver a intentar mas tarde.");
-                },
-                success: function (response) {
-                    $("#divResultCobrosPorPagarAsignados").html(response);
-
-                    DataTableAnularAsignacionCobrosPagar();
-                   // feather.replace();
-                },
-                complete: function (data) {
-                    $(".loader").fadeOut("slow");
-                }
-            });
-        }
-
-        $("#btnAnularCobro").click(function () {
-            var formData = new FormData();
-            var KeyBLD = $('#EmbarqueDetalle_KEYBLD').val();
-            formData.append("Id", $('#IdAsignado').val());
-            $.ajax({
-                type: "POST",
-                url:'@Url.Action("AnularCobroPorPagarAsignado", "Embarque", new { area= "GestionarEmbarques" })',
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                },
-                success: function (result) {
-                    if (result != null) {
-                        if (result.codigo == 0) {
-                            $('#modal_confirmar_anular_cobro').modal('hide');
-                            ListarCobrosPorPagar(KeyBLD);
-                        } else {
-                            ShowAlertMensage('MensajeConfirmarAnularCobro', 'warning', '', result.mensaje, 0, null);
-                        }
-                    } else {
-                        ShowAlertMensage('MensajeConfirmarAnularCobro', 'warning', '', 'Error inesperado, por favor volver a intentar mas tarde', 0, null);
-                    }
-
-                },
-                complete: function (data) {
-
-                    $(".loader").fadeOut("slow");
-
-                }
-            });
-
-
-        });
-
-
-        function GestionarMemo(KeyBL, pServicio) {
-
-            $.ajax({
-                type: "GET",
-                url:'@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL + '&servicio=' + pServicio ,
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                beforeSend: function () {
-
-                    $(".loader").fadeIn("slow");
-                }
-            })
-            .done(function (result) {
-                if (result.codigo == 0) {
-                    location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio ,
-                } else if (result.codigo == -1) {
-
-                    $("#ResultMemo").html(result.mensaje);
-                    $('#modal_gestionar_memo').modal('show');
-                    $("#dialogGestionMamo_Titulo").html(result.titulo);
-
-                } else {
-
-
-                    $('#modal_gestionar_memo').modal('show');
-                    $("#dialogGestionMamo_Titulo").html(result.titulo);
-                }
-
-            })
-            .fail(function (xhr, status, error) {
+                $(".loader").fadeOut("slow");
                 $("#dialogError").modal("show");
-                $("#outputMensajeError").html(error);
-            })
-            .always(function () {
-                $(".loader").fadeOut("slow");
-            });
-        }
-
-        function GestionarSolicitudFacturacion(){
-
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("GestionarSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })" ,
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                beforeSend: function () {
-
-                    $(".loader").fadeIn("slow");
-                }
-            })
-                .done(function (result) {
-
-                if (result.codigo == 0) {
-              location.href = '@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques", keyBl = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
-
-
-                } else if (result.codigo > 0) {
-
-                    $("#dialogAlerta").modal("show");
-                    $("#outputMensaje").html(result.mensaje);
-
-
-                } else {
-
-
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html(result.mensaje);
-
-                }
-
-            })
-            .fail(function (xhr, status, error) {
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html(error);
-            })
-            .always(function () {
-                $(".loader").fadeOut("slow");
-            });
-
-        }
-
-
-        function AsignarAgente(codigo, anio, filtro, servicio) {
-
-            $('#ResultMensaje').html("");
-            var idusuario = $("#ddlAgente option:selected").val();
-            var correo = $("#ddlAgente option:selected").data("correo");
-            var idEntidad = $("#ddlAgente option:selected").data("entidad");
-            var textAgenteSelect = $("#ddlAgente option:selected").text();
-            var formData = new FormData();
-
-            formData.append("codigo", codigo);
-            formData.append("IdUsuarioAsignado", idusuario);
-            formData.append("Correo", correo);
-            formData.append("IdEntidadAsignado", idEntidad);
-            formData.append("servicio", servicio);
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("AsignarAgente", "Embarque", new { area= "GestionarEmbarques" })",
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                    $(".loader").fadeOut("slow");
-
-                },
-                success: function (result) {
-
-                    if (result != null) {
-                        if (result.codigo == 0) {
-
-                            $('#modal_asignar').modal('hide');
-                            $("#dialogOk").modal("show");
-                            $("#outputMensajeOk").html(result.mensaje);
-
-                        } else {
-                            ShowAlertMensage('ResultMensaje', 'warning', '', result.mensaje, 0, null);
-                        }
-
-                    } else {
-
-                    }
-
-                },
-                complete: function (data) {
-
-
-                    $(".loader").fadeOut("slow");
-                }
-            });
-
-        }
-
-        function CloseModalAsignar() {
-            $('#modal_asignar').modal('hide');
-
-
-
-        }
-
-        $("#btnVolver").click(function () {
-            window.location.href = "@Url.Action("Buscar","Embarque",new { area="GestionarEmbarques"})";
-        });
-
-        $("#btnNotificar").click(function () {
-
-            var formData = new FormData();
-            formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
-
-            $.ajax({
-                type: "POST",
-                url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false
-            })
-                .done(function (msj) {
-
-                    $("#msj").html(msj);
-
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-
-                });
-
-        });
-
-        function CloseModalAsignar() {
-            $('#modal_asignar').modal('hide');
-        }
-
-        $("#btnVolver").click(function () {
-            window.location.href = "@Url.Action("Buscar","Embarque",new { area="GestionarEmbarques"})";
-        });
-
-        function registrarNotificacionArribo() {
-
-            $(".loader").fadeIn("slow");
-
-            var formData = new FormData();
-            formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
-            formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
-            formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
-
-            $.ajax({
-                type: "POST",
-                url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false
-            })
-                .done(function (msj) {
-                    $("#msj").html(msj);
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-                    $(".loader").fadeOut("slow");
-                });
-        }
-
-
-
-       function AceptarExpressRelease() {
-
-
-           if ($("#ckExpressRelease").is(':checked')==false) {
-
-               $("#dialogAlerta").modal("show");
-               $("#outputMensaje").html("Favor de aceptar la condición de Express Release.");
-
-               return;
-           }
-
-
-            var formData = new FormData();
-            formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
-            formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
-
-            $.ajax({
-                type: "POST",
-                url: "/GestionarEmbarques/Embarque/AceptarExpressRelease",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                }
-
-            }).done(function (msj) {
-
-                $("#modal_aceptacion_condicion_emision").modal("hide");
-                $("#dialogOk").modal("show");
-                $("#outputMensajeOk").html(msj);
-
-                }).fail(function (xhr, status, error) {
-
-                   $(".loader").fadeOut("slow");
-                   $("#dialogError").modal("show");
-                   $("#outputMensajeError").html(msj.mensaje);
-
-               }).always(function () {
-
-                   $(".loader").fadeOut("slow");
-
-               });
-
-
-        }
-
-
-
-
-        function AceptarParrafo() {
-
-            $(".loader").fadeIn("slow");
-
-            var formData = new FormData();
-            formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
-            formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
-            formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
-
-            $.ajax({
-                type: "POST",
-                url: "/GestionarEmbarques/Embarque/AceptarParrafo",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false
-            })
-                .done(function (msj) {
-                    $('#modal_aceptacion_condicion_emision').modal('hide');
-                    $("#dialogOk").modal("show");
-                    $("#outputMensajeOk").html(msj);
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-                    $(".loader").fadeOut("slow");
-                });
-        }
-
-
-        function VerificarAsignacionAgenteAduanas(keyBl) {
-
-            $("#divContentAsignacionAgenteAduanas").show();
-            $("#btnAsignarAgenteAduanas").show();
-
-            var formData = new FormData();
-            formData.append("KeyBl", keyBl);
-
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("AsignarAgenteVerificar", "Embarque", new { area="GestionarEmbarques"})",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                }
-            }).done(function (msj) {
-
-                if (msj.codigo != 0) {
-                    $("#divContentAsignacionAgenteAduanas").hide();
-                    $("#btnAsignarAgenteAduanas").hide();
-                    ShowAlertMensage('ResultMensaje', 'warning', '', msj.mensaje, 0, null);
-                } else {
-                    $('#ddlAgente option:eq(0)').prop('selected', true)
-                }
-
-            }).fail(function (xhr, status, error) {
-                ShowAlertMensage('ResultMensaje', 'danger', '', msj.mensaje, 0, null);
-                $(".loader").fadeOut("slow");
+                $("#outputMensajeError").html(msj.mensaje);
 
             }).always(function () {
 
@@ -1463,315 +1384,390 @@
 
             });
 
-        }
 
+     }
 
-        function autorizarLiberacion() {
 
 
 
-            if (ValidarLiberacionCarga()) {
+     function AceptarParrafo() {
 
+         $(".loader").fadeIn("slow");
 
-                var formData = $('#frmLiberacionCarga').serialize();
+         var formData = new FormData();
+         formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
+         formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
+         formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
 
+         $.ajax({
+             type: "POST",
+             url: "/GestionarEmbarques/Embarque/AceptarParrafo",
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false
+         })
+             .done(function (msj) {
+                 $('#modal_aceptacion_condicion_emision').modal('hide');
+                 $("#dialogOk").modal("show");
+                 $("#outputMensajeOk").html(msj);
+             })
+             .fail(function (xhr, status, error) {
 
+             })
+             .always(function () {
+                 $(".loader").fadeOut("slow");
+             });
+     }
 
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("AutorizarLiberacion", "Embarque",new { area="GestionarEmbarques"})",
-                    data: formData,
-                    processData: true,
-                    beforeSend: function () {
-                        $(".loader").fadeIn("slow");
-                    }
 
-                }).done(function (msj) {
+     function VerificarAsignacionAgenteAduanas(keyBl) {
 
-                        if (msj.codigo == 0) {
+         $("#divContentAsignacionAgenteAduanas").show();
+         $("#btnAsignarAgenteAduanas").show();
 
-                            $("#modal_autorizar_liberacion_carga").modal("hide");
+         var formData = new FormData();
+         formData.append("KeyBl", keyBl);
 
+         $.ajax({
+             type: "POST",
+             url: "@Url.Action("AsignarAgenteVerificar", "Embarque", new { area="GestionarEmbarques"})",
+             data: formData,
+             dataType: "json",
+             contentType: false,
+             processData: false,
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             }
+         }).done(function (msj) {
 
-                            $("#dialogOk").modal("show");
+             if (msj.codigo != 0) {
+                 $("#divContentAsignacionAgenteAduanas").hide();
+                 $("#btnAsignarAgenteAduanas").hide();
+                 ShowAlertMensage('ResultMensaje', 'warning', '', msj.mensaje, 0, null);
+             } else {
+                 $('#ddlAgente option:eq(0)').prop('selected', true)
+             }
 
-                            $("#outputMensajeOk").html(msj.mensaje);
+         }).fail(function (xhr, status, error) {
+             ShowAlertMensage('ResultMensaje', 'danger', '', msj.mensaje, 0, null);
+             $(".loader").fadeOut("slow");
 
-                           // window.location.reload();
+         }).always(function () {
 
-                        } else {
+             $(".loader").fadeOut("slow");
 
-                            $("#dialogAlerta").modal("show");
-                            $("#outputMensaje").html(msj.mensaje);
+         });
 
-                        }
-                    })
-                    .fail(function (xhr, status, error) {
+     }
 
-                        $(".loader").fadeOut("slow");
-                        $("#dialogError").modal("show");
-                        $("#outputMensajeError").html(msj.mensaje);
 
-                    })
-                    .always(function () {
+     function autorizarLiberacion() {
 
-                        $(".loader").fadeOut("slow");
 
-                    });
 
-            }
+         if (ValidarLiberacionCarga()) {
 
 
+             var formData = $('#frmLiberacionCarga').serialize();
 
-        }
 
 
-        function ValidarLiberacionCarga() {
+             $.ajax({
+                 type: "POST",
+                 url: "@Url.Action("AutorizarLiberacion", "Embarque",new { area="GestionarEmbarques"})",
+                 data: formData,
+                 processData: true,
+                 beforeSend: function () {
+                     $(".loader").fadeIn("slow");
+                 }
 
-            let validado = true;
+             }).done(function (msj) {
 
-            let strMensaje = "";
+                     if (msj.codigo == 0) {
 
-            let blSeleccionarAutorizacion = false;
+                         $("#modal_autorizar_liberacion_carga").modal("hide");
 
-              $(".cssCheckLiberacionCarga").each(function (index) {
 
-                if ($(this).is(':checked')) {
-                    blSeleccionarAutorizacion = true;
-                }
+                         $("#dialogOk").modal("show");
 
-            });
+                         $("#outputMensajeOk").html(msj.mensaje);
 
-              if (blSeleccionarAutorizacion==false) {
-                validado = false;
-                strMensaje = strMensaje + "Debe selecionar un cliente";
+                        // window.location.reload();
 
-                $("#dialogAlerta").modal("show");
-                $("#outputMensaje").html("Debe seleccionar uno o más registros");
-            }
+                     } else {
 
-
-
-            return validado;
-
-
-        }
-
-        function ActualizarForm() {
-
-            window.location.reload();
-
-        }
-
-        function LiberarCarga(keybl) {
-
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("LiberarCarga", "Embarque",new { area="GestionarEmbarques"})",
-                data: { keyBl: keybl },
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                    $("#divContentLiberarCarga").html("Procesando...")
-                },
-            })
-                .done(function (response) {
-
-                    $("#divContentLiberarCarga").html(response);
-
-                    DataTableLiberacionCarga();
-
-                    ActualizarControles();
-
-                })
-                .fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-                    $("#divContentLiberarCarga").html(error)
-                })
-                .always(function () {
-
-                    $(".loader").fadeOut("slow");
-                });
-
-        }
-
-        function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente, pServicio) {
-            $.ajax({
-                url: '@Url.Action("ValidarSolicitudDireccionamiento", "Direccionamiento",new { area="GestionarEmbarques"})',
-                data: { KeyBL: KeyBL, servicio: pServicio},
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                    $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
-                    $("#dialogError").modal("show");
-                },
-                success: function (response) {
-                    $(".loader").fadeOut("slow");
-
-                    if (response.codigo == -1 || response.codigo == 2) { // Ya existe la solicitud
-                        $("#dialogAlerta").modal("show");
-                        $("#outputMensaje").html(response.mensaje);
-                    }
-                    if (response.codigo == 0) {
-                        if (FlagPlazoEta == "1") { // Cumple Plazo
-                            if (FlagDireccionamientoPermanente == "1") {
-                                $("#modal_confirmar_direccionamiento").modal("show");
-                            } else {
-                                IrSolicitudDireccionamiento();
-                            }
-                        } else {
-                            $("#dialogAlerta").modal("show");
-                            $("#outputMensaje").html("Favor considerar que no cumple con el plazo para gestionar direccionamiento por este medio.");
-                        }
-                    }
-                },
-                complete: function (data) {
-
-                }
-            });
-        }
-
-        function IrSolicitudDireccionamiento() {
-            window.location.href = '@Url.Action("Solicitud", "Direccionamiento", new { codigo = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
-        }
-
-        function RegistrarDireccionamientoPermanente(KeyBL, CodigoTaf, RazonSocial) {
-
-
-
-            $.ajax({
-                url: '@Url.Action("RegistrarDireccionamientoPermanente", "Direccionamiento",new { area="GestionarEmbarques"})',
-                data: { KeyBL: KeyBL, CodigoTaf: CodigoTaf, RazonSocial: RazonSocial },
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                    $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
-                    $("#dialogError").modal("show");
-                },
-                success: function (response) {
-
-                    $(".loader").fadeOut("slow");
-                    $("#modal_confirmar_direccionamiento").fadeOut("slow");
-
-                    if (response.codigo == 1)
-                    {
-
-                        $("#dialogOk").modal("show");
-                        $("#outputMensajeOk").html(response.mensaje);
-
-
-                    } else
-                    {
                          $("#dialogAlerta").modal("show");
-                        $("#outputMensaje").html(response.mensaje);
+                         $("#outputMensaje").html(msj.mensaje);
 
+                     }
+                 })
+                 .fail(function (xhr, status, error) {
 
-                    }
+                     $(".loader").fadeOut("slow");
+                     $("#dialogError").modal("show");
+                     $("#outputMensajeError").html(msj.mensaje);
 
-                },
-                complete: function (data) {
+                 })
+                 .always(function () {
 
-                }
-            });
-        }
+                     $(".loader").fadeOut("slow");
 
-        function CloseModalDireccionamientoPermanente() {
-            $("#modal_confirmar_direccionamiento").modal("hide");
-        }
+                 });
 
-
-        function MostrarMensajeValidacionOtros(mensaje) {
-
-            $("#modal_mensaje_validacion_facturacion_tercero").modal("show");
-
-        }
-
-            function ValidacionAsignacionCobros(keyBl) {
-            $.ajax({
-                url: '@Url.Action("ValidacionAsignacionCobros", "Embarque",new { area="GestionarEmbarques"})',
-                data: { KeyBL: keyBl },
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                    $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
-                    $("#dialogError").modal("show");
-                },
-                success: function (response) {
-
-                    if (response.codigo == 1) {
-
-                        $("#modal_mensaje_validacion_cobros_pagar").modal("show");
-                        $("#outputMensajeCobros").html(response.mensaje);
-                    }
-                    if (response.codigo == 0) {
-
-                        window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques",  id= Model.EmbarqueDetalle.KEYBLD, servicio= Model.Servicio })";
-
-                    }
-                },
-                complete: function (data) {
-                    $(".loader").fadeOut("slow");
-                }
-            });
-        }
-
-
-        function LiberarCargaMensaje(keyBl, pServicio) {
-
-            $.ajax({
-                url: '@Url.Action("ValidarLiberacionCarga", "Embarque",new { area="GestionarEmbarques"})',
-                data: { KeyBL: keyBl, servicio: pServicio},
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'json',
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $(".loader").fadeOut("slow");
-                    $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
-                    $("#dialogError").modal("show");
-                },
-                success: function (response) {
-
-                    if (response.codigo == 0) {
-                        $("#modal_mensaje_validacion_confirmar_liberacion_carga").modal("show");
-                        $("#outputMensajeCobros").html(response.mensaje);
-                    } else {
-
-
-                        $("#outputMensajeError").html(response.mensaje);
-                        $("#dialogError").modal("show");
-                    }
-                },
-                complete: function (data) {
-                    $(".loader").fadeOut("slow");
-                }
-            });
+         }
 
 
 
-        }
+     }
 
 
-    </script>
+     function ValidarLiberacionCarga() {
+
+         let validado = true;
+
+         let strMensaje = "";
+
+         let blSeleccionarAutorizacion = false;
+
+           $(".cssCheckLiberacionCarga").each(function (index) {
+
+             if ($(this).is(':checked')) {
+                 blSeleccionarAutorizacion = true;
+             }
+
+         });
+
+           if (blSeleccionarAutorizacion==false) {
+             validado = false;
+             strMensaje = strMensaje + "Debe selecionar un cliente";
+
+             $("#dialogAlerta").modal("show");
+             $("#outputMensaje").html("Debe seleccionar uno o más registros");
+         }
+
+
+
+         return validado;
+
+
+     }
+
+     function ActualizarForm() {
+
+         window.location.reload();
+
+     }
+
+     function LiberarCarga(keybl) {
+
+         $.ajax({
+             type: "GET",
+             url: "@Url.Action("LiberarCarga", "Embarque",new { area="GestionarEmbarques"})",
+             data: { keyBl: keybl },
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'html',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+                 $("#divContentLiberarCarga").html("Procesando...")
+             },
+         })
+             .done(function (response) {
+
+                 $("#divContentLiberarCarga").html(response);
+
+                 DataTableLiberacionCarga();
+
+                 ActualizarControles();
+
+             })
+             .fail(function (xhr, status, error) {
+                 $(".loader").fadeOut("slow");
+                 $("#divContentLiberarCarga").html(error)
+             })
+             .always(function () {
+
+                 $(".loader").fadeOut("slow");
+             });
+
+     }
+
+     function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente, pServicio) {
+         $.ajax({
+             url: '@Url.Action("ValidarSolicitudDireccionamiento", "Direccionamiento",new { area="GestionarEmbarques"})',
+             data: { KeyBL: KeyBL, servicio: pServicio},
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+                 $("#dialogError").modal("show");
+             },
+             success: function (response) {
+                 $(".loader").fadeOut("slow");
+
+                 if (response.codigo == -1 || response.codigo == 2) { // Ya existe la solicitud
+                     $("#dialogAlerta").modal("show");
+                     $("#outputMensaje").html(response.mensaje);
+                 }
+                 if (response.codigo == 0) {
+                     if (FlagPlazoEta == "1") { // Cumple Plazo
+                         if (FlagDireccionamientoPermanente == "1") {
+                             $("#modal_confirmar_direccionamiento").modal("show");
+                         } else {
+                             IrSolicitudDireccionamiento();
+                         }
+                     } else {
+                         $("#dialogAlerta").modal("show");
+                         $("#outputMensaje").html("Favor considerar que no cumple con el plazo para gestionar direccionamiento por este medio.");
+                     }
+                 }
+             },
+             complete: function (data) {
+
+             }
+         });
+     }
+
+     function IrSolicitudDireccionamiento() {
+         window.location.href = '@Url.Action("Solicitud", "Direccionamiento", new { codigo = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
+     }
+
+     function RegistrarDireccionamientoPermanente(KeyBL, CodigoTaf, RazonSocial) {
+
+
+
+         $.ajax({
+             url: '@Url.Action("RegistrarDireccionamientoPermanente", "Direccionamiento",new { area="GestionarEmbarques"})',
+             data: { KeyBL: KeyBL, CodigoTaf: CodigoTaf, RazonSocial: RazonSocial },
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+                 $("#dialogError").modal("show");
+             },
+             success: function (response) {
+
+                 $(".loader").fadeOut("slow");
+                 $("#modal_confirmar_direccionamiento").fadeOut("slow");
+
+                 if (response.codigo == 1)
+                 {
+
+                     $("#dialogOk").modal("show");
+                     $("#outputMensajeOk").html(response.mensaje);
+
+
+                 } else
+                 {
+                      $("#dialogAlerta").modal("show");
+                     $("#outputMensaje").html(response.mensaje);
+
+
+                 }
+
+             },
+             complete: function (data) {
+
+             }
+         });
+     }
+
+     function CloseModalDireccionamientoPermanente() {
+         $("#modal_confirmar_direccionamiento").modal("hide");
+     }
+
+
+     function MostrarMensajeValidacionOtros(mensaje) {
+
+         $("#modal_mensaje_validacion_facturacion_tercero").modal("show");
+
+     }
+
+         function ValidacionAsignacionCobros(keyBl) {
+         $.ajax({
+             url: '@Url.Action("ValidacionAsignacionCobros", "Embarque",new { area="GestionarEmbarques"})',
+             data: { KeyBL: keyBl },
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+                 $("#dialogError").modal("show");
+             },
+             success: function (response) {
+
+                 if (response.codigo == 1) {
+
+                     $("#modal_mensaje_validacion_cobros_pagar").modal("show");
+                     $("#outputMensajeCobros").html(response.mensaje);
+                 }
+                 if (response.codigo == 0) {
+
+                     window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques",  id= Model.EmbarqueDetalle.KEYBLD, servicio= Model.Servicio })";
+
+                 }
+             },
+             complete: function (data) {
+                 $(".loader").fadeOut("slow");
+             }
+         });
+     }
+
+
+     function LiberarCargaMensaje(keyBl, pServicio) {
+
+         $.ajax({
+             url: '@Url.Action("ValidarLiberacionCarga", "Embarque",new { area="GestionarEmbarques"})',
+             data: { KeyBL: keyBl, servicio: pServicio},
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 $(".loader").fadeIn("slow");
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
+                 $(".loader").fadeOut("slow");
+                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+                 $("#dialogError").modal("show");
+             },
+             success: function (response) {
+
+                 if (response.codigo == 0) {
+                     $("#modal_mensaje_validacion_confirmar_liberacion_carga").modal("show");
+                     $("#outputMensajeCobros").html(response.mensaje);
+                 } else {
+
+
+                     $("#outputMensajeError").html(response.mensaje);
+                     $("#dialogError").modal("show");
+                 }
+             },
+             complete: function (data) {
+                 $(".loader").fadeOut("slow");
+             }
+         });
+
+
+
+     }
+
+
+</script>
 
 
 
