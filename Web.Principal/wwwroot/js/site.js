@@ -30,3 +30,13 @@ function CambiarPerfil(IdPerfil) {
     $("#IdPerfilSesion").val(IdPerfil);
     $("#frmCambiarPerfil").submit();
 }
+
+function CambiarEmpresa(CodigoEmpresa) {
+    $("#CodigoEmpresa").val(CodigoEmpresa);
+    $("#frmCambiarEmpresa").submit();
+}
+
+function SeleccionarEmpresa(CodigoEmpresa) {
+    $("#CodigoEmpresa").val(CodigoEmpresa);
+    $("#frmCambiarEmpresa").submit();
+}

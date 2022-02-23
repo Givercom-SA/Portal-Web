@@ -15,13 +15,9 @@ namespace TransMares.Core
         public string Body { get; set; }
         public string Asunto { get; set; }
         public string UrlArchivoAdjunto { get; set; }
-
         public List<string> ListaPara { get; set; }
-
         public List<string> ListaCopiaOculta { get; set; }
         public List<string> ListaArchivos { get; set; }
-
-
         public string EmailSender { get; set; }
         public string EmailSenderContrasenia { get; set; }
         public string EmailSenderHost { get; set; }
@@ -32,14 +28,6 @@ namespace TransMares.Core
         {
             int estatus = 0;
 
-
-            //string emailSender = "admin.sistemas@tpsac.com.pe";
-            //string emailSenderPassword = "Tr4nsm4r3s";
-            //string emailSenderHost = "smtp.outlook.office365.com";
-            //int emailSenderPort = 587;
-            //Boolean emailIsSSL = true;
-
-       
             using (MailMessage _mailmsg = new MailMessage())
             {
 
@@ -129,4 +117,3 @@ namespace TransMares.Core
         }
     }
 }
-

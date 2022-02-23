@@ -114,10 +114,14 @@ namespace Web.Principal.Pages.Account
                 user.Sesion = new ViewModel.Datos.UsuarioRegistro.SesionUsuarioVM();
                 user.Sesion.FechaInicioSesion = DateTime.Now;
                 user.Sesion.CodigoTransGroupEmpresaSeleccionado = Input.Empresa;
-                user.Sesion.RucTransGroupEmpresaSeleccionado = empresaSelect.Ruc;
+                //user.Sesion.RucTransGroupEmpresaSeleccionado = empresaSelect.Ruc;
+                user.Sesion.RucTransGroupEmpresaSeleccionado = "";
                 user.Sesion.RucIngresadoUsuario = Input.Ruc;
-                user.Sesion.NombreTransGroupEmpresaSeleccionado = empresaSelect.Nombres;
-                user.Sesion.ImagenTransGroupEmpresaSeleccionado = empresaSelect.Imagen;
+                //user.Sesion.NombreTransGroupEmpresaSeleccionado = empresaSelect.Nombres;
+                user.Sesion.NombreTransGroupEmpresaSeleccionado = "";
+                //user.Sesion.ImagenTransGroupEmpresaSeleccionado = empresaSelect.Imagen;
+                user.Sesion.ImagenTransGroupEmpresaSeleccionado = "";
+                user.Empresas = listEmpresas;
 
                 if (user.CodigoResultado == 0)
                 {
@@ -147,7 +151,7 @@ namespace Web.Principal.Pages.Account
   
             [Display(Name = "Empresa Transmares Group(*)")]
             [Required(ErrorMessage = "Debe seleccionar una empresa")]
-            [RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccione una empresa")]
+            //[RegularExpression(@"^.{2,}$", ErrorMessage = "Seleccione una empresa")]
             public string Empresa { get; set; }
 
 

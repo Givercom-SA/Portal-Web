@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilitario.Constante;
+using ViewModel.Datos.Acceso;
 
 namespace ViewModel.Datos.UsuarioRegistro
 {
@@ -38,7 +39,8 @@ namespace ViewModel.Datos.UsuarioRegistro
         public bool isCambioClave { get; set; }
         public List<MenuLoginVM> Menus { get; set; }
         public List<PerfilLoginVM> Perfiles { get; set; }
-
+        public ListarTransGroupEmpresaVM Empresas { get; set; }
+        
         public List<MenuLoginVM> MenusUserSecundario { get; set; }
         public SesionUsuarioVM Sesion { get; set; }
 

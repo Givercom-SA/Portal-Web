@@ -134,17 +134,18 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                                                                                                && x.IdPerfil == model.Usuario.Perfiles[i].IdPerfil
                                                                                                    && x.Nombre.Equals(itemMenu[jj])
                                                                                                ).ToList();
-                     
 
-                        menu.IdMenu = resultMenu[0].IdMenu;
+                        if (resultMenu.Count() > 0)
+                        {
+                            menu.IdMenu = resultMenu[0].IdMenu;
 
-                        PerfilAutorizacion perfil = new PerfilAutorizacion();
-                        perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
-                        perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
-                        perfil.Checked = resultMenu[0].Permiso;
+                            PerfilAutorizacion perfil = new PerfilAutorizacion();
+                            perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
+                            perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
+                            perfil.Checked = resultMenu[0].Permiso;
 
-                        menu.Perfiles.Add(perfil);
-
+                            menu.Perfiles.Add(perfil);
+                        }
 
                     }
 
@@ -278,7 +279,10 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             model.Grupos = new List<GruposAutorizacion>();
 
+
+            
             var grupos = model.Usuario.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+
             for (int ii = 0; ii < grupos.Count(); ii++)
             {
 
@@ -303,36 +307,26 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                     for (int i = 0; i < model.Usuario.Perfiles.Count(); i++)
                     {
-
                         var resultMenu = model.Usuario.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
                                                                                                && x.IdPerfil == model.Usuario.Perfiles[i].IdPerfil
                                                                                                    && x.Nombre.Equals(itemMenu[jj])
                                                                                                ).ToList();
+                        if (resultMenu.Count() > 0)
+                        {
+                            menu.IdMenu = resultMenu[0].IdMenu;
+                            PerfilAutorizacion perfil = new PerfilAutorizacion();
+                            perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
+                            perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
+                            perfil.Checked = resultMenu[0].Permiso;
 
-
-                        menu.IdMenu = resultMenu[0].IdMenu;
-
-                        PerfilAutorizacion perfil = new PerfilAutorizacion();
-                        perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
-                        perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
-                        perfil.Checked = resultMenu[0].Permiso;
-
-                        menu.Perfiles.Add(perfil);
-
-
+                            menu.Perfiles.Add(perfil);
+                        }
                     }
 
-
                     grupo.Menus.Add(menu);
-
-
                 }
 
-
-
                 model.Grupos.Add(grupo);
-
-
 
             }
 

@@ -40,7 +40,7 @@
                                     <h3 class="fw-light my-4 letra" align="center">Iniciar Sesión</h3>
 
                                     <form asp-route-returnUrl="@Model.ReturnUrl" method="post" id="frmLogin" >
-                                        <div class="mb-3">
+                                        <div class="mb-3" style="display:none">
                                             <label asp-for="Input.Empresa" class="small mb-1"></label>
                                             <select asp-for="Input.Empresa" id="ddlEmpresa"
                                                     asp-items="Model.Input.ListarEmpresas"

@@ -1,12 +1,16 @@
 ﻿@using ViewModel.Datos.UsuarioRegistro
+@using ViewModel.Datos.Acceso 
 @{
     int IdPerfil = Convert.ToInt32(ViewData["IdPerfil"]);
     string PerfilNombre = ViewData["PerfilNombre"].ToString();
     var RucRazon = ViewData["RucRazonSocial"].ToString();
+
+
+    ListarTransGroupEmpresaVM EmpresasSesion = ViewData["EmpresasSesion"] as ListarTransGroupEmpresaVM;
     List<PerfilLoginVM> PerfilesSesion = ViewData["PerfilesSesion"] as List<PerfilLoginVM>;
     var NombreEmpresaTrans = ViewData["EmpresaTransmaresSelct"].ToString();
     var ImagenEmpresaTransmaresSelct = ViewData["ImagenEmpresaTransmaresSelct"].ToString();
-    
+
 }
 <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white" id="sidenavAccordion">
     <!-- Sidenav Toggle Button-->
@@ -75,34 +79,29 @@
             }
         </li>
 
-        @*<li class="nav-item dropdown no-caret d-none d-md-block me-2">
+        <li class="nav-item dropdown no-caret d-none d-md-block me-2">
             <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="fw-500">Empresa</div>
                 <i class="fas fa-chevron-right dropdown-arrow"></i>
             </a>
+
             <div class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up" aria-labelledby="navbarDropdownDocs">
-                <a class="dropdown-item py-3" href="javascript:void()" target="_blank">
-                    <div class="icon-stack bg-primary-soft text-primary me-4">EWP</div>
-                    <div>
-                        ECU WORLDWIDE PERU S.A.C.
-                    </div>
-                </a>
-                <div class="dropdown-divider m-0"></div>
-                <a class="dropdown-item py-3" href="javascript:void()" target="_blank">
-                    <div class="icon-stack bg-primary-soft text-primary me-4">TLC</div>
-                    <div>
-                        TRANSOCEAN LOGISTICS CORPORATION S.A.C.
-                    </div>
-                </a>
-                <div class="dropdown-divider m-0"></div>
-                <a class="dropdown-item py-3" href="javascript:void()" target="_blank">
-                    <div class="icon-stack bg-primary-soft text-primary me-4">TL</div>
-                    <div>
-                        TRANSLOGISTICS S.A.C.
-                    </div>
-                </a>
+
+                @foreach (var itemEmpresa in EmpresasSesion.Empresa)
+                {
+                    <a class="dropdown-item py-3" href="javascript:CambiarEmpresa('@itemEmpresa.Codigo')" >
+                        <div class="icon-stack bg-primary-soft text-primary me-4"> @itemEmpresa.Codigo</div>
+                        <div>
+                           @itemEmpresa.Nombres
+                        </div>
+                    </a>
+                    <div class="dropdown-divider m-0"></div>
+
+                }
+
             </div>
-        </li>*@
+
+        </li>
 
         <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
             <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownAlerts" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="bell"></i></a>
@@ -181,4 +180,7 @@
 </nav>
 <form id="frmCambiarPerfil" asp-area="GestionarDashboards" asp-controller="inicio" asp-action="CambiarPerfil" method="post">
     <input id="IdPerfilSesion" name="IdPerfil" type="hidden" value="0" />
+</form>
+<form id="frmCambiarEmpresa" asp-area="GestionarDashboards" asp-controller="inicio" asp-action="CambiarEmpresa" method="post">
+    <input id="CodigoEmpresa" name="CodigoEmpresa" type="hidden" value="0" />
 </form>

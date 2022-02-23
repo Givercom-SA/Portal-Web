@@ -134,6 +134,7 @@ namespace Web.Principal.Utils
                         ViewData["RucRazonSocial"] = "";
 
                     ViewData["PerfilesSesion"] = usuario.Perfiles;
+                    ViewData["EmpresasSesion"] = usuario.Empresas;
                     ViewData["EmpresaTransmaresSelct"] = usuario.Sesion.NombreTransGroupEmpresaSeleccionado;
                     ViewData["ImagenEmpresaTransmaresSelct"] = usuario.Sesion.ImagenTransGroupEmpresaSeleccionado;
 

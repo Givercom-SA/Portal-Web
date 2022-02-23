@@ -66,23 +66,7 @@
     </div>
 
 
-    <div class="modal fade" id="modalEmpresaTransmares" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display:none;" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"> Empresa Transmares </h5>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <partial name="_EmpresaTransmares" />
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <partial name="_EmpresaTransmares" />
 
 
     <div class="modal fade" id="modalClientes" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display:none;" aria-hidden="true">
@@ -118,7 +102,7 @@
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
 
     <script src="~/js/scripts.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js?version=1"></script>
 
     <script>
         var userId ="@usuario.idUsuario.ToString()";

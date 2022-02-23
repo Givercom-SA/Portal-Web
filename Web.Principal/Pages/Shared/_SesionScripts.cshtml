@@ -2,7 +2,14 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
  
+
+@{ 
+    var NombreEmpresaTrans = ViewData["EmpresaTransmaresSelct"].ToString();
+}
+
 <script type="text/javascript">
+
+    var nombreEmpresaSeleccionado = "@NombreEmpresaTrans";
 
     $(document).ready(function () {
 
@@ -18,8 +25,6 @@
                 keepAliveButton: 'Seguir conectado',
                 logoutUrl: '@Url.RouteUrl("cerrarsesionasync")',
                 redirUrl: '@Url.RouteUrl("PaginaExpirada")',
-                //warnAfter: 10e3,
-                //redirAfter: 10e3 + 10e3,
                 warnAfter: @(Convert.ToInt32(Configuration.GetSection("Session")["TimeExpired"]) * 1e3 - 65e3),
                 redirAfter: @(Convert.ToInt32(Configuration.GetSection("Session")["TimeExpired"]) * 1e3 - 5e3),
                 countdownBar: true
@@ -28,7 +33,14 @@
 
 
         //$("#modalClientes").modal("show");
+        if (nombreEmpresaSeleccionado=="")
+        { 
+        $("#modalEmpresaTransmares").modal("show");
+        }
+        
+
         //listarClientes();
+
     });
 
         function sessionKeepAlive() {

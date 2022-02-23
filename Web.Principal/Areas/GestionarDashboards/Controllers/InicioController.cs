@@ -91,5 +91,27 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
             return RedirectToAction("Home", "Inicio", new { area = "GestionarDashboards"});
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarEmpresa(string CodigoEmpresa)
+        {
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+            var empresaSelect = resultSesion.Empresas.Empresa.Where(x => x.Codigo == CodigoEmpresa).FirstOrDefault();
+
+            resultSesion.Sesion.CodigoTransGroupEmpresaSeleccionado = empresaSelect.Codigo;
+            resultSesion.Sesion.RucTransGroupEmpresaSeleccionado = empresaSelect.Ruc;
+            resultSesion.Sesion.NombreTransGroupEmpresaSeleccionado = empresaSelect.Nombres;
+            resultSesion.Sesion.ImagenTransGroupEmpresaSeleccionado = empresaSelect.Imagen;
+       
+
+         
+                HttpContext.Session.SetUserContent(resultSesion);
+
+
+                return RedirectToAction("Home", "Inicio", new { area = "GestionarDashboards" });
+
+        }
+
     }
 }
