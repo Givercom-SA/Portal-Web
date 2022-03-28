@@ -71,24 +71,18 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         [HttpPost]
         public async Task<IActionResult> CambiarPerfil(int IdPerfil)
         {
-            var resultSesion = HttpContext.Session.GetUserContent();
+            var actualSesion = HttpContext.Session.GetUserContent();
 
-          
-            ViewModel.Datos.UsuarioRegistro.CambiarPerfilDefectoParameterVM cambiarPerfilDefecetoParameter = new ViewModel.Datos.UsuarioRegistro.CambiarPerfilDefectoParameterVM();
-            cambiarPerfilDefecetoParameter.IdPerfil = IdPerfil;
-            cambiarPerfilDefecetoParameter.IdUsuario= resultSesion.idUsuario;
+            var resultCambioPerfil = await _serviceUsuario.CambiarPerfilDefecto(new ViewModel.Datos.UsuarioRegistro.CambiarPerfilDefectoParameterVM() { IdUsuario = actualSesion.idUsuario, IdPerfil = IdPerfil });
+            var sesionUsuario = await _serviceAcceso.ObtenerUsuarioPorId(actualSesion.idUsuario);
 
-            var result = await _serviceUsuario.CambiarPerfilDefecto(cambiarPerfilDefecetoParameter);
+            actualSesion.MenusUserSecundario = sesionUsuario.MenusUserSecundario;
+            actualSesion.Menus = sesionUsuario.Menus;
 
-            var resultUsuario = await _serviceAcceso.ObtenerUsuarioPorId(resultSesion.idUsuario);
-             resultUsuario.Sesion = resultSesion.Sesion ;
-
-            HttpContext.Session.SetUserContent(resultUsuario);
-
-
-
+            HttpContext.Session.SetUserContent(actualSesion);
             HttpContext.Session.SetSession("IdPerfilSesion", IdPerfil);
-            return RedirectToAction("Home", "Inicio", new { area = "GestionarDashboards"});
+
+            return RedirectToAction("Home", "Inicio", new { area = "GestionarDashboards" });
 
         }
 

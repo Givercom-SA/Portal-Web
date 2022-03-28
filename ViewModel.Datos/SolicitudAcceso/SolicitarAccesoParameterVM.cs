@@ -25,10 +25,11 @@ namespace ViewModel.Datos.SolictudAcceso
         public bool? ProcesoFacturacion { get; set; }
         public bool? TerminoCondicionGeneralContraTCGC { get; set; }
         public string CodigoSunat { get; set; }
-
+        public int IdEntidad { get; set; }
         public bool BrindaAgenciamientoAduanas { get; set; }
         public string ImagenGrupoTrans { get; set; }
-
+        public string TipoRegistro { get; set; }
+        public int IdUsuarioCreaModifica { get; set; }
         public List<TipoEntidadVM> TipoEntidad { get; set; }
         public List<DocumentoVM> Documento { get; set; }
     }

@@ -46,25 +46,26 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _servicioMessage = servicioMessage;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo)
+        public async Task<IActionResult> Solicitud(string codigo, string servicio)
         {
             var listTipoDoc = await _serviceMaestro.ObtenerParametroPorIdPadre(66);
 
             ViewBag.ListTipoDoc = new SelectList(listTipoDoc.ListaParametros, "ValorCodigo", "NombreDescripcion");
             ViewBag.KeyBL = codigo;
+            ViewBag.Servicio = servicio;
 
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GestionarMemo(string KeyBL)
+        public async Task<IActionResult> GestionarMemo(string KeyBL, string servicio)
         {
             ActionResponse ActionResponse = new();
             string mensaje = string.Empty;
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
                 var parameterNofificacion = new NotificacionMemoParameterVM()
                 {
@@ -186,6 +187,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var parameter = new SolicitudMemoParameterVM
             {
                 KeyBL = Request.Form["KeyBL"].ToString(),
+                Servicio = Request.Form["Servicio"].ToString(),
                 IdUsuarioCrea = usuario.idUsuario,
                 Correo = usuario.CorreoUsuario
             };
@@ -202,7 +204,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             parameter.Documentos = listDoc;
             parameter.ImagenEmpresaLogo = usuario.Sesion.ImagenTransGroupEmpresaSeleccionado;
             
-            var embarque = await _serviceEmbarques.ObtenerEmbarque(parameter.KeyBL);
+            var embarque = await _serviceEmbarques.ObtenerEmbarque(parameter.KeyBL,parameter.Servicio);
             parameter.NroEmbarque = embarque.NROBL;
             parameter.CodigoEmpresaServicio =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
 

@@ -61,9 +61,9 @@ namespace ViewModel.Datos.Embarque.SolicitudFacturacion
         
         [CustomValidation(typeof(ValidationMethod), "ValidarImporteTransferencia",ErrorMessage = "Se requiere el importe de transferencia")]
         public double? ImporteTransferencia { get; set; }
-        
-      
 
+
+        public string Servicio { get; set; }
 
         public List<CobroClienteVM> CobrosPendientesCliente { get; set; }
 

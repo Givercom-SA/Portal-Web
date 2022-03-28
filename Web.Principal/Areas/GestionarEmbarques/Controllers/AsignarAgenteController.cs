@@ -189,7 +189,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AprobarRechazar(int Id, string Observacion, string Estado, string KeyBL)
+        public async Task<JsonResult> AprobarRechazar(int Id, string Observacion, string Estado, string KeyBL, string servicio)
         {
             ActionResponse = new ActionResponse();
             string EstadoNombre = string.Empty;
@@ -208,7 +208,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 Observacion = Observacion
             };
 
-            var embarqueDetalle = await _serviceEmbarques.ObtenerEmbarque(KeyBL);
+            var embarqueDetalle = await _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
             if (Estado.Equals("2"))
             {

@@ -15,6 +15,12 @@ namespace Utilitario.Constante
             public static string POSIBLES_CODIGOS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         }
 
+        public static class ModoVisualizacion
+        {
+            public static string ADMINISTRADOR = "ADMIN";
+            public static string ADMIN_INSPECTOR = "ADMIN_INSPECTOR";
+            public static string USUARIO = "USUARIO";
+        }
 
 
     }

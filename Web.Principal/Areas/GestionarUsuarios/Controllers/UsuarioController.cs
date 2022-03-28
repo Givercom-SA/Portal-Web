@@ -1,19 +1,27 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransMares.Core;
+using Utilitario.Constante;
+using ViewModel.Datos.Documento;
 using ViewModel.Datos.Message;
+using ViewModel.Datos.Parametros;
 using ViewModel.Datos.Perfil;
+using ViewModel.Datos.SolictudAcceso;
 using ViewModel.Datos.UsuarioRegistro;
 using Web.Principal.Areas.GestionarUsuarios.Models;
+using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
+using Web.Principal.ServiceExterno;
 using Web.Principal.Utils;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Controllers
@@ -27,7 +35,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         private readonly IConfiguration _configuration;
         private readonly ServicioMaestro _serviceMaestro;
         private readonly ServicioMessage _servicioMessage;
-        
+        private readonly ServicioSolicitud _serviceSolicitud;
+        private readonly ServicioEmbarques _serviceEmbarqueExterno;
+
         private static ILogger _logger = ApplicationLogging.CreateLogger("UsuarioController");
 
         public UsuarioController(
@@ -36,7 +46,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             IMapper mapper,
             IConfiguration configuration,
             ServicioMaestro serviceMaestro,
-             ServicioMessage servicioMessage)
+             ServicioMessage servicioMessage,
+             ServicioSolicitud serviceSolicitud,
+             ServicioEmbarques serviceEmbarqueExterno)
         {
             _serviceAcceso = serviceAcceso;
             _serviceUsuario = serviceUsuario;
@@ -44,6 +56,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             _configuration = configuration;
             _serviceMaestro = serviceMaestro;
             _servicioMessage = servicioMessage;
+            _serviceSolicitud = serviceSolicitud;
+            _serviceEmbarqueExterno = serviceEmbarqueExterno;
         }
 
         [HttpGet]
@@ -264,6 +278,395 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CuentaEntidad()
+        {
+
+            ClienteDetalleModel model = new ClienteDetalleModel();
+            model.Solicitud = new ViewModel.Datos.Solicitud.SolicitudVM();
+
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+            var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
+            model.Entidad = resultEntidad.Cliente;
+            model.Solicitud = await _serviceSolicitud.leerSolicitud(model.Entidad.IdSolicitud);
+
+
+            model.CodigoSolicitud = model.Solicitud.CodigoSolicitud;
+
+
+      
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> SolicitudAcceso()
+        {
+
+            ClienteDetalleModel model = new ClienteDetalleModel();
+            model.Solicitud = new ViewModel.Datos.Solicitud.SolicitudVM();
+
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+            var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
+            model.Entidad = resultEntidad.Cliente;
+            model.Solicitud = await _serviceSolicitud.leerSolicitud(model.Entidad.IdSolicitud);
+
+
+            model.CodigoSolicitud = model.Solicitud.CodigoSolicitud;
+
+
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> SolicitarAccesoActualizar()
+        {
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+
+            var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
+          
+
+        
+            SolicitarAccesoModel model = new SolicitarAccesoModel();
+            var listEntidades = await _serviceMaestro.ObtenerParametroPorIdPadre(1);
+
+
+            if (listEntidades.CodigoResultado == 0)
+            {
+                var resultTipoentidad = listEntidades.ListaParametros;
+                model.ListTipoEntidad2 = new ListTipoEntidadModel();
+                model.ListTipoEntidad2.TiposEntidad = new List<TipoEntidad>();
+
+
+                List<string> listTIpoPerfil = new List<string>();
+                if(resultEntidad.Cliente.AgenteAduana!=null)
+                    listTIpoPerfil.Add(resultEntidad.Cliente.AgenteAduana);
+
+                if (resultEntidad.Cliente.ClienteForwarder != null)
+                    listTIpoPerfil.Add(resultEntidad.Cliente.ClienteForwarder);
+
+                if (resultEntidad.Cliente.ClienteFinal != null)
+                    listTIpoPerfil.Add(resultEntidad.Cliente.ClienteFinal);
+
+                if (resultEntidad.Cliente.ClienteBroker != null)
+                    listTIpoPerfil.Add(resultEntidad.Cliente.ClienteBroker);
+
+                foreach (ParametrosVM item in resultTipoentidad)
+                {
+
+                    
+
+                    var result = listTIpoPerfil.Where(x => x.Equals(item.ValorCodigo)).FirstOrDefault();
+                    if (result == null) result = "";
+
+                    if (result.Trim() == "" )
+                    {
+                        model.ListTipoEntidad2.TiposEntidad.Add(new TipoEntidad()
+                        {
+                            Check = false,
+                            CodTipoEntidad = item.ValorCodigo,
+                            IdParametro = item.IdParametro,
+                            NombreTipoEntidad = item.NombreDescripcion
+                        });
+                    }
+                }
+
+            }
+            else
+                model.MensajeError = model.MensajeError + " " + listEntidades.MensajeResultado;
+
+      
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SolicitarAccesoActualizar(SolicitarAccesoModel Input) {
+
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+            bool blDocumentosValido = true;
+            ActionResponse ActionResponse = new ActionResponse();
+            ActionResponse.ListActionListResponse = new List<ActionErrorResponse>();
+
+            ListDocumentoTipoEntidadParameterVM listarDocumentoTipoEntidadVM = new ListDocumentoTipoEntidadParameterVM();
+            listarDocumentoTipoEntidadVM.BrindaCargaFCL = Input.seBrindaOperacionesCargaFCL;
+            listarDocumentoTipoEntidadVM.AcuerdoSeguridadCadenaSuministro = Input.acuerdoSeguridadCadenaSuministra;
+            listarDocumentoTipoEntidadVM.SeBrindaAgenciamientodeAduanas = Input.seBrinaAgenciaAdeuanas;
+            listarDocumentoTipoEntidadVM.TiposEntidad = new List<ViewModel.Datos.Entidad.TipoEntidadVM>();
+
+            foreach (var item in Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true))
+            {
+                listarDocumentoTipoEntidadVM.TiposEntidad.Add(new ViewModel.Datos.Entidad.TipoEntidadVM() { CodTipoEntidad = item.CodTipoEntidad });
+            }
+
+            var listDocumentosSeleccionados = await _serviceMaestro.ObtenerDocumentoPorTipoEntidad(listarDocumentoTipoEntidadVM);
+
+            var listVerificar = Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true).ToList();
+
+            if (listVerificar == null || listVerificar.Count() <= 0)
+            {
+                ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe seleccionar al menos un tipo de entidad", NombreCampo = "Input.TipoEntidad2" });
+            }
+
+
+
+            if (ModelState.IsValid && (blDocumentosValido) && (listVerificar.Count() > 0))
+            {
+
+
+                var resultValidarentidad = await EntidadPermitoRegistrar(Input);
+                if (resultValidarentidad.Respuesta == false)
+                {
+                    ActionResponse.Codigo = -3;
+                    ActionResponse.Mensaje = "Estimado usuario, no esta registrado en nuestra base de Transmares como:";
+                    ActionResponse.Mensaje += "<br/>";
+                    ActionResponse.Mensaje += string.Join(" ", resultValidarentidad.EntidadRespuestas.Select(e => e.Mensaje));
+                }
+                else
+                {
+
+                    string document = resultSesion.TipoDocumento;
+                    SolicitarAccesoParameterVM solicitarAccesoVM = new SolicitarAccesoParameterVM();
+                    solicitarAccesoVM.TipoDocumento = resultSesion.TipoDocumento;
+                    solicitarAccesoVM.NumeroDocumento = resultSesion.NumeroDocumento;
+                    solicitarAccesoVM.RazonSocial = resultSesion.RazonSocial;
+                    solicitarAccesoVM.RepresentaLegalNombre = resultSesion.NombresUsuario;
+                    solicitarAccesoVM.RepresentaLegalApellidoPaterno = resultSesion.ApellidoPaternousuario;
+                    solicitarAccesoVM.RepresentaLegalMaterno = resultSesion.ApellidoMaternoUsuario;
+                    solicitarAccesoVM.Correo = resultSesion.CorreoUsuario;
+
+
+
+                    solicitarAccesoVM.AcuerdoEndoceElectronico = Input.acuerdoCorrectoUsoEndosesElectronico;
+                    solicitarAccesoVM.BrindaOpeCargaFCL = Input.seBrindaOperacionesCargaFCL;
+                    solicitarAccesoVM.AcuerdoSeguroCadenaSuministro = Input.acuerdoSeguridadCadenaSuministra;
+                    solicitarAccesoVM.DeclaracionJuradaVeracidadInfo = Input.declaracionJUridaVeracidadInformacio;
+                    solicitarAccesoVM.BrindaAgenciamientoAduanas = Input.seBrinaAgenciaAdeuanas;
+
+                    if (Input.ListTipoEntidad2.TiposEntidad.Exists(x => x.CodTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS)))
+                    {
+                        solicitarAccesoVM.CodigoSunat = Input.CodigoSunat;
+                        solicitarAccesoVM.ProcesoFacturacion = Input.HabiliarProcesoFacturacion;
+                        solicitarAccesoVM.TerminoCondicionGeneralContraTCGC = Input.TerminoCondicionesGeneralesContraTCGC;
+                    }
+                    else
+                    {
+                        solicitarAccesoVM.CodigoSunat = null;
+                        solicitarAccesoVM.ProcesoFacturacion = null;
+                        solicitarAccesoVM.TerminoCondicionGeneralContraTCGC = null;
+                    }
+
+
+
+                    solicitarAccesoVM.Documento = new List<ViewModel.Datos.SolictudAcceso.DocumentoVM>();
+
+                    foreach (DocumentoTipoEntidadVM item in listDocumentosSeleccionados.listarDocumentosTipoEntidad)
+                    {
+                        solicitarAccesoVM.Documento.Add(new DocumentoVM() { CodigoDocumento = item.CodigoDocumento });
+                    }
+
+                    solicitarAccesoVM.TipoEntidad = new List<ViewModel.Datos.SolictudAcceso.TipoEntidadVM>();
+
+                    foreach (TipoEntidad item in Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true))
+                    {
+                        solicitarAccesoVM.TipoEntidad.Add(new TipoEntidadVM() { CodigoTipoEntidad = item.CodTipoEntidad });
+                    }
+
+
+                    var jsonSolicitarAcceso = JsonConvert.SerializeObject(solicitarAccesoVM);
+
+                    CodigoGeneradoValidacionParameterVM codigoGeneradoValidacionParameterVM = new CodigoGeneradoValidacionParameterVM();
+                    codigoGeneradoValidacionParameterVM.CodigoTipoDocumento = solicitarAccesoVM.TipoDocumento;
+                    codigoGeneradoValidacionParameterVM.NumeroDocumento = solicitarAccesoVM.NumeroDocumento;
+                    codigoGeneradoValidacionParameterVM.Correo = solicitarAccesoVM.Correo;
+                    codigoGeneradoValidacionParameterVM.Nombres = solicitarAccesoVM.RepresentaLegalNombre;
+
+
+                    solicitarAccesoVM.ImagenGrupoTrans = $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}";
+                    solicitarAccesoVM.TipoRegistro = Utilitario.Constante.SolicitudAccesoConstante.SolicitudAcceso.REGISTRO_SOLICITUD_ACTUALIZADO.ToString();
+                    solicitarAccesoVM.IdUsuarioCreaModifica = resultSesion.idUsuario;
+                    solicitarAccesoVM.IdEntidad =resultSesion.IdEntidad;
+
+                    var listTipoDocumnentoResult = await _serviceAcceso.SolicitarAcceso(solicitarAccesoVM);
+
+                    if (listTipoDocumnentoResult.CodigoResultado == 0)
+                    {
+
+                     
+
+                        ActionResponse.Mensaje = "Estimado cliente, su solicitud fue resgistrado con éxito, por favor volver ainiciar sesión";
+                        ActionResponse.Codigo = 0;
+
+
+
+                    }
+                    else
+                    {
+                        ActionResponse.Mensaje = "Ocurrio un error interno, intentar más tarde por favor.";
+                        ActionResponse.Codigo = -1;
+                    }
+
+                }
+
+            }
+            else
+            {
+
+                var erroresCampos = ModelState.Where(ms => ms.Value.Errors.Any())
+                                      .Select(x => new { x.Key, x.Value.Errors });
+
+                foreach (var erroneousField in erroresCampos)
+                {
+                    var fieldKey = erroneousField.Key;
+                    var fieldErrors = string.Join(" | ", erroneousField.Errors.Select(e => e.ErrorMessage));
+
+                    ActionResponse.ListActionListResponse.Add(new ActionErrorResponse()
+                    {
+                        Mensaje = fieldErrors,
+                        NombreCampo = fieldKey
+                    }); ;
+                }
+
+                ActionResponse.Codigo = -1;
+                ActionResponse.Mensaje = "Por favor ingresar los campos requeridos.";
+
+            }
+
+
+
+            return new JsonResult(ActionResponse);
+        }
+
+        class EntidadTransmaresResponse
+        {
+
+            public string Mensaje { get; set; }
+            public string TipoEntidad { get; set; }
+            public int Respuesta { get; set; }
+
+
+        }
+
+        class EntidadValidar
+        {
+            public List<EntidadTransmaresResponse> EntidadRespuestas { get; set; }
+            public bool Respuesta { get; set; }
+        }
+
+        private async Task<EntidadValidar> EntidadPermitoRegistrar(SolicitarAccesoModel Input)
+        {
+            var resultSesion = HttpContext.Session.GetUserContent();
+
+            EntidadValidar entidadValidar = new EntidadValidar();
+            List<EntidadTransmaresResponse> listResponseService = new List<EntidadTransmaresResponse>();
+
+            bool ExisteAgenteAduanasProcesoFacturacion = false;
+
+            var agenteAduanasSelecciono = Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true && x.CodTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS)).FirstOrDefault();
+
+            if (agenteAduanasSelecciono != null && Input.HabiliarProcesoFacturacion == false)
+            {
+                ExisteAgenteAduanasProcesoFacturacion = true;
+            }
+
+            int resultValidarRegistro = 0;
+
+            if (ExisteAgenteAduanasProcesoFacturacion == false)
+            {
+                // ini validar registro en transmares
+
+
+
+                foreach (var itemTipoEntidad in Input.ListTipoEntidad2.TiposEntidad.Where(x => x.Check == true))
+                {
+
+                    EntidadTransmaresResponse entidadTransmaresResponse = new EntidadTransmaresResponse();
+
+
+                    string codigoTipoEntidad = itemTipoEntidad.CodTipoEntidad;
+
+                    string strTipoEntidadTransmares = "";
+
+                    if (codigoTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS))
+                    {
+                        strTipoEntidadTransmares = EmbarqueConstante.TipoEntidadTransmares.AGENTE_ADUANAS;
+                        entidadTransmaresResponse.TipoEntidad = "Agente de Aduanas";
+                    }
+                    else if (codigoTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.CLIENTE_FINAL))
+                    {
+                        strTipoEntidadTransmares = EmbarqueConstante.TipoEntidadTransmares.CLIENTE_FINAL;
+                        entidadTransmaresResponse.TipoEntidad = "Cliente Final";
+                    }
+                    else if (codigoTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.BROKER))
+                    {
+                        strTipoEntidadTransmares = EmbarqueConstante.TipoEntidadTransmares.BROKET;
+                        entidadTransmaresResponse.TipoEntidad = "Broker";
+                    }
+                    else if (codigoTipoEntidad.Equals(EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER))
+                    {
+                        strTipoEntidadTransmares = EmbarqueConstante.TipoEntidadTransmares.CLIENTE_FORWARDER;
+                        entidadTransmaresResponse.TipoEntidad = "Forwarder";
+                    }
+
+
+                    int intRespuestaServicioTrans = await _serviceEmbarqueExterno.ValidarRegistroEntidad(strTipoEntidadTransmares, resultSesion.NumeroDocumento, resultSesion.CorreoUsuario);
+                    entidadTransmaresResponse.Respuesta = intRespuestaServicioTrans;
+
+                    if (intRespuestaServicioTrans == 0)
+                    {
+                        entidadTransmaresResponse.Mensaje = @$"<li>{ entidadTransmaresResponse.TipoEntidad}</li>";
+
+                        listResponseService.Add(entidadTransmaresResponse);
+                    }
+
+                }
+
+                if (listResponseService.Exists(x => x.Respuesta == 0))
+                {
+                    resultValidarRegistro = 0;
+                }
+                else
+                {
+                    resultValidarRegistro = 1;
+                }
+
+
+
+
+                if (resultValidarRegistro == 0)
+                {
+                    entidadValidar.Respuesta = false;
+
+                }
+                else
+                {
+                    entidadValidar.Respuesta = true;
+
+                }
+
+
+            }
+            else
+            {
+                entidadValidar.Respuesta = true;
+
+            }
+
+            entidadValidar.EntidadRespuestas = listResponseService;
+
+            return entidadValidar;
+
+
+
+
+
+        }
 
         [HttpPost]
         public async Task<JsonResult> ActualizarUsuario(EditarUsuarioInternoModel usuario)

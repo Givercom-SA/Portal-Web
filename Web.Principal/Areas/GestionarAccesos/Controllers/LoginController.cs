@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace Web.Principal.Areas.GestionarAccesos.Controllers
     public class LoginController : BaseController
     {
         private readonly ServicioAcceso _serviceAcceso;
-
+        private static ILogger _logger = ApplicationLogging.CreateLogger("LoginController");
         public LoginController(ServicioAcceso serviceAcceso)
         {
             _serviceAcceso = serviceAcceso;
@@ -63,6 +65,90 @@ namespace Web.Principal.Areas.GestionarAccesos.Controllers
 
         }
 
+
+        [HttpGet]
+        public async Task<JsonResult> CambiarSessionEntidad(int id, string idPerfil)
+        {
+        
+            ActionResponse ActionResponse = new ActionResponse();
+
+            try
+            {
+
+
+                var actualSesion = HttpContext.Session.GetUserContent();
+
+
+
+                var newUserSesion = await _serviceAcceso.ObtenerUsuarioPorId(id);
+
+                newUserSesion.Sesion = actualSesion.Sesion;
+                newUserSesion.Empresas = actualSesion.Empresas;
+                newUserSesion.IdUsuarioInicioSesion = actualSesion.IdUsuarioInicioSesion;
+
+                newUserSesion.ModoAdminSistema = Utilitario.Constante.SeguridadConstante.ModoVisualizacion.ADMIN_INSPECTOR.ToString();
+                newUserSesion.AdminSistema = actualSesion.AdminSistema;
+                newUserSesion.Sesion.RucIngresadoUsuario = newUserSesion.NumeroDocumento;
+
+
+                HttpContext.Session.SetUserContent(newUserSesion);
+
+                HttpContext.Session.SetSession("IdPerfilSesion", idPerfil);
+
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = "Exitosamente";
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "CambiarSessionEntidad");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde";
+            }
+
+            return new JsonResult(ActionResponse);
+        }
+
+
+        [HttpGet]
+        public async Task<JsonResult> CerrarSesionInspector()
+        {
+
+            ActionResponse ActionResponse = new ActionResponse();
+
+            try
+            {
+                var actualSesion = HttpContext.Session.GetUserContent();
+                var newUserSesion = await _serviceAcceso.ObtenerUsuarioPorId(Int32.Parse(actualSesion.IdUsuarioInicioSesion.ToString()));
+
+                newUserSesion.Sesion = actualSesion.Sesion;
+
+                newUserSesion.Empresas = actualSesion.Empresas;
+                newUserSesion.ModoAdminSistema = Utilitario.Constante.SeguridadConstante.ModoVisualizacion.ADMINISTRADOR.ToString();
+                newUserSesion.IdUsuarioInicioSesion = newUserSesion.idUsuario;
+
+                HttpContext.Session.SetUserContent(newUserSesion);
+                HttpContext.Session.SetSession("IdPerfilSesion", newUserSesion.IdPerfil);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = "Exitosamente";
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "CerrarSesionInspector");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar más tarde";
+            }
+
+            return new JsonResult(ActionResponse);
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> CambiarContrasenia(CambiarContraseniaModel model)
         {
@@ -75,7 +161,15 @@ namespace Web.Principal.Areas.GestionarAccesos.Controllers
             {
 
                 CambiarContrasenaParameterVM cambiarContrasenaParameterVM = new CambiarContrasenaParameterVM();
-                cambiarContrasenaParameterVM.IdUsuario = usuario.idUsuario;
+                if (usuario.AdminSistema == 1)
+                {
+                    cambiarContrasenaParameterVM.IdUsuario = Int32.Parse(usuario.IdUsuarioInicioSesion.ToString());
+                }
+                else {
+                    cambiarContrasenaParameterVM.IdUsuario = usuario.idUsuario;
+                }
+                
+
                 cambiarContrasenaParameterVM.ContrasenaActual = new Utilitario.Seguridad.Encrypt().GetSHA256(model.contraseniaActual);
                 cambiarContrasenaParameterVM.ContrasenaNuevo = new Utilitario.Seguridad.Encrypt().GetSHA256(model.contraseniaNueva);
 
@@ -89,8 +183,7 @@ namespace Web.Principal.Areas.GestionarAccesos.Controllers
                     cambiarContrasenaParameterVM.EsUsuarioNuevo =false;
                 }
 
-
-                    var cambiarContrasenaResultVM = await _serviceAcceso.ActualizarContrasena(cambiarContrasenaParameterVM);
+                var cambiarContrasenaResultVM = await _serviceAcceso.ActualizarContrasena(cambiarContrasenaParameterVM);
 
                 ViewBag.mensaje = cambiarContrasenaResultVM.MensajeResultado;
                 ViewBag.codigo = cambiarContrasenaResultVM.CodigoResultado;

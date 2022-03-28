@@ -104,6 +104,7 @@ namespace Web.Principal.Pages.Account
                 MensajeError = MensajeError + " " + listTipoDocumnentoResult.MensajeResultado;
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPost()
         {
             bool blDocumentosValido = true;

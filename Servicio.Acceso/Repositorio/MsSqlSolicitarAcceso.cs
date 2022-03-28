@@ -94,8 +94,10 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@SOLI_TERMIN_CONDICION_GEN_CONTRA", parameter.TerminoCondicionGeneralContraTCGC);
                     queryParameters.Add("@SOLI_CODIGO_SUNAT", parameter.CodigoSunat);
                     queryParameters.Add("@CONTRASENIA", new Utilitario.Seguridad.Encrypt().GetSHA256(strContrasenia) );
-                    
 
+                    queryParameters.Add("@SOLI_TIPO_REGISTRO", parameter.TipoRegistro);
+                    queryParameters.Add("@CODIGO_USUARIO_REGISTRAR", parameter.IdUsuarioCreaModifica);
+                    queryParameters.Add("@IdEntidadActualizar", parameter.IdEntidad);
                     queryParameters.Add("@ListTipoEndida", DtLis,DbType.Object);
                     queryParameters.Add("@ListdDocumentos", dtDocumentos, DbType.Object);
 

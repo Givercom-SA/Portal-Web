@@ -17,6 +17,7 @@ using ViewModel.Datos.Embarque.CobrosPagar;
 using ViewModel.Datos.ListaExpressRelease;
 using ViewModel.Datos.Embarque.SolicitudFacturacion;
 using Service.Common;
+using ViewModel.Datos.Entidad;
 
 namespace Web.Principal.ServiceConsumer
 {
@@ -26,6 +27,7 @@ namespace Web.Principal.ServiceConsumer
         private const string SERVICIO_EMBARQUE = "Embarque/";
         private const string SERVICIO_DIRECCIONAMIENTO = "Direccionamiento/";
         private const string SERVICIO_FACTURACION = "Facturacion/";
+        private const string SERVICIO_ENTIDAD = "Entidad/";
 
         static HttpClient client = new HttpClient();
 
@@ -33,6 +35,26 @@ namespace Web.Principal.ServiceConsumer
         {
             this.URL_BASE = $"{configuration["ConfiguracionServicios:Embarque"]}";
         }
+
+
+
+
+        #region Entidad
+        public async Task<ListarEntidadResultVM> ListarEntidadTipo(ListarEntidadParameterVM parameter)
+        {
+            const string SERVICIO = "entidad-listar-tipo";
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var uri = $"{URL_BASE}{SERVICIO_ENTIDAD}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarEntidadResultVM>();
+
+            return resultado;
+
+        }
+        #endregion
 
         public async Task<ListarUsuarioEntidadResultVM> ListarAgentes(int IdPerfil, int IdUsuarioExcluir)
         {

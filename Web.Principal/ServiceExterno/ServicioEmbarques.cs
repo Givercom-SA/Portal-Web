@@ -18,24 +18,24 @@ namespace Web.Principal.ServiceExterno
     {
         private static ILogger logger = ApplicationLogging.CreateLogger("ServicioEmbarques");
 
-        public async Task<ListaCobrosModel> ObtenerCobros(string val)
+        public async Task<ListaCobrosModel> ObtenerCobros(string val, string servicio)
         {
             ListaCobrosModel listaResult = new ListaCobrosModel();
 
             WebService_TM_PWSoapClient client =
                 new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ObtenerCobrosEmbarqueRequest request = new TM_WS_ObtenerCobrosEmbarqueRequest(pKeybld: val);
+            TM_WS_ObtenerCobrosEmbarque_V2Request request = new TM_WS_ObtenerCobrosEmbarque_V2Request(pKeybld: val, pServicio: servicio);
 
-            TM_WS_ObtenerCobrosEmbarqueResponse response = client.TM_WS_ObtenerCobrosEmbarque(request);
+            TM_WS_ObtenerCobrosEmbarque_V2Response response = await client.TM_WS_ObtenerCobrosEmbarque_V2Async(request);
 
             await client.CloseAsync();
 
             listaResult.listaCobros = new List<EmbarqueCobrosModel>();
 
-            if (!response.TM_WS_ObtenerCobrosEmbarqueResult.Nodes[1].IsEmpty)
+            if (!response.TM_WS_ObtenerCobrosEmbarque_V2Result.Nodes[1].IsEmpty)
             {
-                foreach (var item in response.TM_WS_ObtenerCobrosEmbarqueResult.Nodes[1].Element("NewDataSet").Elements("Table"))
+                foreach (var item in response.TM_WS_ObtenerCobrosEmbarque_V2Result.Nodes[1].Element("NewDataSet").Elements("Table"))
                 {
                     listaResult.listaCobros.Add(
                         new EmbarqueCobrosModel
@@ -239,30 +239,32 @@ namespace Web.Principal.ServiceExterno
         }
 
 
-        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad)
+        public async Task<ListaEmbarqueModel> ListarEmbarques(string _pEmpresa, short _pAnio, short _pTipoFiltro, string _pFiltro, string pTipoEntidad, string _pRucEntidad, string _pServicio, string _pOrigen)
         {
             ListaEmbarqueModel listaResult = new ListaEmbarqueModel();
 
             WebService_TM_PWSoapClient client =
                 new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ListarEmbarquesRequest request = new TM_WS_ListarEmbarquesRequest(
+            TM_WS_ListarEmbarques_V2Request request = new TM_WS_ListarEmbarques_V2Request(
                 pEmpresa: _pEmpresa,
                 pAnio: _pAnio,
                 pTipoFiltro: _pTipoFiltro,
                 pFiltro: _pFiltro,
                 pTipoEntidad: pTipoEntidad,
-                pRuc_Entidad: _pRucEntidad);
+                pRuc_Entidad: _pRucEntidad,
+                pServicio: _pServicio,
+                pOrigen: _pOrigen);
 
-            TM_WS_ListarEmbarquesResponse response = await client.TM_WS_ListarEmbarquesAsync(request);
+            TM_WS_ListarEmbarques_V2Response response = await client.TM_WS_ListarEmbarques_V2Async(request);
 
             await client.CloseAsync();
 
             listaResult.listaEmbarques = new List<EmbarqueModel>();
 
-            if (!response.TM_WS_ListarEmbarquesResult.Nodes[1].IsEmpty)
+            if (!response.TM_WS_ListarEmbarques_V2Result.Nodes[1].IsEmpty)
             {
-                foreach (var item in response.TM_WS_ListarEmbarquesResult.Nodes[1].Element("NewDataSet").Elements("Table"))
+                foreach (var item in response.TM_WS_ListarEmbarques_V2Result.Nodes[1].Element("NewDataSet").Elements("Table"))
                 {
                     listaResult.listaEmbarques.Add(
                         new EmbarqueModel
@@ -291,77 +293,94 @@ namespace Web.Principal.ServiceExterno
             return listaResult;
         }
 
-        public async Task<EmbarqueModel> ObtenerEmbarque(string pKeybld)
+        public async Task<EmbarqueModel> ObtenerEmbarque(string pKeybld, string pServicio)
         {
             EmbarqueModel embarque = new EmbarqueModel();
 
-            WebService_TM_PWSoapClient client =
-                new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-            TM_WS_ObtenerInformacionEmbarqueRequest request = new TM_WS_ObtenerInformacionEmbarqueRequest(pKeybld);
-
-            TM_WS_ObtenerInformacionEmbarqueResponse response = client.TM_WS_ObtenerInformacionEmbarque(request);
-
-            await client.CloseAsync();
-
-            if (!response.TM_WS_ObtenerInformacionEmbarqueResult.Nodes[1].IsEmpty)
+            try
             {
-                var item = response.TM_WS_ObtenerInformacionEmbarqueResult.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
 
-                embarque.KEYBLD = item.Element("KEYBLD").Value;
-                embarque.NROOT = item.Element("NROOT").Value;
-                embarque.NROBL = item.Element("NROBL").Value;
-                embarque.NRORO = item.Element("NRORO").Value;
-                embarque.EMPRESA = item.Element("EMPRESA").Value;
-                embarque.ORIGEN = item.Element("ORIGEN").Value;
-                embarque.CONDICION = item.Element("CONDICION").Value;
-                embarque.DES_CONDICION = item.Element("DES_CONDICION").Value;
-                embarque.POL = item.Element("POL").Value;
-                embarque.POD = item.Element("POD").Value;
-                embarque.ETAPOD = item.Element("ETAPOD").Value;
-                embarque.EQUIPAMIENTO = item.Element("EQUIPAMIENTO").Value;
-                embarque.MANIFIESTO = item.Element("MANIFIESTO").Value;
-                embarque.COD_LINEA = item.Element("COD_LINEA").Value;
-                embarque.DES_LINEA = item.Element("DES_LINEA").Value;
-                embarque.COD_TIPO_CONSIGNATARIO = item.Element("COD_TIPO_CONSIGNATARIO").Value;
-                embarque.CONSIGNATARIO = item.Element("CONSIGNATARIO").Value;
-                embarque.COD_INSTRUCCION = item.Element("COD_INSTRUCCION").Value;
-                embarque.DES_INSTRUCCION = item.Element("DES_INSTRUCCION").Value;
-                embarque.FLAG_LINEA_MEMO = item.Element("FLAG_LINEA_MEMO").Value;
-                embarque.FLAG_MEMO_VIGENTE = item.Element("FLAG_MEMO_VIGENTE").Value;
-                embarque.FLAG_COBROS_FACTURADOS = item.Element("FLAG_COBROS_FACTURADOS").Value;
-                embarque.FLAG_PLAZO_ETA = item.Element("FLAG_PLAZO_ETA").Value;
-                embarque.FLAG_CARGA_PELIGROSA = item.Element("FLAG_CARGA_PELIGROSA").Value;
-                embarque.FLAG_LOI = item.Element("FLAG_LOI").Value;
-                embarque.VENCIMIENTO_PLAZO = item.Element("VENCIMIENTO_PLAZO").Value;
-                embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE").Value;
-                embarque.CODIGO_TAF_DEPOSITO_PERMANENTE = item.Element("CODIGO_TAF_DEPOSITO_PERMANENTE").Value;
-                embarque.RAZON_SOCIAL_DEPOSITO_PERMANENTE = item.Element("RAZON_SOCIAL_DEPOSITO_PERMANENTE").Value;
-                embarque.ALMACEN = item.Element("ALMACEN").Value;
-                embarque.CANTIDAD_CNT = item.Element("CANTIDAD_CNT").Value;
-                embarque.NAVEVIAJE = item.Element("NAVEVIAJE").Value;
 
-                embarque.OPERADOR_MAIL = item.Element("OPERADOR_MAIL").Value;
-                embarque.FLAG_DESGLOSE = item.Element("BL_DESGLOSA").Value;
-                embarque.CANTIDAD_DESGLOSE = item.Element("CANT_DESGLOSES").Value;
+                WebService_TM_PWSoapClient client =
+                    new WebService_TM_PWSoapClient(WebService_TM_PWSoapClient.EndpointConfiguration.WebService_TM_PWSoap);
 
-                embarque.FLAG_CONFIRMACION_AA = item.Element("FLAG_CONFIRMACION_AA").Value;
-                embarque.FLAG_PLAZO_TERMINO_DESCARGA = item.Element("FLAG_PLAZO_TERMINO_DESCARGA").Value;
-                embarque.FLAG_EXONERADO_COBRO_GARANTIA = item.Element("FLAG_EXONERADO_COBRO_GARANTIA").Value;
-                embarque.PLAZO_TERMINO_DESCARGA = item.Element("PLAZO_TERMINO_DESCARGA").Value;
-                embarque.TIPO_PADRE = item.Element("TIPO_PADRE") == null ? "" : item.Element("TIPO_PADRE").Value;
-                embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE_BL = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL") == null ? "" : item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL").Value;
-                embarque.FINANZAS_MAIL = item.Element("FINANZAS_MAIL") == null ? "" : item.Element("FINANZAS_MAIL").Value;
+                TM_WS_ObtenerInformacionEmbarque_V2Request request = new TM_WS_ObtenerInformacionEmbarque_V2Request(pKeybld, pServicio);
 
-                embarque.FEC_CREATE_RO = item.Element("FEC_CREATE_RO") == null ? "" : item.Element("FEC_CREATE_RO").Value;
-                embarque.FEC_ETD = item.Element("FEC_ETD") == null ? "" : item.Element("FEC_ETD").Value;
-                embarque.FEC_ETA = item.Element("FEC_ETA") == null ? "" : item.Element("FEC_ETA").Value;
-                embarque.FEC_TRANSMISION_ADUANAS = item.Element("FEC_TRANSMISION_ADUANAS") == null ? "" : item.Element("FEC_TRANSMISION_ADUANAS").Value;
-                embarque.FEC_ING_CARGA = item.Element("FEC_ING_CARGA") == null ? "" : item.Element("FEC_ING_CARGA").Value;
-                embarque.FEC_RET_CARGA = item.Element("FEC_RET_CARGA") == null ? "" : item.Element("FEC_RET_CARGA").Value;
 
+
+                TM_WS_ObtenerInformacionEmbarque_V2Response response = await client.TM_WS_ObtenerInformacionEmbarque_V2Async(request);
+
+                await client.CloseAsync();
+
+                if (!response.TM_WS_ObtenerInformacionEmbarque_V2Result.Nodes[1].IsEmpty)
+                {
+                    var item = response.TM_WS_ObtenerInformacionEmbarque_V2Result.Nodes[1].Element("NewDataSet").Elements("Table").FirstOrDefault();
+
+                    embarque.KEYBLD = item.Element("KEYBLD") == null ? "" : item.Element("KEYBLD").Value;
+                    embarque.NROOT = item.Element("NROOT") == null ? "" : item.Element("NROOT").Value;
+                    embarque.NROBL = item.Element("NROBL") == null ? "" : item.Element("NROBL").Value;
+                    embarque.NRORO = item.Element("NRORO") == null ? "" : item.Element("NRORO").Value;
+                    embarque.EMPRESA = item.Element("EMPRESA") == null ? "" : item.Element("EMPRESA").Value;
+                    embarque.ORIGEN = item.Element("ORIGEN") == null ? "" : item.Element("ORIGEN").Value;
+                    embarque.CONDICION = item.Element("CONDICION") == null ? "" : item.Element("CONDICION").Value;
+                    embarque.DES_CONDICION = item.Element("DES_CONDICION") == null ? "" : item.Element("DES_CONDICION").Value;
+                    embarque.POL = item.Element("POL") == null ? "" : item.Element("POL").Value;
+                    embarque.POD = item.Element("POD") == null ? "" : item.Element("POD").Value;
+                    embarque.ETAPOD = item.Element("ETAPOD") == null ? "" : item.Element("ETAPOD").Value;
+                    embarque.EQUIPAMIENTO = item.Element("EQUIPAMIENTO") == null ? "" : item.Element("EQUIPAMIENTO").Value;
+                    embarque.MANIFIESTO = item.Element("MANIFIESTO") == null ? "" : item.Element("MANIFIESTO").Value;
+                    embarque.COD_LINEA = item.Element("COD_LINEA") == null ? "" : item.Element("COD_LINEA").Value;
+                    embarque.DES_LINEA = item.Element("DES_LINEA") == null ? "" : item.Element("DES_LINEA").Value;
+                    embarque.COD_TIPO_CONSIGNATARIO = item.Element("COD_TIPO_CONSIGNATARIO") == null ? "" : item.Element("COD_TIPO_CONSIGNATARIO").Value;
+                    embarque.CONSIGNATARIO = item.Element("CONSIGNATARIO") == null ? "" : item.Element("CONSIGNATARIO").Value;
+                    embarque.COD_INSTRUCCION = item.Element("COD_INSTRUCCION") == null ? "" : item.Element("COD_INSTRUCCION").Value;
+                    embarque.DES_INSTRUCCION = item.Element("DES_INSTRUCCION") == null ? "" : item.Element("DES_INSTRUCCION").Value;
+                    embarque.FLAG_LINEA_MEMO = item.Element("FLAG_LINEA_MEMO") == null ? "" : item.Element("FLAG_LINEA_MEMO").Value;
+                    embarque.FLAG_MEMO_VIGENTE = item.Element("FLAG_MEMO_VIGENTE") == null ? "" : item.Element("FLAG_MEMO_VIGENTE").Value;
+                    embarque.FLAG_COBROS_FACTURADOS = item.Element("FLAG_COBROS_FACTURADOS") == null ? "" : item.Element("FLAG_COBROS_FACTURADOS").Value;
+                    embarque.FLAG_PLAZO_ETA = item.Element("FLAG_PLAZO_ETA") == null ? "" : item.Element("FLAG_PLAZO_ETA").Value;
+                    embarque.FLAG_CARGA_PELIGROSA = item.Element("FLAG_CARGA_PELIGROSA") == null ? "" : item.Element("FLAG_CARGA_PELIGROSA").Value;
+                    embarque.FLAG_LOI = item.Element("FLAG_LOI") == null ? "" : item.Element("FLAG_LOI").Value;
+                    embarque.VENCIMIENTO_PLAZO = item.Element("VENCIMIENTO_PLAZO") == null ? "" : item.Element("VENCIMIENTO_PLAZO").Value;
+                    embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE") == null ? "" : item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE").Value;
+                    embarque.CODIGO_TAF_DEPOSITO_PERMANENTE = item.Element("CODIGO_TAF_DEPOSITO_PERMANENTE") == null ? "" : item.Element("CODIGO_TAF_DEPOSITO_PERMANENTE").Value;
+                    embarque.RAZON_SOCIAL_DEPOSITO_PERMANENTE = item.Element("RAZON_SOCIAL_DEPOSITO_PERMANENTE") == null ? "" : item.Element("RAZON_SOCIAL_DEPOSITO_PERMANENTE").Value;
+                    embarque.ALMACEN = item.Element("ALMACEN") == null ? "" : item.Element("ALMACEN").Value;
+                    embarque.CANTIDAD_CNT = item.Element("CANTIDAD_CNT") == null ? "" : item.Element("CANTIDAD_CNT").Value;
+                    embarque.NAVEVIAJE = item.Element("NAVEVIAJE") == null ? "" : item.Element("NAVEVIAJE").Value;
+
+                    embarque.OPERADOR_MAIL = item.Element("OPERADOR_MAIL") == null ? "" : item.Element("OPERADOR_MAIL").Value;
+                    embarque.FLAG_DESGLOSE = item.Element("BL_DESGLOSA") == null ? "" : item.Element("BL_DESGLOSA").Value;
+                    embarque.CANTIDAD_DESGLOSE = item.Element("CANT_DESGLOSES") == null ? "" : item.Element("CANT_DESGLOSES").Value;
+
+                    embarque.FLAG_CONFIRMACION_AA = item.Element("FLAG_CONFIRMACION_AA") == null ? "" : item.Element("FLAG_CONFIRMACION_AA").Value;
+                    embarque.FLAG_PLAZO_TERMINO_DESCARGA = item.Element("FLAG_PLAZO_TERMINO_DESCARGA") == null ? "" : item.Element("FLAG_PLAZO_TERMINO_DESCARGA").Value;
+                    embarque.FLAG_EXONERADO_COBRO_GARANTIA = item.Element("FLAG_EXONERADO_COBRO_GARANTIA") == null ? "" : item.Element("FLAG_EXONERADO_COBRO_GARANTIA").Value;
+                    embarque.PLAZO_TERMINO_DESCARGA = item.Element("PLAZO_TERMINO_DESCARGA") == null ? "" : item.Element("PLAZO_TERMINO_DESCARGA").Value;
+                    embarque.TIPO_PADRE = item.Element("TIPO_PADRE") == null ? "" : item.Element("TIPO_PADRE").Value;
+                    embarque.FLAG_DIRECCIONAMIENTO_PERMANENTE_BL = item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL") == null ? "" : item.Element("FLAG_DIRECCIONAMIENTO_PERMANENTE_BL").Value;
+                    embarque.FINANZAS_MAIL = item.Element("FINANZAS_MAIL") == null ? "" : item.Element("FINANZAS_MAIL").Value;
+
+                    embarque.FEC_CREATE_RO = item.Element("FEC_CREATE_RO") == null ? "" : item.Element("FEC_CREATE_RO").Value;
+                    embarque.FEC_ETD = item.Element("FEC_ETD") == null ? "" : item.Element("FEC_ETD").Value;
+                    embarque.FEC_ETA = item.Element("FEC_ETA") == null ? "" : item.Element("FEC_ETA").Value;
+                    embarque.FEC_TRANSMISION_ADUANAS = item.Element("FEC_TRANSMISION_ADUANAS") == null ? "" : item.Element("FEC_TRANSMISION_ADUANAS").Value;
+                    embarque.FEC_ING_CARGA = item.Element("FEC_ING_CARGA") == null ? "" : item.Element("FEC_ING_CARGA").Value;
+                    embarque.FEC_RET_CARGA = item.Element("FEC_RET_CARGA") == null ? "" : item.Element("FEC_RET_CARGA").Value;
+
+
+                }
 
             }
+            catch (Exception err) {
+
+
+                logger.LogError(err, "ObtenerEmbarque");
+          
+
+            }
+
 
 
             return embarque;

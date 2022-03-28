@@ -20,7 +20,8 @@ using Servicio.Embarque.Models.CobrosPagar;
 using ViewModel.Datos.ListaExpressRelease;
 using Servicio.Embarque.Models.SolicitudFacturacion;
 using ViewModel.Datos.Embarque.SolicitudFacturacion;
-
+using ViewModel.Datos.Entidad;
+using Servicio.Embarque.Models.Entidad;
 
 namespace Servicio.Embarque.Profiles
 {
@@ -49,6 +50,14 @@ namespace Servicio.Embarque.Profiles
             CreateMap<AsignarAgenteCrearParameter, AsignarAgenteCrearParameterVM>();
             CreateMap<AsignarAgenteEstadoParameter, AsignarAgenteEstadoParameterVM>();
             CreateMap<AsignarAgenteListarParameter, AsignarAgenteListarParameterVM>();
+            
+            CreateMap<ListarEntidadParameterVM, ListarEntidadParameter>();
+
+            CreateMap<ListarEntidadResult, ListarEntidadResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+           .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
+           .ForMember(s => s.Entidades, o => o.MapFrom(s => s.Entidades));
+            CreateMap<EntidadTipo, EntidadTipoVM>();
 
             CreateMap<ListarSolicitudesMemoParameterVM, ListarSolicitudesMemoParameter>();
 

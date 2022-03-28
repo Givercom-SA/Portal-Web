@@ -175,14 +175,15 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet()]
-        public async Task<IActionResult> SolicitudFacturacion(string keyBl) { 
+        public async Task<IActionResult> SolicitudFacturacion(string keyBl, string servicio) { 
         
             SolicitarFacturacionParameterVM model = new SolicitarFacturacionParameterVM();
-            var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(keyBl);
+            var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(keyBl, servicio);
             model.CobrosPendientesCliente = new List<CobroClienteVM>();
             var cobrosPendientesFacturar = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(keyBl, "1");
             model.KEYBLD = keyBl;
             model.NroBl = embarqueSeleccionado.NROBL;
+            model.Servicio = servicio;
          
             var listTipoDocumnentoResult = await _servicMaestro.ObtenerParametroPorIdPadre(38);
             if (listTipoDocumnentoResult.CodigoResultado == 0)
@@ -395,7 +396,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GestionarSolicitudFacturacion(string KeyBL)
+        public async Task<IActionResult> GestionarSolicitudFacturacion(string KeyBL, string servicio)
         {
             ActionResponse ActionResponse = new();            
             ActionResponse.Codigo = 0;
@@ -403,7 +404,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL);
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
 
                 var listSolicitudFacturacionRegistrado = await _serviceEmbarque.ListarSolicitudFacturacionPorKeyBl(KeyBL);
 
@@ -616,7 +617,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 {
                     if (model.CobrosPendientesCliente.Count() > 0)
                     {
-                        var embarque = await _serviceEmbarques.ObtenerEmbarque(model.KEYBLD);
+                        var embarque = await _serviceEmbarques.ObtenerEmbarque(model.KEYBLD, model.Servicio);
                         model.IdEntidadSolicita = usuario.IdEntidad;
                         model.IdUsuarioSolicita = usuario.idUsuario;
                         model.CodigoTipoEntidad = usuario.TipoEntidad;

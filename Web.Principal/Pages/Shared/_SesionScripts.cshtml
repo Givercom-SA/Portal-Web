@@ -34,10 +34,10 @@
 
         //$("#modalClientes").modal("show");
         if (nombreEmpresaSeleccionado=="")
-        { 
+        {
         $("#modalEmpresaTransmares").modal("show");
         }
-        
+
 
         //listarClientes();
 
@@ -68,7 +68,140 @@
         }
 
     }
-    
+
+
+    function ListarEntidadTipo() {
+
+         $.ajax({
+             type: "GET",
+             url: "@Url.Action("ListarEntidadTipo", "Entidad",new { area="GestionarEmbarques"})",
+             data: null,
+             async: true,
+             contentType: 'application/html; charset=utf-8',
+             type: 'GET',
+             dataType: 'html',
+             beforeSend: function () {
+                 $("#btnSuperBarListarEntidadTipo").prop("disabled", true);
+                 $("#spinnerSuperBarListarEntidadTipo").show();
+
+             },
+         })
+             .done(function (response) {
+
+                     $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
+                 $("#spinnerSuperBarListarEntidadTipo").hide();
+
+                 $("#modelEntidades").modal("show");
+                 $("#divContentEnitdad").html(response);
+
+                 ListarEntidadTipoDataTable();
+
+
+             })
+             .fail(function (xhr, status, error) {
+                 $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
+                 $("#spinnerSuperBarListarEntidadTipo").hide();
+
+                 alert(error);
+
+             })
+             .always(function () {
+
+
+             });
+
+     }
+
+    function ListarEntidadTipoDataTable() {
+
+        try {
+
+
+            new simpleDatatables.DataTable("#dtListarEntidadTipo", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+        }
+        catch (Erro) {
+
+
+        }
+
+    }
+
+    function SeleccionarEntidad(IdEntidad, IdPerfil, Contador) {
+
+        
+
+        $.ajax({
+
+             url: '@Url.Action("CambiarSessionEntidad", "Login",new { area="GestionarAccesos"})',
+             data: { id: IdEntidad, idPerfil: IdPerfil},
+            contentType: 'json',
+            async: true,
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 
+                 $("#spinnerListaEntidadSeleccionar_" + Contador).show();
+              
+
+             },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $("#spinnerListaEntidadSeleccionar_" + Contador).hide();
+                alert("Ocurrio un errore inesperado");
+
+             },
+             success: function (response) {
+                 window.location.href = "@Url.Action("Home", "Inicio", new { area= "GestionarDashboards" })";
+
+             },
+             complete: function (data) {
+
+                 $("#spinnerListaEntidadSeleccionar_" + Contador).hide();
+             }
+         });
+
+    }
+    function CerrarSesionModo() {
+
+        $.ajax({
+
+            url: '@Url.Action("CerrarSesionInspector", "Login",new { area="GestionarAccesos"})',
+            async: true,
+             contentType: 'json',
+             type: 'GET',
+             dataType: 'json',
+             beforeSend: function () {
+                 $("#btnSuperCerrarSesionModo").prop("disabled", true);
+                 $("#spinnerSuperBarCerrarSesionModo").show();
+             },
+            error: function (jqXHR, textStatus, errorThrown) {
+                
+                
+                $("#btnSuperCerrarSesionModo").prop("disabled", false);
+                $("#spinnerSuperBarCerrarSesionModo").hide();
+                 alert("Ocurrio un errore inesperado.");
+             },
+             success: function (response) {
+                 $("#btnSuperCerrarSesionModo").prop("disabled", false);
+                 $("#spinnerSuperBarCerrarSesionModo").hide();
+                    window.location.href = "@Url.Action("Home", "Inicio", new { area= "GestionarDashboards" })";
+
+
+             },
+             complete: function (data) {
+                 $("#btnSuperCerrarSesionModo").prop("disabled", false);
+                 $("#spinnerSuperBarCerrarSesionModo").hide();
+             }
+         });
+
+    }
 
 
 </script>

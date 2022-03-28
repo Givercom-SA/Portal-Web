@@ -114,15 +114,23 @@ namespace Web.Principal.Pages.Account
                 user.Sesion = new ViewModel.Datos.UsuarioRegistro.SesionUsuarioVM();
                 user.Sesion.FechaInicioSesion = DateTime.Now;
                 user.Sesion.CodigoTransGroupEmpresaSeleccionado = Input.Empresa;
-                //user.Sesion.RucTransGroupEmpresaSeleccionado = empresaSelect.Ruc;
                 user.Sesion.RucTransGroupEmpresaSeleccionado = "";
                 user.Sesion.RucIngresadoUsuario = Input.Ruc;
-                //user.Sesion.NombreTransGroupEmpresaSeleccionado = empresaSelect.Nombres;
                 user.Sesion.NombreTransGroupEmpresaSeleccionado = "";
-                //user.Sesion.ImagenTransGroupEmpresaSeleccionado = empresaSelect.Imagen;
                 user.Sesion.ImagenTransGroupEmpresaSeleccionado = "";
                 user.Empresas = listEmpresas;
+                user.IdUsuarioInicioSesion = user.idUsuario;
 
+                if (user.AdminSistema == 1)
+                {
+
+                    user.ModoAdminSistema = Utilitario.Constante.SeguridadConstante.ModoVisualizacion.ADMINISTRADOR.ToString();
+                }
+                else {
+                    user.ModoAdminSistema = Utilitario.Constante.SeguridadConstante.ModoVisualizacion.USUARIO.ToString();
+                }
+
+                
                 if (user.CodigoResultado == 0)
                 {
                     HttpContext.Session.SetUserContent(user);
@@ -135,7 +143,6 @@ namespace Web.Principal.Pages.Account
             Input.CodigoCaptcha = "";
             Input.CodigoCaptchaValidate = "";
             
-
 
             return Page();
         }

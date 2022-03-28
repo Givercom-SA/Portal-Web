@@ -19482,7 +19482,7 @@ body {
 }
 
 .timeline.timeline-xs .timeline-item .timeline-item-marker {
-    transform: translateX(0.5625rem);
+    transform: translateX(0.8rem);
 }
 
     .timeline.timeline-xs .timeline-item .timeline-item-marker .timeline-item-marker-text {
@@ -19491,8 +19491,8 @@ body {
     }
 
     .timeline.timeline-xs .timeline-item .timeline-item-marker .timeline-item-marker-indicator {
-        height: 0.875rem;
-        width: 0.875rem;
+        height: 1.5rem;
+        width: 1.5rem;
         font-size: 0.875rem;
         border: 0.125rem solid #fff;
         margin-top: -0.125rem;

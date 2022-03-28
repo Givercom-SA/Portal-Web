@@ -128,6 +128,8 @@ namespace Web.Principal.Utils
                     ViewData["MenusSesion"] = usuario.Menus.Where(x => x.IdPerfil == IdPerfil).ToList();
                     ViewData["IdEntidad"] = usuario.IdEntidad;
                     ViewData["CambioClave"] = usuario.isCambioClave;
+                    ViewData["AdminSistema"] = usuario.AdminSistema;
+                    ViewData["ModoAdminSistema"] = usuario.ModoAdminSistema;
                     if (usuario.NumeroDocumento != null)
                         ViewData["RucRazonSocial"] = string.Format("{0} ({1} {2})", usuario.RazonSocial, usuario.TipoDocumento, usuario.NumeroDocumento);
                     else

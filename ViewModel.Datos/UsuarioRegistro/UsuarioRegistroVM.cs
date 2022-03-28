@@ -11,39 +11,40 @@ namespace ViewModel.Datos.UsuarioRegistro
 {
     public class UsuarioRegistroVM : BaseResultVM
     {
+        
         public int IdEntidad { get; set; }
         public string TipoDocumento { get; set; }
         public string NumeroDocumento { get; set; }
         public string RazonSocial { get; set; }
-
         public string TipoEntidad { get; set; }
 
-        public int idUsuario { get; set; }
+        public int idUsuario
+        {
+            get;set;
+        }
+
         public string NombresUsuario { get; set; }
         public string ApellidoPaternousuario { get; set; }
         public string ApellidoMaternoUsuario { get; set; }
         public string CorreoUsuario { get; set; }
-
+    
         public string obtenerNombreCompleto() {
-
-
-
             return $"{this.NombresUsuario} {this.ApellidoPaternousuario} {this.ApellidoMaternoUsuario}";
         }
-
         public int IdPerfil { get; set; }
         public string PerfilNombre { get; set; }
         public string TipoPerfil { get; set; }
         public string Dashboard { get; set; }
+        public int AdminSistema { get; set; }
+
+        public string ModoAdminSistema { get; set; }
 
         public bool isCambioClave { get; set; }
         public List<MenuLoginVM> Menus { get; set; }
         public List<PerfilLoginVM> Perfiles { get; set; }
         public ListarTransGroupEmpresaVM Empresas { get; set; }
-        
         public List<MenuLoginVM> MenusUserSecundario { get; set; }
         public SesionUsuarioVM Sesion { get; set; }
-
         public List<string> DocumentosRevisar { get; set; }
         public int EsAdmin { get; set; }
         public string obtenerTipoEntidadTransmares() {
@@ -100,6 +101,10 @@ namespace ViewModel.Datos.UsuarioRegistro
 
 
         }
+
+
+
+        public long IdUsuarioInicioSesion { get; set; }
 
     }
 

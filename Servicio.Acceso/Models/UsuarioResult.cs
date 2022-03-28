@@ -22,10 +22,13 @@ namespace Servicio.Acceso.Models
         public string PEFL_TIPO { get; set; }
         
         public int PEFL_ID { get; set; }
+        public string ModoAdminSistema { get; set; }
         public string PEFL_NOMBRE { get; set; }
-
+        public long IdUsuarioInicioSesion { get; set; }
         public int USUA_CAMBIOCLAVE { get; set; }
         public int EsAdmin { get; set; }
+
+        public int AdminSistema { get; set; }
         
         public List<MenuLogin> Menus { get; set; }
         public List<MenuLogin> MenusUserSecundario { get; set; }

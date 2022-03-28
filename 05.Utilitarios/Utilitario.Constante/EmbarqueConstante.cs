@@ -165,6 +165,24 @@ namespace Utilitario.Constante
             
         }
 
+        public static class Trazabilidad
+        {
+            public static string MARITIMO = "M";
+            public static string AEREO = "A";
+            public static string IMPORTACION = "I";
+            public static string EXPORTACION = "E";
+
+        }
+
+        public static class Estado
+        {
+            public static string TODO = "T";
+            public static string ACTIVO = "A";
+            public static string INACTIVO = "I";
+            
+
+        }
+
         public static class MetodoPago
         {
             public static string TRANSFERENCIA = "TR";

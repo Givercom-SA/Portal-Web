@@ -34,5 +34,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Models
 
         public ListarCobrosPagarResultVM listaCobrosPagar { get; set; }
 
+        public string Servicio { get; set; }
+        public string Origen { get; set; }
     }
 }

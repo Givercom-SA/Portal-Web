@@ -1,0 +1,67 @@
+﻿
+@model Web.Principal.Areas.GestionarEmbarques.Models.Entidad.EntidadTipoModel
+
+@{
+
+    int iContador = 0;
+
+}
+
+@if (Model.EntidadesTipo.Entidades.Count() > 0)
+{
+
+   
+
+    <table class="table small" id="dtListarEntidadTipo">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tipo Documento</th>
+                <th>Nro. Documento</th>
+                <th>Razon Social / Representante Legal</th>
+                <th>Perfil</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        
+
+            @foreach (var item in Model.EntidadesTipo.Entidades)
+            {
+
+                <tr>
+                    <td>
+
+                        <button class="btn btn-sm btn-outline-primary" type="button" onclick="SeleccionarEntidad(@item.IdUsuarioEntidadAdmin,@item.IdPerfil,@iContador)">
+                            <span class="spinner-border spinner-border-sm" style="display:none" id="spinnerListaEntidadSeleccionar_@iContador" role="status" aria-hidden="true"></span>
+                            Seleccionar
+                        </button>
+
+                    </td>
+                    <td>@item.TipoDocumento</td>
+                    <td>@item.NumeroDocumento</td>
+                    <td>@item.RazonSocial</td>
+                    <td>@item.PerfilEntidad</td>
+
+                </tr>
+
+                iContador = iContador + 1;
+           }
+        </tbody>
+    </table>
+
+
+
+
+
+}
+else
+{
+
+    <div>
+
+        No hay datos
+    </div>
+
+
+}

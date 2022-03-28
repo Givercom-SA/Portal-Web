@@ -24,10 +24,11 @@ namespace Servicio.Acceso.Models.SolicitarAcceso
         public string CodigoSunat { get; set; }
         public List<TipoEntidad> TipoEntidad { get; set; }
         public List<Documento> Documento { get; set; }
+        public string TipoRegistro { get; set; }
+        public int IdUsuarioCreaModifica { get; set; }
+        public int IdEntidad { get; set; }
+        
 
-
-
-  
     }
 
 

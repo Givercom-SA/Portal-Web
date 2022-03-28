@@ -61,7 +61,7 @@
                                     <div class="card-body">
                                         <!-- Registration form-->
                                         <form asp-route-returnUrl="@Model.ReturnUrl" id="frmSolicitarAcceso" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
-                                            <!-- Form Row-->
+                                         @Html.AntiForgeryToken()
 
                                             <div class="loader" style="">
                                                 <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
@@ -81,8 +81,6 @@
                                                     </fieldset>
                                                 </div>
                                             </div>
-
- 
 
                                             <div class="row gx-3">
                                                 <div class="col-md-12">
@@ -866,11 +864,11 @@
 
             } else if (strDatos == "carga_fcl") {
 
-                if (blEstado) {
-                    $("#spanOperacionCargaFCL").html("");
-                } else {
-                    $("#spanOperacionCargaFCL").html("Esta opción es requerido");
-                }
+                //if (blEstado) {
+                //    $("#spanOperacionCargaFCL").html("");
+                //} else {
+                //    $("#spanOperacionCargaFCL").html("Esta opción es requerido");
+                //}
 
 
 

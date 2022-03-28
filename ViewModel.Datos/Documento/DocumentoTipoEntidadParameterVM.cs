@@ -8,7 +8,7 @@ using ViewModel.Datos.Entidad;
 
 namespace ViewModel.Datos.Documento
 {
-    public class ListDocumentoTipoEntidadParameterVM : BaseResultVM
+    public class ListDocumentoTipoEntidadParameterVM
     {
         public bool BrindaCargaFCL { get; set; }
 

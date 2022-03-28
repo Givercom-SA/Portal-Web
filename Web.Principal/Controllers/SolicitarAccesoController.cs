@@ -71,6 +71,8 @@ namespace Web.Principal.Controllers
 
                 solicitarAccesoVM = JsonConvert.DeserializeObject<SolicitarAccesoParameterVM>(strSesion);
                 solicitarAccesoVM.ImagenGrupoTrans =$"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}";
+                solicitarAccesoVM.IdUsuarioCreaModifica = -10;
+                solicitarAccesoVM.TipoRegistro =Utilitario.Constante.SolicitudAccesoConstante.SolicitudAcceso.REGISTRO_SOLICITUD_NUEVO.ToString();
 
 
                 model.CodigoTipoDocumento = solicitarAccesoVM.TipoDocumento;

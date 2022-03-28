@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace Web.Principal.Areas.GestionarAccesos.Controllers
         private readonly ServicioSolicitud _serviceSolicitud;
 
         private readonly IMapper _mapper;
-
+        private static ILogger _logger = ApplicationLogging.CreateLogger("SolicitarAccesoController");
         public SolicitarAccesoController(
             ServicioMaestro serviceMaestro,
             ServicioSolicitud serviceSolicitud,

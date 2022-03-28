@@ -1,0 +1,760 @@
+﻿@using Web.Principal.Areas.GestionarUsuarios.Models
+@model SolicitarAccesoModel
+
+@{
+    ViewData["Title"] = "Solicitar Acceso";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<link href="/css/estilo.css" rel="stylesheet" />
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-xl px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="user"></i></div>
+                        Configuracion de Cuenta
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-4">
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">Solicitar Acceso</div>
+                <div class="card-body">
+
+
+                    <form asp-route-returnUrl="@Model.ReturnUrl" id="frmSolicitarAcceso" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+
+
+
+                        <div class="row gx-3">
+                            <div class="col-md-6">
+                                <fieldset class="mb-1">
+                                    <legend class="small" style="font-weight:bold"> Consideraciones </legend>
+                                    <ul>
+                                        <li>
+                                            <span class="small text-danger field-validation-valid">
+                                                (*)
+                                            </span>       <label class="small mb-1"> Campos obligatorios</label>
+                                        </li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3">
+                            <div class="col-md-12">
+
+
+
+
+
+                                <fieldset>
+                                    <div class="sombra">
+                                        <div class="box">
+                                            <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarTipoEntidad')">Tipo Entidad <i class="fas fa-angle-down icon"></i></legend>
+                                            <div id="ocultarTipoEntidad">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="sbp-preview-content">
+                                                            @for (int i = 0; i < Model.ListTipoEntidad2.TiposEntidad.Count; i++)
+                                                            {
+
+                                                                <div class="form-check">
+                                                                    <input asp-for="@Model.ListTipoEntidad2.TiposEntidad[i].Check"
+                                                                           data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area = "GestionarAccesos" })"
+                                                                           data-codtipoentidad="@Model.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad"
+                                                                           class="form-check-input cssChkTipoEntidad" onchange="onChangeTipoEntidadSelect(this)" type="checkbox" />
+
+                                                                    <input type="hidden" asp-for="@Model.ListTipoEntidad2.TiposEntidad[i].Check" />
+                                                                    <input type="hidden" asp-for="@Model.ListTipoEntidad2.TiposEntidad[i].CodTipoEntidad" />
+                                                                    <input type="hidden" asp-for="@Model.ListTipoEntidad2.TiposEntidad[i].IdParametro" />
+                                                                    <input type="hidden" asp-for="@Model.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad" />
+                                                                    <label class="small mb-1"> @Model.ListTipoEntidad2.TiposEntidad[i].NombreTipoEntidad </label>
+                                                                </div>
+
+                                                            }
+                                                            <span id="spanTipoEntidad" asp-validation-for="@Model.ListTipoEntidad2" class="small text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+
+
+
+                            </div>
+
+                            <div class="col-md-12">
+
+
+                                <fieldset id="fsAgenteAduanas" style="display:none">
+                                    <div class="sombra">
+                                        <div class="box">
+                                            <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarDatosAgenteAduanas')">Datos de Agente de Aduanas <i class="fas fa-angle-down icon"></i></legend>
+                                            <div id="ocultarDatosAgenteAduanas">
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <div class="sbp-preview-content">
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.HabiliarProcesoFacturacion" type="checkbox" />
+                                                                <label class="small mb-1" asp-for="@Model.HabiliarProcesoFacturacion"></label>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.HabiliarProcesoFacturacion" class="small text-danger"></span>
+                                                            </div>
+
+                                                            <div class="form-check">
+                                                                <input class="form-check-input cssChkTipoEntidad" asp-for="@Model.TerminoCondicionesGeneralesContraTCGC"
+                                                                       onchange="onOtrosDatos(this)"
+                                                                       data-codigo="termino_condi_general"
+                                                                       type="checkbox" />
+                                                                <a href="~/fileserver/Terminos_Condiciones_Generales_Contratacion.pdf" id="anchorTerminoCondicionGeneral" class="small" target="_blank">@Model.TerminoCondicionesGeneralesContraTCGC</a>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.TerminoCondicionesGeneralesContraTCGC" id="spanTerminosCondicionesGeneerales" class="small text-danger"></span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <label asp-for="@Model.CodigoSunat" class="small mb-1"></label>
+                                                            <input asp-for="@Model.CodigoSunat" id="txtCodigoSunat" onblur="onValidarCodigoSunat(this)" class="form-control" type="text" minlength="1" maxlength="10" placeholder="Ingrese código de sunat" />
+                                                            <br>
+                                                            <span asp-validation-for="@Model.CodigoSunat" id="spanCodigoSunat" class="small text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+
+                                <fieldset>
+                                    <div class="sombra">
+                                        <div class="box">
+                                            <legend class="small bordeColor" style="font-weight:bold" onClick="muestra_oculta('ocultarOtrosDatos')">Otros Datos <i class="fas fa-angle-down icon"></i></legend>
+                                            <div id="ocultarOtrosDatos">
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+
+                                                        <div class="sbp-preview-content">
+
+                                                            <div class="form-check">
+                                                                <input asp-for="@Model.seBrindaOperacionesCargaFCL" onchange="onOtrosDatos(this)"
+                                                                       data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                       data-codigo="carga_fcl"
+                                                                       class="form-check-input" id="chkSeBrindaFCL" type="checkbox" />
+                                                                <a href="~/fileserver/ACUERDO_POR_SERVICIOS_FCL.pdf" class="small" target="_blank">Se Brindara Operaciones con Cargas FCL</a>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.seBrindaOperacionesCargaFCL" id="spanOperacionCargaFCL" class="small text-danger"></span>
+
+                                                            </div>
+
+                                                            <div class="form-check">
+                                                                <input asp-for="@Model.seBrinaAgenciaAdeuanas"
+                                                                       id="chkSeBrindaAgenciaAduana"
+                                                                       data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                       class="form-check-input" type="checkbox" />
+
+                                                                <label asp-for="@Model.seBrinaAgenciaAdeuanas" class="small"></label>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.seBrinaAgenciaAdeuanas"
+                                                                      class="small text-danger"></span>
+                                                            </div>
+
+                                                            <div class="form-check" id="divEndose" style="display:none">
+                                                                <input asp-for="@Model.acuerdoCorrectoUsoEndosesElectronico" id="chkEndose"
+                                                                       onchange="onOtrosDatos(this)"
+                                                                       data-codigo="endose"
+                                                                       class="form-check-input" type="checkbox" />
+
+                                                                <a href="~/fileserver/ACUERDO_DE_COOPERACION_Y_SEGURIDAD_PARA_EL_CORRECTO_US_DE_ENDOSES ELECTRONICOS.pdf" id="anchorEndose" class="small" target="_blank">Acuerdo para el Correcto Uso de los Endoses Electrónicos (*)</a>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.acuerdoCorrectoUsoEndosesElectronico" id="spanEndose" class="small text-danger"></span>
+
+                                                            </div>
+
+                                                            <div class="form-check" id="divCadenaSuministro" style="display:none">
+                                                                <input asp-for="@Model.acuerdoSeguridadCadenaSuministra" onchange="onOtrosDatos(this)"
+                                                                       data-url="@Url.Action("listarDocumentosPorTipo", "SolicitarAcceso", new { Area="GestionarAccesos" })"
+                                                                       data-codigo="cadena_suministro"
+                                                                       class="form-check-input" id="chkAcuerdoCadenaSumistro" type="checkbox" />
+                                                                <a href="~/fileserver/Acuerdo_de_Seguridad_de_la_Cadena_de_Suministro.pdf" id="anchorAcuerdoCadenaSumini" class="small" target="_blank">Acuerdo de Seguridad de la Cadena de Suministro (*)</a>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.acuerdoSeguridadCadenaSuministra" id="spanAcuerdoCadenaSumistro" class="small text-danger"></span>
+                                                            </div>
+
+                                                            <div class="form-check" id="divVeracidadInfo" style="display:none">
+                                                                <input asp-for="@Model.declaracionJUridaVeracidadInformacio" onchange="onOtrosDatos(this)"
+                                                                       data-codigo="vericidad_informacion"
+                                                                       class="form-check-input" id="chkVeracidadInfo" type="checkbox" />
+                                                                <a href="~/fileserver/Declaración_Jurada_de_Veracidad_de_Información.pdf" id="anchorVeracidadInfo" class="small" target="_blank">Declaración Jurada de Veracidad de la Información</a>
+                                                                <br>
+                                                                <span asp-validation-for="@Model.declaracionJUridaVeracidadInformacio" id="spanVeracidadInfo" class="small text-danger"></span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+
+                            </div>
+
+                        </div>
+                        <hr />
+
+                        <div id="divOutputOk" class="alert alert-success" role="alert" style="display:none">
+                            <output id="outputOk" class="small"></output>
+                        </div>
+
+                        <div id="divOutputError" class="alert alert-danger" role="alert" style="display:none">
+                            <output id="outputError" class="small"></output>
+                        </div>
+
+                        <div id="divOutputAlerta" class="alert alert-warning" role="alert" style="display:none">
+                            <output id="outputAlerta" class="small"></output>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">CONTINUAR</button>
+
+                        <div class="row" id="divContentPlantilla" style="display:none">
+
+                            <label class="small mb-1"> </label>
+                            <input type="file" class="form-control small" accept=".pdf, .jpg, .jpeg" onchange="fileValidation(this)">
+                            <input type="hidden">
+
+                            <br />
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-info">Información</h5>
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensajeOk"></output>
+                </div>
+                <div class="modal-footer"><a class="btn btn-primary" href="~/">Iniciar Sesion</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning">Alerta</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensaje"></output>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Error</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensajeError"></output>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
+    <script type="text/javascript">
+
+        var strEndose = "Acuerdo para el Correcto Uso de los Endoses Electrónicos";
+        var strTerminoCondicionGeneralContratacion = "Términos y Condiciones Generales de Contratación - T&CGC (*)";
+        var strVerificacionInfo = "Declaración Jurada de Veracidad de la Información";
+        var strCadenaSuminis = "Acuerdo de Seguridad de la Cadena de Suministro";
+
+        var listArchivosAdjuntos = Array();
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            var defaultRangeValidator = $.validator.methods.range;
+            $.validator.methods.range = function (value, element, param) {
+                if (element.type === 'checkbox') {
+                    // if it's a checkbox return true if it is checked
+                    return element.checked;
+                } else {
+                    // otherwise run the default validation function
+                    return defaultRangeValidator.call(this, value, element, param);
+                }
+            }
+
+
+        });
+
+        function setearCheck() {
+
+            $("#anchorVeracidadInfo").html(strVerificacionInfo);
+            $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis);
+            $("#anchorEndose").html(strEndose);
+            $("#anchorTerminoCondicionGeneral").html(strTerminoCondicionGeneralContratacion);
+            $("#spanVeracidadInfo").html("");
+            $("#spanAcuerdoCadenaSumistro").html("");
+            $("#spanEndose").html("");
+
+
+
+        }
+
+        function onChangeTipoEntidadSelect(obj) {
+
+            $("#chkEndose").prop("checked", false);
+            $("#chkAcuerdoCadenaSumistro").prop("checked", false);
+            $("#chkVeracidadInfo").prop("checked", false);
+
+
+            $("#divEndose").hide();
+            $("#divCadenaSuministro").hide();
+            $("#divVeracidadInfo").hide();
+
+            let objTipoEntidad = $(obj);
+            let strCodigoTipoEbtidad = objTipoEntidad.data("codtipoentidad");
+
+            if (strCodigoTipoEbtidad == "@Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS") {
+
+                if (objTipoEntidad.is(":checked")) {
+                    $("#fsAgenteAduanas").show();
+                } else {
+                    $("#fsAgenteAduanas").hide();
+                }
+            }
+
+            onChangeTipoEntidad(obj);
+        }
+
+        function onOtrosDatos(objSender) {
+
+            let strDatos = $(objSender).data("codigo");
+            let blEstado = $(objSender).is(":checked");
+
+            if (strDatos == "vericidad_informacion") {
+                if (blEstado) {
+                    $("#spanVeracidadInfo").html("");
+                } else {
+                    $("#spanVeracidadInfo").html("Esta opción es requerido");
+                }
+
+
+            } else if (strDatos == "cadena_suministro") {
+
+                if (blEstado) {
+                    $("#spanAcuerdoCadenaSumistro").html("");
+                } else {
+                    $("#spanAcuerdoCadenaSumistro").html("Esta opción es requerido");
+                }
+
+
+
+            } else if (strDatos == "carga_fcl") {
+
+                //if (blEstado) {
+                //    $("#spanOperacionCargaFCL").html("");
+                //} else {
+                //    $("#spanOperacionCargaFCL").html("Esta opción es requerido");
+                //}
+
+
+
+            } else if (strDatos == "endose") {
+                if (blEstado) {
+                    $("#spanEndose").html("");
+                } else {
+                    $("#spanEndose").html("Esta opción es requerido");
+                }
+
+
+
+
+            }
+            else if (strDatos == "termino_condi_general") {
+                if (blEstado) {
+                    $("#spanTerminosCondicionesGeneerales").html("");
+                } else {
+                    $("#spanTerminosCondicionesGeneerales").html("Esta opción es requerido");
+                }
+            }
+
+
+
+        }
+
+        function onChangeTipoEntidad(obj) {
+
+            let outputOk = $("#outputOk");
+            let outputError = $("#outputError");
+            let outputAlerta = $("#outputAlerta");
+
+
+            var objectThis = $(obj);
+            var url = objectThis.data('url');
+
+            setearCheck();
+
+
+            let _logOperacion = "Log";
+            console.log("INI-" + _logOperacion);
+
+            let listTipoEntidadSelec = new Object();
+            listTipoEntidadSelec.TiposEntidad = [];
+
+            var checkEntidadAlMenosUno = false;
+
+
+            $(".cssChkTipoEntidad").each(function (index) {
+
+                if ($(this).is(':checked')) {
+
+
+                    checkEntidadAlMenosUno = true;
+
+                    let objTipoEntidad = new Object();
+                    objTipoEntidad.CodTipoEntidad = $(this).data('codtipoentidad');
+
+                    listTipoEntidadSelec.TiposEntidad.push(objTipoEntidad);
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC03") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#divVeracidadInfo").show();
+
+                    }
+
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC02") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis + " (*)");
+                        $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                    if (objTipoEntidad.CodTipoEntidad == "TC01" || objTipoEntidad.CodTipoEntidad == "TC04") {
+
+                        $("#anchorVeracidadInfo").html(strVerificacionInfo + " (*)");
+                        $("#anchorAcuerdoCadenaSumini").html(strCadenaSuminis + " (*)");
+                        $("#anchorEndose").html(strEndose + " (*)");
+
+
+                        $("#divEndose").show();
+                         $("#divCadenaSuministro").show();
+                        $("#divVeracidadInfo").show();
+                    }
+
+
+                }
+
+            });
+
+
+            listTipoEntidadSelec.BrindaCargaFCL = $("#chkSeBrindaFCL").is(':checked');
+            listTipoEntidadSelec.AcuerdoSeguridadCadenaSuministro = $("#chkAcuerdoCadenaSumistro").is(':checked');
+            listTipoEntidadSelec.SeBrindaAgenciamientodeAduanas = $("#chkSeBrindaAgenciaAduana").is(':checked');
+
+
+
+            if (checkEntidadAlMenosUno)
+            {
+                $("#spanTipoEntidad").html("");
+            } else {
+                $("#spanTipoEntidad").html("Debe seleccionar al menos un tipo de entidad");
+            }
+
+
+
+            return true;
+        }
+
+        function valideKey(event) {
+            if ((event.keyCode < 48 || event.keyCode > 57)
+                && (event.keyCode < 96 || event.keyCode > 105)
+                && event.keyCode !== 190
+                && event.keyCode !== 110
+                && event.keyCode !== 8 && event.keyCode !== 9) {
+                return false;
+            }
+        }
+
+        function fileValidation(objThis) {
+
+            var fileInput = objThis;
+            var filePath = fileInput.value;
+            var allowedExtensions = /(.pdf|.jpg|.jpeg)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Por favor subir archivos con extensiones .pdf/.jpeg/.jpg');
+                fileInput.value = '';
+                return false;
+            } else {
+
+            }
+
+        }
+
+        function onValidarCodigoSunat(sender) {
+
+            let txtCodigoSunat = $(sender);
+            let strValor = txtCodigoSunat.val().replace(/\s/g, "");
+
+            if (strValor == "") {
+                $("#spanCodigoSunat").html("@Utilitario.Constante.SolicitudAccesoConstante.MensajeRegistroDatosEntidad.MENSAJE_CODIGO_SUNAT");
+            } else {
+                $("#spanCodigoSunat").html("");
+            }
+
+        }
+
+        function muestra_oculta(id) {
+            if (document.getElementById) {
+                var el = document.getElementById(id);
+                el.style.display = (el.style.display == 'none') ? 'block' : 'none';
+            }
+        }
+
+        async function fnSubValidarCorreo(oFormElement) {
+
+            $("#divValidarOutputOk").hide();
+            $("#divValidarOutputError").hide();
+            $("#divValidarOutputAlerta").hide();
+
+            let json = "";
+            let outputValidarOk = $("#outputValidarOk");
+            let outputValidarError = $("#outputValidarError");
+            let outputValidarAlerta = $("#outputValidarAlerta");
+
+            $(".loader").fadeIn("slow");
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+                const response = await fetch(oFormElement.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    let jsonResponseForm = await response.json();
+
+                    if (jsonResponseForm.codigo != 0) {
+
+                        $("#divValidarOutputAlerta").show();
+                        outputValidarAlerta.html(jsonResponseForm.mensaje);
+
+
+                    } else {
+
+                        $("#divValidarOutputOk").show();
+                        outputValidarOk.html('Registrado con éxito');
+
+
+                        window.location.href = "/Account/SolicitudAccesoRegistrado";
+                    }
+
+                    $(".loader").fadeOut("slow");
+
+                } else {
+
+                    $(".loader").fadeOut("slow");
+                    $("#divValidarOutputError").show();
+                    outputValidarError.html('Resultado: ' + response.status + ' ' + response.statusText);
+
+                }
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                $("#divValidarOutputError").show();
+                outputValidarError.html('Resultado: ' + error);
+
+            }
+        }
+
+        async function AJAXSubmit(oFormElement) {
+
+            $("#divOutputOk").hide();
+            $("#divOutputError").hide();
+            $("#divOutputAlerta").hide();
+
+            let json = "";
+            let outputOk = $("#outputOk");
+            let outputError = $("#outputError");
+            let outputAlerta = $("#outputAlerta");
+
+            $(".loader").fadeIn("slow");
+            $("#spanInputRazonSocial").html("");
+            $("#spanTipoEntidad").html("");
+            $("#spanFiles").html("");
+
+            const formData = new FormData(oFormElement);
+
+            try {
+
+                const response = await fetch(oFormElement.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    let jsonResponseForm = await response.json();
+
+                    if (jsonResponseForm.codigo != 0) {
+
+                        $("#divOutputAlerta").show();
+                        outputAlerta.html(jsonResponseForm.mensaje);
+
+                        for (var item = 0; item < jsonResponseForm.listActionListResponse.length; item++) {
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "RazonSocial") {
+                                $("#spanInputRazonSocial").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                $("#txtRazonSocial").focus();
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "NumeroDocumento") {
+                                $("#spanNumeroDocumento").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                $("#txtNumeroDocumento").focus();
+                            }
+
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TipoEntidad2") {
+                                $("#spanTipoEntidad").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Files") {
+                                $("#spanFiles").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoSeguridadCadenaSuministra") {
+                                $("#spanAcuerdoCadenaSumistro").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoCorrectoUsoEndosesElectronico") {
+                                $("#spanEndose").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "declaracionJUridaVeracidadInformacio") {
+                                $("#spanVeracidadInfo").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "seBrindaOperacionesCargaFCL") {
+                                $("#spanOperacionCargaFCL").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "CodigoSunat") {
+
+                                $("#spanCodigoSunat").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TerminoCondicionesGeneralesContraTCGC") {
+
+                                $("#spanTerminosCondicionesGeneerales").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                            }
+
+
+                        }
+                    } else {
+
+                      
+             
+                        
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(jsonResponseForm.mensaje);
+
+                        $("#divValidarOutputOk").hide();
+                        $("#outputValidarOk").html('');
+                        $("#divValidarOutputAlerta").hide();
+                        $("#outputValidarAlerta").html('');
+                        $("#divValidarOutputError").hide();
+                        $("#outputValidarError").html('');
+
+                    }
+
+                    $(".loader").fadeOut("slow");
+                } else {
+
+                    $(".loader").fadeOut("slow");
+
+
+                    $("#divOutputError").show();
+                    outputError.html(response.status + ' ' + response.statusText);
+
+                }
+
+            } catch (error) {
+
+                $(".loader").fadeOut("slow");
+                $("#divOutputError").show();
+                outputError.html('Result: ' + error);
+
+            }
+        }
+
+    </script>
+
+}
