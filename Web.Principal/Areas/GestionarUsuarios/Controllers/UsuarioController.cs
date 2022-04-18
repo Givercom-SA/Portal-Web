@@ -91,8 +91,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             else {
                 ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
             }
-            
-       
 
             EditarUsuarioInternoModel model = new EditarUsuarioInternoModel();
             model.Correo = result.usuario.Correo;
@@ -104,6 +102,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.Perfil = result.usuario.IdPerfil;
             model.Items = result.usuario.Menus;
             model.IdEntidad = result.usuario.IdEntidad;
+            model.IdUsuario = result.usuario.IdUsuario;
 
             ViewBag.IdUsuario = Id;
             return View(model);
@@ -156,58 +155,74 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             return View(model);
         }
 
-      
+
         [HttpGet]
-        public async Task<IActionResult> ListarUsuarios()
+        public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
         {
-            Models.ListarUsuariosModel model = new Models.ListarUsuariosModel();
-            ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
-            listarUsuarioParameterVM.ApellidoMaterno = "";
-            listarUsuarioParameterVM.ApellidoPaterno = "";
-            listarUsuarioParameterVM.Nombres = "";
-            listarUsuarioParameterVM.Correo = "";
-            listarUsuarioParameterVM.RegistroInicio = 1;
-            listarUsuarioParameterVM.RegistroFin = 100;
-            var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
-            await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
-            model.ListUsuarios = result;
+            
+
+            if (model==null)
+                model = new Models.ListarUsuariosModel();
+
+            try
+            {
+             
+                ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
+                listarUsuarioParameterVM.Nombres = model.Nombres;
+                listarUsuarioParameterVM.Correo = model.Correo;
+                listarUsuarioParameterVM.IdPerdil = model.IdPerfil;
+                listarUsuarioParameterVM.isActivo = model.isActivo;
+                listarUsuarioParameterVM.RegistroInicio = 1;
+                listarUsuarioParameterVM.RegistroFin = 100;
+
+                var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
+                await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
+                model.ListUsuarios = result;
+                model.ListEstado = await ListarEstados();
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, "ListarUsuarios");
+            }
+            return View(model);
+        }
 
 
-   
+        public async Task<SelectList> ListarEstados() {
 
             var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
 
-            model.ListEstado = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
- 
+           var result = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
-
-            return View(model);
+            return result;
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
+        //{
+        //    ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
+        //    //listarUsuarioParameterVM.ApellidoMaterno = model.ApellidoMaterno;
+        //    //listarUsuarioParameterVM.ApellidoPaterno = model.ApellidoPaterno;
+        //    listarUsuarioParameterVM.Nombres = model.Nombres;
+        //    listarUsuarioParameterVM.Correo = model.Correo;
+        //    listarUsuarioParameterVM.IdPerdil = model.IdPerfil;
+        //    listarUsuarioParameterVM.isActivo = model.isActivo;
+        //    listarUsuarioParameterVM.RegistroInicio = 1;
+        //    listarUsuarioParameterVM.RegistroFin = 100;
+        //    var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
 
-        [HttpPost]
-        public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
+        //    model.ListUsuarios = result;
+
+        //    await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
+
+        //    model.ListEstado = await ListarEstados();
+
+        //    return View(model);
+        //}
+
+
+        private async Task  cargarListas(string tipo) 
         {
-            ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
-            listarUsuarioParameterVM.ApellidoMaterno = model.ApellidoMaterno;
-            listarUsuarioParameterVM.ApellidoPaterno = model.ApellidoPaterno;
-            listarUsuarioParameterVM.Nombres = model.Nombres;
-            listarUsuarioParameterVM.Correo = model.Correo;
-            listarUsuarioParameterVM.IdPerdil = model.IdPerfil;
-            listarUsuarioParameterVM.isActivo = model.isActivo;
-            listarUsuarioParameterVM.RegistroInicio = 1;
-            listarUsuarioParameterVM.RegistroFin = 100;
-            var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
-
-            model.ListUsuarios = result;
-
-            await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
-
-            return View(model);
-        }
-
-
-        private async Task  cargarListas(string tipo) {
             ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
             parameter.Tipo = tipo;
             var resultPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(parameter);
@@ -284,18 +299,12 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             ClienteDetalleModel model = new ClienteDetalleModel();
             model.Solicitud = new ViewModel.Datos.Solicitud.SolicitudVM();
-
             var resultSesion = HttpContext.Session.GetUserContent();
-
             var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
             model.Entidad = resultEntidad.Cliente;
             model.Solicitud = await _serviceSolicitud.leerSolicitud(model.Entidad.IdSolicitud);
-
-
             model.CodigoSolicitud = model.Solicitud.CodigoSolicitud;
 
-
-      
             return View(model);
         }
 
@@ -306,17 +315,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             ClienteDetalleModel model = new ClienteDetalleModel();
             model.Solicitud = new ViewModel.Datos.Solicitud.SolicitudVM();
-
             var resultSesion = HttpContext.Session.GetUserContent();
-
             var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
             model.Entidad = resultEntidad.Cliente;
             model.Solicitud = await _serviceSolicitud.leerSolicitud(model.Entidad.IdSolicitud);
-
-
             model.CodigoSolicitud = model.Solicitud.CodigoSolicitud;
-
-
 
             return View(model);
         }
@@ -326,22 +329,16 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         public async Task<IActionResult> SolicitarAccesoActualizar()
         {
             var resultSesion = HttpContext.Session.GetUserContent();
-
-
             var resultEntidad = await _serviceUsuario.LeerCliente(resultSesion.IdEntidad);
           
-
-        
             SolicitarAccesoModel model = new SolicitarAccesoModel();
             var listEntidades = await _serviceMaestro.ObtenerParametroPorIdPadre(1);
-
 
             if (listEntidades.CodigoResultado == 0)
             {
                 var resultTipoentidad = listEntidades.ListaParametros;
                 model.ListTipoEntidad2 = new ListTipoEntidadModel();
                 model.ListTipoEntidad2.TiposEntidad = new List<TipoEntidad>();
-
 
                 List<string> listTIpoPerfil = new List<string>();
                 if(resultEntidad.Cliente.AgenteAduana!=null)
@@ -358,9 +355,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                 foreach (ParametrosVM item in resultTipoentidad)
                 {
-
-                    
-
                     var result = listTIpoPerfil.Where(x => x.Equals(item.ValorCodigo)).FirstOrDefault();
                     if (result == null) result = "";
 
@@ -375,12 +369,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                         });
                     }
                 }
-
             }
             else
                 model.MensajeError = model.MensajeError + " " + listEntidades.MensajeResultado;
-
-      
 
             return View(model);
         }
@@ -414,12 +405,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe seleccionar al menos un tipo de entidad", NombreCampo = "Input.TipoEntidad2" });
             }
 
-
-
             if (ModelState.IsValid && (blDocumentosValido) && (listVerificar.Count() > 0))
             {
-
-
                 var resultValidarentidad = await EntidadPermitoRegistrar(Input);
                 if (resultValidarentidad.Respuesta == false)
                 {
@@ -430,7 +417,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 }
                 else
                 {
-
                     string document = resultSesion.TipoDocumento;
                     SolicitarAccesoParameterVM solicitarAccesoVM = new SolicitarAccesoParameterVM();
                     solicitarAccesoVM.TipoDocumento = resultSesion.TipoDocumento;
@@ -440,8 +426,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     solicitarAccesoVM.RepresentaLegalApellidoPaterno = resultSesion.ApellidoPaternousuario;
                     solicitarAccesoVM.RepresentaLegalMaterno = resultSesion.ApellidoMaternoUsuario;
                     solicitarAccesoVM.Correo = resultSesion.CorreoUsuario;
-
-
 
                     solicitarAccesoVM.AcuerdoEndoceElectronico = Input.acuerdoCorrectoUsoEndosesElectronico;
                     solicitarAccesoVM.BrindaOpeCargaFCL = Input.seBrindaOperacionesCargaFCL;

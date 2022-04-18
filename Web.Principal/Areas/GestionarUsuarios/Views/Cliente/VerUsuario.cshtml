@@ -1,4 +1,4 @@
-﻿@model Web.Principal.Areas.GestionarUsuarios.Models.EditarUsuarioClienteModel
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.EditarClienteModel
 @{
     ViewData["Title"] = "Detalle Usuario";
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -33,100 +33,108 @@
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header">
-            Detalle de Usuario
+            Detalle Usuario
             <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
         </div>
 
         <div class="card-body">
             <div class="sbp-preview-content">
-                <div class="row">
-             
-                    <div class="col-md">
+              
 
-                        <form>
+                <form>
 
-                            <div class="form-group row small">
-
-                                <label asp-for="@Model.Nombres" class="col-sm-2 col-form-label small"></label>
-
-                                <div class="col-sm-4">
-
-                                    <input asp-for="@Model.Nombres" disabled class="form-control " type="text" />
-
-                                </div>
-                                <label asp-for="@Model.ApellidoPaterno" class="col-sm-2 col-form-label "></label>
-                                <div class="col-sm-4">
-
-
-                                    <input asp-for="@Model.ApellidoPaterno" disabled class="form-control" type="text" />
-
-
-                                </div>
-
-                            </div>
-
-                            <div class="form-group row small">
-                                <label asp-for="@Model.ApellidoMaterno" class="col-sm-2 col-form-label small"></label>
-                                <div class="col-sm-4">
-                                    <input asp-for="@Model.ApellidoMaterno" disabled class="form-control" type="text" />
-                                </div>
-                                <label asp-for="@Model.Correo" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-4">
-                                    <input readonly asp-for="@Model.Correo" disabled class="form-control small" type="text" />
-
-                                </div>
-                            </div>
-
-                            <div class="form-group row small">
-                                <label asp-for="@Model.UsuarioCrea" class="col-sm-2 col-form-label small"></label>
-                                <div class="col-sm-4">
-                                    <input asp-for="@Model.UsuarioCrea" disabled class="form-control" type="text" />
-                                </div>
-                                <label asp-for="@Model.FechaCrea" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-4">
-                                    <input readonly asp-for="@Model.FechaCrea" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" disabled class="form-control small" type="text" />
-
-                                </div>
-                            </div>
-
-                            <div class="form-group row small">
-                                <label asp-for="@Model.UsuarioModifica " class="col-sm-2 col-form-label small"></label>
-                                <div class="col-sm-4">
-                                    <input asp-for="@Model.UsuarioModifica" disabled class="form-control" type="text" />
-                                </div>
-                                <label asp-for="@Model.FechaModifica" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-4">
-                                    <input readonly asp-for="@Model.FechaModifica" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" disabled class="form-control small" type="text" />
-
-                                </div>
-                            </div>
+                    <div class="row gx-3 mb-3">
 
 
 
-                            <div class="form-group row mb-3 small">
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                            <input asp-for="@Model.Nombres" disabled class="form-control " type="text" />
 
-                                <label class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-2">
-                                    <fieldset class="border p-2 mb-2">
-                                        <legend class="w-auto text-sm">Estado</legend>
+                        </div>
 
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.Activo" disabled class="form-check-input border-primary" id="Radio1" type="radio" value="true">
-                                            <label class="form-check-label" for="Radio1">Activo</label>
-                                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
 
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.Activo" disabled class="form-check-input border-primary" id="Radio2" type="radio" value="false">
-                                            <label class="form-check-label" for="Radio2">Inactivo</label>
-                                        </div>
-                                    </fieldset>
+                            <input asp-for="@Model.ApellidoPaterno" disabled class="form-control" type="text" />
 
 
+                        </div>
+
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoMaterno" disabled class="form-control" type="text" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Correo" class="small mb-1"></label>
+                            <input readonly asp-for="@Model.Correo" disabled class="form-control small" type="text" />
+
+                        </div>
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.UsuarioCrea" class="small mb-1"></label>
+                            <input asp-for="@Model.UsuarioCrea" disabled class="form-control" type="text" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.FechaCrea" class="small mb-1"></label>
+                            <input readonly asp-for="@Model.FechaCrea" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" disabled class="form-control small" type="text" />
+
+                        </div>
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.UsuarioModifica " class="small mb-1"></label>
+                            <input asp-for="@Model.UsuarioModifica" disabled class="form-control" type="text" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.FechaModifica" class="small mb-1"></label>
+                            <input readonly asp-for="@Model.FechaModifica" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" disabled class="form-control small" type="text" />
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Estado</label>
+                            <fieldset class="border p-2 mb-2">
+
+
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" disabled class="form-check-input border-primary" id="Radio1" type="radio" value="true">
+                                    <label class="form-check-label small" for="Radio1">Activo</label>
                                 </div>
 
-                                <div class="col-sm-3">
-                                    <fieldset class="border p-2 h-100">
-                                        <legend class="w-auto text-sm">Otros</legend>
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" disabled class="form-check-input border-primary" id="Radio2" type="radio" value="false">
+                                    <label class="form-check-label small" for="Radio2">Inactivo</label>
+                                </div>
+                            </fieldset>
+
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="small mb-1">Otros</label>
+                                    <fieldset class="border p-2">
+
 
 
                                         <div class="form-check form-check-solid">
@@ -139,7 +147,7 @@
                                             {
                                                 <input asp-for="@Model.CambioContrasenia" disabled class="form-check-input border-primary" type="checkbox" />
                                             }
-                                            <label asp-for="@Model.CambioContrasenia" class=""></label>
+                                            <label asp-for="@Model.CambioContrasenia" class="small"></label>
 
                                         </div>
 
@@ -153,7 +161,7 @@
                                             {
                                                 <input readonly asp-for="@Model.ConfirmarCuenta" disabled class="form-check-input border-primary" type="checkbox" />
                                             }
-                                            <label asp-for="@Model.ConfirmarCuenta" class=""></label>
+                                            <label asp-for="@Model.ConfirmarCuenta" class="small"></label>
 
                                         </div>
 
@@ -161,31 +169,52 @@
                                     </fieldset>
 
                                 </div>
+                                <div class="col-sm-6">
+                                    <label class="small mb-1">Es Administrador de Entidad</label>
+                                    @if (Model.IdEntidad != 0)
+                                    {
+                                        @if (@Model.EsAdmin)
+                                        {
 
-                            </div>
+                                            <input class="form-control" disabled type="text" placeholder="" value="SI" />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" disabled type="text" placeholder="" value="NO" />
+                                        }
 
-                            <div class="form-group row mb-3 small">
 
-                                <label class="col-sm-2 col-form-label">Permisos</label>
-                                <div class="col-sm-10">
-                                    @await Html.PartialAsync("_MenusPorPerfil", Model)
+                                    }
+
                                 </div>
-                            </div>
-
-
-
-
-                            <div id="MensajeResult"></div>
-                            <hr />
-                            <div class="mb-2 text-right">
-
-                                <button class="btn btn-primary" id="btnEditar" type="button"> Editar</button>
 
                             </div>
+                        </div>
 
-                        </form>
                     </div>
-                </div>
+
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-md-12">
+                            <label class="small mb-1">Permisos</label>
+                            @await Html.PartialAsync("_MenusPorPerfil", Model)
+                        </div>
+                    </div>
+
+
+
+
+                    <div id="MensajeResult"></div>
+                    <hr />
+                    <div class="mb-2 text-right">
+
+                        <button class="btn btn-primary" id="btnEditar" type="button"> Editar</button>
+
+                    </div>
+
+                </form>
+
 
             </div>
         </div>

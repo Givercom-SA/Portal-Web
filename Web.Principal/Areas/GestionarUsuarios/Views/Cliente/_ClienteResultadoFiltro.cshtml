@@ -8,10 +8,10 @@
             <th class="border-gray-200" scope="col">Número de Documento</th>
             <th class="border-gray-200" scope="col">Razon Social / Representante Legal</th>
             <th class="border-gray-200" scope="col">Estado</th>
-            <th class="border-gray-200" scope="col">CL</th>
-            <th class="border-gray-200" scope="col">WS</th>
-            <th class="border-gray-200" scope="col">CB</th>
-            <th class="border-gray-200" scope="col">AA</th>
+            <th class="border-gray-200" scope="col" title="Cliente Final">CL</th>
+            <th class="border-gray-200" scope="col" title="Cliente Forwarder">WS</th>
+            <th class="border-gray-200" scope="col" title="Cliente Broker">CB</th>
+            <th class="border-gray-200" scope="col" title="Cliente Agente de Aduana">AA</th>
             <th width="100px" class="border-gray-200" scope="col">Acción</th>
         </tr>
     </thead>
@@ -19,8 +19,8 @@
         @foreach (var item in Model)
         {
         <tr>
-            <td>@item.TipoDocumentoNombre</td>
-            <td>@item.NumeroDocumento</td>
+            <td>  @item.TipoDocumentoNombre </td>
+            <td><a  href="@Url.Action("Detalle","Cliente",new { area="GestionarUsuarios", Id=item.IdEntidad})" title="Ver Información"> @item.NumeroDocumento </a></td>
             <td>@item.RazonSocialRepresentanteLegal()</td>
 
             @if (item.Activo == true)

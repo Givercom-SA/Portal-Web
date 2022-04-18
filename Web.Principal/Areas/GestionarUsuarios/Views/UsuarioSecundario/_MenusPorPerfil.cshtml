@@ -1,28 +1,101 @@
-﻿@model IEnumerable<ViewModel.Datos.UsuarioRegistro.UsuarioMenuVM>
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.MenuPerfilModel
 @{
     string Disabled = string.Empty;
     if (ViewData.ContainsKey("ModoLectura"))
         Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
 }
+
 @if (Model != null)
 {
-    <div class="list-group small">
-        @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
-        {
-            <label class="list-group-item"><b>@grupo</b></label>
-            @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
-            {
-                <label class="list-group-item">
-                    @if (item.Permiso == 1)
-                    {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled> @item.Nombre
-                    }
-                    else
-                    {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled> @item.Nombre
-                    }
-                </label>
-            }
-        }
+
+    <div class="card rounded-lg overflow-hidden mb-5  small">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+
+                        <tr class="bg-dark text-white">
+                            <th class="py-2" scope="col"></th>
+
+                            @for (int i = 0; i < Model.Perfiles.Count(); i++)
+                            {
+                                <th class="py-2" scope="col">@Model.Perfiles[i].Nombre</th>
+
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        @for (int ii = 0; ii < Model.Grupos.Count(); ii++)
+                        {
+
+                            <tr>
+                                <td class="p-3" scope="row">
+                                    <label class=""><b>@Model.Grupos[ii].Nombre</b></label>
+                                    <input type="hidden" asp-for="@Model.Grupos[ii].Nombre" />
+                                </td>
+
+                                @for (int i = 0; i < Model.Perfiles.Count(); i++)
+                                {
+                                    <td>
+                                    </td>
+                                }
+                            </tr>
+
+
+
+                            @for (int jj = 0; jj < Model.Grupos[ii].Menus.Count(); jj++)
+                            {
+                                <tr>
+                                    <td>
+                                        <label class="">
+                                            @Model.Grupos[ii].Menus[jj].Nombre
+                                        </label>
+
+                                        <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].IdMenu" />
+                                        <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Nombre" />
+
+                                    </td>
+
+
+                                    @for (int i = 0; i < Model.Grupos[ii].Menus[jj].Perfiles.Count(); i++)
+                                    {
+
+                                <td class="text-center">
+
+                                    @if (!string.IsNullOrEmpty(Disabled))
+                                    {
+                                    <input class="form-check-input border-primary" disabled type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                    }
+                                    else { 
+                                      <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                    }
+
+
+                                    <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].IdPerfil" />
+                                    <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Nombre" />
+
+
+                                </td>
+                                    }
+
+                                </tr>
+
+                            }
+
+                        }
+
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+
+
 }

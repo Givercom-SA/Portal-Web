@@ -11,13 +11,13 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
     public class PerfilModel
     {
         public int IdPerfil { get; set; }
-        [Display(Name = "Nombre del perfil")]
+        [Display(Name = "Nombre")]
         [StringLength(50, ErrorMessage = "El nombre tiene una longitud inválida")]
         [Required(ErrorMessage = "Debe ingresar un nombre")]
         public string Nombre { get; set; }
         public bool Activo { get; set; }
 
-        [Display(Name = "Tipo de Perfil")]
+        [Display(Name = "Tipo ")]
         [RegularExpression(@"^.{4,}$", ErrorMessage = "Debe seleccionar un tipo de perfil")]
         public string Tipo { get; set; }
 

@@ -64,9 +64,9 @@ namespace Servicio.Usuario.Controllers
 
         [HttpPost]
         [Route("crear-usuario-secundario")]
-        public async Task<ActionResult<UsuarioSecundarioResultVM>> CrearUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public  ActionResult<UsuarioSecundarioResultVM> CrearUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.CrearUsuarioSecundario(parameter);
+            var result =  _repository.CrearUsuarioSecundario(parameter);
             if (parameter.RequiereConfirmacion)
             {
                 if (result.IN_CODIGO_RESULTADO > 0)
@@ -83,24 +83,28 @@ namespace Servicio.Usuario.Controllers
 
         [HttpPost]
         [Route("crear-usuario")]
-        public async Task<ActionResult<UsuarioSecundarioResultVM>> CrearUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public ActionResult<UsuarioSecundarioResultVM> CrearUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
             var result = _repository.CrearUsuario(parameter);
-            if (parameter.RequiereConfirmacion)
+
+            if (result.IN_CODIGO_RESULTADO == 0)
             {
-                if (result.IN_CODIGO_RESULTADO > 0)
+                if (parameter.RequiereConfirmacion)
                 {
-                    parameter.UrlConfirmacion =  string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
-                }
-                enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
+                    parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
+                    enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
                  new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+
+
+                }
+
             }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
         [HttpPost]
         [Route("editar-usuario-secundario")]
-        public ActionResult<UsuarioSecundarioResultVM> EditarUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public  ActionResult<UsuarioSecundarioResultVM> EditarUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
             var result = _repository.EditarUsuarioSecundario(parameter);
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
@@ -108,7 +112,7 @@ namespace Servicio.Usuario.Controllers
 
         [HttpPost]
         [Route("editar-usuario-interno")]
-        public ActionResult<UsuarioSecundarioResultVM> EditarUsuarioInterno(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public  ActionResult<UsuarioSecundarioResultVM> EditarUsuarioInterno(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
             var result = _repository.EditarUsuarioInterno(parameter);
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
@@ -116,7 +120,7 @@ namespace Servicio.Usuario.Controllers
 
         [HttpPost]
         [Route("cambiar-clave-usuario")]
-        public ActionResult<UsuarioSecundarioResultVM> CambiarClaveUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public  ActionResult<UsuarioSecundarioResultVM> CambiarClaveUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
             var result = _repository.CambiarClaveUsuario(parameter);
             return _mapper.Map<UsuarioSecundarioResultVM>(result);

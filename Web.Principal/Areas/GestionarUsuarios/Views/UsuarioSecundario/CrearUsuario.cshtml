@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Nuevo Usuario Secundario";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", false);
 }
 
 <div class="loader" style="">
@@ -33,57 +34,72 @@
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header">
-            Nuevo registro
-            <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
+            Crear Usuario Secundario
+            <button id="btnVolver" class="btn btn-sm btn-primary" onclick="javascript: history.go(-1)" type="button">Volver</button>
         </div>
 
         <div class="card-body">
             <div class="sbp-preview-content">
-                <form id="frmUsuario" autocomplete="off">
-                    <div class="form-group row">
-                        <label asp-for="@Model.Correo" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-6">
-                            <input asp-for="@Model.Correo" class="form-control" type="text" placeholder="Ingresar Correo" />
-                            <span asp-validation-for="@Model.Correo" class="small text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label asp-for="@Model.Contrasenia" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-6">
-                            <input asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
-                            <span asp-validation-for="@Model.Contrasenia" class="small text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-3">
-                        <label asp-for="@Model.ConfirmarContrasenia" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-6">
-                            <input asp-for="@Model.ConfirmarContrasenia" class="form-control" type="password" placeholder="Confirmar Contraseña" />
-                            <span asp-validation-for="@Model.ConfirmarContrasenia" class="small text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-3">
-                        <label class="col-sm-3 col-form-label">Permisos</label>
-                        <div class="col-sm-3">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto small">Perfil</legend>
-                                @foreach (var perfil in ViewBag.Perfiles as List<ViewModel.Datos.Perfil.PerfilVM>)
-                                {
-                                    <div class="form-check form-check-solid">
-                                        <input asp-for="@Model.Perfil" class="form-check-input" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
-                                        <label class="form-check-label" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
-                                    </div>
-                                }
-                                <span asp-validation-for="@Model.Perfil" class="small text-danger"></span>
-                            </fieldset>
 
+                <form id="frmUsuario" autocomplete="off">
+
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Correo" class="small mb-1"></label>
+                            <input asp-for="@Model.Correo" class="form-control" type="text" placeholder="Ingresar Correo" />
+                            <span asp-validation-for="@Model.Correo" class="small text-danger small"></span>
                         </div>
-                        <div class="col-sm-3">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto small">Accesos</legend>
-                                <div style="height:180px;" class="overflow-auto" id="MenuCheckBox"></div>
-                            </fieldset>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                            <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingresar Contraseña" />
+                            <span asp-validation-for="@Model.Nombres" class="small text-danger small"></span>
+                        </div>
+
+                    </div>
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder="Ingresar Correo" />
+                            <span asp-validation-for="@Model.ApellidoPaterno" class="small text-danger small"></span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder="Ingresar Contraseña" />
+                            <span asp-validation-for="@Model.ApellidoMaterno" class="small text-danger small"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Contrasenia" class="small mb-1"></label>
+                            <input asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
+                            <span asp-validation-for="@Model.Contrasenia" class="small text-danger small"></span>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ConfirmarContrasenia" class="small mb-1"></label>
+                            <input asp-for="@Model.ConfirmarContrasenia" class="form-control" type="password" placeholder="Confirmar Contraseña" />
+                            <span asp-validation-for="@Model.ConfirmarContrasenia" class="small text-danger small"></span>
                         </div>
                     </div>
+
+               
+                    <div class="row gx-3 mb-3">
+                        <div class="col-sm-12">
+                            <label class="small mb-1">Accesos</label>
+                            @await Html.PartialAsync("_MenusPorPerfil", Model.MenuPerfil)
+                        </div>
+                    </div>
+
+
                     <div id="MensajeResult"></div>
                     <hr />
                     <div class="mb-2 text-right">
@@ -154,7 +170,7 @@
                 var formData = new FormData(form);
                 $.ajax({
                     type: "POST",
-                    url: "/GestionarUsuarios/UsuarioSecundario/CrearUsuario",
+                    url: "@Url.Action("CrearUsuario", "UsuarioSecundario", new { area= "GestionarUsuarios" })",
                     data: formData,
                     contentType: false,
                     processData: false
@@ -185,9 +201,9 @@
             window.location.href = "/GestionarUsuarios/UsuarioSecundario/ListarUsuarios";
         });
 
-        $("#btnVolver").click(function () {
-            window.location.href = "/GestionarUsuarios/UsuarioSecundario/ListarUsuarios";
-        });
+        //$("#btnVolver").click(function () {
+        //    window.location.href = "/GestionarUsuarios/UsuarioSecundario/ListarUsuarios";
+        //});
 
     </script>
 }

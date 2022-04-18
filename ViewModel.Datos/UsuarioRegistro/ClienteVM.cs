@@ -13,7 +13,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string RazonSocialRepresentanteLegal() {
 
 
-            if (this.TipoDocumento.Equals(Utilitario.Constante.EmbarqueConstante.TipoDocumento.DNI))
+            if (this.TipoDocumento.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoDocumento.RUC))
             {
                 return $"{this.RazonSocial}";
             }

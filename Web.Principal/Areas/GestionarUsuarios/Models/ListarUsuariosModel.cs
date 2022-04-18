@@ -23,7 +23,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public string ApellidoMaterno { get; set; }
 
         [Display(Name = "Perfil")]
-        public int IdPerfil { get; set; } = -1;
+        public int IdPerfil { get; set; } = 0;
 
         [Display(Name = "Entidad")]
         public Int64 IdEntidad { get; set; }

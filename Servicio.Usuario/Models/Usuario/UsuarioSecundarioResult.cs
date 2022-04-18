@@ -9,5 +9,6 @@ namespace Servicio.Usuario.Models.Usuario
     public class UsuarioSecundarioResult: BaseResult
     {
         public Usuario usuario { get; set; }
+        public int IdUsuario { get; set; }
     }
 }

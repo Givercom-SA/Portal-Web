@@ -1,7 +1,8 @@
-﻿@model Web.Principal.Areas.GestionarUsuarios.Models.UsuarioSecundarioModel
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.EditarUsuarioInternoModel
 @{
     ViewData["Title"] = "Editar Usuario Secundario";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", false);
 }
 
 <div class="loader" style="">
@@ -28,69 +29,82 @@
 
     <div class="card card-header-actions mb-4">
         <div class="card-header">
-            Editar registro
-            <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
+            Editar Usuario Secundario
+            <button id="btnVolver" class="btn btn-sm btn-primary" onclick="javascript: history.go(-1)" type="button">Volver</button>
         </div>
 
         <div class="card-body">
             <div class="sbp-preview-content">
-                <form id="frmUsuario">
-                    <div class="form-group row">
-                        <label asp-for="@Model.Correo" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-7">
-                            <input readonly asp-for="@Model.Correo" class="form-control" type="text" />
+                <form id="frmUsuario" asp-action="ActualizarUsuario" asp-controller="UsuarioSecundario" asp-area="GestionarUsuarios" method="post" onsubmit="ActualizarUsuario(this);return false;">
+
+
+                    <input type="hidden" asp-for="@Model.IdUsuario">
+                    <input type="hidden" asp-for="@Model.Contrasenia" value="*ABCDEGhijcsd123456--*">
+                    <input type="hidden" asp-for="@Model.ConfirmarContrasenia" value="*ABCDEGhijcsd123456--*">
+
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Correo" class="small mb-1"></label>
+                            <input asp-for="@Model.Correo" class="form-control" readonly type="text" placeholder="Ingresar Correo" />
+                            <span asp-validation-for="@Model.Correo" class="small text-danger small"></span>
                         </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                            <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingresar Contraseña" />
+                            <span asp-validation-for="@Model.Nombres" class="small text-danger small"></span>
+                        </div>
+
                     </div>
-                    <div class="form-group row mb-3">
-                        <label class="col-sm-3 col-form-label">Permisos</label>
-                        <div class="col-sm-2">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto small">Estado</legend>
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder="Ingresar Correo" />
+                            <span asp-validation-for="@Model.ApellidoPaterno" class="small text-danger small"></span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder="Ingresar Contraseña" />
+                            <span asp-validation-for="@Model.ApellidoMaterno" class="small text-danger small"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Estado</label>
+                            <fieldset class="border p-2">
+
                                 <div class="form-check form-check-solid">
                                     <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" type="radio" value="true">
-                                    <label class="form-check-label" for="Radio1">Activo</label>
+                                    <label class="form-check-label small" for="Radio1">Activo</label>
                                 </div>
                                 <div class="form-check form-check-solid">
                                     <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" type="radio" value="false">
-                                    <label class="form-check-label" for="Radio2">Inactivo</label>
+                                    <label class="form-check-label small" for="Radio2">Inactivo</label>
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="col-sm-2">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto small">Perfil</legend>
-                                @foreach (var perfil in ViewBag.Perfiles as List<ViewModel.Datos.Perfil.PerfilVM>)
-                                {
-                                    <div class="form-check form-check-solid">
-                                        @if (Model.Perfil == perfil.IdPerfil)
-                                        {
-                                            <input asp-for="@Model.Perfil" class="form-check-input" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked />
-                                        }
-                                        else
-                                        {
-                                            <input asp-for="@Model.Perfil" class="form-check-input" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
-                                        }
 
-                                        <label class="form-check-label" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
-                                    </div>
-                                }
-                                <span asp-validation-for="@Model.Perfil" class="small text-danger"></span>
-                            </fieldset>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-sm-12">
+                                <label class="small mb-1">Accesos</label>
+                                @await Html.PartialAsync("_MenusPorPerfil", Model.MenuPerfil)
+                            </div>
+                        </div>
 
-                        </div>
-                        <div class="col-sm-3">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto small">Accesos</legend>
-                                <div style="height:180px;" class="overflow-auto" id="MenuCheckBox">
-                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
-                                </div>
-                            </fieldset>
-                        </div>
                     </div>
                     <div id="MensajeResult"></div>
                     <hr />
                     <div class="mb-2 text-right">
-                        <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
+                        <button id="btnGuardar" class="btn btn-primary" type="submit">Guardar Cambios</button>
                         <button id="btnRestablecer" class="btn btn-primary" type="button">Restablecer Contraseña</button>
                     </div>
                 </form>
@@ -111,14 +125,16 @@
                     <div class="form-group row">
                         <label class="col-sm-5 col-form-label">Nueva Contraseña</label>
                         <div class="col-sm-7">
-                            <input id="Contrasenia" asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
+
+                            <input id="ContraseniarRecuperar" asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
                             <span asp-validation-for="@Model.Contrasenia" class="small text-danger"></span>
+                            <input type="hidden" asp-for="@Model.IdUsuario">
                         </div>
-                    </div>
+                    </div> 
                     <div class="form-group row mb-3">
                         <label asp-for="@Model.ConfirmarContrasenia" class="col-sm-5 col-form-label"></label>
                         <div class="col-sm-7">
-                            <input asp-for="@Model.ConfirmarContrasenia" class="form-control" type="password" placeholder="Confirmar Contraseña" />
+                            <input asp-for="@Model.ConfirmarContrasenia" id="ContraseniaConfirmar" class="form-control" type="password" placeholder="Confirmar Contraseña" />
                             <span asp-validation-for="@Model.ConfirmarContrasenia" class="small text-danger"></span>
                         </div>
                     </div>
@@ -133,127 +149,82 @@
 </div>
 
 
-
 <div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-success">Información</h5>
-                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Confirmación</h5>
+
             </div>
             <div class="modal-body">
-                <output id="outputMensajeOK"></output>
+                <output id="outputMensajeOk" class="small"></output>
             </div>
-            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar</button></div>
         </div>
     </div>
 </div>
 
 
 <div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-warning">Alerta</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensaje"></output>
+                <output id="outputMensaje" class="small"></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
     </div>
 </div>
 
-
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
+
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
     <script>
 
         $(document).ready(function () {
 
             $(".loader").fadeOut("slow");
 
-               $('input[type=radio][name=Perfil]').change(function () {
-            var IdUsuario = '@ViewBag.IdUsuario';
-            var IdPerfil = this.value;
-            $.ajax({
-                type: "GET",
-                url: "/GestionarUsuarios/UsuarioSecundario/MenusPorPerfil?IdPerfil=" + IdPerfil + "&IdUsuario=" + IdUsuario,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
-            })
-            .done(function (result) {
-                if (result != null) {
 
-                    $('#MenuCheckBox').html(result);
-
-                } else {
-
-                }
-            })
-            .fail(function (xhr, status, error) {
-
-            })
-            .always(function () {
-
-            });
-        });
             $("#btnRestablecer").click(function () {
+
+                 
+                $('#ContraseniaConfirmar').val('');
+                $('#ContraseniarRecuperar').val('');
+                $('#ContraseniarRecuperar').focus();
                 $('#modal_restablecer').modal('show');
             });
 
-            $("#btnVolver").click(function () {
-                window.location.href = "/GestionarUsuarios/UsuarioSecundario/ListarUsuarios";
-            });
-               $("#btnGuardar").click(function () {
-            $(".loader").fadeIn("slow");
-            var form = $('#frmUsuario')[0];
-            var formData = new FormData(form);
-            formData.append("IdUsuario", @ViewBag.IdUsuario);
-            $.ajax({
-                type: "POST",
-                url: "/GestionarUsuarios/UsuarioSecundario/ActualizarUsuario",
-                data: formData,
-                contentType: false,
-                processData: false
-            })
-            .done(function (result) {
-                if (result != null) {
-                    if (result.codigo == 0) {
-                        ShowAlertMensage('MensajeResult', 'success', '', "El usuario se ha actualizo correctamente.", 3, null);
-                    } else {
-                        ShowAlertMensage('MensajeResult', 'warning', '', result.mensaje, 0, null);
-                    }
-                }else{
-
-                }
-            })
-            .fail(function (xhr, status, error) {
-
-            })
-            .always(function () {
-                $(".loader").fadeOut("slow");
-            });
-
         });
 
-        });
+        function ActualizarUsuario(oFormElement) {
 
-
-
-        function AJAXSubmit(oFormElement) {
-
-            var isValid = $('#frmRestablecer').valid();
+            var isValid = $('#frmUsuario').valid();
 
             if (isValid) {
 
-                var formData = new FormData();
-                formData.append("IdUsuario", @ViewBag.IdUsuario);
-                formData.append("Clave", $('#Contrasenia').val());
+                var formData = new FormData(oFormElement);
 
                 $.ajax({
                     url: oFormElement.action,
@@ -266,12 +237,10 @@
                         $(".loader").fadeIn("slow");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-
-                        $('#alertError').show();
-
-                        outputDetalleError.html('Resultado: ' + errorThrown);
-
                         $(".loader").fadeOut("slow");
+                        $('#dialogError').show();
+                        $("#outputMensajeError").html('Estimado usuario, ocurrio un error inesperado : ' + errorThrown);
+                     
 
                     },
                     success: function (response) {
@@ -280,12 +249,70 @@
                             if (response.codigo == 0) {
                                 $('#modal_restablecer').modal('hide');
                                 $("#dialogOk").modal("show");
-                                $("#outputMensajeOK").html('Resultado: ' + response.mensaje);
+                                $("#outputMensajeOk").html(response.mensaje);
+
+                               
+
+                            } else {
+                                $('#dialogAlerta').show();
+                                $("#outputMensaje").html('Estimado usuario, ocurrio un error inesperado : ' + + response.mensaje);
                             }
                         } else {
-
+                            $('#dialogError').show();
+                            $("#outputMensajeError").html('Estimado usuario, ocurrio un error inesperado : ' + + response.mensaje);
                         }
 
+                    },
+                    complete: function (data) {
+                        $(".loader").fadeOut("slow");
+                
+
+                    }
+                });
+            }
+
+        }
+
+        function AJAXSubmit(oFormElement) {
+
+            var isValid = $('#frmRestablecer').valid();
+
+            if (isValid) {
+
+                var formData = new FormData(oFormElement);
+                $.ajax({
+                    url: oFormElement.action,
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+                        $('#dialogError').show();
+                        $("#outputMensajeError").html('Estimado usuario, ocurrio un error inesperado : ' + errorThrown);
+
+                    },
+                    success: function (response) {
+
+
+                        if (response != null) {
+                            if (response.codigo == 0) {
+                                $('#modal_restablecer').modal('hide');
+                                $("#dialogOk").modal("show");
+                                $("#outputMensajeOk").html( response.mensaje);
+                            } else {
+                                $('#dialogAlerta').show();
+                                $("#outputMensaje").html( response.mensaje);
+                            }
+                        } else {
+                            $('#dialogError').show();
+                            $("#outputMensajeError").html(response.mensaje);
+                        }
 
 
                     },
@@ -296,18 +323,12 @@
                     }
                 });
 
+            } else {
 
-
-
-
-
-
-
+                $('#dialogAlerta').show();
+                $("#outputMensaje").html('Estimado usuario, revisar los campos obligatorios');
             }
         }
-
-
-
 
     </script>
 }

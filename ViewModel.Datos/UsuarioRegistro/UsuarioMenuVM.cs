@@ -16,5 +16,8 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public int Permiso { get; set; }
+
+
+
     }
 }

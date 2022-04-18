@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransMares.Core;
+using ViewModel.Datos.Autorizacion;
 using ViewModel.Datos.Message;
 using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
@@ -163,73 +164,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             }
 
-                /*
-                   
-                         
 
-                                  
-
-
-                                    @for (int jj =0;jj < itemMenu.Count(); jj++)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <label class="">
-                                                    @itemMenu[jj]
-                                                </label>
-                                            </td>
-
-
-                                            @for (int i = 0; i < Model.Perfiles.Count(); i++)
-                                            {
-
-                                             <td class="text-center">
-
-                                            @{ var resultMenu = Model.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
-                                                                                               && x.IdPerfil == Model.Perfiles[i].IdPerfil
-                                                                                                   && x.Nombre.Equals(itemMenu[jj])
-                                                                                               ).ToList(); }
-
-                                            @if (resultMenu.Count() > 0)
-                                            {
-
-                                                if (Model.EsAdmin == 0)
-                                                {
-
-                                                    if (resultMenu[0].Permiso)
-                                                    {
-                                                        <input class="form-check-input border-primary" type="checkbox" name="Grupos[@ii].Menus[@jj].Perfiles[@i].Checked" checked value="true" @Disabled>
-                                                    }
-                                                    else
-                                                    {
-                                                        <input class="form-check-input border-primary" type="checkbox" name="Grupos[@ii].Menus[@jj].Perfiles[@i].Checked" value="false" @Disabled>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <input class="form-check-input border-primary" type="checkbox" name="Grupos[@ii].Menus[@jj].Perfiles[@i].Checked" checked value="true" @Disabled>
-                                                }
-
-                                                <input type="hidden" name="Grupos[@ii].Nombre" value="@grupos[ii]" />
-                                                <input type="hidden" name="Grupos[@ii].Menus[@jj].IdMenu" value="@resultMenu[0].IdMenu" />
-                                                <input type="hidden" name="Grupos[@ii].Menus[@jj].Nombre" value="@resultMenu[0].Nombre" />
-                                                <input type="hidden" name="Grupos[@ii].Menus[@jj].Perfiles[@i].IdPerfil" value="@Model.Perfiles[i].IdPerfil" />
-                                                <input type="hidden" name="Grupos[@ii].Menus[@jj].Perfiles[@i].Nombre" value="@Model.Perfiles[i].Nombre" />
-
-                                            }
-                                        </td>
-                                            }
-
-                                        </tr>
-
-                                    }
-
-                                
-
-                 */
-
-
-                return View(model);
+       
+            return View(model);
         }
 
 
@@ -330,21 +267,37 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             }
 
+
+
+
             return View(model);
         }
 
       
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<IActionResult> Listar(ClienteModel model)
         {
-            Models.ClienteModel model = new Models.ClienteModel();
+
+
             ListarClienteParameterVM listarClienteParameter = new ListarClienteParameterVM();
-            listarClienteParameter.isActivo =null;
-            listarClienteParameter.IdPerfil =null;
-            listarClienteParameter.RazonSocialRepresentanteLegal =null;
-            listarClienteParameter.TipoDocumento = null;
-            listarClienteParameter.NumeroDocumento = null;
-         
+            if (model.isActivo < 0)
+            {
+                listarClienteParameter.isActivo = null;
+            }
+            else if (model.isActivo == 0)
+            {
+                listarClienteParameter.isActivo = false;
+            }
+            else
+            {
+                listarClienteParameter.isActivo = true;
+            }
+
+            listarClienteParameter.IdPerfil = model.IdPerfil;
+            listarClienteParameter.RazonSocialRepresentanteLegal = model.RazonSocuialRepresentanteLegal;
+            listarClienteParameter.TipoDocumento = model.IdTipoDocumento;
+            listarClienteParameter.NumeroDocumento = model.NumeroDocumento;
+
 
             var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
             var listServiceTipoDocumento = await _serviceMaestro.ObtenerParametroPorIdPadre(38);
@@ -360,7 +313,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
 
             model.ListarClientes = await _serviceUsuario.ListarClientes(listarClienteParameter);
-            
 
 
 
@@ -386,47 +338,47 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Listar(ClienteModel model)
-        {
-            ListarClienteParameterVM listarClienteParameter = new ListarClienteParameterVM();
-            if (model.isActivo < 0)
-            {
-                listarClienteParameter.isActivo = null;
-            }
-            else if (model.isActivo == 0)
-            {
-                listarClienteParameter.isActivo = false;
-            }
-            else {
-                listarClienteParameter.isActivo = true;
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> Listar(ClienteModel model)
+        //{
+        //    ListarClienteParameterVM listarClienteParameter = new ListarClienteParameterVM();
+        //    if (model.isActivo < 0)
+        //    {
+        //        listarClienteParameter.isActivo = null;
+        //    }
+        //    else if (model.isActivo == 0)
+        //    {
+        //        listarClienteParameter.isActivo = false;
+        //    }
+        //    else {
+        //        listarClienteParameter.isActivo = true;
+        //    }
 
              
-            listarClienteParameter.IdPerfil = model.IdPerfil;
-            listarClienteParameter.RazonSocialRepresentanteLegal = model.RazonSocuialRepresentanteLegal;
-            listarClienteParameter.TipoDocumento = model.IdTipoDocumento;
-            listarClienteParameter.NumeroDocumento = model.NumeroDocumento;
+        //    listarClienteParameter.IdPerfil = model.IdPerfil;
+        //    listarClienteParameter.RazonSocialRepresentanteLegal = model.RazonSocuialRepresentanteLegal;
+        //    listarClienteParameter.TipoDocumento = model.IdTipoDocumento;
+        //    listarClienteParameter.NumeroDocumento = model.NumeroDocumento;
 
-            var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
-            var listServiceTipoDocumento = await _serviceMaestro.ObtenerParametroPorIdPadre(38);
+        //    var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
+        //    var listServiceTipoDocumento = await _serviceMaestro.ObtenerParametroPorIdPadre(38);
 
-            model.ListarEstado = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
-            model.ListarTipoDocumento = new SelectList(listServiceTipoDocumento.ListaParametros, "ValorCodigo", "NombreDescripcion");
+        //    model.ListarEstado = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
+        //    model.ListarTipoDocumento = new SelectList(listServiceTipoDocumento.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
-            ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
-            parameter.Tipo = Utilitario.Constante.EmbarqueConstante.TipoPerfil.EXTERNO;
+        //    ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
+        //    parameter.Tipo = Utilitario.Constante.EmbarqueConstante.TipoPerfil.EXTERNO;
 
-            var listPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(parameter);
-            model.ListarPerfiles = new SelectList(listPerfiles.Perfiles, "IdPerfil", "Nombre");
-
-
-            model.ListarClientes = await _serviceUsuario.ListarClientes(listarClienteParameter);
+        //    var listPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(parameter);
+        //    model.ListarPerfiles = new SelectList(listPerfiles.Perfiles, "IdPerfil", "Nombre");
 
 
+        //    model.ListarClientes = await _serviceUsuario.ListarClientes(listarClienteParameter);
 
-            return View(model);
-        }
+
+
+        //    return View(model);
+        //}
 
 
 
@@ -513,8 +465,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             if (ModelState.IsValid)
             {
-                if (usuario.Menus != null)
+                if (usuario.Grupos != null)
                 {
+
                     CrearUsuarioSecundarioParameterVM parameterVM = new CrearUsuarioSecundarioParameterVM();
                     parameterVM.IdUsuario = usuario.IdUsuario;
                     parameterVM.IdPerfil = usuario.Perfil;
@@ -524,9 +477,37 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.EsAdmin = usuario.EsAdmin;
                     parameterVM.Activo = usuario.Activo;
                     parameterVM.IdUsuarioModifica = this.usuario.idUsuario;
-                    parameterVM.Menus = usuario.Menus.ToList();
 
-                    var result = await _serviceUsuario.EditarUsuarioInterno(parameterVM);
+                    // usuario.Grupos
+                    parameterVM.MenusPerfil = new List<MenuVM>();
+                    usuario.Grupos.ForEach(x=> {
+
+
+                        
+                        x.Menus.ForEach(m =>
+                        {
+                            
+                           
+                            m.Perfiles.ForEach(p=> {
+
+                                if (p.Checked) {
+
+                                    MenuVM menuVM = new MenuVM();
+                                    menuVM.IdMenu = m.IdMenu;
+                                    menuVM.IdPerfil = p.IdPerfil;
+                                    parameterVM.MenusPerfil.Add(menuVM);
+                                }
+                                
+                                
+                            });
+
+                        });
+
+                    });
+
+                 
+
+                    var result = await _serviceUsuario.EditarUsuarioSecundario(parameterVM);
                     ActionResponse.Codigo = result.CodigoResultado;
                     ActionResponse.Mensaje = result.MensajeResultado ;
 

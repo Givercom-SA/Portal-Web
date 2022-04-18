@@ -29,170 +29,177 @@
     <!-- Payment methods card-->
     <div class="card card-header-actions mb-4">
         <div class="card-header">
-            Editar registro
+            Editar Perfil
             <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
         </div>
 
         <div class="card-body">
             <div class="sbp-preview-content">
-                <div class="row">
-             
-                    <div class="col-md">
-                        <form id="frmUsuario">
+                
+                <form id="frmUsuario" asp-area="GestionarUsuarios" asp-controller="Usuario" asp-action="ActualizarUsuario" method="post" onsubmit="ActualizarUsuario(this);return false;">
+
+                    <div class="row gx-3 mb-3">
+                        <input type="hidden" asp-for="@Model.Contrasenia" value="*ABCDEGhijcsd123456--*">
+                        <input type="hidden" asp-for="@Model.IdUsuario" >
+
+                        <input type="hidden" asp-for="@Model.ConfirmarContrasenia" value="*ABCDEGhijcsd123456--*">
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Correo" class="small mb-1"></label>
+                            <input readonly asp-for="@Model.Correo" class="form-control small" type="text" placeholder="Ingresar Correo" />
+
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                            @if (Model.IdEntidad == 0)
+                            {
+                                <input asp-for="@Model.Nombres" class="form-control " type="text" placeholder="Ingresar Nombres" />
+                            }
+                            else
+                            {
+                                <input asp-for="@Model.Nombres" disabled class="form-control " type="text" placeholder="Ingresar Nombres" />
+                            }
 
 
-             
-
-                            <div class="form-group row small">
-                                <label asp-for="@Model.Nombres" class="col-sm-2 col-form-label small"></label>
-                                <div class="col-sm-4">
-                                    @if (Model.IdEntidad == 0)
-                                    {
-                                        <input asp-for="@Model.Nombres"   class="form-control " type="text" placeholder="Ingresar Nombres" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="@Model.Nombres" disabled  class="form-control " type="text" placeholder="Ingresar Nombres" />
-                                    }
+                            <span asp-validation-for="@Model.Nombres" class="small text-danger small"></span>
+                        </div>
+                    </div>
 
 
-                                    <span asp-validation-for="@Model.Nombres" class="small text-danger"></span>
+                    <div class="row gx-3 mb-3">
+
+
+
+
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                            @if (Model.IdEntidad == 0)
+                            {
+                                <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder="Ingresar Apellido Paterno" />
+                            }
+                            else
+                            {
+                                <input asp-for="@Model.ApellidoPaterno" disabled class="form-control" type="text" placeholder="Ingresar Apellido Paterno" />
+                            }
+                            <span asp-validation-for="@Model.ApellidoPaterno" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                            @if (Model.IdEntidad == 0)
+                            {
+                                <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder="Ingresar Apellido Materno" />
+                            }
+                            else
+                            {
+                                <input asp-for="@Model.ApellidoMaterno" disabled class="form-control" type="text" placeholder="Ingresar Apellido Materno" />
+                            }
+
+
+                            <span asp-validation-for="@Model.ApellidoMaterno" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+
+
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Estado</label>
+                            <fieldset class="border p-2 mb-2">
+
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" class="form-check-input border-primary" id="Radio1" type="radio" value="true">
+                                    <label class="form-check-label small" for="Radio1">Activo</label>
                                 </div>
-                            </div>
-                            <div class="form-group row small">
-                                <label asp-for="@Model.ApellidoPaterno" class="col-sm-2 col-form-label "></label>
-                                <div class="col-sm-4">
-                                    @if (Model.IdEntidad == 0)
-                                    {
-                                        <input asp-for="@Model.ApellidoPaterno"  class="form-control" type="text" placeholder="Ingresar Apellido Paterno" />
-                                    }
-                                    else { 
-                                             <input asp-for="@Model.ApellidoPaterno" disabled class="form-control" type="text" placeholder="Ingresar Apellido Paterno" />
-                                    }
-                                        <span asp-validation-for="@Model.ApellidoPaterno" class="text-danger"></span>
-                                    </div>
-                            </div>
-                            <div class="form-group row small">
-                                <label asp-for="@Model.ApellidoMaterno" class="col-sm-2 col-form-label small"></label>
-                                <div class="col-sm-4">
-                                    @if (Model.IdEntidad == 0)
-                                    {
-                                        <input asp-for="@Model.ApellidoMaterno"  class="form-control" type="text" placeholder="Ingresar Apellido Materno" />
-                                    }
-                                    else
-                                    {
-                                        <input asp-for="@Model.ApellidoMaterno" disabled class="form-control" type="text" placeholder="Ingresar Apellido Materno" />
-                                    }
-
-
-                                    <span asp-validation-for="@Model.ApellidoMaterno" class="text-danger"></span>
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" class="form-check-input border-primary" id="Radio2" type="radio" value="false">
+                                    <label class="form-check-label small" for="Radio2">Inactivo</label>
                                 </div>
-                            </div>
-                            <div class="form-group row small">
-                                <label asp-for="@Model.Correo" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-6">
-                                    <input readonly asp-for="@Model.Correo" class="form-control small" type="text" placeholder="Ingresar Correo" />
-                                    
-                                </div>
-                            </div>
+                            </fieldset>
+
+                        </div>
 
 
 
-                            <div class="form-group row mb-3 small">
-                                <label class="col-sm-2 col-form-label">Permisos</label>
-                                <div class="col-sm-2">
-                                    <fieldset class="border p-2 mb-2">
-                                        <legend class="w-auto text-sm">Estado</legend>
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.Activo" class="form-check-input border-primary" id="Radio1" type="radio" value="true">
-                                            <label class="form-check-label" for="Radio1">Activo</label>
-                                        </div>
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.Activo" class="form-check-input border-primary" id="Radio2" type="radio" value="false">
-                                            <label class="form-check-label" for="Radio2">Inactivo</label>
-                                        </div>
-                                    </fieldset>
-                                         @if (Model.IdEntidad != 0)
-                                         {
-                                    <fieldset class="border p-2">
-                                        <legend class="w-auto text-sm">Es Administrador</legend>
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.EsAdmin" disabled class="form-check-input border-primary" id="Radio3" type="radio" value="true">
-                                            <label class="form-check-label" for="Radio3">Si</label>
-                                        </div>
-                                        <div class="form-check form-check-solid">
-                                            <input asp-for="@Model.EsAdmin" disabled class="form-check-input border-primary" id="Radio4" type="radio" value="false">
-                                            <label class="form-check-label" for="Radio4">No</label>
-                                        </div>
-                                    </fieldset>
-                                         }
-                                </div>
-                                <div class="col-sm-3">
 
-                                    <fieldset class="border p-2 h-100">
-                                        <legend class="w-auto text-sm">Perfil</legend>
-                                        @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>
-                                  )
+                    </div>
+
+
+
+
+
+                    <div class="row gx-3 mb-3">
+
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Perfil</label>
+                            <fieldset class="border p-2">
+
+                                @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>
+)
+                                {
+
+                                    <div class="form-check form-check-solid">
+
+                                        @if (Model.Perfil == perfil.IdPerfil)
                                         {
+                                            if (Model.IdEntidad != 0)
+                                            {
+                                                <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked disabled />
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked />
+                                            }
 
-                                            <div class="form-check form-check-solid">
-
-                                                @if (Model.Perfil == perfil.IdPerfil)
-                                                {
-                                                    if (Model.IdEntidad != 0)
-                                                    {
-                                                        <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked disabled />
-                                                    }
-                                                    else
-                                                    {
-                                                        <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked />
-                                                    }
-
-
-                                                }
-                                                else
-                                                {
-                                                    if (Model.IdEntidad != 0)
-                                                    {
-                                                        <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" disabled />
-                                                    }
-                                                    else
-                                                    {
-                                                        <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
-                                                    }
-                                                }
-
-                                                <label class="form-check-label " for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
-                                            </div>
 
                                         }
-                                        <span asp-validation-for="@Model.Perfil" class="text-danger"></span>
-                                    </fieldset>
+                                        else
+                                        {
+                                            if (Model.IdEntidad != 0)
+                                            {
+                                                <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" disabled />
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
+                                            }
+                                        }
 
+                                        <label class="small" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
+                                    </div>
+
+                                }
+                                <span asp-validation-for="@Model.Perfil" class="text-danger"></span>
+                            </fieldset>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">Accesos</label>
+                            <fieldset class="border p-2">
+
+                                <div style="height:180px;" class="overflow-auto small" id="MenuCheckBox">
+                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Items)
                                 </div>
-                                <div class="col-sm-5">
-                                    <fieldset class="border p-2 h-100">
-                                        <legend class="w-auto text-sm">Accesos</legend>
-                                        <div style="height:180px;" class="overflow-auto" id="MenuCheckBox">
-                                            @await Html.PartialAsync("_MenusPorPerfil", Model.Items)
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-
-                                
-
-                            <div id="MensajeResult"></div>
-                            <hr />
-                            <div class="mb-2 text-right">
-
-                                <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
-
-                                <button id="btnRestablecer" class="btn btn-primary" type="button">Restablecer Contraseña</button>
-                            </div>
-                        </form>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
+
+
+
+                    <div id="MensajeResult"></div>
+                    <hr />
+                    <div class="mb-2 text-right">
+
+                        <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
+
+                        <button id="btnRestablecer" class="btn btn-primary" type="button">Restablecer Contraseña</button>
+                    </div>
+                </form>
+
 
             </div>
         </div>
@@ -275,7 +282,7 @@
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn btn-primary" type="button" data-bs-dismiss="modal" onclick="ActualizarUsuario()">Aceptar</button>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal" onclick="ActualizarUsuarioInterno()">Aceptar</button>
             </div>
         </div>
     </div>
@@ -364,63 +371,86 @@
 
         $("#btnGuardar").click(function () {
 
-            $("#divModalConfirmar").modal("show");
-            $("#divModalConfirmarMensaje").html("¿Esta seguro de registrar los cambios?");
+            var esValidoFormulario = $('#frmUsuario').valid();
+            if (esValidoFormulario) {
+                $("#divModalConfirmar").modal("show");
+                $("#divModalConfirmarMensaje").html("¿Esta seguro de registrar los cambios?");
+            } else {
+                $('#frmUsuario').submit();
+            }
+
+            
 
 
         });
 
 
-        function ActualizarUsuario() {
 
-              var form = $('#frmUsuario')[0];
-            var formData = new FormData(form);
-            formData.append("IdUsuario", @ViewBag.IdUsuario);
+        function ActualizarUsuario(oFormElement) {
 
-            $.ajax({
-                type: "POST",
-                url: "/GestionarUsuarios/Usuario/ActualizarUsuario",
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                }
-            })
-                .done(function (result) {
-                    $(".loader").fadeOut("slow");
+            var isValid = $('#frmUsuario').valid();
 
-                    if (result != null) {
+            if (isValid) {
 
-                        if (result.codigo == 0) {
+                var formData = new FormData(oFormElement);
 
-                            $('#modal_mensaje').modal('show');
-                            $("#mensaje_ok").html(result.mensaje);
+                $.ajax({
+                    url: oFormElement.action,
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
 
-                        } else {
-
-                            $('#divMensajeWarning').html(result.mensaje);
-                            $('#divModalWarning').modal('show');
-
-                        }
-                    }
-                    else {
                         $(".loader").fadeOut("slow");
-                        $('#divMensajeDanger').html(error.mensaje);
+                        $('#divMensajeDanger').html(errorThrown.mensaje);
                         $('#divModalDanger').modal('show');
+
+                    },
+                    success: function (response) {
+
+                        $(".loader").fadeOut("slow");
+
+                        if (response != null) {
+
+                            if (response.codigo == 0) {
+
+                                $('#modal_mensaje').modal('show');
+                                $("#mensaje_ok").html(response.mensaje);
+
+                            } else {
+
+                                $('#divMensajeWarning').html(response.mensaje);
+                                $('#divModalWarning').modal('show');
+
+                            }
+                        }
+                        else {
+                            $(".loader").fadeOut("slow");
+                            $('#divMensajeDanger').html(response.mensaje);
+                            $('#divModalDanger').modal('show');
+                        }
+
+
+                    },
+                    complete: function (data) {
+
+
+                        $(".loader").fadeOut("slow");
                     }
-            })
-                .fail(function (xhr, status, error) {
+                });
+            } else {
+                $('#divMensajeWarning').html("Estimado usuario, revise los campos obligatorios");
+                $('#divModalWarning').modal('show');
 
-                    $(".loader").fadeOut("slow");
-                    $('#divMensajeDanger').html(error.mensaje);
-                    $('#divModalDanger').modal('show');
+            }
 
-            })
-            .always(function () {
-
-            });
         }
+
 
         function restablecerContrasena() {
 
@@ -476,7 +506,9 @@
             }
         }
 
-
+        function ActualizarUsuarioInterno() {
+            $('#frmUsuario').submit();
+        }
 
         $("#btnRestablecer").click(function () {
             $('#modal_restablecer').modal('show');

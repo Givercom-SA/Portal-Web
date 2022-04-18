@@ -14,7 +14,7 @@
                 <div class="col-auto mb-3">
                     <h1 class="page-header-title">
                         <div class="page-header-icon"><i data-feather="user"></i></div>
-                        Configuración de Cuenta
+                        Configuración de Mi Cuenta
                     </h1>
                 </div>
             </div>
@@ -25,18 +25,19 @@
 <div class="container-xl px-4 mt-4">
     <nav class="nav nav-borders">
         <a class="nav-link active ms-0 small" asp-controller="Usuario" asp-action="CuentaUsuario" asp-area="GestionarUsuarios">Cuenta</a>
-        @if (Model.Usuario.AdminSistema!=1) { 
-        <a class="nav-link small" asp-controller="Usuario" asp-action="CuentaEntidad" asp-area="GestionarUsuarios">Entidad</a>
+        @if (Model.Usuario.AdminSistema != 1 && Model.Usuario.IdEntidad != 0)
+        {
+            <a class="nav-link small" asp-controller="Usuario" asp-action="CuentaEntidad" asp-area="GestionarUsuarios">Entidad</a>
         }
-        
-        
+
+
     </nav>
     <hr class="mt-0 mb-4" />
     <div class="row">
         <div class="col-xl-9">
             <!-- Account details card-->
             <div class="card mb-4">
-                <div class="card-header">Mi Cuenta</div>
+                <div class="card-header">Cuenta</div>
                 <div class="card-body">
                     <form>
                         <!-- Form Group (username)-->
@@ -74,29 +75,30 @@
                                     <li>
                                         @item
                                     </li>
-                               
+
                                 }
                             </ul>
-                            
+
                         </div>
 
-          
+
 
                     </form>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="nav-sticky">
-                <div class="card card-header-actions">
-                    <div class="card-header">
-                        Acciones
+        @if (Model.Usuario.AdminSistema != 1 && Model.Usuario.IdEntidad !=0)
+        {
+            <div class="col-lg-3">
+                <div class="nav-sticky">
+                    <div class="card card-header-actions">
+                        <div class="card-header">
+                            Acciones
 
-                    </div>
-                    <div class="card-body" style="padding:0rem;">
-                        <ul class="list-group list-group-flush" id="stickyNav">
-                            @if (Model.Usuario.AdminSistema != 1)
-                            {
+                        </div>
+                        <div class="card-body" style="padding:0rem;">
+                            <ul class="list-group list-group-flush" id="stickyNav">
+
                                 <li class="list-group-item" style="padding: 0.5rem 0rem;">
                                     <a class="nav-link" asp-area="GestionarUsuarios" asp-controller="Usuario" asp-action="SolicitarAccesoActualizar">
                                         <div class="d-flex align-items-center">
@@ -107,13 +109,14 @@
                                         </div>
                                     </a>
                                 </li>
-                            }
+                             
                             </ul>
 
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
+        }
         </div>
-    </div>
 </div>

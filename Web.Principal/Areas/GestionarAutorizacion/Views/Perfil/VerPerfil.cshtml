@@ -35,74 +35,81 @@
         <div class="card-body">
             <div class="sbp-preview-content">
 
-                <div class="form-group row small">
-                    <label asp-for="@Model.Nombre" class="col-sm-2 col-form-label"></label>
-                    <div class="col-sm-4">
+                <div class="row gx-3 mb-3">
+
+
+                    <div class="col-md-6">
+                        <label asp-for="@Model.Nombre" class="small mb-1"></label>
                         <input asp-for="@Model.Nombre" class="form-control" readonly type="text" />
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Tipo</label>
-                    <div class="col-sm-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Tipo</label>
                         <input asp-for="@Model.TipoPerfil" class="form-control" readonly type="text" />
                     </div>
                 </div>
 
-             
-                <div class="form-group row small">
-                    <label  class="col-sm-2 col-form-label">Usuario de Creación</label>
-                    <div class="col-sm-4">
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Usuario de Creación</label>
                         <input asp-for="@Model.UsuarioCrea" class="form-control" readonly type="text" />
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Fecha de Creación</label>
-                    <div class="col-sm-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Fecha de Creación</label>
                         <input asp-for="@Model.FechaRegistro" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
                     </div>
                 </div>
 
-                <div class="form-group row small">
-                    <label a class="col-sm-2 col-form-label">Ultimo Usuario que Modifica</label>
-                    <div class="col-sm-4">
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label a class="small mb-1">Ultimo Usuario que Modifica</label>
                         <input asp-for="@Model.UsuarioModifica" class="form-control" readonly type="text" />
                     </div>
 
-                    <label class="col-sm-2 col-form-label">Ultima Fecha de Modificación</label>
-                    <div class="col-sm-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Ultima Fecha de Modificación</label>
                         <input asp-for="@Model.FechaModifica" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
                     </div>
                 </div>
 
-                <div class="form-group row mb-3">
+                <div class="row gx-3 mb-3">
 
-                    <label a class="col-sm-2 col-form-label"></label>
+                    <div class="col-md-6">
 
-                    <div class="col-sm-2 small">
-
-                        <fieldset class="border p-2  h-100">
-                            <legend class="w-auto text-sm"> Estado</legend>
-                            <div class="form-check form-check-solid">
-                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" disabled type="radio" value="true">
-                                <label class="form-check-label" for="Radio1">Activo</label>
-                            </div>
-                            <div class="form-check form-check-solid">
-                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" disabled type="radio" value="false">
-                                <label class="form-check-label" for="Radio2">Inactivo</label>
-                            </div>
-                        </fieldset>
-
-                    </div>
-
-
-                    <div class="col-sm-7 small">
-
-
+                        <label a class="small mb-1">Accesos</label>
                         <fieldset class="border p-2 h-100">
-                            <legend class="w-auto text-sm"> Accesos</legend>
-                            <div style="height:250px;" class="overflow-auto" id="MenuCheckBox">
+
+                            <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
                                 @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
                             </div>
                         </fieldset>
                     </div>
+
+                    <div class="col-md-6">
+                        <label a class="small mb-1">Estado</label>
+                        <fieldset class="border p-2  h-100">
+
+                            <div class="form-check form-check-solid">
+                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" disabled type="radio" value="true">
+                                <label class="form-check-label small" for="Radio1">Activo</label>
+                            </div>
+                            <div class="form-check form-check-solid">
+                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" disabled type="radio" value="false">
+                                <label class="form-check-label small" for="Radio2">Inactivo</label>
+                            </div>
+                        </fieldset>
+
+                    </div>
+
+
+
                 </div>
 
 
@@ -110,11 +117,11 @@
                 <hr />
 
                 <div class="mb-2 text-right">
-                    <button id="btnEditar"  class="btn btn-primary" type="button">Editar</button>
+                    <button id="btnEditar" class="btn btn-primary" type="button">Editar</button>
                 </div>
 
             </div>
-        </div>
+            </div>
     </div>
 </div>
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.Autorizacion;
 
 namespace Servicio.Usuario.Models.Usuario
 {
@@ -26,6 +27,7 @@ namespace Servicio.Usuario.Models.Usuario
 
         public string ImagenGrupoTrans { get; set; }
         public List<int> Menus { get; set; }
+        public List<MenuVM> MenusPerfil { get; set; }
     }
 }
 

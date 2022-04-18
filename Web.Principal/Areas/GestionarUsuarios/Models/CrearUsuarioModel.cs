@@ -30,11 +30,34 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [DataType(DataType.Password)]
         public string ConfirmarContrasenia { get; set; }
 
+        [Display(Name = "Nombre")]
+        [Required(ErrorMessage = "Debe ingresar su nombre")]
+        public string Nombres { get; set; }
+        [Display(Name = "Apellido Paterno")]
+        [Required(ErrorMessage = "Debe ingresar su apellido paterno")]
+        public string ApellidoPaterno { get; set; }
+        [Required(ErrorMessage = "Debe ingresar su apellido materno")]
+        [Display(Name = "Apellido Materno")]
+        public string ApellidoMaterno { get; set; }
+
         [Display(Name = "Perfil")]
-        [Required(ErrorMessage = "Seleccione Perfil")]
+ 
         public string Perfil { get; set; }
+
+        public string EstadoFormulario { get; set; }
+
+        public Int32 IdUsuario { get; set; }
+
+        public bool Activo { get; set; }
         public int[] Menus { get; set; }
         public String ReturnUrl { get; set; }
+
+        public MenuPerfilModel MenuPerfil { get; set; }
+
+        public UsuarioRegistroVM Usuario { get; set; }
+        public List<GruposAutorizacion> Grupos { get; set; }
+
+
 
     }
 
@@ -47,6 +70,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         [Required(ErrorMessage = "Debe ingresar Apellido Paterno")]
         public string ApellidoPaterno { get; set; }
         [Required(ErrorMessage = "Debe ingresar Apellido Materno")]
+        [Display(Name = "Apellido Materno")]
         public string ApellidoMaterno { get; set; }
         [Display(Name = "Correo")]
         [Required(ErrorMessage = "Debe ingresar el correo")]
@@ -76,5 +100,5 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public String ReturnUrl { get; set; }
 
     }
-
+  
 }

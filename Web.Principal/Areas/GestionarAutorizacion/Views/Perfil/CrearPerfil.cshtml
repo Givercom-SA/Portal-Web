@@ -33,51 +33,57 @@
 
         <div class="card-body">
             <div class="sbp-preview-content">
+              
+
 
                 <form id="frmPerfil">
 
-                    <div class="form-group row small">
-                        <label asp-for="@Model.Nombre" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-4">
+
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group (first name)-->
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Nombre" class="small mb-1"></label>
                             <input asp-for="@Model.Nombre" class="form-control" type="text" placeholder="Ingresar Nombre" />
-                            <span asp-validation-for="@Model.Nombre" class="text-danger"></span>
+                            <span asp-validation-for="@Model.Nombre" class="text-danger small"></span>
                         </div>
-
-                        <label class="col-sm-2 col-form-label">Tipo</label>
-                        <div class="col-sm-3">
-
+                        <!-- Form Group (last name)-->
+                        <div class="col-md-6">
+                            <label class="small mb-1">Tipo</label>
                             <select asp-for="@Model.Tipo"
                                     asp-items=" ViewBag.ListTipo"
                                     class="form-select small">
                                 <option value="0">Seleccionar</option>
                             </select>
-                            <span asp-validation-for="@Model.Tipo" class="text-danger"></span>
+                            <span asp-validation-for="@Model.Tipo" class="text-danger small"></span>
                         </div>
                     </div>
 
 
 
-                    <div class="form-group row small">
-                        <label class="col-sm-2 col-form-label">Usuario de Creación</label>
-                        <div class="col-sm-4">
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group (organization name)-->
+                        <div class="col-md-6">
+                            <label class="small mb-1">Usuario de Creación</label>
                             <input asp-for="@Model.UsuarioCrea" class="form-control" readonly type="text" />
                         </div>
 
-                      
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="small mb-1">Accesos</label>
+               
+                        <fieldset class="border p-2 h-100">
+                           
+                            <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
+                                @await Html.PartialAsync("_MenusPorPerfil", ViewBag.Menus as List<ViewModel.Datos.Perfil.MenuPerfilVM>)
+                            </div>
+                        </fieldset>
                     </div>
 
 
-                    <div class="form-group row mb-3">
-                        <label class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-9 small">
-                            <fieldset class="border p-2 h-100">
-                                <legend class="w-auto text-sm">Accesos</legend>
-                                <div style="height:250px;" class="overflow-auto" id="MenuCheckBox">
-                                    @await Html.PartialAsync("_MenusPorPerfil", ViewBag.Menus as List<ViewModel.Datos.Perfil.MenuPerfilVM>)
-                                </div>
-                            </fieldset>
-                        </div>
-                    </div>
+
                     <div id="MensajeResult" class="small"></div>
                     <hr />
                     <div class="mb-2 text-right">

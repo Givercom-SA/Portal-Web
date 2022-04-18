@@ -70,7 +70,7 @@
                             <li class="nav-item me-1"><a class="nav-link active" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos</a></li>
                             @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.IMPORTACION))
                             {
-                            <li class="nav-item"><a class="nav-link" id="cobros_pagar-pill" href="#cobros_pagar" data-bs-toggle="tab" role="tab" aria-controls="cobros_pagar" aria-selected="false">Cobros a Pagar </a></li>
+                                <li class="nav-item"><a class="nav-link" id="cobros_pagar-pill" href="#cobros_pagar" data-bs-toggle="tab" role="tab" aria-controls="cobros_pagar" aria-selected="false">Cobros a Pagar </a></li>
                             }
                             <li class="nav-item"><a class="nav-link" id="Estado-pill" href="#Estado" data-bs-toggle="tab" role="tab" aria-controls="Estado" aria-selected="false">Estado de Embarque</a></li>
                         </ul>
@@ -134,12 +134,7 @@
                                         </div>
 
                                         <div class="row mb-3">
-
-
-
                                             <div class="col-6 col-sm-6  small ">
-
-
                                                 <div class="row">
 
                                                     <div class="col-6">
@@ -162,31 +157,17 @@
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NRORO" />
                                                     </div>
                                                 </div>
-
-
-
-
-
                                             </div>
 
                                             <div class=" col-6 col-sm-6  small ">
-
-
-
                                                 <div class="row">
-
                                                     <div class="col-6">
-
-
                                                         @Html.Raw("Origen: ")
-
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ORIGEN" />
-
                                                     </div>
                                                 </div>
-
 
                                             </div>
                                         </div>
@@ -226,7 +207,14 @@
                                             <div class=" col-6 col-sm-6  small ">
                                                 <div class="row">
                                                     <div class="col-6">
-                                                        @Html.Raw("Fecha de Descarga: ")
+                                                        @if (Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
+                                                        {
+                                                            @Html.Raw("Fecha de Carga: ")
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw("Fecha de Descarga: ")
+                                                        }
                                                     </div>
                                                     <div class="col-6">
                                                         <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ETAPOD" />
@@ -290,46 +278,46 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @if ( 
-                                            (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) 
-                                            && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.IMPORTACION)))
+                                        @if (
+                                           (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO)
+                                           && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.IMPORTACION)))
                                         {
-                                            
-                                       
-                                    <div class="row mb-3">
 
-                                        <div class=" col-6 col-sm-6  small ">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    @Html.Raw("Instrucción de Embarque: ")
+
+                                            <div class="row mb-3">
+
+                                                <div class=" col-6 col-sm-6  small ">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            @Html.Raw("Instrucción de Embarque: ")
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input class="form-control  small" type="text" disabled value=" @Model.EmbarqueDetalle.DES_INSTRUCCION " />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6">
-                                                    <input class="form-control  small" type="text" disabled value=" @Model.EmbarqueDetalle.DES_INSTRUCCION " />
+
+                                                <div class="col-6 col-sm-6  small ">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            @Html.Raw("Carga Peligrosa: ")
+                                                        </div>
+                                                        <div class="col-6">
+                                                            @if (Model.EmbarqueDetalle.FLAG_CARGA_PELIGROSA == "1")
+                                                            {
+                                                                <input class="form-control  small" type="text" disabled value="SI" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="form-control  small" type="text" disabled value="NO" />
+                                                            }
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-6 col-sm-6  small ">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    @Html.Raw("Carga Peligrosa: ")
-                                                </div>
-                                                <div class="col-6">
-                                                    @if (Model.EmbarqueDetalle.FLAG_CARGA_PELIGROSA == "1")
-                                                    {
-                                                        <input class="form-control  small" type="text" disabled value="SI" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <input class="form-control  small" type="text" disabled value="NO" />
-                                                    }
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                         }
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Dashboard Tab Pane 2-->
@@ -349,205 +337,240 @@
                                 </div>
                             }
 
-                                <div class="tab-pane fade" id="Estado" role="tabpanel" aria-labelledby="Estado-pill">
-                                    <div class="row align-items-center justify-content-center">
-                                        <div class="col-6">
-                                            <aside>
-                                                <div class="contenedor-temario small">
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Origen: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control " type="text" disabled value="@Model.EmbarqueDetalle.ORIGEN" />
-                                                        </div>
+                            <div class="tab-pane fade" id="Estado" role="tabpanel" aria-labelledby="Estado-pill">
+                                <div class="row align-items-center justify-content-center">
+                                    <div class="col-6">
+                                        <aside>
+                                            <div class="contenedor-temario small">
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Origen: ")
                                                     </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Condición: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control" type="text" disabled value="@Model.EmbarqueDetalle.DES_CONDICION" />
-                                                        </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control " type="text" disabled value="@Model.EmbarqueDetalle.ORIGEN" />
                                                     </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Numeración de Embarque: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NROBL" />
-                                                        </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Condición: ")
                                                     </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
+                                                    <div class="col-6">
+                                                        <input class="form-control" type="text" disabled value="@Model.EmbarqueDetalle.DES_CONDICION" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Numeración de Embarque: ")
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NROBL" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
 
-                                                            @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
-                                                            {
-                                                                @Html.Raw("Nro. de Booking: ")
-                                                            }
-                                                            else if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
-                                                            {
+                                                        @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
+                                                        {
+                                                            @Html.Raw("Nro. de Booking: ")
+                                                        }
+                                                        else if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                        {
                                                             @Html.Raw("Nro. de Instrucción: ")
-                                                            }
-                                                            else
-                                                            {
+                                                        }
+                                                        else
+                                                        {
                                                             @Html.Raw("Nro. de Routing Order: ")
-                                                            }
+                                                        }
 
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NRORO" />
-                                                        </div>
                                                     </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Puerto de Carga: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POL" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Puerto de Descarga: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POD" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-6">
-                                                            @Html.Raw("Fecha de Descarga: ")
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ETAPOD" />
-                                                        </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.NRORO" />
                                                     </div>
                                                 </div>
-                                            </aside>
-                                        </div>
-                                        <div class="col-6">
-
-
-                                            <aside>
-                                                <div class="contenedor-temario small" id="temario">
-                                                    
-                                                                                                        <ul class="lista">
-                                                                                                            @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
-                                                                                                            {   
-                                                                                                                <li id="aCreacionBooking"><a href="javascript:void()">Creación Nro. de Booking @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
-                                                                                                            }
-                                                                                                            else if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
-                                                                                                            {
-                                                                                                                <li id="aCreacionBooking"><a href="javascript:void()">Creación Nro. de Instrucción @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                <li id="aCreacionBooking"><a href="javascript:void()">Creación Routing Order @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
-                                                                                                            }
-
-                                                                                                            <li id="aETD"><a href="javascript:void()">ETD @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETD))</a></li>
-                                                                                                            <li id="aTA"><a href="javascript:void()">Transmisión Aduanas @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS))</a></li>
-                                                                                                            <li id="aETA"><a href="javascript:void()">ETA @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETA))</a></li>
-                                                                                                            @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
-                                                                                                            {
-                                                                                                                <li id="aICA"><a href="javascript:void()">Ingreso de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
-                                                                                                                <li id="aRCA"><a href="javascript:void()">Retiro de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
-                                                                                                            }
-                                                                                                        </ul>
-                                                    
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Puerto de Carga: ")
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POL" />
+                                                    </div>
                                                 </div>
-                                            </aside>
-
-
-                                            <!--<div class="timeline timeline-xs">-->
-                                            <!-- Timeline Item 1-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-primary"></div>
-                        </div>
-                        <div class="timeline-item-content">
-                            New order placed!
-                            <a class="fw-bold text-dark" href="#!">Order #2912</a>
-                            has been successfully placed.
-                        </div>
-                    </div>-->
-                                            <!-- Timeline Item 2-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-blue"></div>
-                        </div>
-                        <div class="timeline-item-content">
-                            Your
-                            <a class="fw-bold text-dark" href="#!">weekly report</a>
-                            has been generated and is ready to view.
-                        </div>
-                    </div>-->
-                                            <!-- Timeline Item 3-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-purple"></div>
-                        </div>
-                        <div class="timeline-item-content">
-                            New user
-                            <a class="fw-bold text-dark" href="#!">Valerie Luna</a>
-                            has registered
-                        </div>
-                    </div>-->
-                                            <!-- Timeline Item 4-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-yellow"></div>
-                        </div>
-                        <div class="timeline-item-content">Server activity monitor alert</div>
-                    </div>-->
-                                            <!-- Timeline Item 5-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-green"></div>
-                        </div>
-                        <div class="timeline-item-content">
-                            New order placed!
-                            <a class="fw-bold text-dark" href="#!">Order #2911</a>
-                            has been successfully placed.
-                        </div>
-                    </div>-->
-                                            <!-- Timeline Item 6-->
-                                            <!--<div class="timeline-item">
-                        <div class="timeline-item-marker">
-                            <div class="timeline-item-marker-text"></div>
-                            <div class="timeline-item-marker-indicator bg-purple"></div>
-                        </div>
-                        <div class="timeline-item-content">
-                            Details for
-                            <a class="fw-bold text-dark" href="#!">Marketing and Planning Meeting</a>
-                            have been updated.
-                        </div>
-                    </div>-->
-                                            <!-- Timeline Item 7-->
-                                            <!--<div class="timeline-item">
-                            <div class="timeline-item-marker">
-                                <div class="timeline-item-marker-text"></div>
-                                <div class="timeline-item-marker-indicator bg-green"></div>
-                            </div>
-                            <div class="timeline-item-content">
-                                New order placed!
-                                <a class="fw-bold text-dark" href="#!">Order #2910</a>
-                                has been successfully placed.
-                            </div>
-                        </div>
-                    </div>-->
-
-                                        </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Puerto de Descarga: ")
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.POD" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        @Html.Raw("Fecha de Descarga: ")
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input class="form-control  small" type="text" disabled value="@Model.EmbarqueDetalle.ETAPOD" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aside>
                                     </div>
+                                    <div class="col-6">
 
+
+                                        <aside>
+                                            <div class="contenedor-temario small" id="temario">
+
+                                                <ul class="lista">
+
+                                                    @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) &&
+                                                Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
+                                                    {
+                                                        <li id="aCreacionBooking"><a href="javascript:void()">Creación Nro. de Booking @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
+                                                    }
+                                                    else if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                    {
+                                                        <li id="aCreacionBooking"><a href="javascript:void()">Inicio Despacho @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li id="aCreacionBooking"><a href="javascript:void()">Creación Routing Order @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_CREATE_RO))</a></li>
+                                                    }
+
+                                                    @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                    {
+                                                        <li id="aETD"><a href="javascript:void()">Ingreso de Carga a Deposito @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETD))</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li id="aETD"><a href="javascript:void()">ETD @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETD))</a></li>
+                                                    }
+
+                                                    @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                    {
+                                                        <li id="aTA"><a href="javascript:void()">Fecha de Vuelo @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS))</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li id="aTA"><a href="javascript:void()">Transmisión Aduanas @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_TRANSMISION_ADUANAS))</a></li>
+                                                    }
+
+                                                    @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                    {
+                                                        <li id="aETA"><a href="javascript:void()">Arribo a destino @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETA))</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li id="aETA"><a href="javascript:void()">ETA @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ETA))</a></li>
+                                                    }
+
+
+                                                    @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.AEREO))
+                                                    {
+                                                        <li id="aICA"><a href="javascript:void()">Release AWB @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
+                                                        <li id="aRCA"><a href="javascript:void()">Entrega a Puerta @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_LCL))
+                                                        {
+                                                            <li id="aICA"><a href="javascript:void()">Ingreso de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_ING_CARGA))</a></li>
+                                                            <li id="aRCA"><a href="javascript:void()">Retiro de Carga al Almacen @Html.Raw(ParseHito(Model.EmbarqueDetalle.FEC_RET_CARGA))</a></li>
+                                                        }
+                                                    }
+                                                </ul>
+
+                                            </div>
+                                        </aside>
+
+
+                                        <!--<div class="timeline timeline-xs">-->
+                                        <!-- Timeline Item 1-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-primary"></div>
+                                            </div>
+                                            <div class="timeline-item-content">
+                                                New order placed!
+                                                <a class="fw-bold text-dark" href="#!">Order #2912</a>
+                                                has been successfully placed.
+                                            </div>
+                                        </div>-->
+                                        <!-- Timeline Item 2-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-blue"></div>
+                                            </div>
+                                            <div class="timeline-item-content">
+                                                Your
+                                                <a class="fw-bold text-dark" href="#!">weekly report</a>
+                                                has been generated and is ready to view.
+                                            </div>
+                                        </div>-->
+                                        <!-- Timeline Item 3-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-purple"></div>
+                                            </div>
+                                            <div class="timeline-item-content">
+                                                New user
+                                                <a class="fw-bold text-dark" href="#!">Valerie Luna</a>
+                                                has registered
+                                            </div>
+                                        </div>-->
+                                        <!-- Timeline Item 4-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-yellow"></div>
+                                            </div>
+                                            <div class="timeline-item-content">Server activity monitor alert</div>
+                                        </div>-->
+                                        <!-- Timeline Item 5-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-green"></div>
+                                            </div>
+                                            <div class="timeline-item-content">
+                                                New order placed!
+                                                <a class="fw-bold text-dark" href="#!">Order #2911</a>
+                                                has been successfully placed.
+                                            </div>
+                                        </div>-->
+                                        <!-- Timeline Item 6-->
+                                        <!--<div class="timeline-item">
+                                            <div class="timeline-item-marker">
+                                                <div class="timeline-item-marker-text"></div>
+                                                <div class="timeline-item-marker-indicator bg-purple"></div>
+                                            </div>
+                                            <div class="timeline-item-content">
+                                                Details for
+                                                <a class="fw-bold text-dark" href="#!">Marketing and Planning Meeting</a>
+                                                have been updated.
+                                            </div>
+                                        </div>-->
+                                        <!-- Timeline Item 7-->
+                                        <!--<div class="timeline-item">
+                                                <div class="timeline-item-marker">
+                                                    <div class="timeline-item-marker-text"></div>
+                                                    <div class="timeline-item-marker-indicator bg-green"></div>
+                                                </div>
+                                                <div class="timeline-item-content">
+                                                    New order placed!
+                                                    <a class="fw-bold text-dark" href="#!">Order #2910</a>
+                                                    has been successfully placed.
+                                                </div>
+                                            </div>
+                                        </div>-->
+
+                                    </div>
                                 </div>
+
                             </div>
+                        </div>
                     </div>
 
                 </div>
@@ -591,7 +614,7 @@
                                 </li>
 
                                 @if (Model.SoyAgenteAduanas == false && Model.EstaAsginadoAgenteAduanas.Equals("0") &&
-                               Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString()))
+                              Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString()))
                                 {
 
 
@@ -682,62 +705,62 @@
                                     </li>
                                 }
 
-                                
-                                    if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())) &&
-                                        Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("Y") && !Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")
-                                        )
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
 
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-clipboard-check">  </i>
-                                                    </div>
+                                if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())) &&
+                                    Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("Y") && !Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")
+                                    )
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
 
-                                                    Confirmación de Liberación de Carga
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
                                                 </div>
 
+                                                Confirmación de Liberación de Carga
+                                            </div>
 
-                                            </a>
-                                        </li>
-                                    }
-                                    else if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())))
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')" data-bs-toggle="modal">
 
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-clipboard-check">  </i>
-                                                    </div>
+                                        </a>
+                                    </li>
+                                }
+                                else if ((Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FORWARDER.ToString())))
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCargaMensaje('@Model.EmbarqueDetalle.KEYBLD','@Model.Servicio')" data-bs-toggle="modal">
 
-                                                    Confirmación de Liberación de Carga
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
                                                 </div>
 
+                                                Confirmación de Liberación de Carga
+                                            </div>
 
-                                            </a>
-                                        </li>
-                                    }
-                                    else if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString())
-                                    && Model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER") &&
-                                    Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("N") &&
-                                    (Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")))
-                                    {
-                                        <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
 
-                                                <div class="d-flex align-items-center">
-                                                    <div class="nav-link-icon" style="margin-right:10px">
-                                                        <i class="bi bi-clipboard-check">  </i>
-                                                    </div>
-                                                    Confirmación de Liberación de Carga
+                                        </a>
+                                    </li>
+                                }
+                                else if (Model.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.CLIENTE_FINAL.ToString())
+                                && Model.EmbarqueDetalle.TIPO_PADRE.ToUpper().Equals("MASTER") &&
+                                Model.EmbarqueDetalle.FLAG_DESGLOSE.Equals("N") &&
+                                (Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")))
+                                {
+                                    <li class="list-group-item" style="padding: 0.5rem 0rem;">
+                                        <a class="nav-link" href="#" onclick="LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
+
+                                            <div class="d-flex align-items-center">
+                                                <div class="nav-link-icon" style="margin-right:10px">
+                                                    <i class="bi bi-clipboard-check">  </i>
                                                 </div>
-                                            </a>
-                                        </li>
-                                    }
+                                                Confirmación de Liberación de Carga
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
 
-                                
+
 
                                 @if (Model.EmbarqueDetalle.CONDICION.Trim().Equals(Utilitario.Constante.EmbarqueConstante.TipoCondicion.CONDICION_FCL)) // 01 = fcl | 02 = LCL
                                 {
@@ -1088,10 +1111,10 @@
 </div>
 
 @section Scripts{
-<script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
-<script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
-<script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
-<script>
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+    <script>
 
      $(document).ready(function () {
 
@@ -1908,7 +1931,7 @@
      }
 
 
-</script>
+    </script>
 
 
 

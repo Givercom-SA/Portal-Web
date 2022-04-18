@@ -9,7 +9,7 @@
 @if (Model != null)
 {
 
-    <div class="card rounded-lg overflow-hidden mb-5">
+    <div class="card rounded-lg overflow-hidden mb-5  small">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table mb-0">
@@ -70,23 +70,18 @@
 
                                     @if (Model.Usuario.EsAdmin == 0)
                                     {
-
-                                        if (Model.Grupos[ii].Menus[jj].Perfiles[i].Checked)
-                                        {
-                                            <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked"  >
-                                        }
-                                        else
-                                        {
-                                            <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked"  >
-                                        }
+                                            if (String.IsNullOrEmpty(Disabled)) { 
+                                                <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                            }
+                                            else { 
+                                                <input class="form-check-input border-primary" type="checkbox" disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">    
+                                            }
                                     }
                                     else
                                     {
                                         <input class="form-check-input border-primary" type="checkbox" checked disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked"  >
                                     }
 
-
-                                 
                                     <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].IdPerfil" />
                                     <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Nombre" />
 
@@ -100,19 +95,6 @@
 
                         }
 
-                        @*<tr>
-
-                                <th class="p-3" scope="row">Pricing</th>
-
-
-                            </tr>
-
-                            <tr class="bg-gray-100">
-                                <th class="p-3" scope="row">User accounts</th>
-                                <td class="p-3">1</td>
-                                <td class="p-3">Up to 5</td>
-                                <td class="p-3">Up to 50</td>
-                            </tr>*@
 
 
 

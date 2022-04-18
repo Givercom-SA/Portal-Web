@@ -118,6 +118,10 @@ namespace Servicio.Acceso.Repositorio
             return result;
         }
 
+
+
+
+
         public List<MenuLogin> ObtenerMenusLogin(int IdUsuario,int IdPerfil)
         {
             var result = new List<MenuLogin>();

@@ -124,6 +124,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public UsuarioRegistroVM Usuario { get; set; }
         public List<GruposAutorizacion> Grupos { get; set; }
 
+
+        
         public string getNombre()
         {
             String nombreCompleto = this.Nombres + " " + this.ApellidoPaterno + " " + this.ApellidoMaterno;

@@ -24,8 +24,6 @@ namespace Servicio.Embarque.Repositorio
             _configuration = configuration;
         }
 
-        
-
         public ListarSolicitudFacturacionBandejaResult ObtenerFacturacionListaBandeja(ListarSolicitudFacturacionBandejaParameter parameter)
         {
             var result = new ListarSolicitudFacturacionBandejaResult();
@@ -44,8 +42,6 @@ namespace Servicio.Embarque.Repositorio
 
                     result.SolicitudesFacturacion = cnn.Query<SolicitudFacturacion>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                     
-                    
-
                 }
             }
             catch (Exception ex)
@@ -56,8 +52,6 @@ namespace Servicio.Embarque.Repositorio
 
             return result;
         }
-
-
 
         public SolicitarFacturacionEstadoResult RegistrarSolicitudFacturacionEstado(SolicitarFacturacionEstadoParameter parameter)
         {
@@ -86,9 +80,6 @@ namespace Servicio.Embarque.Repositorio
 
             return result;
         }
-
-
-
 
         public NotificacionFacturacionResult NotificarFacturacion(NotificacionFacturacionParameter parameter)
         {
@@ -136,9 +127,6 @@ namespace Servicio.Embarque.Repositorio
                         result.SolicitudFacturacion.Enventos = readyResult.Read<EventoSolicitudFacturacion>().ToList();
                     }
                     
-
-
-
                 }
             }
             catch (Exception ex)
@@ -221,9 +209,6 @@ namespace Servicio.Embarque.Repositorio
                     cobroClienteProvosionSeleleccionado = parameter.CobrosPendientesCliente[0];
                 }
 
-
-
-
                 foreach (CobroPendietenEmbarque row in cobroClienteProvosionSeleleccionado.CobrosPendientesEmbarque)
                 {
                     DataRow drog = dtClienteProvision.NewRow();
@@ -276,10 +261,7 @@ namespace Servicio.Embarque.Repositorio
 
                     result = cnn.Query<SolicitarFacturacionResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
-
                 }
-
-
 
             }
             catch (Exception ex)

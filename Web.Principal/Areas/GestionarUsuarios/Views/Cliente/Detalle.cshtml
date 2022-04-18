@@ -37,8 +37,8 @@
         <div class="card-header">
             <!-- Dashboard card navigation-->
             <ul class="nav nav-tabs card-header-tabs" id="dashboardNav" role="tablist">
-                <li class="nav-item me-1"><a class="nav-link active" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos Generales</a></li>
-                <li class="nav-item"><a class="nav-link" id="cliente_usuarios-pill" href="#cliente_usuarios" data-bs-toggle="tab" role="tab" aria-controls="cliente_usuarios" aria-selected="false">Usuarios </a></li>
+                <li class="nav-item me-1 small"><a class="nav-link active" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos Generales</a></li>
+                <li class="nav-item small"><a class="nav-link" id="cliente_usuarios-pill" href="#cliente_usuarios" data-bs-toggle="tab" role="tab" aria-controls="cliente_usuarios" aria-selected="false">Usuarios </a></li>
             </ul>
 
             <button class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
@@ -46,153 +46,112 @@
         </div>
 
         <div class="card-body">
-
             <div class="tab-content" id="dashboardNavContent">
-
                 <!-- Dashboard Tab Pane 1-->
                 <div class="tab-pane fade show active" id="Datos" role="tabpanel" aria-labelledby="Datos-pill">
 
                     <div class="row">
-
-
-
 
                         <fieldset>
 
                             <legend class="small" style="font-weight:bold">Datos Generales</legend>
 
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Estado:")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.NombreEstado" />
-                                        </div>
-                                    </div>
+                            <div class="row gx-3 mb-3">
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">Estado:</label>
+
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.NombreEstado" />
+
                                 </div>
 
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Fecha Registro: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.FechaRegistro" />
-                                        </div>
-                                    </div>
+
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">@Html.Raw(Model.Solicitud.TipoDocumento + ": ") </label>
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.NumeroDocumento" />
+
                                 </div>
 
-                            </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">@Html.Raw("Razon Social: ")</label>
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.RazonSocial" />
 
-
-
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw(Model.Solicitud.TipoDocumento + ": ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.NumeroDocumento" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Fecha Evaluación: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.FechaEvaluacion" />
-                                        </div>
-                                    </div>
                                 </div>
 
                             </div>
 
 
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Razon Social: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.RazonSocial" />
-                                        </div>
-                                    </div>
+                            <div class="row gx-3 mb-3">
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">Fecha Registro: </label>
+
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.FechaRegistro" />
+
                                 </div>
 
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Usuario Evalua: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.UsuarioEvalua" />
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">Fecha Evaluación: </label>
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.FechaEvaluacion" />
+
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">@Html.Raw("Usuario Evalua: ")</label>
+
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.UsuarioEvalua" />
+
+
                                 </div>
 
                             </div>
 
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Tipo(s) Entidad(es) : ")
-                                        </div>
-                                        <div class="col-6">
-
-                                            @{
-
-                                                <ul>
-
-                                                    @foreach (var item in Model.Solicitud.ListaTipoEntidad)
-                                                    {
 
 
-                                                        <li>@item.NombreEntidad </li>
+
+                            <div class="row gx-3 mb-3">
 
 
-                                                    }
-                                                </ul>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1"> @Html.Raw("Tipo(s) Entidad(es) : ")</label>
+                                    @{
 
-                                                @for (var item = 0; item < Model.Solicitud.ListaTipoEntidad.Count(); item++)
-                                                {
+                                        <ul class="small">
 
-                                                    <input type="checkbox"
-                                                           data-codtipoentidad="@Model.Solicitud.ListaTipoEntidad.ElementAt(item).CodigoEntidad"
-                                                           checked="checked"
-                                                           style="display:none" class="cssTipoEntidad" />
-                                                }
+                                            @foreach (var item in Model.Solicitud.ListaTipoEntidad)
+                                            {
+
+
+                                                <li>@item.NombreEntidad </li>
+
 
                                             }
+                                        </ul>
+
+                                        @for (var item = 0; item < Model.Solicitud.ListaTipoEntidad.Count(); item++)
+                                        {
+
+                                            <input type="checkbox"
+                                                   data-codtipoentidad="@Model.Solicitud.ListaTipoEntidad.ElementAt(item).CodigoEntidad"
+                                                   checked="checked"
+                                                   style="display:none" class="cssTipoEntidad" />
+                                        }
+
+                                    }
 
 
-
-
-
-                                        </div>
-                                    </div>
                                 </div>
 
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Motivo de Rechazo: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <textarea class="form-control  small" disabled /> @Model.Solicitud.MotivoRechazo </textarea>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1"> @Html.Raw("Motivo de Rechazo: ")</label>
+                                    <textarea class="form-control  small" disabled /> @Model.Solicitud.MotivoRechazo </textarea>
                                 </div>
+
+
                             </div>
 
 
@@ -204,36 +163,25 @@
 
                             <legend class="small" style="font-weight:bold">Datos de Representante legal</legend>
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Contacto : ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value=" @Html.Raw(string.Format("{0} {1} {2}", Model.Solicitud.NombreRepresentanteL, Model.Solicitud.ApellidoPatRepresentanteL, Model.Solicitud.ApellidoMatRepresentanteL))" />
-                                        </div>
-                                    </div>
+                            <div class="row gx-3 mb-3">
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">@Html.Raw("Contacto : ")</label>
+                                    <input class="form-control  small" type="text" disabled value=" @Html.Raw(string.Format("{0} {1} {2}", Model.Solicitud.NombreRepresentanteL, Model.Solicitud.ApellidoPatRepresentanteL, Model.Solicitud.ApellidoMatRepresentanteL))" />
+                                  
                                 </div>
 
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Correo: ")
-                                        </div>
-                                        <div class="col-6">
-                                            <input class="form-control  small" type="text" disabled value="@Model.Solicitud.Correo" />
-                                        </div>
-                                    </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1">   @Html.Raw("Correo: ")</label>
+                                    <input class="form-control  small" type="text" disabled value="@Model.Solicitud.Correo" />
+                                  
                                 </div>
 
                             </div>
                         </fieldset>
 
-
                         @if (Model.Solicitud.ListaTipoEntidad.ToList().Exists(x => x.CodigoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS)))
                         {
-
                             <hr />
 
                             <fieldset>
@@ -241,61 +189,36 @@
                                 <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
 
 
-                                <div class="row mb-3">
-                                    <div class="col-6 small">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                @Html.Raw("Habilitar Servicio de Proceso de Facturación : ")
-                                            </div>
-                                            <div class="col-6">
+                                <div class="row gx-3 mb-3">
 
-                                                <input type="checkbox" disabled checked="@Model.Solicitud.ProcesoFacturacion" />
+                                    <div class="col-sm-6">
 
 
-
-
-                                            </div>
-                                        </div>
+                                        <input type="checkbox" disabled checked="@Model.Solicitud.ProcesoFacturacion" />
+                                        <label class="small mb-1">   @Html.Raw("Habilitar Servicio de Proceso de Facturación")</label>
                                     </div>
 
-                                    <div class="col-6 small">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                @Html.Raw("Términos y Condiciones Generales de Contratación - T&CGC : ")
-                                            </div>
-                                            <div class="col-6">
 
-                                                <input type="checkbox" disabled checked="@Model.Solicitud.TerminoCondicionGeneralContracion" />
+                                    <div class="col-sm-6">
 
-
-
-
-
-
-                                            </div>
-                                        </div>
+                                        <input type="checkbox" disabled checked="@Model.Solicitud.TerminoCondicionGeneralContracion" />
+                                        <label class="small mb-1">   @Html.Raw("Términos y Condiciones Generales de Contratación - T&CGC")</label>
                                     </div>
 
                                 </div>
 
 
-                                <div class="row mb-3">
-                                    <div class="col-6 small">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                @Html.Raw("Código de Sunat: ")
-                                            </div>
-                                            <div class="col-6">
-                                                <input class="form-control  small" type="text" disabled value="@Model.Solicitud.CodigoSunat" />
-                                            </div>
-                                        </div>
+                                <div class="row gx-3 mb-3">
+
+
+
+                                    <div class="col-sm-4">
+                                        <label class="small mb-1">   @Html.Raw("Código de Sunat")</label>
+                                        <input class="form-control  small" type="text" disabled value="@Model.Solicitud.CodigoSunat" />
+
                                     </div>
 
-                                    <div class="col-6 small">
-                                        <div class="row">
 
-                                        </div>
-                                    </div>
 
                                 </div>
 
@@ -304,79 +227,53 @@
                             </fieldset>
                         }
 
-
                         <hr />
                         <fieldset>
 
                             <legend class="small" style="font-weight:bold">Otros Datos</legend>
 
 
+                            <div class="row gx-3 mb-3">
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Se Brindara Operaciones con Cargas FCL : ")
-                                        </div>
-                                        <div class="col-6">
+                                <div class="col-sm-6">
+                                    <input type="checkbox" disabled checked="@Model.Solicitud.BrindaCargaFCL" />
+                                    <label class="small">   @Html.Raw("Se Brindara Operaciones con Cargas FCL")</label>
+                             
 
-                                            <input type="checkbox" disabled checked="@Model.Solicitud.BrindaCargaFCL" />
 
-                                        </div>
-                                    </div>
                                 </div>
 
 
 
-                                <div class="col-6 small" id="divCadenaSuministro" style="display:none">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Acuerdo de Seguridad de la Cadena de Suministro : ")
-                                        </div>
-                                        <div class="col-6">
+                                <div class="col-sm-6" id="divCadenaSuministro" style="display:none">
+                                    <input type="checkbox" disabled checked="@Model.Solicitud.AcuerdoCadenaSuministro" />
+                                    <label class="small">   @Html.Raw("Acuerdo de Seguridad de la Cadena de Suministro")</label>
+                          
 
-                                            <input type="checkbox" disabled checked="@Model.Solicitud.AcuerdoCadenaSuministro" />
-
-                                        </div>
-                                    </div>
                                 </div>
 
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-6 small">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Se Brindara Agenciamiento de Aduanas : ")
-                                        </div>
-                                        <div class="col-6">
+                            <div class="row gx-3 mb-3">
+                                <div class="col-sm-6">
+                                    <input type="checkbox" disabled checked="@Model.Solicitud.BrindaAgenciamientoAduanas" />
+                                    <label class="small">   @Html.Raw("Se Brindara Agenciamiento de Aduanas")</label>
 
-                                            <input type="checkbox" disabled checked="@Model.Solicitud.BrindaAgenciamientoAduanas" />
-                                        </div>
-                                    </div>
                                 </div>
 
 
+                                <div class="col-sm-6" id="divVeracidadInfo" style="display:none">
+                                    <input type="checkbox" disabled checked="@Model.Solicitud.DeclaracionJuaradVerecidad" />
+                                    <label class="small">   @Html.Raw("Declaración Jurada de Veracidad de la Información")</label>
+                            
 
-
-                                <div class="col-6 small" id="divVeracidadInfo" style="display:none">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            @Html.Raw("Declaración Jurada de Veracidad de la Información : ")
-                                        </div>
-                                        <div class="col-6">
-
-                                            <input type="checkbox" disabled checked="@Model.Solicitud.DeclaracionJuaradVerecidad" />
-
-                                        </div>
-                                    </div>
                                 </div>
 
 
                             </div>
 
 
-                            <div class="row mb-3">
+                            <div class="row gx-3 mb-3">
 
                                 <div class="col-6 small" id="divEndose" style="display:none">
                                     <div class="row">
@@ -410,28 +307,14 @@
 
                 <div class="tab-pane fade" id="cliente_usuarios" role="tabpanel" aria-labelledby="cliente_usuario-pill">
 
-
-
-
-
-
                 </div>
-
-
 
             </div>
         </div>
 
     </div>
 
-
-
-
-
-
 </div>
-
-
 
 <div class="modal fade" data-bs-backdrop="static" id="modalDesactivarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

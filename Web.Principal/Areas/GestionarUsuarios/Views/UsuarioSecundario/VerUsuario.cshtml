@@ -1,0 +1,199 @@
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.EditarUsuarioInternoModel
+@{
+    ViewData["Title"] = "Detalle Usuario Secundario";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", true);
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        Detalle Usuario Secundario
+                    </h1>
+                    <div class="page-header-subtitle">Aquí puedes modificar perfiles o restablecer su contraseña.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Detalle Usuario Secundario
+            <button class="btn btn-sm btn-primary" onclick="javascript: history.go(-1)" type="button">Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+                <form id="frmUsuario" >
+
+
+                    <input type="hidden" asp-for="@Model.IdUsuario">
+                    
+
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Correo" class="small mb-1"></label>
+                            <input asp-for="@Model.Correo" class="form-control" readonly type="text" placeholder="Ingresar Correo" />
+                            
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                            <input asp-for="@Model.Nombres" class="form-control" readonly type="text" placeholder="Ingresar Contraseña" />
+                            
+                        </div>
+
+                    </div>
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoPaterno" readonly class="form-control" type="text" placeholder="Ingresar Correo" />
+                            
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                            <input asp-for="@Model.ApellidoMaterno" readonly class="form-control"  type="text" placeholder="Ingresar Contraseña" />
+                            
+                        </div>
+
+                    </div>
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-sm-6">
+                            <label class="small mb-1">Estado</label>
+                            <fieldset class="border p-2">
+
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" disabled class="form-check-input" id="Radio1" type="radio" value="true">
+                                    <label class="form-check-label small" for="Radio1">Activo</label>
+                                </div>
+                                <div class="form-check form-check-solid">
+                                    <input asp-for="@Model.Activo" disabled class="form-check-input" id="Radio2" type="radio" value="false">
+                                    <label class="form-check-label small" for="Radio2">Inactivo</label>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="small mb-1"></label>
+                            <div class="form-check form-check-solid">
+                                @if (Model.CambioContrasenia)
+                                {
+                                    <input asp-for="@Model.CambioContrasenia" disabled class="form-check-input border-primary" type="checkbox" checked />
+                                }
+                                else
+                                {
+                                    <input asp-for="@Model.CambioContrasenia" disabled class="form-check-input border-primary" type="checkbox" />
+                                }
+                                <label asp-for="@Model.CambioContrasenia" class="small"></label>
+                            </div>
+                            <div class="form-check form-check-solid">
+                                @if (Model.ConfirmarCuenta)
+                                {
+                                    <input readonly asp-for="@Model.ConfirmarCuenta" disabled class="form-check-input border-primary" type="checkbox" checked />
+                                }
+                                else
+                                {
+                                    <input readonly asp-for="@Model.ConfirmarCuenta" disabled class="form-check-input border-primary" type="checkbox" />
+                                }
+                                <label asp-for="@Model.ConfirmarCuenta" class="small"></label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+                        <div class="col-sm-12">
+                            <label class="small mb-1">Accesos</label>
+                            @await Html.PartialAsync("_MenusPorPerfil", Model.MenuPerfil)
+                        </div>
+                    </div>
+
+                    <div id="MensajeResult"></div>
+                    <hr />
+                    <div class="mb-2 text-right">
+                        <button id="btnEditar" class="btn btn-primary" type="button">Editar</button>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success">Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOK"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+          $("#btnEditar").on("click", function (){
+
+                window.location = "@Url.Action("EditarUsuario", "UsuarioSecundario", new { area = "GestionarUsuarios", Id = Model.IdUsuario })";
+
+            });
+
+
+        });
+
+
+
+
+    </script>
+}

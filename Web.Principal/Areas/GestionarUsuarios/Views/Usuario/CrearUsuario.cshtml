@@ -29,89 +29,108 @@
         <!-- Payment methods card-->
         <div class="card card-header-actions mb-4">
             <div class="card-header">
-                Nuevo Usuario
+                Crear Usuario
                 <button id="btnVolver" class="btn btn-sm btn-primary" type="button">Volver</button>
             </div>
 
             <div class="card-body">
                 <div class="sbp-preview-content">
-                    <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-md">
-                            <form id="frmUsuario">
-                                <div class="form-group row small">
-                                    <label asp-for="@Model.Nombres" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingresar Nombres" />
-                                        <span asp-validation-for="@Model.Nombres" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row small">
-                                    <label asp-for="@Model.ApellidoPaterno" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder="Ingresar Apellidos" />
-                                        <span asp-validation-for="@Model.ApellidoPaterno" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row small">
-                                    <label asp-for="@Model.ApellidoMaterno" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder="Ingresar Apellidos" />
-                                        <span asp-validation-for="@Model.ApellidoMaterno" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row small">
-                                    <label asp-for="@Model.Correo" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.Correo" class="form-control" type="text" placeholder="Ingresar Correo" />
-                                        <span asp-validation-for="@Model.Correo" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row small">
-                                    <label asp-for="@Model.Contrasenia" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
-                                        <span asp-validation-for="@Model.Contrasenia" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-3 small">
-                                    <label asp-for="@Model.ConfirmarContrasenia" class="col-sm-2 col-form-label"></label>
-                                    <div class="col-sm-6">
-                                        <input asp-for="@Model.ConfirmarContrasenia" class="form-control" type="password" placeholder="Confirmar Contraseña" />
-                                        <span asp-validation-for="@Model.ConfirmarContrasenia" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group row mb-3">
-                                    <label class="col-sm-2 col-form-label ">Permisos</label>
-                                    <div class="col-sm-3 small">
-                                        <fieldset class="border p-2 h-100">
-                                            <legend class="w-auto text-sm">Perfil</legend>
-                                            @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>)
-                                            {
-                                                <div class="form-check form-check-solid">
-                                                    <input asp-for="@Model.Perfil" class="form-check-input" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
-                                                    <label class="form-check-label" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
-                                                </div>
-                                            }
-                                            <span asp-validation-for="@Model.Perfil" class="text-danger"></span>
-                                        </fieldset>
+                    
 
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <fieldset class="border p-2 h-100">
-                                            <legend class="w-auto text-sm">Accesos</legend>
-                                            <div style="height:180px;" class="overflow-auto small" id="MenuCheckBox"></div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                <div id="MensajeResult"></div>
-                                <hr />
-                                <div class="mb-2 text-right">
-                                    <button class="btn btn-primary" type="submit">Registrar</button>
-                                </div>
-                            </form>
+
+                    <form id="frmUsuario">
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="@Model.Correo" class="small mb-1"></label>
+                                <input asp-for="@Model.Correo" class="form-control" type="text" placeholder="Ingresar Correo" />
+                                <span asp-validation-for="@Model.Correo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                                <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingresar Nombres" />
+                                <span asp-validation-for="@Model.Nombres" class="text-danger small"></span>
+                            </div>
+
+
+                        
+
+
                         </div>
-                    </div>
+
+
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
+                                <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder="Ingresar Apellidos" />
+                                <span asp-validation-for="@Model.ApellidoPaterno" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
+                                <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder="Ingresar Apellidos" />
+                                <span asp-validation-for="@Model.ApellidoMaterno" class="text-danger small"></span>
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label asp-for="@Model.Contrasenia" class="small mb-1"></label>
+                                <input asp-for="@Model.Contrasenia" class="form-control" type="password" placeholder="Ingresar Contraseña" />
+                                <span asp-validation-for="@Model.Contrasenia" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="@Model.ConfirmarContrasenia" class="small mb-1"></label>
+                                <input asp-for="@Model.ConfirmarContrasenia" class="form-control" type="password" placeholder="Confirmar Contraseña" />
+                                <span asp-validation-for="@Model.ConfirmarContrasenia" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row gx-3 mb-3">
+
+                          
+                            <div class="col-md-6">
+                                <label class="small mb-1">Perfil</label>
+                                <fieldset class="border p-2">
+                               
+                                    @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>)
+                                    {
+                                        <div class="form-check form-check-solid">
+                                            <input asp-for="@Model.Perfil" class="form-check-input" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" />
+                                            <label class="small" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
+                                        </div>
+                                    }
+                                    <span asp-validation-for="@Model.Perfil" class="text-danger small"></span>
+                                </fieldset>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Accesos</label>
+                                <fieldset class="border p-2">
+                                 
+                                    <div style="height:180px;" class="overflow-auto small" id="MenuCheckBox"></div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div id="MensajeResult"></div>
+                        <hr />
+                        <div class="mb-2 text-right">
+                            <button class="btn btn-primary" type="submit">Registrar</button>
+                        </div>
+                    </form>
+                   
 
                 </div>
             </div>

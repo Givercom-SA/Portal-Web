@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ViewModel.Datos.Autorizacion;
 
 namespace ViewModel.Datos.UsuarioRegistro
 {
@@ -28,5 +29,9 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string UrlConfirmacion { get; set; }
         public bool RequiereConfirmacion { get; set; }
         public List<int> Menus { get; set; }
+
+        public List<MenuVM> MenusPerfil { get; set; }
+
+        
     }
 }

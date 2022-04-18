@@ -4,10 +4,7 @@
     <thead>
         <tr>
             <th class="border-gray-200" scope="col">Id</th>
-
             <th class="border-gray-200" scope="col">Nombre Completo</th>
-            <th class="border-gray-200" scope="col">Apellido Paterno</th>
-            <th class="border-gray-200" scope="col">Apellido Materno</th>
             <th class="border-gray-200" scope="col">Correo</th>
             <th class="border-gray-200" scope="col">Perfil</th>
             <th class="border-gray-200" scope="col">Fecha de Creación</th>
@@ -22,8 +19,7 @@
             <td >@item.getCodigoUsuario()</td>
 
             <td title="@item.getNombre()"><a href="@Url.Action("VerUsuario", "Usuario", new { area= "GestionarUsuarios", Id=item.IdUsuario})" title="Detalle del usuario">@item.getNombreCorto()</a></td>
-            <td>@item.ApellidoPaterno</td>
-            <td>@item.ApellidoMaterno</td>
+    
             <td>@item.Correo</td>
 
             <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" title="Detalle del perfil">@item.PerfilNombre </a></td>

@@ -2,7 +2,7 @@
 
 <form asp-area="GestionarUsuarios" asp-action="FiltrarUsuarios" asp-controller="Cliente" id="frmClienteUsuarios" onsubmit="FiltrarUsuarios(this);return false;" method="post">
 
-    <h4>Filtros para Busqueda</h4>
+    <h5>Filtros para Busqueda</h5>
     <hr />
     <div class="sbp-preview-content">
 
@@ -10,7 +10,21 @@
 
 
         <div class="row gx-3">
-            <div class="col-3">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label asp-for="@Model.Correo" class="small mb-1"></label>
+                    <input asp-for="@Model.Correo" class="form-control" type="text" maxlength="50" placeholder=" Ingrese su correo" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Form Group (last name)-->
+                <div class="mb-3">
+                    <label asp-for="@Model.Nombres" class="small mb-1"></label>
+                    <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingrese su nombre" />
+                </div>
+            </div>
+            <div class="col-4">
                 <label asp-for="@Model.TipoUsuario" class="small mb-1"></label>
                 <select asp-for="@Model.TipoUsuario"
                         class="form-select small">
@@ -19,37 +33,11 @@
                     <option value="0">Secundario</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <!-- Form Group (last name)-->
-                <div class="mb-3">
-                    <label asp-for="@Model.Nombres" class="small mb-1"></label>
-                    <input asp-for="@Model.Nombres" class="form-control" type="text" placeholder="Ingrese su nombre" />
-                </div>
-            </div>
 
-            <div class="col-md-3">
-                <!-- Form Group (first name)-->
-                <div class="mb-3">
-                    <label asp-for="@Model.ApellidoPaterno" class="small mb-1"></label>
-                    <input asp-for="@Model.ApellidoPaterno" class="form-control" type="text" placeholder=" Ingrese su apellido paterno" />
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label asp-for="@Model.ApellidoMaterno" class="small mb-1"></label>
-                    <input asp-for="@Model.ApellidoMaterno" class="form-control" type="text" placeholder=" Ingrese su apellido materno" />
-                </div>
-            </div>
         </div>
         <div class="row gx-3">
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label asp-for="@Model.Correo" class="small mb-1"></label>
-                    <input asp-for="@Model.Correo" class="form-control" type="text" maxlength="50" placeholder=" Ingrese su correo" />
-                </div>
-            </div>
-            <div class="col-3">
+          
+            <div class="col-4">
                 <label asp-for="@Model.isActivo" class="small mb-1"></label>
                 <select asp-for="@Model.isActivo"
                         asp-items="Model.ListEstado"
@@ -58,7 +46,7 @@
                 </select>
             </div>
 
-            <div class="col-3">
+            <div class="col-4">
                 <label asp-for="@Model.IdPerfil" class="small mb-1"></label>
 
                 <select class="form-select small" asp-for="@Model.IdPerfil">
@@ -82,7 +70,7 @@
 <br />
 <br />
 
-<h4>Regitros Encontrados</h4>
+<h5>Regitros Encontrados</h5>
 
 <hr />
 
