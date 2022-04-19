@@ -90,9 +90,18 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     foreach (var item in CobrosPendientes.ListFacturacionTerceroDetalle) {
                         uids.Add(item.IdProvision);
                     }
-                  
+
+                    model.CobrosPendientesEmbarque.ForEach(x =>
+                    {
+                        if (x.ConceptoCodigo.Trim().Equals("003") && x.RubroCodigo.Trim().Equals("TMAR"))
+                        {
+                            uids.Add(x.ID);
+                        }
+                    });
+
                     model.CobrosPendientesEmbarque.RemoveAll(xx => uids.Contains(xx.ID));
 
+                    
                 }
             }
         
@@ -175,7 +184,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet()]
-        public async Task<IActionResult> SolicitudFacturacion(string keyBl, string servicio) { 
+        public async Task<IActionResult> SolicitudFacturacion(string keyBl, string servicio, string origen) { 
         
             SolicitarFacturacionParameterVM model = new SolicitarFacturacionParameterVM();
             var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(keyBl, servicio);
@@ -184,7 +193,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             model.KEYBLD = keyBl;
             model.NroBl = embarqueSeleccionado.NROBL;
             model.Servicio = servicio;
-         
+            model.Origen = origen;
+
             var listTipoDocumnentoResult = await _servicMaestro.ObtenerParametroPorIdPadre(38);
             if (listTipoDocumnentoResult.CodigoResultado == 0)
             {

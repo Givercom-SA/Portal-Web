@@ -71,7 +71,7 @@
                                             <tr>
                                                 <th>Seleccionar</th>
                                                 <th>Tipo de Provisión</th>
-                                                <th>Código de Rubro</th>
+                                                <th>Código de Concepto</th>
                                                 <th>Concepto</th>
                                                 <th>Moneda</th>
                                                 <th>Importe</th>
@@ -82,36 +82,36 @@
                                         <tbody>
                                             @for (var item = 0; item < Model.CobrosPendientesEmbarque.Count; item++)
                                             {
-                                                <tr>
-                                                    <td class="text-center">
-                                                        <input type="checkbox" asp-for="@Model.CobrosPendientesEmbarque[item].Check"
-                                                               class="form-check-input cssCheckConceptoCobroPendiente"
-                                                               onchange="ValidarCobroPendiente()"
-                                                               data-concepto="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Check" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigo" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].RubroCodigo" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Descripcion" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Moneda" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Importe" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Igv" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Total" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].FlagAsignacion" />
-                                                        <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ID" />
+                                            <tr>
+                                                <td class="text-center">
+                                                    <input type="checkbox" asp-for="@Model.CobrosPendientesEmbarque[item].Check"
+                                                           class="form-check-input cssCheckConceptoCobroPendiente"
+                                                           onchange="ValidarCobroPendiente()"
+                                                           data-concepto="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Check" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].RubroCodigo" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Descripcion" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Moneda" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Importe" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Igv" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].Total" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].FlagAsignacion" />
+                                                    <input type="hidden" asp-for="@Model.CobrosPendientesEmbarque[item].ID" />
 
-                                                    </td>
+                                                </td>
 
-                                                    <td>@Model.CobrosPendientesEmbarque[item].Descripcion</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].RubroCodigo</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].Moneda</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].Importe</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].Igv</td>
-                                                    <td>@Model.CobrosPendientesEmbarque[item].Total</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].Descripcion</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].RubroCodigo@Model.CobrosPendientesEmbarque[item].ConceptoCodigo</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].Moneda</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].Importe</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].Igv</td>
+                                                <td>@Model.CobrosPendientesEmbarque[item].Total</td>
 
 
-                                                </tr>
+                                            </tr>
                                             }
                                         </tbody>
                                     </table>

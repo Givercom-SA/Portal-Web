@@ -67,12 +67,12 @@
                     <div class="card-header border-bottom">
                         <!-- Dashboard card navigation-->
                         <ul class="nav nav-tabs card-header-tabs" id="dashboardNav" role="tablist">
-                            <li class="nav-item me-1"><a class="nav-link active" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos</a></li>
+                            <li class="nav-item me-1"><a class="nav-link active small" id="Datos-pill" href="#Datos" data-bs-toggle="tab" role="tab" aria-controls="Datos" aria-selected="true">Datos</a></li>
                             @if (Model.Servicio.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.MARITIMO) && Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.IMPORTACION))
                             {
-                                <li class="nav-item"><a class="nav-link" id="cobros_pagar-pill" href="#cobros_pagar" data-bs-toggle="tab" role="tab" aria-controls="cobros_pagar" aria-selected="false">Cobros a Pagar </a></li>
+                                <li class="nav-item"><a class="nav-link small" id="cobros_pagar-pill" href="#cobros_pagar" data-bs-toggle="tab" role="tab" aria-controls="cobros_pagar" aria-selected="false">Cobros a Pagar </a></li>
                             }
-                            <li class="nav-item"><a class="nav-link" id="Estado-pill" href="#Estado" data-bs-toggle="tab" role="tab" aria-controls="Estado" aria-selected="false">Estado de Embarque</a></li>
+                            <li class="nav-item"><a class="nav-link small" id="Estado-pill" href="#Estado" data-bs-toggle="tab" role="tab" aria-controls="Estado" aria-selected="false">Estado de Embarque</a></li>
                         </ul>
 
 
@@ -1350,7 +1350,7 @@
              .done(function (result) {
 
              if (result.codigo == 0) {
-                location.href = "@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques"})?keyBl=" + keyLb + "&servicio=" + servicio;
+                location.href = "@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques"})?keyBl=" + keyLb + "&servicio=@Model.Servicio&origen=@Model.Origen";
              } else if (result.codigo > 0) {
 
                  $("#dialogAlerta").modal("show");

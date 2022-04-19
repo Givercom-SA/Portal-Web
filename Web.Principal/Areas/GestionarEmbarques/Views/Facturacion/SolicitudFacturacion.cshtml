@@ -736,6 +736,9 @@
 </div>
 
 
+
+<input type="hidden" id="hidenUrlDetalle" data-url="@Url.Action("Detalle", "Embarque", new { Area= "GestionarEmbarques", codigo = Model.KEYBLD, @servicio = Model.Servicio, @origen = Model.Origen })">
+
 @section Scripts{
 
 
@@ -1596,8 +1599,8 @@
         }
 
         function ActualizarForm() {
-
-            window.location.href = "@Url.Action("Detalle", "Embarque", new { Area= "GestionarEmbarques", codigo = Model.KEYBLD })" ;
+            let urlDetalleEmbarque =$("#hidenUrlDetalle").data("url");
+            window.location.href = urlDetalleEmbarque ;
 
 
         }
