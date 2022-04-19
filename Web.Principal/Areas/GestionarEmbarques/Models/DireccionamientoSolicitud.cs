@@ -55,5 +55,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Models
         public string NaveViaje { get; set; }
         public string Consignatario { get; set; }
         public string NroBL { get; set; }
+        public string Servicio { get; set; }
+        public string Origen { get; set; }
+        
     }
 }

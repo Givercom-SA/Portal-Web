@@ -42,7 +42,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo, string servicio)
+        public async Task<IActionResult> Solicitud(string codigo, string servicio, string origen)
         {
             var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
             var listModalidad = await _serviceMaestro.ObtenerParametroPorIdPadre(62);
@@ -62,6 +62,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             model.Consignatario = embarque.CONSIGNATARIO;
             model.NaveViaje = embarque.NAVEVIAJE;
             model.NroBL = embarque.NROBL;
+
+            model.Servicio = servicio;
+            model.Origen = origen;
+         
+
             //if(model.FlagPlazoEta.Equals("0")) // No cumple con el plazo (Mostrar solo modalidad Diferido)
             //{
             //    model.ListModalidad = new SelectList(listModalidad.ListaParametros.Where(x=>x.ValorCodigo=="1").ToList(), "ValorCodigo", "NombreDescripcion");

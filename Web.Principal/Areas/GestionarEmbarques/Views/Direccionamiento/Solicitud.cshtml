@@ -9,6 +9,7 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
+<input type="hidden" id="hidenDetalleEmbarque" data-url="@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", @codigo=Model.KeyBL, @servicio=Model.Servicio, @origen=Model.Origen})">
 
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
@@ -241,11 +242,13 @@
 
         $("#btnCerrar").click(function () {
             $('#modal_mensaje').modal('hide');
-            window.location.href = "@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", codigo=Model.KeyBL})";
+            let urlDetalleEmbarque = $("#hidenDetalleEmbarque");
+            window.location.href = urlDetalleEmbarque.data("url");
         });
 
         $("#btnVolver").click(function () {
-            window.location.href = "@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", codigo=Model.KeyBL})";
+            let urlDetalleEmbarque = $("#hidenDetalleEmbarque");
+            window.location.href = urlDetalleEmbarque.data("url");
         });
 
         function ObtenerEntidad(NroDocumento) {

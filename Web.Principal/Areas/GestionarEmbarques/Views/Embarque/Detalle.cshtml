@@ -26,7 +26,10 @@
     }
 }
 
+
 <link href="/css/estilo.css" rel="stylesheet" />
+
+<input type="hidden" id="hidenUrlDireccionamiento" data-url="@Url.Action("Solicitud", "Direccionamiento", new { @codigo = Model.EmbarqueDetalle.KEYBLD, @servicio = Model.Servicio , @origen=Model.Origen })" />
 
 <div class="loader" style="">
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
@@ -1798,8 +1801,9 @@
          });
      }
 
-     function IrSolicitudDireccionamiento() {
-         window.location.href = '@Url.Action("Solicitud", "Direccionamiento", new { codigo = Model.EmbarqueDetalle.KEYBLD, servicio = Model.Servicio })';
+        function IrSolicitudDireccionamiento() {
+            hidenUrlDireccionamiento = $("#hidenUrlDireccionamiento");
+            window.location.href = hidenUrlDireccionamiento.data("url");
      }
 
      function RegistrarDireccionamientoPermanente(KeyBL, CodigoTaf, RazonSocial) {
