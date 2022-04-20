@@ -770,7 +770,7 @@
                                     if (Model.EmbarqueDetalle.FLAG_LINEA_MEMO.Equals("1"))
                                     {
                                         <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                            <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD', '@Model.Servicio')">
+                                            <a class="nav-link" href="#" onclick="GestionarMemo('@Model.EmbarqueDetalle.KEYBLD', '@Model.Servicio','@Model.Origen')">
 
                                                 <div class="d-flex align-items-center">
                                                     <div class="nav-link-icon" style="margin-right:10px">
@@ -1297,11 +1297,11 @@
      });
 
 
-     function GestionarMemo(KeyBL, pServicio) {
+     function GestionarMemo(KeyBL, pServicio, pOrigen) {
 
          $.ajax({
              type: "GET",
-             url:'@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL + '&servicio=' + pServicio ,
+             url: '@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques" })?KeyBL=' + KeyBL + '&servicio=' + pServicio + "&origen=" + pOrigen ,
              contentType: 'application/json; charset=utf-8',
              dataType: 'json',
              beforeSend: function () {
@@ -1311,7 +1311,7 @@
          })
          .done(function (result) {
              if (result.codigo == 0) {
-                 location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio;
+                 location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio + "&origen=" + pOrigen;
              } else if (result.codigo == -1) {
 
                  $("#ResultMemo").html(result.mensaje);

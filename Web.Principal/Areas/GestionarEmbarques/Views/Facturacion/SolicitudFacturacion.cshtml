@@ -53,6 +53,9 @@
 
             <form id="formSolicitudFacturacion" asp-action="SolicitudFacturacion" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
 
+                <input type="hidden" asp-for="@Model.Servicio">
+                <input type="hidden" asp-for="@Model.Origen">
+
                 <div class="tab-content" id="cardTabContent">
                     <!-- Wizard tab pane item 1-->
                     <div class="tab-pane py-5 py-xl-5 fade show active" id="wzCobrosFacturar" role="tabpanel" aria-labelledby="wzCobrosFacturar-tab">
@@ -63,102 +66,102 @@
                                 <input type="hidden" asp-for="@Model.KEYBLD" />
                                 <input type="hidden" asp-for="@Model.NroBl" />
                                 <input type="hidden" id="ProvicionClienteCantidad" value="@Model.CobrosPendientesCliente.Count()" />
-                               
+
                                 @{
                                     for (var itemCliente = 0; itemCliente < Model.CobrosPendientesCliente.Count(); itemCliente++)
                                     {
 
-                                                                <div id="contenedorProvosion_@itemCliente" data-itemcliente="@itemCliente" class="cssContenedorProvision" 
-                                                                     style="padding: 5px;margin: 2px;margin-top: 10px;border: 2px #afa5a5 solid">
+                                        <div id="contenedorProvosion_@itemCliente" data-itemcliente="@itemCliente" class="cssContenedorProvision"
+                                             style="padding: 5px;margin: 2px;margin-top: 10px;border: 2px #afa5a5 solid">
 
-                                                                    @if (Model.CobrosPendientesCliente.Count() > 1)
-                                                                    {
-                                                                        <div class="form-check form-check-solid small">
-                                                                            <input asp-for="@Model.ProvisionSeleccionado" onchange="OnChangeProvision(this,'@itemCliente')" class="form-check-input cssClienteProvision" type="radio" value="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
-                                                                            <label class="form-check-label">
-                                                                                Seleccionar
-                                                                            </label>
-                                                                        </div>
-                                                                    }
-
-
-                                                                    <br />
-                                                                    <input type="hidden" id="ProvicionDetalleClienteCantidad_@itemCliente" value="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count" />
-                                                                    <input type="hidden" id="hidenProvisionIdFacturacionTercero_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
-                                                                    <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdCliente" />
-                                                                    <input type="hidden" id="hidenProvisionRazonSocial_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente" />
-                                                                    <input type="hidden" id="hidenProvisionTipoDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente" />
-                                                                    <input type="hidden" id="hidenProvisionNroDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente" />
-                                                                    <input type="hidden" id="hidenProvisionMontoTotal_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].MontoTotal" />
+                                            @if (Model.CobrosPendientesCliente.Count() > 1)
+                                            {
+                                                <div class="form-check form-check-solid small">
+                                                    <input asp-for="@Model.ProvisionSeleccionado" onchange="OnChangeProvision(this,'@itemCliente')" class="form-check-input cssClienteProvision" type="radio" value="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
+                                                    <label class="form-check-label">
+                                                        Seleccionar
+                                                    </label>
+                                                </div>
+                                            }
 
 
-                                                                    <div id="divContenedorProviosion_@itemCliente">
+                                            <br />
+                                            <input type="hidden" id="ProvicionDetalleClienteCantidad_@itemCliente" value="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count" />
+                                            <input type="hidden" id="hidenProvisionIdFacturacionTercero_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdFacturacionTercero" />
+                                            <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].IdCliente" />
+                                            <input type="hidden" id="hidenProvisionRazonSocial_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente" />
+                                            <input type="hidden" id="hidenProvisionTipoDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente" />
+                                            <input type="hidden" id="hidenProvisionNroDocumento_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente" />
+                                            <input type="hidden" id="hidenProvisionMontoTotal_@itemCliente" asp-for="@Model.CobrosPendientesCliente[itemCliente].MontoTotal" />
 
 
-                                                                        <label class="small">Cliente: <strong>  @Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente </strong></label>
-                                                                        <br />
-                                                                        <label class="small">Tipo Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente </strong></label>
-                                                                        <br />
-                                                                        <label class="small">Número de Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente </strong></label>
-                                                                        <br />
-                                                                        <label class="small"> Total a Pagar:<strong> @Model.CobrosPendientesCliente[itemCliente].MontoTotal </strong></label>
-
-                                                                        <div class="table-responsive table-billing-history">
-
-                                                                            <table id="dtConceptoCobro_@itemCliente" class="table cssTablaProvision">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>Concepto</th>
-                                                                                        <th>Moneda</th>
-                                                                                        <th>Importe</th>
-                                                                                        <th>Igv</th>
-                                                                                        <th>Total</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @for (var item = 0; item < Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count(); item++)
-                                                                                    {
-                                                                                        <tr>
+                                            <div id="divContenedorProviosion_@itemCliente">
 
 
-                                                                                            <td>
+                                                <label class="small">Cliente: <strong>  @Model.CobrosPendientesCliente[itemCliente].RazonSocialCliente </strong></label>
+                                                <br />
+                                                <label class="small">Tipo Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].TipoDocumentoCliente </strong></label>
+                                                <br />
+                                                <label class="small">Número de Documento:<strong> @Model.CobrosPendientesCliente[itemCliente].NroDocumentoCliente </strong></label>
+                                                <br />
+                                                <label class="small"> Total a Pagar:<strong> @Model.CobrosPendientesCliente[itemCliente].MontoTotal </strong></label>
 
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigo" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].RubroCodigo" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Descripcion" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].FlagAsignacion" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ID" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].IdBlPagar" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].NroBl" />
-                                                                                                <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].keyBl" />
+                                                <div class="table-responsive table-billing-history">
 
-                                                                                                @Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion
-
-                                                                                            </td>
-                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda</td>
-                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe</td>
-                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv</td>
-                                                                                            <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total</td>
-
-
-                                                                                        </tr>
-                                                                                    }
-                                                                                </tbody>
-                                                                            </table>
-
-                                                                        </div>
-
-                                                                    </div>
+                                                    <table id="dtConceptoCobro_@itemCliente" class="table cssTablaProvision">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Concepto</th>
+                                                                <th>Moneda</th>
+                                                                <th>Importe</th>
+                                                                <th>Igv</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @for (var item = 0; item < Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque.Count(); item++)
+                                                            {
+                                                                <tr>
 
 
-                                                                    <br />
+                                                                    <td>
 
-                                                                </div>
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigo" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].RubroCodigo" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Descripcion" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].FlagAsignacion" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ID" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].IdBlPagar" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].NroBl" />
+                                                                        <input type="hidden" asp-for="@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].keyBl" />
+
+                                                                        @Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].ConceptoCodigoDescripcion
+
+                                                                    </td>
+                                                                    <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Moneda</td>
+                                                                    <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Importe</td>
+                                                                    <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Igv</td>
+                                                                    <td>@Model.CobrosPendientesCliente[itemCliente].CobrosPendientesEmbarque[item].Total</td>
+
+
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <br />
+
+                                        </div>
 
                                     }
 
@@ -246,7 +249,7 @@
 
                                                 </div>
 
-                                               
+
 
                                                 <div class="col-md-6">
 
@@ -264,7 +267,7 @@
                                     </div>
 
                                     <br />
-                             
+
                                     <div id="divPagoTransferencia" style="display:none">
 
                                         <div class="row">
@@ -345,7 +348,7 @@
 
                                     <br />
                                 </div>
-          
+
                                 <br />
                                 <div class="d-flex justify-content-between">
                                     <a class="btn btn-dark" href="javascript:RegresarConcepto()"> Regresar </a>
@@ -369,7 +372,7 @@
                                     <div class="col-md-12">
 
                                         <div class="mb-3">
-                                        
+
                                             <div id="divContenedorResumenCliente">
 
 
@@ -611,74 +614,74 @@
                         </div>
                     </div>
 
-                    
+
 
                 </div>
 
 
                 <div class="modal fade" id="dialogTerminoCondicionAceptacionCredito" tabindex="1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-info">Términos y Condiciones</h5>
-       
-            </div>
-            <div class="modal-body">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-info">Términos y Condiciones</h5>
 
-                <ul class="small">
+                            </div>
+                            <div class="modal-body">
 
-                    <li>
-                        El crédito es otorgado en días calendarios.
-                    </li>
+                                <ul class="small">
 
-                    <li>
-                        <strong>EL CLIENTE</strong> acepta proporcionar toda la información necesaria para un correcto análisis de riesgo crediticio.
-                    </li>
+                                    <li>
+                                        El crédito es otorgado en días calendarios.
+                                    </li>
 
-                    <li>
-                        El crédito podrá ser prorrogado, modificado o cancelado de manera unilateral sin previo aviso.
-                    </li>
+                                    <li>
+                                        <strong>EL CLIENTE</strong> acepta proporcionar toda la información necesaria para un correcto análisis de riesgo crediticio.
+                                    </li>
 
-                    <li>
-                        En caso <strong>EL CLIENTE</strong> no cumpla con efectuar el pago dentro del plazo otorgado, quedará automáticamente constituido en mora y se devengarán los intereses moratorios a la tasa más alta permitida por ley.
-                    </li>
+                                    <li>
+                                        El crédito podrá ser prorrogado, modificado o cancelado de manera unilateral sin previo aviso.
+                                    </li>
 
-                    <li>
-                        Independientemente del vencimiento de la vigencia del crédito, <strong>EL CLIENTE</strong> deberá pagar las sumas de los otorgados pendientes de pago, conforme al plazo pactado por la línea de crédito aprobada.
-                    </li>
+                                    <li>
+                                        En caso <strong>EL CLIENTE</strong> no cumpla con efectuar el pago dentro del plazo otorgado, quedará automáticamente constituido en mora y se devengarán los intereses moratorios a la tasa más alta permitida por ley.
+                                    </li>
 
-                    <li>
-                        Queda expresamente prohibido ceder las obligaciones contraídas; salvo que medie un acuerdo por escrito entre las partes en dicho sentido.
-                    </li>
+                                    <li>
+                                        Independientemente del vencimiento de la vigencia del crédito, <strong>EL CLIENTE</strong> deberá pagar las sumas de los otorgados pendientes de pago, conforme al plazo pactado por la línea de crédito aprobada.
+                                    </li>
 
-                    <li>
-                        Las partes acuerdan que lo que no se encuentra expresamente pactado, se rige supletoriamente por las normas del Código Civil y la normatividad aplicable en el Perú.
-                    </li>
+                                    <li>
+                                        Queda expresamente prohibido ceder las obligaciones contraídas; salvo que medie un acuerdo por escrito entre las partes en dicho sentido.
+                                    </li>
 
-                    <li>
-                        Ante cualquier disputa o controversia, las partes renuncian al fuero de sus domicilios sometiéndose a los Tribunales y Jueces del Distrito Judicial de Lima.
-                    </li>
+                                    <li>
+                                        Las partes acuerdan que lo que no se encuentra expresamente pactado, se rige supletoriamente por las normas del Código Civil y la normatividad aplicable en el Perú.
+                                    </li>
+
+                                    <li>
+                                        Ante cualquier disputa o controversia, las partes renuncian al fuero de sus domicilios sometiéndose a los Tribunales y Jueces del Distrito Judicial de Lima.
+                                    </li>
 
 
-                </ul>
+                                </ul>
 
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input asp-for="@Model.AceptoFormulario" class="form-check-input" id="chkAceptarFormulario" type="checkbox" />
-                        <label asp-for="@Model.AceptoFormulario" class="small mb-1"></label>
-                        <span asp-validation-for="@Model.AceptoFormulario" id="spanValidarTipoDocumento" class="small text-danger"></span>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input asp-for="@Model.AceptoFormulario" class="form-check-input" id="chkAceptarFormulario" type="checkbox" />
+                                        <label asp-for="@Model.AceptoFormulario" class="small mb-1"></label>
+                                        <span asp-validation-for="@Model.AceptoFormulario" id="spanValidarTipoDocumento" class="small text-danger"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" onclick="AceptarTerminoCondicionCredito()" type="button">Aceptar</button>
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary" onclick="AceptarTerminoCondicionCredito()" type="button">Aceptar</button>
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
             </form>
 

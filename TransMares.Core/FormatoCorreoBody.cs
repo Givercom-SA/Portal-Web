@@ -1385,7 +1385,7 @@ namespace TransMares.Core
         {
 
             String HtmlSend = "";
-            string imagen = "http://portalweb.tpsac.com.pe/img/"+ nombreLogoEmpresa ;
+            string imagen = nombreLogoEmpresa ;
 
             HtmlSend = $@"
                 <!DOCTYPE html>

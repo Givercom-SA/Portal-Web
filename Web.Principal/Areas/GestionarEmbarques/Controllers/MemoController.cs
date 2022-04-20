@@ -46,13 +46,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _servicioMessage = servicioMessage;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo, string servicio)
+        public async Task<IActionResult> Solicitud(string codigo, string servicio,string origen)
         {
             var listTipoDoc = await _serviceMaestro.ObtenerParametroPorIdPadre(66);
 
             ViewBag.ListTipoDoc = new SelectList(listTipoDoc.ListaParametros, "ValorCodigo", "NombreDescripcion");
             ViewBag.KeyBL = codigo;
             ViewBag.Servicio = servicio;
+            ViewBag.Origen = origen;
 
             return View();
         }

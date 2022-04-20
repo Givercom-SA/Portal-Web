@@ -1,9 +1,11 @@
+using FluentScheduler;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Service.Common.HostBuilder;
+using Servicio.Embarque.BusinessLogic;
 using Servicio.Embarque.Jobs;
 using System;
 using System.Collections.Generic;
@@ -16,24 +18,38 @@ namespace Servicio.Embarque
     {
         public static void Main(string[] args)
         {
-            // CreateHostBuilder(args).Build().Run();
             var host = HostBaseBuilder<Startup>.GenericBuildWebHost(args);
 
-            //JobManager.Initialize(new JobRegistry());
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+              
+                var logger = services.GetRequiredService<ILogger<Program>>();
+
+                try
+                {
+                  
+
+                   
+                        JobManager.JobException += (obj) => { logger.LogError(obj.Exception.Message); };
+                        JobManager.Initialize(new JobRegistry(
+                            services.GetRequiredService<ProcesoBusinessLogic>()
+                        ));
+                    
+
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Ocurrió un error al cargar los parámetros iniciales.");
+                    throw ex;
+                }
+            }
 
             host.Run();
         }
 
-        //    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        //        Host.CreateDefaultBuilder(args)
-        //            .ConfigureWebHostDefaults(webBuilder =>
-        //            {
-        //                webBuilder.UseStartup<Startup>();
-        //            }).ConfigureServices(services => {
-        //                services.AddHostedService<BackgroundNotificacionArribo>();
-        //                services.AddHostedService<BackgroundMemo>();
-        //                services.AddHostedService<BackgroundFacturar>();
-        //            });
-        //}
+
     }
 }
+
+
