@@ -352,7 +352,7 @@ namespace Web.Principal.ServiceExterno
 
                     embarque.OPERADOR_MAIL = item.Element("OPERADOR_MAIL") == null ? "" : item.Element("OPERADOR_MAIL").Value;
                     embarque.FLAG_DESGLOSE = item.Element("BL_DESGLOSA") == null ? "" : item.Element("BL_DESGLOSA").Value;
-                    embarque.CANTIDAD_DESGLOSE = item.Element("CANT_DESGLOSES") == null ? "" : item.Element("CANT_DESGLOSES").Value;
+                    embarque.CANTIDAD_DESGLOSE = item.Element("CANT_DESGLOSES") == null ? "0" : item.Element("CANT_DESGLOSES").Value;
 
                     embarque.FLAG_CONFIRMACION_AA = item.Element("FLAG_CONFIRMACION_AA") == null ? "" : item.Element("FLAG_CONFIRMACION_AA").Value;
                     embarque.FLAG_PLAZO_TERMINO_DESCARGA = item.Element("FLAG_PLAZO_TERMINO_DESCARGA") == null ? "" : item.Element("FLAG_PLAZO_TERMINO_DESCARGA").Value;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Servicio.Usuario.Models.Usuario;
 using Servicio.Usuario.Repositorio;
 using System;
@@ -21,19 +22,32 @@ namespace Servicio.Usuario.Controllers
         private readonly IUsuarioRepository _repository;
         private readonly IMapper _mapper;
         private readonly ServiceConsumer.ServicioMessage _servicioMessage;
-
-        public UsuarioController(IUsuarioRepository repository, IMapper mapper, ServiceConsumer.ServicioMessage servicioMessage)
+        private readonly ILogger<UsuarioController> _logger;
+        public UsuarioController(IUsuarioRepository repository, 
+            IMapper mapper, ServiceConsumer.ServicioMessage servicioMessage,
+            ILogger<UsuarioController> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _servicioMessage = servicioMessage;
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("obtener-usuarios")]
         public ActionResult<ListarUsuariosResultVM> ObtenerSolicitudes(Models.Usuario.ListarUsuariosParameter parameter)
         {
-            var result = _repository.ObtenerResultados(parameter);
+            ListarUsuariosResult result = new ListarUsuariosResult();
+            try
+            {
+                result = _repository.ObtenerResultados(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+
             return _mapper.Map<ListarUsuariosResultVM>(result);
         }
 
@@ -41,7 +55,16 @@ namespace Servicio.Usuario.Controllers
         [Route("listar-cliente-usuarios")]
         public ActionResult<ListarUsuariosResultVM> ListarClienteUsuarios(Models.Usuario.ListarUsuariosParameter parameter)
         {
-            var result = _repository.ListarClienteUsuarios(parameter);
+            var result = new ListarUsuariosResult();
+            try
+            {
+                result = _repository.ListarClienteUsuarios(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarUsuariosResultVM>(result);
         }
 
@@ -49,7 +72,16 @@ namespace Servicio.Usuario.Controllers
         [Route("obtener-usuario/{Id}")]
         public ActionResult<LeerUsuarioResultVM> ObtenerUsuario(int Id)
         {
-            var result = _repository.ObtenerUsuario(Id);
+            LeerUsuariosResult result = new LeerUsuariosResult();
+            try
+            {
+                result = _repository.ObtenerUsuario(Id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<LeerUsuarioResultVM>(result);
         }
 
@@ -58,23 +90,43 @@ namespace Servicio.Usuario.Controllers
         [Route("obtener-usuarios-secundarios")]
         public ActionResult<ListarUsuariosResultVM> ObtenerUsuariosSecundarios(Models.Usuario.ListarUsuariosParameter parameter)
         {
-            var result = _repository.ObtenerUsuariosSecundarios(parameter);
+            ListarUsuariosResult result = new ListarUsuariosResult();
+            try
+            {
+                result = _repository.ObtenerUsuariosSecundarios(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+
             return _mapper.Map<ListarUsuariosResultVM>(result);
+
         }
 
         [HttpPost]
         [Route("crear-usuario-secundario")]
-        public  ActionResult<UsuarioSecundarioResultVM> CrearUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public ActionResult<UsuarioSecundarioResultVM> CrearUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result =  _repository.CrearUsuarioSecundario(parameter);
-            if (parameter.RequiereConfirmacion)
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
             {
-                if (result.IN_CODIGO_RESULTADO > 0)
+                result = _repository.CrearUsuarioSecundario(parameter);
+                if (parameter.RequiereConfirmacion)
                 {
-                    parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
+                    if (result.IN_CODIGO_RESULTADO== 0)
+                    {
+                        parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IdUsuario);
+                        enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirma Tu Correo",
+                         new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+                    }
                 }
-                enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
-                 new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado,parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
             }
 
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
@@ -85,44 +137,82 @@ namespace Servicio.Usuario.Controllers
         [Route("crear-usuario")]
         public ActionResult<UsuarioSecundarioResultVM> CrearUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.CrearUsuario(parameter);
-
-            if (result.IN_CODIGO_RESULTADO == 0)
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
             {
-                if (parameter.RequiereConfirmacion)
-                {
-                    parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
-                    enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
-                 new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+                result = _repository.CrearUsuario(parameter);
 
+                if (result.IN_CODIGO_RESULTADO == 0)
+                {
+                    if (parameter.RequiereConfirmacion)
+                    {
+                        parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
+                        enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
+                     new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+
+
+                    }
 
                 }
-
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
         [HttpPost]
         [Route("editar-usuario-secundario")]
-        public  ActionResult<UsuarioSecundarioResultVM> EditarUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public ActionResult<UsuarioSecundarioResultVM> EditarUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.EditarUsuarioSecundario(parameter);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.EditarUsuarioSecundario(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
         [HttpPost]
         [Route("editar-usuario-interno")]
-        public  ActionResult<UsuarioSecundarioResultVM> EditarUsuarioInterno(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public ActionResult<UsuarioSecundarioResultVM> EditarUsuarioInterno(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.EditarUsuarioInterno(parameter);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.EditarUsuarioInterno(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
         [HttpPost]
         [Route("cambiar-clave-usuario")]
-        public  ActionResult<UsuarioSecundarioResultVM> CambiarClaveUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        public ActionResult<UsuarioSecundarioResultVM> CambiarClaveUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.CambiarClaveUsuario(parameter);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.CambiarClaveUsuario(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
@@ -130,7 +220,16 @@ namespace Servicio.Usuario.Controllers
         [Route("habilitar-usuario")]
         public ActionResult<UsuarioSecundarioResultVM> HabilitarUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.HabilitarUsuario(parameter);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.HabilitarUsuario(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
@@ -138,7 +237,16 @@ namespace Servicio.Usuario.Controllers
         [Route("obtener-usuario-secundario")]
         public ActionResult<UsuarioSecundarioResultVM> ObtenerUsuarioSecundario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.ObtenerUsuarioSecundario(parameter);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.ObtenerUsuarioSecundario(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
@@ -146,7 +254,17 @@ namespace Servicio.Usuario.Controllers
         [Route("obtener-lista-usuario-menu")]
         public ActionResult<ListarUsuarioMenuResultVM> ObtenerListaUsuarioMenu(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
         {
-            var result = _repository.ObtenerListaUsuarioMenu(parameter);
+            var result = new ListarUsuarioMenuResult();
+            try
+            {
+                result = _repository.ObtenerListaUsuarioMenu(parameter);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarUsuarioMenuResultVM>(result);
         }
 
@@ -154,7 +272,16 @@ namespace Servicio.Usuario.Controllers
         [Route("existe-usuario")]
         public ActionResult<bool> ExisteUsuario(string Correo)
         {
-            var result = _repository.ExisteUsuario(Correo);
+            bool result;
+            try
+            {
+                result = _repository.ExisteUsuario(Correo);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return result;
         }
 
@@ -162,23 +289,28 @@ namespace Servicio.Usuario.Controllers
         [Route("confirmar-correo-usuario")]
         public ActionResult<UsuarioSecundarioResultVM> ConfirmarCorreoUsuario(int IdUsuario)
         {
-            var result = _repository.ConfirmarCorreoUsuario(IdUsuario);
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.ConfirmarCorreoUsuario(IdUsuario);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioSecundarioResultVM>(result);
         }
 
         private async void enviarCorreo(string _correo, string _asunto, string _contenido)
         {
-
             EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
             enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
             enviarMessageCorreoParameterVM.RequestMessage.Contenido = _contenido;
             enviarMessageCorreoParameterVM.RequestMessage.Correo = _correo;
             enviarMessageCorreoParameterVM.RequestMessage.Asunto = _asunto;
 
-             await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
-
-           
-
+            await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
         }
 
 
@@ -186,12 +318,18 @@ namespace Servicio.Usuario.Controllers
         [Route("cambiar-perfil-defecto")]
         public ActionResult<CambiarPerfilDefectoResultVM> CambiarPerfilDefecto(CambiarPerfilDefectoParameterVM parameter)
         {
-            var result = _repository.CambiarPerfilDefecto(_mapper.Map<CambiarPerfilDefectoParameter>(parameter));
+            CambiarPerfilDefectoResult result = new CambiarPerfilDefectoResult();
+            try
+            {
+                result = _repository.CambiarPerfilDefecto(_mapper.Map<CambiarPerfilDefectoParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<CambiarPerfilDefectoResultVM>(result);
         }
-
-
-
 
     }
 }

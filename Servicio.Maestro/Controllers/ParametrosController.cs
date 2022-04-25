@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Servicio.Maestro.Models;
 using Servicio.Maestro.Models.LibroReclamo;
 using Servicio.Maestro.Models.Tarifario;
@@ -23,18 +24,30 @@ namespace Servicio.Maestro.Controllers
     {
         private readonly IParametrosRepository _repository;
         private readonly IMapper _mapper;
+        private readonly ILogger<ParametrosController> _logger;
 
-        public ParametrosController(IParametrosRepository repository, IMapper mapper)
+        public ParametrosController(IParametrosRepository repository, IMapper mapper,
+            ILogger<ParametrosController> logger)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
         [Route("obtenerParametrosIdPadre")]
         public ActionResult<ListaParametrosVM> ObtenerParametroPorIdPadre(int idParam)
         {
-            var result = _repository.ObtenerParametroPorIdPadre(idParam);
+            ListaParametroResult result = new ListaParametroResult();
+            try
+            {
+                result = _repository.ObtenerParametroPorIdPadre(idParam);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListaParametrosVM>(result);
         }
 
@@ -42,7 +55,16 @@ namespace Servicio.Maestro.Controllers
         [Route("obtenerDocumentoPorTipoentidad")]
         public ActionResult<ListarDocumentoTipoEntidadVM> ObtenerDocumentoPorTipoEntidad(ListDocumentoTipoEntidadParameterVM parameter)
         {
-            var result = _repository.ObtenerDocumentoPorTipoEntidad(_mapper.Map<ListarDocumentoTipoEntidadParameter>(parameter));
+            ListaDocumentoTipoEntidadResult result = new ListaDocumentoTipoEntidadResult();
+            try
+            {
+                result = _repository.ObtenerDocumentoPorTipoEntidad(_mapper.Map<ListarDocumentoTipoEntidadParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarDocumentoTipoEntidadVM>(result);
         }
 
@@ -50,7 +72,16 @@ namespace Servicio.Maestro.Controllers
         [Route("reclamo-empresas")]
         public ActionResult<ListaEmpresasResultVM> ListarEmpresasReclamo(ListaEmpresasParameterVM parameter)
         {
-            var result = _repository.ListEmpresasReclamo(_mapper.Map<ListaEmpresasParameter>(parameter));
+            ListaEmpresasResult result = new ListaEmpresasResult();
+            try
+            {
+                result = _repository.ListEmpresasReclamo(_mapper.Map<ListaEmpresasParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListaEmpresasResultVM>(result);
         }
 
@@ -59,7 +90,17 @@ namespace Servicio.Maestro.Controllers
         [Route("ObtenerCorreosPorPerfil")]
         public ActionResult<ListaCorreosVW> ObtenerCorreosPorPerfil(int idParam)
         {
-            var result = _repository.ObtenerCorreosPorPerfil(idParam);
+            ListaCorreosResult result = new ListaCorreosResult();
+            try
+            {
+                result = _repository.ObtenerCorreosPorPerfil(idParam);
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListaCorreosVW>(result);
         }
 
@@ -67,14 +108,34 @@ namespace Servicio.Maestro.Controllers
         [Route("reclamo-unidadnegocio-xempresa")]
         public ActionResult<ListaUnidadNegocioXEmpresasResultVM> ListarUnidadNegocioXEmpresa(ListaUnidadNegocioXEmpresaParameterVM parameter)
         {
-            var result = _repository.ListarUnidadNegocioXEmpresa(_mapper.Map<ListaUnidadNegocioXEmpresaParameter>(parameter));
+            ListaUnidadNegocioXEmpresasResult result = new ListaUnidadNegocioXEmpresasResult();
+            try
+            {
+                result = _repository.ListarUnidadNegocioXEmpresa(_mapper.Map<ListaUnidadNegocioXEmpresaParameter>(parameter));
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListaUnidadNegocioXEmpresasResultVM>(result);
         }
         [HttpPost]
         [Route("reclamo-registrar")]
         public ActionResult<RegistrarReclamoResultVM> RegistrarReclamo(RegistrarReclamoParameterVM parameter)
         {
-            var result = _repository.RegistrarReclamo(_mapper.Map<RegistrarReclamoParameter>(parameter));
+            RegistraReclamoResult result = new RegistraReclamoResult();
+            try
+            {
+                result = _repository.RegistrarReclamo(_mapper.Map<RegistrarReclamoParameter>(parameter));
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<RegistrarReclamoResultVM>(result);
         }
 
@@ -82,7 +143,17 @@ namespace Servicio.Maestro.Controllers
         [Route("tarifario-listar")]
         public ActionResult<ListarTarifarioResultVM> ListarTarifario(ListarTarifarioParameterVM parameter)
         {
-            var result = _repository.ListarTarifario(_mapper.Map<ListarTarifarioParameter>(parameter));
+            ListarTarifarioResult result = new ListarTarifarioResult();
+            try
+            {
+                result = _repository.ListarTarifario(_mapper.Map<ListarTarifarioParameter>(parameter));
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarTarifarioResultVM>(result);
         }
     }

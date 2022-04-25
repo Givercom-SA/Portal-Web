@@ -279,7 +279,7 @@ namespace TransMares.Core
             return HtmlSend;
         }
 
-        public string formatoBodyBienvendaUsuarioSecundarioRenovada(string pNombre, string pContrasenia ,string pUrl, string ImagenGrupo)
+        public string formatoBodyBienvendaUsuarioSecundarioRenovada(string pNombre, string pContraseniaAutogenerado ,string pUrl, string ImagenGrupo)
         {
             String HtmlSend = "";
 
@@ -309,7 +309,7 @@ namespace TransMares.Core
                                                     style='height: auto;    width: 40%;'>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>  Estimado {pNombre},<br />
                                                     Te damos la bienvenida a Transmares Group.<br />
-                                                </p> Su contraseña de acceso es <b>{pContrasenia}</b>
+                                                </p> Tu contraseña autogenerado es:  {pContraseniaAutogenerado}</p>
 
                                                 <center>
                                                 <p style='font-family:Arial, Helvetica, sans-serif;'>

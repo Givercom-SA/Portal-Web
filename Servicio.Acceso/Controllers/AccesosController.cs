@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Servicio.Acceso.Models.LoginUsuario;
 using Servicio.Acceso.Models.Perfil;
 using Servicio.Acceso.Models.SolicitarAcceso;
@@ -32,13 +33,14 @@ namespace Servicio.Acceso.Controllers
         
         private readonly ISolicitarAccesoRepository _repositorySoli;
         private readonly ICodigoGeneradoValidacionRepository _repositoryCodigoGenerado;
-
+        private readonly ILogger<AccesosController> _logger;
         private readonly string UrlArchivoDocbusinessPartner;
         public AccesosController(IAccesosRepository repository,
             ISolicitarAccesoRepository repositorySoli,
             ICodigoGeneradoValidacionRepository repositoryCodigo,
             IMapper mapper, IConfiguration configuration,
-            ServicioMessage servicioMessage)
+            ServicioMessage servicioMessage,
+            ILogger<AccesosController> logger)
         {
             _repository = repository;
             _repositorySoli = repositorySoli;
@@ -46,13 +48,22 @@ namespace Servicio.Acceso.Controllers
             _mapper = mapper;
             _servicioMessage = servicioMessage;
             UrlArchivoDocbusinessPartner = $"{configuration["RutaArchivos:DocumentoBusinessPartners"]}";
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("login-usuario")]
         public ActionResult<UsuarioRegistroVM> LoginUsuario([FromBody] LoginInicialVW loginUsuario)
         {
-            var result = _repository.ObtenerLogin(loginUsuario.CorreoElectronico, loginUsuario.Contrasenia, loginUsuario.EntidadRuc);
+            Models.UsuarioResult result = new Models.UsuarioResult();
+            try { 
+             result = _repository.ObtenerLogin(loginUsuario.CorreoElectronico, loginUsuario.Contrasenia, loginUsuario.EntidadRuc);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioRegistroVM>(result);
         }
 
@@ -60,7 +71,15 @@ namespace Servicio.Acceso.Controllers
         [Route("usuario-leer/{IdUsuario}")]
         public ActionResult<UsuarioRegistroVM> UsuarioLeer(int IdUsuario)
         {
-            var result = _repository.OtenerUsuario(IdUsuario);
+            Models.UsuarioResult result = new Models.UsuarioResult();
+            try { 
+             result = _repository.OtenerUsuario(IdUsuario);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<UsuarioRegistroVM>(result);
         }
 
@@ -68,7 +87,9 @@ namespace Servicio.Acceso.Controllers
         [Route("solicitar-acceso")]
         public ActionResult<SolicitarAccesoResultVM> SolicitarAcceso([FromBody] SolicitarAccesoParameterVM parameter)
         {
-            var result = _repositorySoli.RegistrarSolicitudAcceso(_mapper.Map<SolicitarAccesoParameter>(parameter));
+            SolicitarAccesoResult result = new SolicitarAccesoResult();
+            try { 
+             result = _repositorySoli.RegistrarSolicitudAcceso(_mapper.Map<SolicitarAccesoParameter>(parameter));
 
             if (result.IN_CODIGO_RESULTADO==0)
             {
@@ -86,6 +107,12 @@ namespace Servicio.Acceso.Controllers
                                UrlArchivoDocbusinessPartner,
                                parameter.AcuerdoSeguroCadenaSuministro);
                 }
+            }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
             }
             return _mapper.Map<SolicitarAccesoResultVM>(result);
 
@@ -111,14 +138,21 @@ namespace Servicio.Acceso.Controllers
         [Route("generar-codigo-validacion")]
         public ActionResult<CodigoGeneradoValidacionResultVM> GenerarCodigoValidacion([FromBody] CodigoGeneradoValidacionParameterVM parameter)
         {
-
+            CodigoGeneradoValidacionResult result =new CodigoGeneradoValidacionResult();
+            try { 
             var param = _mapper.Map<CodigoGeneradoValidacionParameter>(parameter);
             param.CODIGO_VERIFICACION = GenerarCadenaLongit(6);
 
             enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Código de verificación",
              new FormatoCorreoBody().formatoBodyActivarCuenta(parameter.Nombres, param.CODIGO_VERIFICACION, parameter.ImagenGrupoTrans));
 
-            var result = _repositoryCodigoGenerado.GenerarCodigoValidacion(param);
+             result = _repositoryCodigoGenerado.GenerarCodigoValidacion(param);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
 
             return _mapper.Map<CodigoGeneradoValidacionResultVM>(result);
 
@@ -129,10 +163,17 @@ namespace Servicio.Acceso.Controllers
         [Route("verificar-codigo-validacion")]
         public ActionResult<VerificarCodigoValidacionResultVM> VerificarCodigoValidacion([FromBody] VerificarCodigoValidacionParameterVM parameter)
         {
+            VerificarCodigoValidacionResult result =new VerificarCodigoValidacionResult();
+            try { 
             var pranVert = _mapper.Map<VerificarCodigoValidacionParameter>(parameter);
 
-            var result = _repositoryCodigoGenerado.VerificarCodigoValidacion(pranVert);
-
+             result = _repositoryCodigoGenerado.VerificarCodigoValidacion(pranVert);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<VerificarCodigoValidacionResultVM>(result);
         }
 
@@ -140,10 +181,17 @@ namespace Servicio.Acceso.Controllers
         [Route("verificar-solicitud-acceso")]
         public ActionResult<VerificarSolicitudAccesoResultVM> VerificarSolicitudAccesp([FromBody] VerificarSolicitudAccesoParameterVM parameter)
         {
+            VerificarSolicitudAccesoResult result =new VerificarSolicitudAccesoResult();
+            try { 
             var pranVert = _mapper.Map<VerificarSolicitudAccesoParameter>(parameter);
 
-            var result = _repositorySoli.VerificarSolicitudAcceso(pranVert);
-
+             result = _repositorySoli.VerificarSolicitudAcceso(pranVert);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<VerificarSolicitudAccesoResultVM>(result);
         }
 
@@ -184,15 +232,21 @@ namespace Servicio.Acceso.Controllers
         [Route("generar-codigo-validacion-correo")]
         public ActionResult<CodigoGeneradoValidacionResultVM> GenerarCodigoValidacionCorreo([FromBody] CodigoGeneradoValidacionParameterVM parameter)
         {
-
+            CodigoGeneradoValidacionResult result =new CodigoGeneradoValidacionResult();
+            try { 
             var param = _mapper.Map<CodigoGeneradoValidacionParameter>(parameter);
             param.CODIGO_VERIFICACION = GenerarCadenaLongit(6);
 
             enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Código de verifiación",
              new FormatoCorreoBody().formatoBodyActivarCuenta(parameter.Nombres, param.CODIGO_VERIFICACION,parameter.ImagenGrupoTrans));
 
-            var result = _repositoryCodigoGenerado.GenerarCodigoValidacionCorreo(param);
-
+             result = _repositoryCodigoGenerado.GenerarCodigoValidacionCorreo(param);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<CodigoGeneradoValidacionResultVM>(result);
 
         }
@@ -201,10 +255,17 @@ namespace Servicio.Acceso.Controllers
         [Route("verificar-codigo-validacion-correo")]
         public ActionResult<VerificarCodigoValidacionResultVM> VerificarCodigoValidacionCorreo([FromBody] VerificarCodigoValidacionParameterVM parameter)
         {
+            VerificarCodigoValidacionResult result = new VerificarCodigoValidacionResult();
+            try { 
             var pranVert = _mapper.Map<VerificarCodigoValidacionParameter>(parameter);
 
-            var result = _repositoryCodigoGenerado.VerificarCodigoValidacionCorreo(pranVert);
-
+             result = _repositoryCodigoGenerado.VerificarCodigoValidacionCorreo(pranVert);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<VerificarCodigoValidacionResultVM>(result);
         }
 
@@ -212,16 +273,33 @@ namespace Servicio.Acceso.Controllers
         [Route("actualizar-contrasenia")]
         public ActionResult<CambiarContrasenaResultVM> ActualizarContrasenia([FromBody] CambiarContrasenaParameterVM parameter)
         {
-            return    _mapper.Map<CambiarContrasenaResultVM>(_repository.ActualizarContrasenia(_mapper.Map <CambiarContrasenaParameter>(parameter)));
+            CambiarContrasenaResult result =new CambiarContrasenaResult(); 
+            try {
+                result = _repository.ActualizarContrasenia(_mapper.Map<CambiarContrasenaParameter>(parameter));
 
-
+           
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<CambiarContrasenaResultVM>(result);
         }
 
         [HttpPost]
         [Route("obtener-perfiles")]
         public ActionResult<ListarPerfilesResultVM> ObtenerPerfiles([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.ObtenerPerfiles(parameter.Nombre, parameter.Activo,parameter.Tipo);
+            ListarPerfilesResult result =new ListarPerfilesResult();
+            try { 
+             result = _repository.ObtenerPerfiles(parameter.Nombre, parameter.Activo,parameter.Tipo);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarPerfilesResultVM>(result);
         }
 
@@ -230,7 +308,15 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-perfiles-activos")]
         public ActionResult<ListarPerfilesActivosResultVM> ObtenerPerfilesActivos([FromBody] ListarPerfilActivosParameterVM parameter)
         {
-            var result = _repository.ObtenerPerfilesActivos(_mapper.Map<ListarPerfilesActivosParameter>(parameter));
+            ListarPerfilesActivosResult result =new ListarPerfilesActivosResult();
+            try { 
+             result = _repository.ObtenerPerfilesActivos(_mapper.Map<ListarPerfilesActivosParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarPerfilesActivosResultVM>(result);
         }
 
@@ -239,7 +325,15 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-perfil")]
         public ActionResult<ObtenerPerfilResultVM> ObtenerPerfil([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.ObtenerPerfil(parameter.IdPerfil);
+            ObtenerPerfilResult result =new ObtenerPerfilResult();
+            try { 
+             result = _repository.ObtenerPerfil(parameter.IdPerfil);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ObtenerPerfilResultVM>(result);
         }
 
@@ -247,7 +341,15 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-perfiles-entidad")]
         public ActionResult<ListarPerfilesResultVM> ObtenerPerfilesPorEntidad([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.ObtenerPerfilesPorEntidad(parameter.IdEntidad);
+            ListarPerfilesResult result =new ListarPerfilesResult();
+            try { 
+             result = _repository.ObtenerPerfilesPorEntidad(parameter.IdEntidad);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarPerfilesResultVM>(result);
         }
 
@@ -255,7 +357,15 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-menus")]
         public ActionResult<ListarMenusPerfilResultVM> ObtenerMenus()
         {
-            var result = _repository.ObtenerMenus();
+            ListarMenusPerfilResult result =new ListarMenusPerfilResult();
+            try { 
+             result = _repository.ObtenerMenus();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarMenusPerfilResultVM>(result);
         }
 
@@ -263,7 +373,15 @@ namespace Servicio.Acceso.Controllers
         [Route("crear-perfil")]
         public ActionResult<PerfilResultVM> CrearPerfil([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.CrearPerfil(_mapper.Map<PerfilParameter>(parameter));
+            PerfilResult result =new PerfilResult();
+            try { 
+             result = _repository.CrearPerfil(_mapper.Map<PerfilParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<PerfilResultVM>(result);
         }
 
@@ -271,7 +389,15 @@ namespace Servicio.Acceso.Controllers
         [Route("editar-perfil")]
         public ActionResult<PerfilResultVM> EditarPerfil([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.EditarPerfil(_mapper.Map<PerfilParameter>(parameter));
+            PerfilResult result = new PerfilResult();
+            try { 
+             result = _repository.EditarPerfil(_mapper.Map<PerfilParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<PerfilResultVM>(result);
         }
 
@@ -279,7 +405,15 @@ namespace Servicio.Acceso.Controllers
         [Route("eliminar-perfil")]
         public ActionResult<PerfilResultVM> EliminarPerfil([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.EliminarPerfil(parameter.IdPerfil);
+            PerfilResult result = new PerfilResult();
+            try { 
+             result = _repository.EliminarPerfil(parameter.IdPerfil);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<PerfilResultVM>(result);
         }
 
@@ -287,7 +421,15 @@ namespace Servicio.Acceso.Controllers
         [Route("veridicar-accesos-perfil")]
         public ActionResult<PerfilResultVM> VerificarAccesosPerfil([FromBody] PerfilParameterVM parameter)
         {
-            var result = _repository.VerificarAccesoPerfil(parameter.IdPerfil);
+            PerfilResult result = new PerfilResult();
+            try { 
+             result = _repository.VerificarAccesoPerfil(parameter.IdPerfil);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<PerfilResultVM>(result);
         }
 
@@ -295,7 +437,15 @@ namespace Servicio.Acceso.Controllers
         [Route("obtener-transgroup-empresas")]
         public ActionResult<ListarTransGroupEmpresaVM> ObtenerTransGroupEmpresas()
         {
-            var result = _repository.ObtenerTransGroupEmpresa();
+            ListarTransGroupEmpresaResult result = new ListarTransGroupEmpresaResult();
+            try { 
+             result = _repository.ObtenerTransGroupEmpresa();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarTransGroupEmpresaVM>(result);
         }
 

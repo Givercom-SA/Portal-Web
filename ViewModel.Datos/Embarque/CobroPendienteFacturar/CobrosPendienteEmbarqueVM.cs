@@ -56,6 +56,9 @@ namespace ViewModel.Datos.Embarque.CobroPendienteFacturar
 
         public Tenor Tenor { get; set; }
 
+        public string Servicio { get; set; }
+        public string Origen { get; set; }
+       
 
 
     }

@@ -25,8 +25,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ObjetoSolicitudResult();
 
-            try
-            {
+       
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_OBTENER_SOLICITUD_CODIGO";
@@ -41,13 +40,7 @@ namespace Servicio.Solicitud.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new ObjetoSolicitudResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+        
 
             return result;
         }
@@ -56,8 +49,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ObjetoSolicitudResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_OBTENER_SOLICITUD_ID";
@@ -72,14 +64,7 @@ namespace Servicio.Solicitud.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new ObjetoSolicitudResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+         
             return result;
         }
 
@@ -87,8 +72,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ListarSolicitudesResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_SOLICITUD_LEER";
@@ -108,13 +92,7 @@ namespace Servicio.Solicitud.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+           
             return result;
         }
 
@@ -122,8 +100,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ListarDocumentoResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_DOCUMENTOS_LEER_PORSOLICITUD";
@@ -138,12 +115,7 @@ namespace Servicio.Solicitud.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+           
 
             return result;
         }
@@ -152,8 +124,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new BaseResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_ACTUALIZAR_DOCUMENTO";
@@ -171,13 +142,7 @@ namespace Servicio.Solicitud.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new BaseResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+       
 
             return result;
         }
@@ -187,8 +152,7 @@ namespace Servicio.Solicitud.Repositorio
             var result = new BaseResult();
             string strContrasena = new Utilitario.Seguridad.SeguridadCodigo().GenerarCadenaLongitud(6);
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_PROCESAR_SOLICITUD";
@@ -202,13 +166,7 @@ namespace Servicio.Solicitud.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new BaseResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+       
 
             return result;
         }
@@ -217,8 +175,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new AprobarSolicitudResult();
 
-            try
-            {
+          
 
                 string strContrasenia = new Utilitario.Seguridad.SeguridadCodigo().GenerarCadenaLongitud(6);
                 strContrasenia= strContrasenia.ToUpper();
@@ -239,13 +196,7 @@ namespace Servicio.Solicitud.Repositorio
 
                   
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new AprobarSolicitudResult();
-                result.IN_CODIGO_RESULTADO = -100;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -253,8 +204,7 @@ namespace Servicio.Solicitud.Repositorio
         public AprobarSolicitudResult rechazarSolicitud(AprobarSolicitudParameter aprobarSolicitudParameter)
         {
             var result = new AprobarSolicitudResult();
-            try
-            {
+            
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_RECHAZAR_SOLICITUD";
@@ -268,13 +218,7 @@ namespace Servicio.Solicitud.Repositorio
 
               
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new AprobarSolicitudResult();
-                result.IN_CODIGO_RESULTADO = -100;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -283,8 +227,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ListarEventosResult();
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_OBTENER_EVENTOS_SOLICITUD";
@@ -299,13 +242,7 @@ namespace Servicio.Solicitud.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new ListarEventosResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -314,8 +251,7 @@ namespace Servicio.Solicitud.Repositorio
         {
             var result = new ListarTipoEntidadResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_OBTENER_ENTIDADES_SOLICITUD";
@@ -329,13 +265,7 @@ namespace Servicio.Solicitud.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result = new ListarTipoEntidadResult();
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+            
 
             return result;
         }

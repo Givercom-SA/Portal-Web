@@ -23,11 +23,13 @@ namespace Servicio.Embarque.Jobs
         {
             try
             {
+                //_logger.LogInformation("Job - Iniciando FACTURACION");
                 procesoBusinessLogic.FacturacionJobAsync().Wait();
+                //_logger.LogInformation("Job - Finalizado FACTURACION");
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                //_logger.LogError(e, "FacturaJob: " + e.Message);
             }
         }
     }

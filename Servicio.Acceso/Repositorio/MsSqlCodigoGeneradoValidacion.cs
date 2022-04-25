@@ -26,8 +26,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new CodigoGeneradoValidacionResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_GENERAR_CODIGO_VALIDACION";
@@ -43,12 +42,7 @@ namespace Servicio.Acceso.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -57,8 +51,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new CodigoGeneradoValidacionResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_GENERAR_CODIGO_VALIDACION_CORREO";
@@ -73,12 +66,7 @@ namespace Servicio.Acceso.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -87,8 +75,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new VerificarCodigoValidacionResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_VALIDAR_CODIGO_VALIDACION";
@@ -104,12 +91,7 @@ namespace Servicio.Acceso.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -118,8 +100,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new VerificarCodigoValidacionResult();
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_VALIDAR_CODIGO_VALIDACION_CORREO";
@@ -134,12 +115,7 @@ namespace Servicio.Acceso.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+           
 
             return result;
         }

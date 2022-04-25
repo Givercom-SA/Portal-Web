@@ -295,6 +295,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     objCobroCLiente.RazonSocialCliente = usuario.RazonSocial;
                     objCobroCLiente.IdFacturacionTercero = "0";
 
+                    objCobroCLiente.MontoTotal = Math.Truncate(cobrosPendientesFacturar.Sum(x => Convert.ToDouble(x.Total)) * 100) / 100;
                     model.CobrosPendientesCliente.Add(objCobroCLiente);
                 }
 

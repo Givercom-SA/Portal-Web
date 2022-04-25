@@ -484,7 +484,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                      
 
-                        ActionResponse.Mensaje = "Estimado cliente, su solicitud fue resgistrado con éxito, por favor volver ainiciar sesión";
+                        ActionResponse.Mensaje = "Estimado cliente, su solicitud fue resgistrado con éxito, por favor volver a iniciar sesión";
                         ActionResponse.Codigo = 0;
 
 

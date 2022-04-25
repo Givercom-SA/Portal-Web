@@ -17,33 +17,24 @@ namespace Servicio.Message
         {
 
 
+
             var host = HostBaseBuilder<Startup>.GenericBuildWebHost(args);
 
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //  //  var services = scope.ServiceProvider;
-            //    //var param = services.GetRequiredService<ParametrosDataCompletation>();
-            //   // var logger = services.GetRequiredService<ILogger<Program>>();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<Program>>();
 
-            //    try
-            //    {
-            //       // param.CargarAsync().Wait();
-
-            //        //if (DatosGeneralesDto.Cargado)
-            //        //{
-            //        //    JobManager.JobException += (obj) => { logger.LogError(obj.Exception.Message); };
-            //        //    JobManager.Initialize(new JobRegistry(
-            //        //        services.GetRequiredService<AfiliacionBusinessLogic>()
-            //        //    ));
-            //        //}
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        logger.LogError(ex, "Ocurrió un error al cargar los parámetros iniciales.");
-            //        throw ex;
-            //    }
-            //}
+                try
+                {
+                    
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Ocurrió un error al cargar los parámetros iniciales.");
+                    throw ex;
+                }
+            }
 
             host.Run();
         }

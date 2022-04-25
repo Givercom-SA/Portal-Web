@@ -14,16 +14,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Bootstrapper.Common;
 using BusinessLogic.Common;
-
 using Service.Common.HostBuilder;
 using Service.Common.Logging.Extensions;
 
-
 using log4netConfiguration = Service.Common.Logging.Appenders.Configuration;
-
 
 namespace Servicio.Embarque
 {

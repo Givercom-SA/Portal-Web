@@ -27,8 +27,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new SolicitarAccesoResult();
 
-            try
-            {
+         
 
 
                 DataTable DtLis = new DataTable("TM_PDWAC_TY_SOLICITUD_ACCESO_TIPOENTIDAD");
@@ -110,12 +109,7 @@ namespace Servicio.Acceso.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -124,9 +118,6 @@ namespace Servicio.Acceso.Repositorio
         public VerificarSolicitudAccesoResult VerificarSolicitudAcceso(VerificarSolicitudAccesoParameter parameter)
         {
             var result = new VerificarSolicitudAccesoResult();
-
-            try
-            {
 
 
                 
@@ -150,12 +141,7 @@ namespace Servicio.Acceso.Repositorio
 
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }

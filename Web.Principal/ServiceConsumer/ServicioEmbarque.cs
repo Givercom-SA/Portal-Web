@@ -69,7 +69,7 @@ namespace Web.Principal.ServiceConsumer
 
         }
 
-        public async Task<ListarCobrosPagarPadreBeyBlResultVM> ObtenerCobroPagarPadreKeyBL(string keybl)
+        public async Task<ListarCobrosPagarPadreBeyBlResultVM> ObtenerCobroPagarKeyBL(string keybl)
         {
             const string SERVICIO = "listar-cobros-pagar-get_padre-keybl";
 

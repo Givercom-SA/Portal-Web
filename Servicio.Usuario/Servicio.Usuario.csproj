@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\Bootstrapper.Common\Bootstrapper.Common.csproj" />
     <ProjectReference Include="..\00.BloqueCompiladores\Service.Common\Service.Common.csproj" />
     <ProjectReference Include="..\TransMares.Core\TransMares.Core.csproj" />
     <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />

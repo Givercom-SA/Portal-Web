@@ -28,8 +28,7 @@ namespace Servicio.Usuario.Repositorio
         public ListarUsuariosResult ObtenerResultados(ListarUsuariosParameter parameter)
         {
             var result = new ListarUsuariosResult();
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_FILTRAR]";
@@ -54,21 +53,14 @@ namespace Servicio.Usuario.Repositorio
                     result.TotalRegistros = queryParameters.Get<System.Int32>("@TotalRegistros");
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerResultados");
-            }
+         
             return result;
         }
 
         public ListarClienteResult ListarClientes(ListarClienteParameter parameter)
         {
             var result = new ListarClienteResult();
-            try
-            {
+            
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_ENTIDAD_FILTRAR";
@@ -85,13 +77,7 @@ namespace Servicio.Usuario.Repositorio
                     result.STR_MENSAJE_BD = "";
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ListarClientes");
-            }
+         
 
             return result;
         }
@@ -99,8 +85,7 @@ namespace Servicio.Usuario.Repositorio
         public ListarUsuariosResult ListarClienteUsuarios(ListarUsuariosParameter parameter)
         {
             var result = new ListarUsuariosResult();
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_CIENTE_USUARIO_FILTRAR]";
@@ -123,21 +108,14 @@ namespace Servicio.Usuario.Repositorio
                     result.TotalRegistros = queryParameters.Get<System.Int32>("@TotalRegistros");
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerResultados");
-            }
+      
             return result;
         }
 
         public LeerClienteResult LeerCliente(Int64 id)
         {
             var result = new LeerClienteResult();
-            try
-            {
+       
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_ENTIDAD_LEER";
@@ -150,13 +128,7 @@ namespace Servicio.Usuario.Repositorio
                     result.STR_MENSAJE_BD = "";
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ListarClientes");
-            }
+       
 
             return result;
         }
@@ -165,8 +137,7 @@ namespace Servicio.Usuario.Repositorio
         public LeerUsuariosResult ObtenerUsuario(int IdUsario)
         {
             var result = new LeerUsuariosResult();
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_LEER]";
@@ -177,21 +148,14 @@ namespace Servicio.Usuario.Repositorio
                     result.IN_CODIGO_RESULTADO = 0;
                     result.STR_MENSAJE_BD = "Ok";
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerUsuario");
-            }
+        
             return result;
         }
 
         public ListarUsuariosResult ObtenerUsuariosSecundarios(ListarUsuariosParameter parameter)
         {
             var result = new ListarUsuariosResult();
-            try
-            {
+            
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_SECUNDARIO_FILTRAR]";
@@ -209,13 +173,7 @@ namespace Servicio.Usuario.Repositorio
 
                     result.TotalRegistros = queryParameters.Get<System.Int32>("@TotalRegistros");
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
-            }
+         
             return result;
         }
 
@@ -223,8 +181,7 @@ namespace Servicio.Usuario.Repositorio
         {
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+           
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU_PERFIL");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
                 DtListaMenus.Columns.Add("PERFIL_ID", typeof(int));
@@ -265,23 +222,16 @@ namespace Servicio.Usuario.Repositorio
                     result.IN_CODIGO_RESULTADO = queryParameters.Get<System.Int32>("@CodigoRespuesta");
                     result.STR_MENSAJE_BD = queryParameters.Get<System.String>("@MensajeRespuesta");
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "CrearUsuarioSecundario");
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+        
 
             return result;
         }
 
         public UsuarioSecundarioResult CrearUsuario(CrearUsuarioSecundarioParameter parameter)
-        {
+        { 
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+           
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
@@ -314,13 +264,7 @@ namespace Servicio.Usuario.Repositorio
 
                     result.IN_CODIGO_RESULTADO = queryParameters.Get<System.Int32>("@IdUsuarioNuevo");
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "CrearUsuario");
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -329,8 +273,7 @@ namespace Servicio.Usuario.Repositorio
         {
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+           
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU_PERFIL");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
                 DtListaMenus.Columns.Add("PERFIL_ID", typeof(int));
@@ -361,13 +304,7 @@ namespace Servicio.Usuario.Repositorio
 
                     result.IN_CODIGO_RESULTADO = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
-            }
+           
 
             return result;
         }
@@ -376,8 +313,7 @@ namespace Servicio.Usuario.Repositorio
         {
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+            
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
@@ -407,14 +343,7 @@ namespace Servicio.Usuario.Repositorio
 
                     
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerUsuariosSecundarios");
-            }
-
+           
             return result;
         }
 
@@ -422,8 +351,7 @@ namespace Servicio.Usuario.Repositorio
         {
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+            
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_CAMBIAR_CLAVE]";
@@ -436,13 +364,7 @@ namespace Servicio.Usuario.Repositorio
                     result= cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "CambiarClaveUsuario");
-            }
+         
 
             return result;
         }
@@ -452,8 +374,7 @@ namespace Servicio.Usuario.Repositorio
             var result = new UsuarioSecundarioResult();
             int activo = (parameter.Activo) ? 1 : 0;
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_HABILITAR]";
@@ -467,13 +388,7 @@ namespace Servicio.Usuario.Repositorio
 
                   
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "HabilitarUsuario");
-                result.IN_CODIGO_RESULTADO = -200;
-                result.STR_MENSAJE_BD = "Estimado usuario, ocurrio un error inesperado por favor volver a intentar nuevamente.";
-            }
+         
 
             return result;
         }
@@ -481,8 +396,7 @@ namespace Servicio.Usuario.Repositorio
         public bool ExisteUsuario(string Correo)
         {
             bool result = false;
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_EXISTE]";
@@ -494,20 +408,14 @@ namespace Servicio.Usuario.Repositorio
 
                     result = queryParameters.Get<System.Boolean>("@Existe");
                 }
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                _logger.LogError(ex, "ExisteUsuario");
-            }
+          
             return result;
         }
 
         public UsuarioSecundarioResult ObtenerUsuarioSecundario(CrearUsuarioSecundarioParameter parameter)
         {
             var result = new UsuarioSecundarioResult();
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_OBTENER]";
@@ -528,13 +436,7 @@ namespace Servicio.Usuario.Repositorio
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerUsuarioSecundario");
-            }
+           
             return result;
         }
 
@@ -542,8 +444,7 @@ namespace Servicio.Usuario.Repositorio
         {
             int Modo = 2; // Listar Menus por IdUsuario y IdPerfil
             var result = new ListarUsuarioMenuResult();
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
@@ -555,21 +456,14 @@ namespace Servicio.Usuario.Repositorio
                     result.Menus = cnn.Query<Models.Usuario.UsuarioMenu>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                     result.IN_CODIGO_RESULTADO = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ObtenerListaUsuarioMenu");
-            }
+          
             return result;
         }
         public CambiarPerfilDefectoResult CambiarPerfilDefecto(CambiarPerfilDefectoParameter parameter)
         {
 
             var result = new CambiarPerfilDefectoResult();
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_CAMBIAR_PERFIL]";
@@ -579,21 +473,14 @@ namespace Servicio.Usuario.Repositorio
                     result = cnn.Query<CambiarPerfilDefectoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "CambiarPerfilDefecto");
-            }
+       
             return result;
         }
         public UsuarioSecundarioResult ConfirmarCorreoUsuario(int IdUsuario)
         {
             var result = new UsuarioSecundarioResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_CONFIRMAR_CORREO]";
@@ -604,13 +491,7 @@ namespace Servicio.Usuario.Repositorio
                     result = cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-                _logger.LogError(ex, "ConfirmarCorreoUsuario");
-            }
+          
 
             return result;
         }

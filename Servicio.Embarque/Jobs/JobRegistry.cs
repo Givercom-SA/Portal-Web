@@ -13,18 +13,18 @@ namespace Servicio.Embarque.Jobs
         {
             Schedule(new MemoJob(procesoBusinessLogic))
                 .ToRunNow()
-                .AndEvery(1)//Minutos
+                .AndEvery(5)//Minutos
                 .Minutes(); 
 
             Schedule(new FacturaJob(procesoBusinessLogic))
                .ToRunNow()
-               .AndEvery(2)//Minutos
+               .AndEvery(5)//Minutos
                .Minutes();
 
             Schedule(new NotificacionArriboJob(procesoBusinessLogic))
-           .ToRunNow()
-           .AndEvery(3)//Minutos
-           .Minutes();
+               .ToRunNow()
+               .AndEvery(5)//Minutos
+               .Minutes();
 
         }
 

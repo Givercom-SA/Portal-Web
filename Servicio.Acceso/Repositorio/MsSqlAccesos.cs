@@ -26,8 +26,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new UsuarioResult();
 
-            try
-            {
+            
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_OBTENER_LOGIN";
@@ -60,12 +59,7 @@ namespace Servicio.Acceso.Repositorio
                         result.IN_CODIGO_RESULTADO = 0;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -74,8 +68,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new UsuarioResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     
@@ -108,12 +101,7 @@ namespace Servicio.Acceso.Repositorio
                         result.IN_CODIGO_RESULTADO = 0;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -200;
-                result.STR_MENSAJE_BD = "Ocurrio un error inesperado, por favor volver a intentar mas tarde";
-            }
+         
 
             return result;
         }
@@ -126,8 +114,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new List<MenuLogin>();
             int Modo = 4; // Obtener Menus por Perfil
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
@@ -138,20 +125,14 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", IdPerfil, DbType.Int32);
                     result = cnn.Query<MenuLogin>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result = null;
-            }
-
+         
             return result;
         }
         private List<MenuLogin> ObtenerMenusUsuaroSecundario(int IdUsuario, int IdEntidad)
         {
             var result = new List<MenuLogin>();
             int Modo = 5; // Obtener Menus por Perfil
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
@@ -162,20 +143,14 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
                     result = cnn.Query<MenuLogin>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result = null;
-            }
-
+       
             return result;
         }
         public List<PerfilLogin> ObtenerPerfilesLogin(int IdUsuario, int IdPerfil)
         {
             var result = new List<PerfilLogin>();
             int Modo = 3; // Obtener Perfiles Login
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_FILTRAR]";
@@ -186,11 +161,7 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", IdPerfil, DbType.Int32);
                     result = cnn.Query<PerfilLogin>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result = null;
-            }
+           
 
             return result;
         }
@@ -199,8 +170,7 @@ namespace Servicio.Acceso.Repositorio
         {
             CambiarContrasenaResult cambiarContrasenaResult = new CambiarContrasenaResult();
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_ACTUALIZAR_CONTRASENIA";
@@ -215,12 +185,7 @@ namespace Servicio.Acceso.Repositorio
 
             
                 }
-            }
-            catch (Exception ex)
-            {
-                cambiarContrasenaResult.IN_CODIGO_RESULTADO = -200;
-                cambiarContrasenaResult.STR_MENSAJE_BD = "Ocurrio un error inesperado, por favor volver a intentar mas tarde";
-            }
+            
 
             return cambiarContrasenaResult;
         }
@@ -229,8 +194,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ListarPerfilesResult();
             int Modo = 0; // Listar Todos los Perfiles
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_FILTRAR]";
@@ -252,13 +216,7 @@ namespace Servicio.Acceso.Repositorio
                     else
                         result.IN_CODIGO_RESULTADO = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+          
             return result;
         }
 
@@ -266,8 +224,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ListarPerfilesActivosResult();
             
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_ACTIVOS]";
@@ -275,12 +232,7 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@Tipo", parameter.Tipo, DbType.String);
                     result.Perfiles = cnn.Query<Perfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -289,8 +241,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new List<MenuPerfil>();
             int Modo = 3; // Obtener Menus por Perfil
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
@@ -300,11 +251,7 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", IdPerfil, DbType.Int32);
                     result = cnn.Query<MenuPerfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result = null;
-            }
+           
 
             return result;
         }
@@ -313,8 +260,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ObtenerPerfilResult();
             int Modo = 1; // Obtener Perfiles por IdPerfil
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_FILTRAR]";
@@ -343,12 +289,7 @@ namespace Servicio.Acceso.Repositorio
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+           
 
             return result;
         }
@@ -357,8 +298,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ListarPerfilesResult();
             int Modo = 2; // Obtener Perfiles por IdEntidad
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_FILTRAR]";
@@ -382,12 +322,7 @@ namespace Servicio.Acceso.Repositorio
                         result.IN_CODIGO_RESULTADO = 0;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+       
 
             return result;
         }
@@ -396,8 +331,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ListarMenusPerfilResult();
             int Modo = 0; // Obtener Todos los Menus
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
@@ -416,12 +350,7 @@ namespace Servicio.Acceso.Repositorio
                         result.IN_CODIGO_RESULTADO = 0;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+        
 
             return result;
         }
@@ -430,8 +359,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new PerfilResult();
 
-            try
-            {
+          
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
@@ -456,12 +384,7 @@ namespace Servicio.Acceso.Repositorio
 
                     
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+      
 
             return result;
         }
@@ -470,8 +393,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new PerfilResult();
 
-            try
-            {
+         
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
@@ -498,13 +420,7 @@ namespace Servicio.Acceso.Repositorio
 
                     result.IN_CODIGO_RESULTADO = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+          
             return result;
         }
 
@@ -512,8 +428,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new PerfilResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_ELIMINAR]";
@@ -521,21 +436,14 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", IdPerfil);
                     result = cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+         
             return result;
         }
         public PerfilResult VerificarAccesoPerfil(int IdPerfil)
         {
             var result = new PerfilResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_VERIFICAR]";
@@ -543,12 +451,7 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@IdPerfil", IdPerfil);
                     result = cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -556,9 +459,7 @@ namespace Servicio.Acceso.Repositorio
         public ListarTransGroupEmpresaResult ObtenerTransGroupEmpresa()
         {
             var result = new ListarTransGroupEmpresaResult();
-            try
-            {
-                using (var cnn = new SqlConnection(strConn))
+            using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "SEGURIDAD.TM_PDWAC_SP_GTRM_EMPRESA_LISTAR";
                     result.Empresa = cnn.Query<TransGroupEmpresa>(spName, null, commandType: CommandType.StoredProcedure).ToList();
@@ -570,12 +471,7 @@ namespace Servicio.Acceso.Repositorio
                     else
                         result.IN_CODIGO_RESULTADO = 0;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
         }
@@ -584,8 +480,7 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new List<string>();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_DOCUMENTOS_PERFIL]";
@@ -594,11 +489,7 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@ID_PERFIL", idperfil, DbType.Int32);
                     result = cnn.Query<string>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                 }
-            }
-            catch (Exception ex)
-            {
-                result = null;
-            }
+        
 
             return result;
         }

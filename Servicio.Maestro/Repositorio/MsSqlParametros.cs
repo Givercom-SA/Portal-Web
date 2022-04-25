@@ -26,8 +26,7 @@ namespace Servicio.Maestro.Repositorio
         {
             var result = new ListaParametroResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_PARAMETROS_LEER_ID";
@@ -41,12 +40,7 @@ namespace Servicio.Maestro.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -55,8 +49,7 @@ namespace Servicio.Maestro.Repositorio
         {
             var result = new ListaDocumentoTipoEntidadResult();
 
-            try
-            {
+         
                 DataTable DtLis = new DataTable("TM_PDWAC_TY_TIPO_ENTIDAD");
                 DtLis.Columns.Add("CODTIPO_ENTIDAD", typeof(string));
 
@@ -82,12 +75,7 @@ namespace Servicio.Maestro.Repositorio
                     if (result.STR_MENSAJE_BD != null)
                         result.IN_CODIGO_RESULTADO = 1;
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+        
 
             return result;
         }
@@ -96,8 +84,7 @@ namespace Servicio.Maestro.Repositorio
         {
             var result = new ListaCorreosResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_LEER_CORREOS_PERFIL";
@@ -111,12 +98,7 @@ namespace Servicio.Maestro.Repositorio
                         result.IN_CODIGO_RESULTADO = 1;
                 }                   
                 
-            }
-            catch(Exception x)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = x.Message;
-            }
+         
 
             return result;
         }
@@ -126,8 +108,7 @@ namespace Servicio.Maestro.Repositorio
 
             var result = new Servicio.Maestro.Models.LibroReclamo.ListaEmpresasResult();
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[RECLAMO_SP_EMPRESAS_LISTAR]";
@@ -140,20 +121,14 @@ namespace Servicio.Maestro.Repositorio
 
                 }
 
-            }
-            catch (Exception err)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = err.Message;
-            }
+         
 
             return result;
         }
         public Servicio.Maestro.Models.LibroReclamo.ListaUnidadNegocioXEmpresasResult ListarUnidadNegocioXEmpresa(ListaUnidadNegocioXEmpresaParameter parametro) {
             var result = new Servicio.Maestro.Models.LibroReclamo.ListaUnidadNegocioXEmpresasResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[RECLAMO_SP_UNIDAD_NEGOCIO_POR_EMPRESA]";
@@ -170,12 +145,7 @@ namespace Servicio.Maestro.Repositorio
 
                 }
 
-            }
-            catch (Exception err)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = err.Message;
-            }
+        
 
             return result;
         }
@@ -183,8 +153,7 @@ namespace Servicio.Maestro.Repositorio
         public Servicio.Maestro.Models.LibroReclamo.RegistraReclamoResult RegistrarReclamo(RegistrarReclamoParameter parametro) {
             var result = new Servicio.Maestro.Models.LibroReclamo.RegistraReclamoResult();
 
-            try
-            {
+          
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[RECLAMO_SP_REGISTRAR]";
@@ -210,12 +179,7 @@ namespace Servicio.Maestro.Repositorio
 
                 }
 
-            }
-            catch (Exception err)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = err.Message;
-            }
+          
 
             return result;
         }
@@ -223,8 +187,7 @@ namespace Servicio.Maestro.Repositorio
         public ListarTarifarioResult ListarTarifario(ListarTarifarioParameter parametro) {
             var result = new ListarTarifarioResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TARIFARIO_SP_LISTAR_TARIFARIO_WEB";
@@ -239,12 +202,7 @@ namespace Servicio.Maestro.Repositorio
 
                 }
 
-            }
-            catch (Exception err)
-            {
-                result.IN_CODIGO_RESULTADO = 2;
-                result.STR_MENSAJE_BD = err.Message;
-            }
+          
 
             return result;
         }

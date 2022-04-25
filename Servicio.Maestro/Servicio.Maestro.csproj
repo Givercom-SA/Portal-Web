@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\Bootstrapper.Common\Bootstrapper.Common.csproj" />
     <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />
     <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
     <ProjectReference Include="..\ViewModel.Reclamo\ViewModel.Reclamo.csproj" />

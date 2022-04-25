@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\00.BloqueCompiladores\Bootstrapper.Common\Bootstrapper.Common.csproj" />
     <ProjectReference Include="..\00.BloqueCompiladores\Service.Common\Service.Common.csproj" />
     <ProjectReference Include="..\05.Utilitarios\Utilitario.Seguridad\Utilitario.Seguridad.csproj" />
     <ProjectReference Include="..\AccesoDatos.Utils\AccesoDatos.Utils.csproj" />

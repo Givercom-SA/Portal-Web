@@ -23,20 +23,12 @@ namespace Servicio.Embarque
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-              
                 var logger = services.GetRequiredService<ILogger<Program>>();
 
                 try
                 {
-                  
-
-                   
                         JobManager.JobException += (obj) => { logger.LogError(obj.Exception.Message); };
-                        JobManager.Initialize(new JobRegistry(
-                            services.GetRequiredService<ProcesoBusinessLogic>()
-                        ));
-                    
-
+                        JobManager.Initialize(new JobRegistry(services.GetRequiredService<ProcesoBusinessLogic>()));
                 }
                 catch (Exception ex)
                 {

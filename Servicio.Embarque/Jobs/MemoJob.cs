@@ -23,11 +23,13 @@ namespace Servicio.Embarque.Jobs
         {
             try
             {
+                //_logger.LogInformation("Job - Iniciando Memo");
                 procesoBusinessLogic.MemoJobAsync().Wait();
+                //_logger.LogInformation("Job - Finalizado Memo");
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                //_logger.LogError(e, "MemoJob: " + e.Message);
             }
         }
     }

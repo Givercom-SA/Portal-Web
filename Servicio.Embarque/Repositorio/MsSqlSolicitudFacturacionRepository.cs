@@ -28,8 +28,7 @@ namespace Servicio.Embarque.Repositorio
         {
             var result = new ListarSolicitudFacturacionBandejaResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_SOLICITUD_FACTURACION_BANDEJA";
@@ -43,12 +42,7 @@ namespace Servicio.Embarque.Repositorio
                     result.SolicitudesFacturacion = cnn.Query<SolicitudFacturacion>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                     
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -57,8 +51,7 @@ namespace Servicio.Embarque.Repositorio
         {
             var result = new SolicitarFacturacionEstadoResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[TM_PDWAC_SP_SOLICITUD_FACTURACION_ESTADO_ACTUALIZAR]";
@@ -71,13 +64,7 @@ namespace Servicio.Embarque.Repositorio
                     result = cnn.Query<SolicitarFacturacionEstadoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
-
+           
             return result;
         }
 
@@ -85,8 +72,7 @@ namespace Servicio.Embarque.Repositorio
         {
             var result = new NotificacionFacturacionResult();
 
-            try
-            {
+           
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "TM_PDWAC_SP_NOTIFICACION_FACTURACION";
@@ -97,12 +83,7 @@ namespace Servicio.Embarque.Repositorio
                     result = cnn.Query<NotificacionFacturacionResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+            
 
             return result;
         }
@@ -112,8 +93,7 @@ namespace Servicio.Embarque.Repositorio
         {
             var result = new LeerSolicitudFacturacionBandejaResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[TM_PDWAC_SP_SOLICITUD_FACTURACION_DETALLE_BANDEJA]";
@@ -128,12 +108,7 @@ namespace Servicio.Embarque.Repositorio
                     }
                     
                 }
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+     
 
             return result;
         }
@@ -143,8 +118,7 @@ namespace Servicio.Embarque.Repositorio
 
             var result = new LeerSolicitudFacturacionKeyBlResult();
 
-            try
-            {
+         
                 using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[dbo].[TM_PDWAC_SP_SOLICITUD_FACTURACION_LISTAR_KEYBL]";
@@ -164,12 +138,7 @@ namespace Servicio.Embarque.Repositorio
                 }
 
 
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+         
 
             return result;
         }
@@ -178,8 +147,7 @@ namespace Servicio.Embarque.Repositorio
         {
             var result = new SolicitarFacturacionResult();
 
-            try
-            {
+         
 
                 DataTable dtClienteProvision = new DataTable("TM_PDWAC_TY_SOLICITUD_FACTURACION_DETALLE");
                 dtClienteProvision.Columns.Add("ESFD_ID", typeof(int));
@@ -263,12 +231,7 @@ namespace Servicio.Embarque.Repositorio
 
                 }
 
-            }
-            catch (Exception ex)
-            {
-                result.IN_CODIGO_RESULTADO = -1;
-                result.STR_MENSAJE_BD = ex.Message;
-            }
+          
 
             return result;
 

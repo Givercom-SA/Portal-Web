@@ -23,11 +23,13 @@ namespace Servicio.Embarque.Jobs
         {
             try
             {
+                //_logger.LogInformation("Job - Iniciando Notificacion Arribo");
                 procesoBusinessLogic.NotificacionArriboAsync().Wait();
+                //_logger.LogInformation("Job - Finalizado Notificacion Arribo");
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                //_logger.LogError(e, "NotificacionArriboJob: " + e.Message);
             }
         }
     }

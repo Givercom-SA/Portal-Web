@@ -18,7 +18,7 @@ namespace Servicio.Message.Controllers
         private readonly ILogger<MessageController> _logger;
         private readonly IMapper _mapper;
         private readonly MessageCorreoManager _messageCorreoManager;
-
+    
         public MessageController(ILogger<MessageController> logger, IMapper mapper, MessageCorreoManager messageCorreoManager)
         {
             _logger = logger;
@@ -30,10 +30,17 @@ namespace Servicio.Message.Controllers
         [Route("enviar-message-correo")]
         public ActionResult<EnviarMessageCorreoResultVM> ObtenerDocumentoPorTipoEntidad(EnviarMessageCorreoParameterVM parameter)
         {
-
             EnviarMessageCorreoResultVM result = new EnviarMessageCorreoResultVM();
+            try { 
+         
             _messageCorreoManager.EnviarMensajeCorreo(parameter.RequestMessage,"Correo");
 
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
 
             return result;
         }

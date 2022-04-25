@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Servicio.Solicitud.Models;
 using Servicio.Solicitud.Repositorio;
 using Servicio.Solicitud.ServiceConsumer;
@@ -28,12 +29,18 @@ namespace Servicio.Solicitud.Controllers
         private readonly IMapper _mapper;
         private readonly string UrlArchivoDocbusinessPartner;
         private readonly ServicioMessage _servicioMessage;
-        
-        public SolicitudController(ISolicitudRepository repository, IMapper mapper, IConfiguration configuration, ServicioMessage servicioMessage)
+        private readonly ILogger<SolicitudController> _logger;
+
+        public SolicitudController(ISolicitudRepository repository, 
+                                    IMapper mapper, 
+                                    IConfiguration configuration, 
+                                    ServicioMessage servicioMessage,
+                                    ILogger<SolicitudController> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _servicioMessage = servicioMessage;
+            _logger = logger;
             UrlArchivoDocbusinessPartner = $"{configuration["RutaArchivos:DocumentoBusinessPartners"]}";
         }
 
@@ -41,19 +48,39 @@ namespace Servicio.Solicitud.Controllers
         [Route("obtenerSolicitudes")]
         public ActionResult<ListarSolicitudesVW> ObtenerSolicitudes(ListarSolicitudesParameterVM parameter)
         {
-            var result = _repository.ObtenerSolicitudes(_mapper.Map<ListarSolicitudesParameter>(parameter));
+            ListarSolicitudesResult result = new ListarSolicitudesResult();
+            try
+            {
+                result = _repository.ObtenerSolicitudes(_mapper.Map<ListarSolicitudesParameter>(parameter));
+               
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
             return _mapper.Map<ListarSolicitudesVW>(result);
+
         }
 
         [HttpGet]
         [Route("obtenerSolicitudPorCodigo")]
         public ActionResult<SolicitudVM> obtenerSolicitudPorCodigo(string codSol)
         {
-            var result = _repository.ObtenerSolicitudPorCodigo(codSol);
-            var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
+            var result = new ObjetoSolicitudResult();
+            try
+            {
+                result = _repository.ObtenerSolicitudPorCodigo(codSol);
+                var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
 
-            if (listaTipoEntidad.IN_CODIGO_RESULTADO == 0)
-                result.ListaTipoEntidad = listaTipoEntidad.ListaEntidades;
+                if (listaTipoEntidad.IN_CODIGO_RESULTADO == 0)
+                    result.ListaTipoEntidad = listaTipoEntidad.ListaEntidades;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
 
             return _mapper.Map<SolicitudVM>(result);
         }
@@ -62,12 +89,21 @@ namespace Servicio.Solicitud.Controllers
         [Route("leer-solicitud")]
         public ActionResult<SolicitudVM> LeerSolicitud(Int64 id)
         {
-            var result = _repository.LeerSolicitud(id);
+            var result = new ObjetoSolicitudResult();
+            try
+            {
+                result = _repository.LeerSolicitud(id);
 
-            var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
+                var listaTipoEntidad = _repository.ObtenerTipoEntidadPorSolicitud(result.SOLI_CODIGO);
 
-            if (listaTipoEntidad.IN_CODIGO_RESULTADO == 0)
-                result.ListaTipoEntidad = listaTipoEntidad.ListaEntidades;
+                if (listaTipoEntidad.IN_CODIGO_RESULTADO == 0)
+                    result.ListaTipoEntidad = listaTipoEntidad.ListaEntidades;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
 
             return _mapper.Map<SolicitudVM>(result);
         }
@@ -76,12 +112,21 @@ namespace Servicio.Solicitud.Controllers
         [Route("actualizarEstadoDocumento/{codSolicitud}/{codDocumento}/{CodEstado}/{CodEstadoRechazo}/{userId}")]
         public ActionResult<string> actualizarEstadoDocumento(string codSolicitud, string codDocumento, string CodEstado, string CodEstadoRechazo, int userId)
         {
-            var result = _repository.ActualizarSolicitudPorCodigo(codSolicitud, codDocumento, CodEstado, CodEstadoRechazo, userId);
+            try
+            {
+                var result = _repository.ActualizarSolicitudPorCodigo(codSolicitud, codDocumento, CodEstado, CodEstadoRechazo, userId);
+            }
+
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
 
             return string.Empty;
         }
 
-        
+
 
         [HttpPost]
         [Route("aprobarSolicitud")]
@@ -113,16 +158,15 @@ namespace Servicio.Solicitud.Controllers
                 resultVM.CodigoResultado = resulAprobacioSolicitud.IN_CODIGO_RESULTADO;
                 resultVM.MensajeResultado = resulAprobacioSolicitud.STR_MENSAJE_BD;
             }
-            catch (Exception err) {
-
+            catch (Exception err)
+            {
+                _logger.LogError(err, err.Message);
 
                 resultVM.CodigoResultado = -200;
                 resultVM.MensajeResultado = err.Message;
             }
 
             return resultVM;
-
-
         }
 
         [HttpPost]
@@ -155,6 +199,7 @@ namespace Servicio.Solicitud.Controllers
             }
             catch (Exception err)
             {
+                _logger.LogError(err, err.Message);
                 resultVM.CodigoResultado = -200;
                 resultVM.MensajeResultado = err.Message;
             }
@@ -165,7 +210,15 @@ namespace Servicio.Solicitud.Controllers
         [Route("obtenereventossolicitud")]
         public ActionResult<ListarEventosVW> ObtenerEventosPorSolicitud(string codSolicitud)
         {
-            var result = _repository.ObtenerEventosPorSolicitud(codSolicitud);
+            ListarEventosResult result =new ListarEventosResult();
+            try { 
+             result = _repository.ObtenerEventosPorSolicitud(codSolicitud);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, err.Message);
+                return StatusCode(500, err.Message);
+            }
             return _mapper.Map<ListarEventosVW>(result);
         }
 
@@ -173,14 +226,22 @@ namespace Servicio.Solicitud.Controllers
         [Route("obtenertipoentidadsolicitud")]
         public ActionResult<ListarEntidadesVW> ObtenerTipoEntidadPorSolicitud(string codSolicitud)
         {
-            var result = _repository.ObtenerTipoEntidadPorSolicitud(codSolicitud);
+            var result =new ListarTipoEntidadResult();
+            try { 
+
+             result = _repository.ObtenerTipoEntidadPorSolicitud(codSolicitud);
+            }
+            catch (Exception err)
+            {
+                _logger.LogError(err, err.Message);
+                return StatusCode(500, err.Message);
+            }
+
             return _mapper.Map<ListarEntidadesVW>(result);
         }
 
         private async void  enviarCorreo(string _correo, string _asunto, string _contenido, string archivo, bool adjunto = false)
         {
-       
-
             EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
             enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
             enviarMessageCorreoParameterVM.RequestMessage.Contenido = _contenido;
@@ -191,10 +252,9 @@ namespace Servicio.Solicitud.Controllers
                 enviarMessageCorreoParameterVM.RequestMessage.Archivos[0] = archivo;
             }
             
-
             await _servicioMessage.EnviarMensageCorreo(enviarMessageCorreoParameterVM);
-           
-
         }
+
     }
+
 }

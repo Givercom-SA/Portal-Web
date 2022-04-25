@@ -9,7 +9,7 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
-
+<input type="hidden" id="hidenUrlDetalleEmbarque" data-url="@Url.Action("Detalle", "Embarque", new { area="GestionarEmbarques", codigo=Model.KEYBL, servicio=Model.Servicio , origen=Model.Origen})">
 
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
@@ -51,8 +51,11 @@
                     <input id="KeyBLD" type="hidden" asp-for="@Model.KEYBL" />
                     <input id="BL" type="hidden" asp-for="@Model.BL" />
 
+                    <input  type="hidden" asp-for="@Model.Servicio" />
+                    <input type="hidden" asp-for="@Model.Origen" />
 
-                  
+
+
 
 
 
@@ -102,14 +105,14 @@
 
                     <hr />
                     <div class="mb-2 text-right">
-                        @if (Model.existeDesglosePendiente > 0) 
-                        { 
+                        @if (Model.existeDesglosePendiente > 0)
+                        {
 
-                        <button class="btn btn-primary" type="submit" id="btnRegistrarCobroPagar">Registrar</button>
+                            <button class="btn btn-primary" type="submit" id="btnRegistrarCobroPagar">Registrar</button>
 
                         }
 
-                            
+
 
                     </div>
 
@@ -339,9 +342,8 @@
 
 
         function ActualizarForm() {
-
-            //window.location.reload();
-            history.go(-1)
+            let urlDetalleEmbarque = $("#hidenUrlDetalleEmbarque").data("url");
+            window.location = urlDetalleEmbarque;
         }
 
         function ValidarCobroPagar() {

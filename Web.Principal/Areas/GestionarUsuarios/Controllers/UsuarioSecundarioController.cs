@@ -320,6 +320,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.ApellidoPaterno = usuario.ApellidoPaterno;
                     parameterVM.ApellidoMaterno = usuario.ApellidoMaterno;
                     parameterVM.Contrasenia = new Utilitario.Seguridad.Encrypt().GetSHA256(usuario.Contrasenia);
+                    parameterVM.ContraseniaNoCifrado = usuario.Contrasenia;
                     parameterVM.RequiereConfirmacion = true;
                     parameterVM.IdUsuarioCrea = Convert.ToInt32(ViewData["IdUsuario"]);
                     parameterVM.UrlConfirmacion = string.Format("{0}/{1}", this.GetUriHost(), "Account/ConfirmarCorreo");

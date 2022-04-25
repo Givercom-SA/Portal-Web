@@ -10,6 +10,23 @@ namespace Test
         }
 
         [Test]
+        public void TestContrasenia() {
+
+           string loannis= new Utilitario.Seguridad.Encrypt().GetSHA256("ioannisb");
+            string luis = new Utilitario.Seguridad.Encrypt().GetSHA256("luisa");
+            string jose = new Utilitario.Seguridad.Encrypt().GetSHA256("Joser");
+            string roger = new Utilitario.Seguridad.Encrypt().GetSHA256("rogerc");
+            string patricia = new Utilitario.Seguridad.Encrypt().GetSHA256("patriciag");
+            string raul = new Utilitario.Seguridad.Encrypt().GetSHA256("raulc");
+            string JoseCOnr = new Utilitario.Seguridad.Encrypt().GetSHA256("josec");
+            string Marco = new Utilitario.Seguridad.Encrypt().GetSHA256("marcoq");
+            string Pilar = new Utilitario.Seguridad.Encrypt().GetSHA256("pilarr");
+
+            string resultado = "";
+
+        }
+
+        [Test]
         public void Test1()
         {
             //Assert.Pass();

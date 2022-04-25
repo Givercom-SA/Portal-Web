@@ -29,12 +29,12 @@ namespace Utilitario.Constante
 
         }
 
-        public static class EmbarqueOpcionRegFacturacionTercero
+        public static class EmbarqueMostrarOpcionRegFacturacionTercero
         {
 
             public static int NO = 0;
-            public static int SI = 1;
-            public static int MENSAJE = 2;
+            public static int SI_INGRESO = 1;
+            public static int SI_NOINGRESA_MENSAJE = 2;
 
 
         }

@@ -20,9 +20,11 @@ namespace Servicio.Embarque.BusinessLogic
     public class ProcesoBusinessLogic : IBusinessLogic
     {
 
-        private int number = 0;
+        
         private Timer timer;
-
+        private int numberMemo = 0;
+        private int numberFactura = 0;
+        private int numberNotificacionArribo= 0;
         private readonly IMemoRepository _repository;
         private readonly ServicioUsuario _serviceUsuario;
         private readonly ServicioEmbarques _serviceEmbarques;
@@ -39,7 +41,8 @@ namespace Servicio.Embarque.BusinessLogic
             IConfiguration configuration,
              ServicioMessage servicioMessage,
              INotificacionArriboRepository notificacionRepository,
-              ILogger<ProcesoBusinessLogic> logger)
+              ILogger<ProcesoBusinessLogic> logger,
+              ISolicitudFacturacionRepository repositoryFacturacion)
         {
             _repository = repository;
             _serviceUsuario = serviceUsuario;
@@ -47,10 +50,17 @@ namespace Servicio.Embarque.BusinessLogic
             _configuration = configuration;
             _servicioMessage = servicioMessage;
             _notificacionRepository = notificacionRepository;
+            _repositoryFacturacion = repositoryFacturacion;
             _logger = logger;
         }
         public async Task MemoJobAsync()
         {
+          
+
+            
+
+            Interlocked.Increment(ref numberMemo);
+            _logger.LogInformation($"Iniciado Memo JOB: Iteracion: {numberMemo}");
             try
             {
                 string pattern = "BM_*";
@@ -61,6 +71,8 @@ namespace Servicio.Embarque.BusinessLogic
                 string KeyBL = string.Empty;
                 foreach (var archivo in archivos)
                 {
+                    _logger.LogInformation($"Iniciado Mover Archivo: Iteracion: {numberMemo}");
+
                     string KeyBLFull = Path.GetFileName(archivo.Name).ToUpper().Replace("BM_", "");
                     string[] arrayKeyBl = KeyBLFull.Split('_');
                     KeyBL = arrayKeyBl[0];
@@ -72,25 +84,32 @@ namespace Servicio.Embarque.BusinessLogic
                     };
                     var result = _repository.CrearNotificacionMemo(parameter);
                     archivo.MoveTo(string.Format("{0}/{1}", rutaNotificacionesProcesadas, archivo.Name));
+
+                    _logger.LogInformation($"Finalizado Mover Archivo JOB: Nombre: {archivo.Name}, Iteracion: {numberMemo}");
                 }
 
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "MemoJobAsync");
-               
+                _logger.LogError(ex, $"Error Memo Iteracion:{numberMemo}");
+
+            }
+            finally {
+                _logger.LogInformation($"Finalizado Memo JOB: Iteracion: {numberMemo}");
             }
         }
 
         public async Task FacturacionJobAsync()
         {
-            Interlocked.Increment(ref number);
+            
+            Interlocked.Increment(ref numberFactura);
 
             try
             {
 
-                Console.WriteLine($"Facturacion job: {number}");
+                _logger.LogInformation($"Iniciado Facturacion JOB: Iteracion: {numberFactura}");
+
                 string rutaNotificacionesPendiente = _configuration["TrabajadoCarpeta:PendientePath"];
                 string rutaNotificacionesProcesadas = _configuration["TrabajadoCarpeta:ProcesadasPath"];
                 string rutaNotificacionesProcesando = _configuration["TrabajadoCarpeta:ProcesandoPath"];
@@ -103,6 +122,8 @@ namespace Servicio.Embarque.BusinessLogic
 
                 foreach (var item in archivosActuales)
                 {
+                    _logger.LogInformation($"Iniciado Facturacion Mover Archivo: Iteracion: {numberFactura}");
+
                     try
                     {
                         strArchivoMover = string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name);
@@ -116,24 +137,27 @@ namespace Servicio.Embarque.BusinessLogic
                         }
 
                         File.Move(item.FullName, strArchivoMover);
-
+                        _logger.LogInformation($"Facturacion Se Mueve Archivo {strArchivoMover}: Iteracion: {numberFactura}");
                         listRutas.Add(new FileFacturacion() { Name = item.Name, FullName = item.FullName });
                     }
                     catch (Exception err)
                     {
-                        Console.WriteLine($"Error from Memo worker: {err.Message}");
+                        _logger.LogError(err, $"Facturacion Error Mover Archivos: Iteracion: {numberFactura}");
+
                     }
                     finally
                     {
-
+                        _logger.LogInformation($"Finalizado Facturacion Mover Archivo: Iteracion: {numberFactura}");
                     }
                 }
-                // fin pasar a carpeta de procesado
 
+                _logger.LogInformation($"Iniciado Facturacion Procesar Archivos Iteracion: {numberFactura}");
                 foreach (var item in listRutas)
                 {
                     try
                     {
+                        _logger.LogInformation($"Iniciado Facturacion Procesar Archivos: Iteracion: {numberFactura}");
+
                         int fileExtPos = item.Name.LastIndexOf(".");
                         string fileName = item.Name;
                         if (fileExtPos >= 0)
@@ -144,6 +168,7 @@ namespace Servicio.Embarque.BusinessLogic
                         string KeyBL = arrayKeyBl[0];
 
                         var resultFacturacion = _repositoryFacturacion.ListarSolicitudFacturacionPorKeyBl(KeyBL);
+
 
                         if (resultFacturacion?.SolicitudFacturaciones.Count() > 0)
                         {
@@ -187,32 +212,43 @@ namespace Servicio.Embarque.BusinessLogic
                                         else
                                         {
                                             regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                                            _logger.LogInformation($"Facturacion Error respuesta de Servicio ActualizarBlTrabajado,  Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
                                         }
                                     }
                                     else
                                     {
                                         regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                                        _logger.LogInformation($"Facturacion FLAG_COBROS_PENDIENTES<>0 y FLAG_ESTADO_FACTURACION_SOLICITUD<>1 Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
                                     }
                                 }
                                 else
                                 {
                                     regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                                    _logger.LogInformation($"Facturacion Estado de Solicitud de Facturacion no esta APROBADO, Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
                                 }
                             }
                             else
                             {
                                 regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                                _logger.LogInformation($"Facturacion Erro en Obtener Solicitud de Facturacion, Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
                             }
                         }
                         else
                         {
                             regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                            _logger.LogInformation($"Facturacion Error en Listar Solicitudes de Facturacion, Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
                         }
+
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error facturacion job: {ex.Message}");
+                        _logger.LogError(ex, $"Error Facturacion Proceso de Archivo, Iteracion: {numberFactura}, {ex.Message}");
                         regresarArchivo(string.Format("{0}/{1}", rutaNotificacionesProcesando, item.Name), string.Format("{0}/{1}", rutaNotificacionesPendiente, item.Name));
+                        _logger.LogInformation($"Facturacion Regresar Archivos a la Ruta Inicial {rutaNotificacionesPendiente}/{item.Name}: Iteracion: {numberFactura}");
+                    }
+                    finally
+                    {
+                        _logger.LogInformation($"Finalizado Facturacion Procesar Archivo, Iteracion: {numberFactura}");
                     }
                 }
 
@@ -220,14 +256,24 @@ namespace Servicio.Embarque.BusinessLogic
 
             catch (Exception ex)
             {
-                _logger.LogError(ex, "FacturacionJobAsync");
+                _logger.LogError(ex, $"Error Facturacion JOB: Iteracion: {numberFactura},  {ex.Message}");
 
             }
+            finally {
+                _logger.LogInformation($"Finalizado Facturacion JOB: Iteracion: {numberFactura}");
+            }
+
+
+
         }
 
         public async Task NotificacionArriboAsync() {
-            Interlocked.Increment(ref number);
-            Console.WriteLine($"Printing from worker: {number}");
+
+         
+
+            Interlocked.Increment(ref numberNotificacionArribo);
+            _logger.LogInformation($"Iniciado Notificacion Arribo : Iteracion: {numberNotificacionArribo}");
+
             try
             {
                 string pattern = "NA-{0}*";
@@ -243,6 +289,8 @@ namespace Servicio.Embarque.BusinessLogic
 
                     foreach (var item in lista)
                     {
+                        _logger.LogInformation($"Iniciado Notificacion Arribo Procesar archivo: Iteracion: {numberNotificacionArribo}");
+
                         var user = _serviceUsuario.ObtenerUsuarioPorId(item.NOTARR_IDUSUARIO_CREA);
 
                         if (user.Result != null)
@@ -300,6 +348,7 @@ namespace Servicio.Embarque.BusinessLogic
 
                             }
                         }
+                        _logger.LogInformation($"Finalizado Notificacion Arribo Procesar archivo: Iteracion: {numberNotificacionArribo}");
                     }
                 }
 
@@ -307,7 +356,10 @@ namespace Servicio.Embarque.BusinessLogic
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "NotificacionArriboAsync");
+                _logger.LogError(ex,$"Erro Notificacion Arribo : Iteracion: {numberNotificacionArribo}");
+            }
+            finally {
+                _logger.LogInformation($"Finalizado Notificacion Arribo : Iteracion: {numberNotificacionArribo}");
             }
         }
         private void regresarArchivo(string origen, string destino)
