@@ -16,6 +16,8 @@ namespace ViewModel.Datos.SolictudAcceso
         public string EstadoSolicitud { get; set; }
         public string MotivoRechazo { get; set; }
         public string ImagenGrupTransmares { get; set; }
+        public string UrlTransmares { get; set; }
+        
 
     }
 

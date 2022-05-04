@@ -103,7 +103,8 @@ namespace Servicio.Acceso.Controllers
                                    string.Format("{0}: {1}", parameter.TipoDocumento, parameter.NumeroDocumento),
                                    parameter.RazonSocial,
                                    string.Format("{0} {1} {2}", parameter.RepresentaLegalNombre, parameter.RepresentaLegalApellidoPaterno,
-                                   parameter.RepresentaLegalMaterno), parameter.Correo, result.Contrasenia, parameter.ImagenGrupoTrans),
+                                   parameter.RepresentaLegalMaterno), parameter.Correo, result.Contrasenia, parameter.ImagenGrupoTrans,
+                                   parameter.UrlTransmares),
                                UrlArchivoDocbusinessPartner,
                                parameter.AcuerdoSeguroCadenaSuministro);
                 }

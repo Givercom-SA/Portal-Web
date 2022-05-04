@@ -150,7 +150,8 @@ namespace Servicio.Solicitud.Controllers
                                     string.Format("{0} {1} {2}", solicitud.SOLI_RELEGAL_NOMBRE, solicitud.SOLI_RLEGAL_APELLIDO_PATERNO,
                                     solicitud.SOLI_RLEGAL_APELLIDO_MATERNO
                                     ), solicitud.SOLI_CORREO, resulAprobacioSolicitud.Contrasenia,
-                                    parameter.ImagenGrupTransmares),
+                                    parameter.ImagenGrupTransmares,
+                                    parameter.UrlTransmares),
                                 UrlArchivoDocbusinessPartner,
                                 (solicitud.SOLI_ACUERDO_SEGUR_CADENA_SUMINI == 1) ? true : false);
                 }

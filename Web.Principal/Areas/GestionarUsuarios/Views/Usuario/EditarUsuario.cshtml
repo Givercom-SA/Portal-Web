@@ -101,10 +101,6 @@
                     </div>
 
                     <div class="row gx-3 mb-3">
-
-
-
-
                         <div class="col-md-6">
                             <label class="small mb-1">Estado</label>
                             <fieldset class="border p-2 mb-2">
@@ -120,28 +116,15 @@
                             </fieldset>
 
                         </div>
-
-
-
-
                     </div>
 
-
-
-
-
                     <div class="row gx-3 mb-3">
-
-
-
                         <div class="col-md-6">
                             <label class="small mb-1">Perfil</label>
                             <fieldset class="border p-2">
-
                                 @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>
 )
                                 {
-
                                     <div class="form-check form-check-solid">
 
                                         @if (Model.Perfil == perfil.IdPerfil)
@@ -154,8 +137,6 @@
                                             {
                                                 <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked />
                                             }
-
-
                                         }
                                         else
                                         {
@@ -188,8 +169,6 @@
                         </div>
                     </div>
 
-
-
                     <div id="MensajeResult"></div>
                     <hr />
                     <div class="mb-2 text-right">
@@ -199,7 +178,6 @@
                         <button id="btnRestablecer" class="btn btn-primary" type="button">Restablecer Contraseña</button>
                     </div>
                 </form>
-
 
             </div>
         </div>

@@ -73,7 +73,7 @@ namespace Web.Principal.Controllers
                 solicitarAccesoVM.ImagenGrupoTrans =$"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}";
                 solicitarAccesoVM.IdUsuarioCreaModifica = -10;
                 solicitarAccesoVM.TipoRegistro =Utilitario.Constante.SolicitudAccesoConstante.SolicitudAcceso.REGISTRO_SOLICITUD_NUEVO.ToString();
-
+                solicitarAccesoVM.UrlTransmares = $"{this.GetUriHost()}";
 
                 model.CodigoTipoDocumento = solicitarAccesoVM.TipoDocumento;
                 model.NumeroDocumento = solicitarAccesoVM.NumeroDocumento;

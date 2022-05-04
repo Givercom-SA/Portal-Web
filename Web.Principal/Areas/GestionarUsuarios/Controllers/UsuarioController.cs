@@ -476,7 +476,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     solicitarAccesoVM.TipoRegistro = Utilitario.Constante.SolicitudAccesoConstante.SolicitudAcceso.REGISTRO_SOLICITUD_ACTUALIZADO.ToString();
                     solicitarAccesoVM.IdUsuarioCreaModifica = resultSesion.idUsuario;
                     solicitarAccesoVM.IdEntidad =resultSesion.IdEntidad;
-
+                    solicitarAccesoVM.UrlTransmares = $"{this.GetUriHost()}";
                     var listTipoDocumnentoResult = await _serviceAcceso.SolicitarAcceso(solicitarAccesoVM);
 
                     if (listTipoDocumnentoResult.CodigoResultado == 0)

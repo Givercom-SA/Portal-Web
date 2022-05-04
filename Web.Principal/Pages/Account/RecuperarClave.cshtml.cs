@@ -73,8 +73,8 @@ namespace Web.Principal.Pages.Account
 
         public class InputCodigoModel
         {
-            [Display(Name = "Codigo")]
-            [Required(ErrorMessage = "Debe ingresar el codigo")]
+            [Display(Name = "Código")]
+            [Required(ErrorMessage = "Debe ingresar el código")]
             [StringLength(10, ErrorMessage = "El correo ingresado tiene longitud invalida")]
             public string Codigo { get; set; }
             public string Correo { get; set; }

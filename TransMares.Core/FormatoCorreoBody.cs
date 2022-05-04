@@ -338,7 +338,7 @@ namespace TransMares.Core
             return HtmlSend;
         }
 
-        public string formatoBodyBienvenidaAprobado(string pRuc, string pRazon, string pNombreRL, string correo, string clave, string imagenGrupo)
+        public string formatoBodyBienvenidaAprobado(string pRuc, string pRazon, string pNombreRL, string correo, string clave, string imagenGrupo, string pUrl)
         {
             String HtmlSend = "";
 
@@ -382,7 +382,7 @@ namespace TransMares.Core
                                                             clave.
                                                         </p>
                                                         <p>
-                                                            <a href='portalweb.tpsac.com.pe'> Acceder </a>
+                                                            <a href='{pUrl}'> Acceder </a>
                                                         </ p >
                                                     </center>
 

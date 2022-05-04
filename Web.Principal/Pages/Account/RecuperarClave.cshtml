@@ -50,7 +50,7 @@
                                                 <input asp-for="InputClave.ConfirmarContrasenia" class="form-control" type="password" placeholder="Repetir contraseña" />
                                                 <span asp-validation-for="InputClave.ConfirmarContrasenia" class="text-danger small"></span>
                                             </div>
-                                            <div id="CambiarClaveResult"></div>
+                                            <div id="CambiarClaveResult" class="small"></div>
                                             <!-- Form Group (submit options)-->
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" asp-page="Login">Volver a iniciar sesión</a>
@@ -71,7 +71,7 @@
                                                 <input asp-for="InputCorreo.Correo" id="Correo" class="form-control" type="email" placeholder="Ingrese correo" />
                                                 <span asp-validation-for="InputCorreo.Correo" class="text-danger small"></span>
                                             </div>
-                                            <div id="VerificarMensaje"></div>
+                                            <div id="VerificarMensaje" class="small"></div>
                                             <!-- Form Group (submit options)-->
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" asp-page="Login">Volver a iniciar sesión</a>
@@ -101,60 +101,80 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form id="frmValidar" method="post">
+
                     <div class="modal-header">
-                        <h5 class="modal-title">Validar código de verificación</h5>
+
+                        <h5 class="modal-title">Validar Código de Verificación</h5>
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+
                     </div>
+
                     <div class="modal-body">
-                        <div id="result"></div>
+
+                        <div id="result" class="small"></div>
+
                         <div class="mb-3">
+
                             <input asp-for="InputCodigo.Correo" type="hidden" id="CorreoVerificado" value="" />
                             <label asp-for="InputCodigo.Codigo" class="small mb-1"></label>
                             <input asp-for="InputCodigo.Codigo" id="Codigo" class="form-control text-center" type="text" placeholder="Ingrese Código" />
                             <span asp-validation-for="InputCodigo.Codigo" class="text-danger small"></span>
+
                         </div>
+
                         <div class="mb-3">
+
                             <a id="btnReenviar" class="small" href="#">Reenviar código</a>
+
                         </div>
+
                     </div>
+
                     <div class="modal-footer">
-                        <button id="btnValidar" class="btn btn-secondary" type="button">Validar</button>
+                        <button id="btnValidar" class="btn btn-primary" type="button">Validar</button>
                         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
                     </div>
+
                 </form>
+
             </div>
+
         </div>
+
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static" id="modal_mensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cambio exitoso</h5>
-                </div>
-                <div class="modal-body" id="mensaje">
+        <div class="modal fade" data-bs-backdrop="static" id="modal_mensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cambio exitoso</h5>
+                    </div>
+                    <div class="modal-body" id="mensaje">
 
-                </div>
-                <div class="modal-footer">
-                    <button id="btnCerrarMensaje" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Aceptar</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnCerrarMensaje" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Aceptar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
-    <script src="@Url.Content("~/js/site.js")"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
+        <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+        <script src="@Url.Content("~/js/site.js")"></script>
 
-    <script src="~/js/scripts.js"></script>
-    <script type="text/javascript">
+        <script src="@Url.Content("~/js/scripts.js")"></script>
+
+        <script type="text/javascript">
+
         $("#btnValidar").click(function () {
-            var text = $("#btnValidar").html();
+
+
             var isValid = $('#frmValidar').valid();
+
             if (isValid) {
-                $("#btnValidar").html('Cargando...');
                 var formData = new FormData();
                 formData.append("Correo", $('#Correo').val());
                 formData.append("Codigo", $('#Codigo').val());
@@ -163,10 +183,18 @@
                     url: "@Url.Action("ValidarCodigoVerificacionCorreo", "Autenticacion")",
                     data: formData,
                     contentType: false,
-                    processData: false
+                    processData: false,
+                    beforeSend: function (txr) {
+
+                        $("#btnValidar").html('Cargando...');
+                        $("#btnValidar").prop('disabled',true);
+                    }
                 })
-                .done(function (result) {
-                    $("#btnValidar").html(text);
+                    .done(function (result) {
+
+                        $("#btnValidar").html("Validar");
+                        $("#btnValidar").prop('disabled', false);
+
                     if (result != null) {
                         if (result.codigo == 0) {
                             $('#frmValidar').submit();
@@ -175,23 +203,30 @@
                             ShowAlertMensage('result', 'warning', '', result.mensaje,0,null);
                         }
                     } else {
-
+                        ShowAlertMensage('result', 'danger', '', "Estimado usuario, ocurrio un error interno, por favor volver a intentar.", 0, null);
                     }
                 })
                 .fail(function (xhr, status, error) {
-
+                    $("#btnValidar").html("Validar");
+                    $("#btnValidar").prop('disabled', false);
+                    ShowAlertMensage('result', 'danger', '', "Estimado usuario, ocurrio un error interno Detalee: " + error, 0, null);
                 })
                 .always(function () {
-
+                    $("#btnValidar").html("Validar");
+                    $("#btnValidar").prop('disabled', false);
                 });
             }
+
         });
+
         $("#btnCambiarClave").click(function () {
+
             $("#CambiarClaveResult").html("");
-            var text = $("#btnCambiarClave").html();
+
             var isValid = $('#frmCambiarClave').valid();
+
             if (isValid) {
-                $("#btnCambiarClave").html('Cargando...');
+
                 var formData = new FormData();
                 formData.append("Correo", $('#Correo').val());
                 formData.append("Clave", $('#Clave').val());
@@ -200,10 +235,19 @@
                     url: "@Url.Action("CambiarClave", "Autenticacion")",
                     data: formData,
                     contentType: false,
-                    processData: false
+                    processData: false,
+                    beforeSend: function (trx) {
+
+                        $("#btnCambiarClave").html('Cargando...');
+                        $("#btnCambiarClave").prop('disabled',true);
+                        //Cambiar Contraseña
+                    }
                 })
                 .done(function (result) {
-                    $("#btnCambiarClave").html(text);
+
+                    $("#btnCambiarClave").html('Cambiar Contraseña');
+                    $("#btnCambiarClave").prop('disabled', false);
+
                     if (result != null) {
                         if (result.codigo == 0) {
                             $('#mensaje').html(result.mensaje);
@@ -213,14 +257,17 @@
                             ShowAlertMensage('CambiarClaveResult', 'warning', '', result.mensaje, 0, null);
                         }
                     } else {
-                        ShowAlertMensage('CambiarClaveResult', 'warning', '', "Error, no se puedo procesar la solicitud.",0,null);
+                        ShowAlertMensage('CambiarClaveResult', 'danger', '', "Estimado usuario, ocurrio un error interno, por favor volver a intentar mas tarde.",0,null);
                     }
                 })
                 .fail(function (xhr, status, error) {
-
+                    $("#btnCambiarClave").html('Cambiar Contraseña');
+                    $("#btnCambiarClave").prop('disabled', false);
+                    ShowAlertMensage('CambiarClaveResult', 'danger', '', "Estimado usuario, ocurrio un error interno Detalle: " + error, 0, null);
                 })
                 .always(function () {
-
+                    $("#btnCambiarClave").html('Cambiar Contraseña');
+                    $("#btnCambiarClave").prop('disabled', false);
                 });
             }
         });
@@ -231,51 +278,66 @@
         });
 
         $("#btnReenviar").click(function () {
+
+
             $("#result").html("");
-            var text = $("#btnReenviar").html();
-            var isValid = $('#frmValidar').valid();
-            if (isValid) {
-                $("#btnReenviar").html("Cargando...");
-                var formData = new FormData();
-                formData.append("Correo", $('#CorreoVerificado').val());
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("GenerarCodigoVerificacionCorreo", "Autenticacion")",
-                    data: formData,
-                    contentType: false,
-                    processData: false
-                })
+
+            var formData = new FormData();
+
+            formData.append("Correo", $('#CorreoVerificado').val());
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GenerarCodigoVerificacionCorreo", "Autenticacion")",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function (trx) {
+
+                    $("#btnReenviar").html("Cargando...");
+                    $("#btnReenviar").hide();
+                }
+            })
                 .done(function (result) {
-                    $("#btnReenviar").html(text);
+
+                    $("#btnReenviar").html("Reenviar Código");
+                    $("#btnReenviar").show();
+
                     if (result != null) {
                         if (result.codigo == 0) {
-                            ShowAlertMensage('result', 'success', '', result.mensaje,0,null);
+                            ShowAlertMensage('result', 'success', '', result.mensaje, 0, null);
                         }
                         else {
-                            ShowAlertMensage('result', 'warning', '', result.mensaje,0,null);
+                            ShowAlertMensage('result', 'warning', '', result.mensaje, 0, null);
                         }
                     } else {
-
+                        ShowAlertMensage('result', 'danger', '', "Estimado usuario, ocurrio un errore interno, por favor volver a intentar.", 0, null);
                     }
                 })
                 .fail(function (xhr, status, error) {
-
+                    ShowAlertMensage('result', 'danger', '', "Estimado usuario, ocurrio un errore interno Detalle:" + error, 0, null);
+                    $("#btnReenviar").html("Reenviar Código");
+                    $("#btnReenviar").show();
                 })
                 .always(function () {
 
+                    $("#btnReenviar").html("Reenviar Código");
+                    $("#btnReenviar").show();
                 });
-            }
 
         });
 
 
         $("#btnVerificar").click(function () {
+
             $("#VerificarMensaje").html("");
-            var text = $("#btnVerificar").html();
+
             $('#CorreoVerificado').val($('#Correo').val());
+
             var isValid = $('#frmVerificar').valid();
+
             if (isValid) {
-                $("#btnVerificar").html("Cargando...");
+
+
                 var formData = new FormData();
                 formData.append("Correo", $('#Correo').val());
                 $.ajax({
@@ -283,31 +345,42 @@
                     url: "@Url.Action("GenerarCodigoVerificacionCorreo", "Autenticacion")",
                     data: formData,
                     contentType: false,
-                    processData: false
-                })
-                .done(function (result) {
-                    $("#btnVerificar").html(text);
+                    processData: false,
+                    beforeSend: function (trx) {
+                        $("#btnVerificar").html("Cargando...");
+                        $("#btnVerificar").prop("disabled", true);
+                    }
+                }).done(function (result) {
+
+                    $("#btnVerificar").html("Verificar Correo");
+                    $("#btnVerificar").prop("disabled", false);
+
                     if (result != null) {
                         if (result.codigo == 0) {
-                            ShowAlertMensage('result', 'success', '', result.mensaje,0,null);
+                            ShowAlertMensage('result', 'success', '', result.mensaje, 0, null);
                             $('#modal_verificacion').modal('show');
                         }
                         else {
-                            ShowAlertMensage('VerificarMensaje', 'warning', '', result.mensaje,0,null);
+                            ShowAlertMensage('VerificarMensaje', 'warning', '', result.mensaje, 0, null);
                         }
                     } else {
-
+                        ShowAlertMensage('VerificarMensaje', 'danger', '', "Estimado usuario, ocurrio un error interno, por vaor volver a intentar.", 0, null);
                     }
-                })
-                .fail(function (xhr, status, error) {
 
                 })
-                .always(function () {
-
-                });
+                    .fail(function (xhr, status, error) {
+                        $("#btnVerificar").html("Verificar Correo");
+                        ShowAlertMensage('VerificarMensaje', 'danger', '', "Estimado usuario, ocurrio un error interno detalle:" + error, 0, null);
+                        $("#btnVerificar").prop("disabled", false);
+                    })
+                    .always(function () {
+                        $("#btnVerificar").html("Verificar Correo");
+                        $("#btnVerificar").prop("disabled", false);
+                    });
             }
 
         });
-    </script>
+
+        </script>
 </body>
 </html>

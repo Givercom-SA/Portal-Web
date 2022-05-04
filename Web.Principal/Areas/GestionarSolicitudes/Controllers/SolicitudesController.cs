@@ -126,6 +126,7 @@ namespace Web.Principal.Areas.GestionarSolicitudes.Controllers
             solicitudAccesoAprobarParameterVM.EstadoSolicitud =Utilitario.Constante.EmbarqueConstante.EstadoGeneral.APROBADO;
             solicitudAccesoAprobarParameterVM.IdUsuarioEvalua = usuario.idUsuario;
             solicitudAccesoAprobarParameterVM.ImagenGrupTransmares = $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}" ;
+            solicitudAccesoAprobarParameterVM.UrlTransmares = $"{this.GetUriHost()}";
             var mensajeResult = await _serviceSolicitud.AprobarSolicitud(solicitudAccesoAprobarParameterVM);
 
                 if (mensajeResult.CodigoResultado >= 0)
