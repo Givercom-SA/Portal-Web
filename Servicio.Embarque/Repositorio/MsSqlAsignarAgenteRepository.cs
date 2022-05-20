@@ -276,7 +276,7 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@EMFT_CODIGO_CLIENTE", parameter.EMFT_CODIGO_CLIENTE, dbType: DbType.String);
                     queryParameters.Add("@EMFT_CLIENTE_NOMBRE", parameter.EMFT_CLIENTE_NOMBRE, dbType: DbType.String);
                     queryParameters.Add("@EMFT_CLIENTE_NRODOC", parameter.EMFT_CLIENTE_NRODOC, dbType: DbType.String);
-                    queryParameters.Add("@EMFT_IDUSUARIO_CREA", -1, dbType: DbType.Int32);
+                    queryParameters.Add("@EMFT_IDUSUARIO_CREA", parameter.EMFT_IDUSUARIO_CREA, dbType: DbType.Int32);
                     queryParameters.Add("@EMFT_ARCHIVO", parameter.EMFT_ARCHIVO, dbType: DbType.String);
                     queryParameters.Add("@EMFT_EMBARQUE_KEYBL", parameter.EMFT_EMBARQUE_KEYBL, dbType: DbType.String);
                     queryParameters.Add("@EMFT_EMBARQUE_NROBL", parameter.EMFT_EMBARQUE_NROBL, dbType: DbType.String);

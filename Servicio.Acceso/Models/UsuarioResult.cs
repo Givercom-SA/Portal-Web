@@ -1,4 +1,5 @@
 ﻿using AccesoDatos.Utils;
+using Servicio.Acceso.Models.Perfil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,7 @@ namespace Servicio.Acceso.Models
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public bool Permiso { get; set; }
+        public List<VistaMenu> VistaMenus { get; set; }
 
     }
 }

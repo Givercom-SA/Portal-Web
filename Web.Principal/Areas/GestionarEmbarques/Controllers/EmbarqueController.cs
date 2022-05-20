@@ -23,6 +23,7 @@ using Utilitario.Constante;
 using TransMares.Core;
 using ViewModel.Datos.Message;
 using ViewModel.Datos.Parametros;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -112,9 +113,22 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalle(string codigo, string anio, string tipofiltro, string filtro, string servicio, string origen)
+        public async Task<IActionResult> Detalle(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+          
+
+            string codigo = parametros[0]; 
+            string anio = parametros[1]; 
+            string tipofiltro= parametros[2];
+            string filtro = parametros[3]; 
+            string servicio = parametros[4]; 
+            string origen = parametros[5];
+
             var resultSesion = HttpContext.Session.GetUserContent();
+        
 
             EmbarqueDetalleModel model = new EmbarqueDetalleModel();
             model.EmbarqueDetalle = new Model.EmbarqueModel();
@@ -243,8 +257,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return View(model);
         }
 
-
-
         private async Task<CobroPagarRegistradoResponse> VerificarEmbarqueCobroPagarRegistrado(string keybl)
         {
 
@@ -278,21 +290,20 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return cobroPagarRegistradoResponse;
         }
 
-
         class CobroPagarRegistradoResponse {
-
-            
             public ListarCobrosPagarResultVM ListaCobrosPagar { get; set; }
             public bool ExisteCobrosPagarRegistrado { get; set; }
 
         }
 
-
-
-
         [HttpGet]
-        public async Task<IActionResult> ObtenerCobros(string id, string servicio)
+        public async Task<IActionResult> ObtenerCobros(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            string[] parametros = dataDesencriptada.Split('|');
+            string id = parametros[0];
+            string servicio = parametros[1];
+
             ListaCobrosModel model = new ListaCobrosModel();
 
             try
@@ -317,8 +328,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerTracking(string id, string servicio)
+        public async Task<IActionResult> ObtenerTracking(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+            string id = parametros[0];
+            string servicio = parametros[1];
+
             ListaTrackingModel model = new ListaTrackingModel();
 
             try
@@ -492,8 +509,17 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> ValidacionAsignacionCobros(string KeyBL, string servicio)
+        public async Task<JsonResult> ValidacionAsignacionCobros(string parkey)
         {
+
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+
+            string KeyBL = parametros[0];
+            string servicio = parametros[1];
+        
+
             ActionResponse = new ActionResponse();
             ActionResponse.Codigo = 0;
 

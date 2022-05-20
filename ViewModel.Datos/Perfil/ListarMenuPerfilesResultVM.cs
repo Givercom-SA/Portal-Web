@@ -13,6 +13,7 @@ namespace ViewModel.Datos.Perfil
 
         }
         public List<MenuPerfilVM> Menus { get; set; }
+        public List<VistaMenuVM> VistaMenu { get; set; }
     }
 
 }

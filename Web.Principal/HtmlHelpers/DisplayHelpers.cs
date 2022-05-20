@@ -12,7 +12,7 @@ namespace Web.Principal.HtmlHelpers
     public static partial class DisplayHelpers
     {
         public static IHtmlContent Encriptar(this IHtmlHelper htmlHelper, string valor)
-          => new HtmlString(Encriptador.EncriptarTexto(valor));
+          => new HtmlString(Encriptador.Instance.EncriptarTexto(valor));
 
         public static IHtmlContent FormatoMontoSoles(this IHtmlHelper htmlHelper, decimal valor)
          => new HtmlString(string.Format("{0} {1}", "S/. ", string.Format("{0:###,###,###,##0.00}", valor)));

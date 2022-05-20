@@ -2,7 +2,8 @@
 	--fondo: #f2f2f2;
 	--color-temario: #c9c9c9;
 	--temario-active: #8698ff;
-	--temario-active-border: #1100ff;
+	--temario-active-border: rgb(17 0 255);
+	--temario-active-border-activo: rgb(17 0 255 / 0.78);
 }
 
 
@@ -19,7 +20,7 @@ aside .contenedor-temario {
 		list-style: none;
 		border-left: 2px solid var(--color-temario);
 		padding-left: 10px;
-		margin-left: 10px;
+		margin-left: 35px;
 
 	}
 
@@ -38,10 +39,10 @@ aside .lista li a {
 
 aside .lista li.activo a,
 aside .lista li a:hover {
-	color: var(--temario-active-border);
+
 }
 
-			aside .lista li::before {
+aside .lista li::before {
 				content: "";
 				border-radius: 50%;
 				display: block;
@@ -55,15 +56,37 @@ aside .lista li a:hover {
 				transform: rotate(45deg);
 				transition: .3s ease all;
 				padding: 8px;
+			
 			}
+
+
+@keyframes animacionLi{
+	from {
+		opacity: 0;
+	}
+
+	15%, 45% {
+		opacity: 30;
+	}
+
+	25%, 75% {
+		opacity: .35;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
 
 aside .lista li.activo::before {
 	background: var(--temario-active);
 	border: 2px solid var(--temario-active-border);
+	animation: animacionLi 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
 
-aside .lista li:hover::before {
-	border: 2px solid var(--temario-active-border);
+aside .lista li.hecho:before {
+	border: 2px solid var(--temario-active-border-activo);
+	background-color: var(--temario-active);
 }
 
 @media (max-width: 750px) {

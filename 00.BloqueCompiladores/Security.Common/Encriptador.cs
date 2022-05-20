@@ -5,27 +5,32 @@ using System.Net;
 
 namespace Security.Common
 {
-    public static class Encriptador
+    public  class Encriptador
     {
         private static string salt = "Pr0y3C70_@FpNEt";
         private static int minimunLength = 20;
 
+        private static readonly Lazy<Encriptador> lazy =
+        new Lazy<Encriptador>(() => new Encriptador());
+
+        public static Encriptador Instance { get { return lazy.Value; } }
+
         //######################################################################################
         //Encriptar Entero
         //######################################################################################
-        public static string Encriptar(int number)
+        public  string Encriptar(int number)
         {
             var hashids = new Hashids(salt, minimunLength);
             return hashids.Encode(number);
         }
 
-        public static int Desencriptar(string hash)
+        public  int Desencriptar(string hash)
         {
             var hashids = new Hashids(salt, minimunLength);
             return hashids.Decode(hash).FirstOrDefault();
         }
 
-        public static string Encriptar(long number)
+        public  string Encriptar(long number)
         {
             var hashids = new Hashids(salt, minimunLength);
             return hashids.EncodeLong(number);
@@ -34,7 +39,7 @@ namespace Security.Common
         //######################################################################################
         //Encriptar Texto
         //######################################################################################
-        public static string EncriptarTexto(string texto)
+        public  string EncriptarTexto(string texto)
         {
             texto = WebUtility.HtmlEncode(texto);
             string hexadecimal = string.Concat(texto.Select(x => ((int)x).ToString("x")));
@@ -43,7 +48,7 @@ namespace Security.Common
             return textoHexaDecimal;
         }
 
-        public static string DesencriptarTexto(string hash)
+        public  string DesencriptarTexto(string hash)
         {
             var hashids = new Hashids(salt, minimunLength);
             var textoHexaDecimal = hashids.DecodeHex(hash);

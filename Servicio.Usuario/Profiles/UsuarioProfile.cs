@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 
 namespace Servicio.Usuario.Profiles
@@ -68,6 +69,9 @@ namespace Servicio.Usuario.Profiles
 
             CreateMap<UsuarioMenu, UsuarioMenuVM>();
 
+            CreateMap<VistaMenu, VistaMenuVM>();
+            CreateMap<VistaMenuVM, VistaMenu>();
+
             CreateMap<ListarUsuarioMenuResult, ListarUsuarioMenuResultVM>()
             .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
             .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
@@ -82,6 +86,20 @@ namespace Servicio.Usuario.Profiles
            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
             CreateMap<ListarClienteParameterVM, ListarClienteParameter>();
+            CreateMap<DashboardClienteParameterVM, DashboardClienteParameter>();
+            CreateMap<DashboardAdminParameterVM, DashboardAdminParameter>();
+
+            CreateMap<DashboardClienteResult, DashboardClienteResultVM>()
+          .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+          .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<DashboardAdminResult, DashboardAdminResultVM>()
+          .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+          .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<DashboardEstado, DashboardEstadoVM>();
+            CreateMap<DashboardFecha, DashboardFechaVM>();
 
             CreateMap<ListarClienteResult, ListarClientesResultVM>()
            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))

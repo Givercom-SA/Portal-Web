@@ -31,5 +31,8 @@ namespace Servicio.Usuario.Repositorio
         public UsuarioSecundarioResult ConfirmarCorreoUsuario(int IdUsuario);
         public CambiarPerfilDefectoResult CambiarPerfilDefecto(CambiarPerfilDefectoParameter parameter);
 
+        public DashboardClienteResult DashboardCliente(DashboardClienteParameter parameter);
+        public DashboardAdminResult DashboardAdmin(DashboardAdminParameter parameter);
+
     }
 }

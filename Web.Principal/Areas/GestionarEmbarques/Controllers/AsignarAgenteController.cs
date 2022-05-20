@@ -57,8 +57,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 modelView = await listarAsignacionAgenteAduanas(model);
             }
 
-            
-
+           
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(44);
             ViewBag.ListarEstado = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 

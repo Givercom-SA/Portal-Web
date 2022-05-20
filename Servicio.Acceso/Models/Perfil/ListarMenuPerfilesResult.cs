@@ -13,6 +13,7 @@ namespace Servicio.Acceso.Models.Perfil
 
         }
         public List<MenuPerfil> Menus { get; set; }
+        public List<VistaMenu> VistaMenu { get; set; }
     }
 
 }

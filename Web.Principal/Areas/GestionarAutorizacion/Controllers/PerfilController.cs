@@ -11,6 +11,7 @@ using Web.Principal.Areas.GestionarAutorizacion.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Service.Common.Logging.Application;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
 {
@@ -67,8 +68,11 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditarPerfil(int Id)
+        public async Task<IActionResult> EditarPerfil(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            int Id = Int32.Parse(dataDesencriptada);
+
             PerfilParameterVM parameter = new PerfilParameterVM();
             parameter.IdPerfil = Id;
             var resultPerfil = await _serviceAcceso.ObtenerPerfil(parameter);
@@ -80,21 +84,34 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
 
             ViewBag.ListTipo = new SelectList(listServiceTipoPerfil.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
-
+            resultPerfil.perfil.IdPerfil = Id;
+            resultPerfil.perfil.Menus.ForEach(x => {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z=>z.IdMenu==x.IdMenu).ToArray();
+                
+            }); 
+            
+            
 
             return View(resultPerfil.perfil);
 
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerPerfil(int Id)
+        public async Task<IActionResult> VerPerfil(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            int Id =Int32.Parse( dataDesencriptada);
+
             PerfilParameterVM parameter = new PerfilParameterVM();
             parameter.IdPerfil = Id;
 
             var resultPerfil = await _serviceAcceso.ObtenerPerfil(parameter);
 
-     
+            resultPerfil.perfil.IdPerfil = Id;
+            resultPerfil.perfil.Menus.ForEach(x => {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
+
+            });
 
 
             return View(resultPerfil.perfil);
@@ -113,10 +130,19 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
             var listServiceTipoPerfil = await _serviceMaestro.ObtenerParametroPorIdPadre(41);
 
             ViewBag.ListTipo = new SelectList(listServiceTipoPerfil.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+            result.Menus.ForEach(x => {
+                x.VistaMenu = result.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
+
+            });
+
             ViewBag.Menus = result.Menus;
 
 
             model.UsuarioCrea = this.usuario.NombresUsuario + " " + this.usuario.ApellidoPaternousuario; ;
+
+      
+
 
             return View(model);
 
@@ -137,6 +163,31 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
                     parameterVM.Menus = perfil.Menus.ToList();
                     parameterVM.Tipo = perfil.Tipo;
                     parameterVM.IdUsuarioCrea = this.usuario.idUsuario;
+
+                    List<VistaMenuVM> vistaMenus = new List<VistaMenuVM>();
+
+
+                    perfil.Perfiles.ForEach(x => {
+                        x.Menus.ForEach(z =>
+                        {
+                            if (z.VistaMenu != null)
+                            {
+                                z.VistaMenu.ToList().ForEach(y =>
+                                {
+
+                                    if (y.IdVistaChecked != null)
+                                    {
+                                        y.IdMenu = z.IdMenu;
+                                        y.IdPerfil = perfil.IdPerfil;
+                                        vistaMenus.Add(y);
+                                    }
+
+                                });
+                            }
+
+                        });
+                    });
+                    parameterVM.VistasMenu = vistaMenus;
 
                     var result = await _serviceAcceso.CrearPerfil(parameterVM);
 
@@ -162,6 +213,8 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
         [HttpPost]
         public async Task<JsonResult> EditarPerfil(PerfilModel perfil)
         {
+         
+
             ActionResponse = new ActionResponse();
 
             if (ModelState.IsValid)
@@ -175,6 +228,31 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
                     parameterVM.Menus = perfil.Menus.ToList();
                     parameterVM.IdUsuarioModifica =this.usuario.idUsuario;
                     parameterVM.Tipo =perfil.Tipo;
+
+                    List<VistaMenuVM> vistaMenus = new List<VistaMenuVM>();
+
+
+                    perfil.Perfiles.ForEach(x=> {
+                        x.Menus.ForEach(z =>
+                        {
+                            if (z.VistaMenu != null)
+                            {
+                                z.VistaMenu.ToList().ForEach(y =>
+                                {
+
+                                    if (y.IdVistaChecked != null)
+                                    {
+                                        y.IdMenu =z.IdMenu;
+                                        y.IdPerfil = perfil.IdPerfil;
+                                        vistaMenus.Add(y);
+                                    }
+
+                                });
+                            }
+
+                        });
+                    });
+                    parameterVM.VistasMenu = vistaMenus;
 
                     var result = await _serviceAcceso.EditarPerfil(parameterVM);
                     ActionResponse.Codigo = 0;

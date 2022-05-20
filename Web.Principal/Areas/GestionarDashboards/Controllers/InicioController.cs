@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.UsuarioRegistro;
+using Web.Principal.Areas.GestionarDashboards.Models;
 using Web.Principal.ServiceConsumer;
 using Web.Principal.Utils;
 
@@ -32,15 +34,22 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         [HttpGet]
         public async Task<IActionResult> Home()
         {
+            HomeModel model = new HomeModel();
             if (!usuario.isCambioClave)
                 return RedirectToAction("CambiarContrasenia", "Login", new { area = "GestionarAccesos" , nuevo = "1" });
 
 
             if (usuario.Dashboard == "Home")
             {
-                return View();
+                DashboardClienteParameterVM dashboardParameterVM = new DashboardClienteParameterVM();
+                
+                dashboardParameterVM.IdUsuario = this.usuario.idUsuario;
+                model.Dashboard = await _serviceUsuario.DashboardCliente(dashboardParameterVM);
+
+                return View(model);
             }
-            else {
+            else
+            {
                 return RedirectToAction(usuario.Dashboard);
             }
             
@@ -49,10 +58,19 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         [HttpGet]
         public async Task<IActionResult> Administracion()
         {
+
             if (!usuario.isCambioClave)
                 return RedirectToAction("CambiarContrasenia", "Login", new { area = "GestionarAccesos", nuevo = "1" });
 
-            return View();
+            AdminModel model = new AdminModel();
+
+            DashboardAdminParameterVM dashboardParameterVM = new DashboardAdminParameterVM();
+
+            
+            model.Dashboard = await _serviceUsuario.DashboardAdmin(dashboardParameterVM);
+            
+
+            return View(model);
         }
 
 

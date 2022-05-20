@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Models
@@ -89,6 +90,9 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public MenuPerfilModel MenuPerfil { get; set; }
         public UsuarioRegistroVM Usuario { get; set; }
         public List<GruposAutorizacion> Grupos { get; set; }
+
+        public PerfilVM PerfilVM { get; set; }
+
     }
 
     public class CambiarClaveModel

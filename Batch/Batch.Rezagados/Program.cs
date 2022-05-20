@@ -34,8 +34,8 @@ namespace Batch.Correo
                 //JobManager.Initialize(new JobRegistry(
                 //    serviceProvider.GetRequiredService<RezagadosMainBusinessLogic>()
                 //));
-                //string id = args[0];
-                string id = @"{8601899D-BC29-4925-B8C4-D2D1751AC1D3}\6148";
+                string id = args[0];
+                //string id = @"{8601899D-BC29-4925-B8C4-D2D1751AC1D3}\6148";
                 id = id.Replace("{", "");
                 id = id.Replace("}", "");
                 // var result= new EnvioCorreoLogic().EnviarCorreo(@"f2fed0d1-7e48-4076-b338-5856b0b858e3\20510", ".\\private$\\tm_pdwac_correo");

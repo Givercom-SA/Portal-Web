@@ -25,6 +25,7 @@ using ViewModel.Datos.Message;
 using Microsoft.AspNetCore.SignalR;
 using Web.Principal.Hubs;
 using Web.Principal.Interface;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -67,9 +68,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> RegistroIntruccionFacturaTercero(string keyBl, string NroBL)
+        public async Task<IActionResult> RegistroIntruccionFacturaTercero(string parkey)
         {
 
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+            string keyBl = parametros[0];
+            string NroBL = parametros[1];
 
             var userSesion = this.usuario;
 
@@ -351,8 +357,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet()]
-        public async Task<IActionResult> VerSolicitud(int codigoSolicitud)
+        public async Task<IActionResult> VerSolicitud(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            int codigoSolicitud =Int32.Parse(dataDesencriptada);
 
             VerSolicitudFacturacionModel model = new VerSolicitudFacturacionModel();
 
@@ -407,8 +415,15 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GestionarSolicitudFacturacion(string KeyBL, string servicio)
+        public async Task<IActionResult> GestionarSolicitudFacturacion(string parkey)
         {
+
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+            string KeyBL = parametros[0];
+            string servicio = parametros[1];
+
             ActionResponse ActionResponse = new();            
             ActionResponse.Codigo = 0;
             ActionResponse.Mensaje = "";
@@ -631,6 +646,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         var embarque = await _serviceEmbarques.ObtenerEmbarque(model.KEYBLD, model.Servicio);
                         model.IdEntidadSolicita = usuario.IdEntidad;
                         model.IdUsuarioSolicita = usuario.idUsuario;
+                        model.IdUsuarioCrea = usuario.idUsuario;
+                        
                         model.CodigoTipoEntidad = usuario.TipoEntidad;
                         var result = await _serviceEmbarque.SolicitarFacturacionRegistrar(model);
 
@@ -1155,8 +1172,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return PartialView("_ResultadoFacturacionTerceroHistorial", model);
 
         }
-        public async Task<IActionResult> VerFacturacionTercero(int Id)
+        public async Task<IActionResult> VerFacturacionTercero(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
+
             ListarFacturacionTerceroDetalleResultVM model = new();
 
             model = await _serviceEmbarque.ListarFacturacionTercerosDetalle(Id);

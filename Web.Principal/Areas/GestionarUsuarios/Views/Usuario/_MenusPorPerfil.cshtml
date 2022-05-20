@@ -8,23 +8,62 @@
 
 @if (Model != null)
 {
-    <div class="list-group">
+    int contadorMenu = 0;
+
+    <input type="hidden" name="PerfilVM.IdPerfil" value="0" />
+
+    <ul class="list-group">
         @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
         {
-            <label class="list-group-item"><b>@grupo</b></label>
-            @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
-            {
-                <label class="list-group-item">
-                    @if (item.Permiso == 1)
+            <li class="list-group-item">
+                <b>@grupo</b>
+                <ul class="list-group">
+                    @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
                     {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled> @item.Nombre
+
+                        int contadorVistaMenu = 0;
+
+                        <li class="list-group-item">
+                            @if (item.Permiso == 1)
+                            {
+                                <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled>
+                                @item.Nombre
+                            }
+                            else
+                            {
+                                <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled>
+                                @item.Nombre
+                            }
+                            <input type="hidden" name="PerfilVM.Menus[@contadorMenu].IdMenu" value="@item.IdMenu" />
+
+                            <ul class="list-group">
+
+                                @foreach (var itemVista in item.VistaMenu)
+                                {
+
+
+
+                                    <li class="list-group-item">
+                                    @if (itemVista.Checked)
+                                    {<input class="form-check-input" type="checkbox" name="PerfilVM.Menus[@contadorMenu].VistaMenu[@contadorVistaMenu].IdVistaChecked" checked value="@itemVista.IdVista" @Disabled>
+                                    }
+                                    else { 
+                                    <input class="form-check-input" type="checkbox" name="PerfilVM.Menus[@contadorMenu].VistaMenu[@contadorVistaMenu].IdVistaChecked" value="@itemVista.IdVista" @Disabled>
+                                    }
+                                    
+                                    @itemVista.VistaNombre
+
+                                    <input type="hidden" name="PerfilVM.Menus[@contadorMenu].VistaMenu[@contadorVistaMenu].IdVista" value="@itemVista.IdVista" />
+                                </li>
+
+                                    contadorVistaMenu = contadorVistaMenu+1;
+                                }
+                            </ul>
+                        </li>
+                        contadorMenu = contadorMenu + 1;
                     }
-                    else
-                    {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled> @item.Nombre
-                    }
-                </label>
-            }
+                </ul>
+            </li>
         }
-    </div>
+    </ul>
 }

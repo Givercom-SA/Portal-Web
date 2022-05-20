@@ -237,7 +237,31 @@ namespace Web.Principal.ServiceConsumer
         }
 
 
+        public async Task<DashboardClienteResultVM> DashboardCliente(DashboardClienteParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            const string SERVICIO = "dasboard-cliente";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<DashboardClienteResultVM>();
 
+
+
+            return resultado;
+        }
+
+        public async Task<DashboardAdminResultVM> DashboardAdmin(DashboardAdminParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            const string SERVICIO = "dasboard-admin";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<DashboardAdminResultVM>();
+
+            return resultado;
+        }
 
     }
 }

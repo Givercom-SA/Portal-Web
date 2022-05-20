@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Models
@@ -124,7 +125,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public UsuarioRegistroVM Usuario { get; set; }
         public List<GruposAutorizacion> Grupos { get; set; }
 
-
+        
         
         public string getNombre()
         {
@@ -137,13 +138,25 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
 
     public class MenuAutoricacion { 
     
-
-    
         public int IdMenu{ get; set; }
         public string Nombre { get; set; }
 
         public List<PerfilAutorizacion> Perfiles { get; set; }
 
+        public List<VistaMenuAutorizacion> VistaMenus { get; set; }
+
+
+    }
+
+    public class VistaMenuAutorizacion {
+        public int IdVistaMenu { get; set; }
+        public int IdMenu { get; set; }
+        public int IdPerfil { get; set; }
+        public int IdVista { get; set; }
+        public bool Checked { get; set; }
+        public string VistaNombre { get; set; }
+        
+        public List<PerfilAutorizacion> Perfiles { get; set; }
     }
 
     public class PerfilAutorizacion {
@@ -151,7 +164,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public bool Checked { get; set; }
         public int IdPerfil { get; set; }
         public string Nombre { get; set; }
-      
+        public bool Existe { get; set; }
+
     }
 
     public class GruposAutorizacion

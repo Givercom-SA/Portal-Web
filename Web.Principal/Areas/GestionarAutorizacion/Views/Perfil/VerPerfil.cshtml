@@ -136,7 +136,7 @@
 
             $("#btnEditar").on("click", function (){
 
-                window.location = "@Url.Action("EditarPerfil","Perfil",new { area="GestionarAutorizacion", Id=Model.IdPerfil})";
+                window.location = "@Url.Action("EditarPerfil","Perfil",new { area="GestionarAutorizacion", parkey = Security.Common.Encriptador.Instance.EncriptarTexto(Model.IdPerfil.ToString())})";
 
             });
 

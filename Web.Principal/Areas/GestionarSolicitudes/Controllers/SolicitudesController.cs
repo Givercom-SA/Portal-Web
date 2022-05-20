@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Security.Common;
 using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace Web.Principal.Areas.GestionarSolicitudes.Controllers
             _serviceSolicitud = serviceSolicitud;
             _mapper = mapper;
             _configuration = configuration;
-         
+
 
 
         }
@@ -61,14 +62,16 @@ namespace Web.Principal.Areas.GestionarSolicitudes.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerSolicitud(string nroSolicitud)
+        public async Task<IActionResult> VerSolicitud(string parkey)
         {
-            
             AsignacionEvaluacionModel asignacionEvaluacionModel = new AsignacionEvaluacionModel();
-            try { 
-            asignacionEvaluacionModel.SolicitudVM  = await _serviceSolicitud.obtenerSolicitudPorCodigo(nroSolicitud);
-            asignacionEvaluacionModel.CodigoSolicitud = nroSolicitud;
 
+            try
+            {
+                var nroSolicitud = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                asignacionEvaluacionModel.SolicitudVM = await _serviceSolicitud.obtenerSolicitudPorCodigo(nroSolicitud);
+                asignacionEvaluacionModel.CodigoSolicitud = nroSolicitud;
 
                 /*// Obtenermos los motivos de rechazo
                 var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(28);

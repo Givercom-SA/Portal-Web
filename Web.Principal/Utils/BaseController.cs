@@ -183,7 +183,7 @@ namespace Web.Principal.Utils
             if (string.IsNullOrEmpty(requestParemeterParguid))
             {
                 var session_menuid = ObtenerMenuId(context.HttpContext, context.RouteData);
-                if (session_menuid != null) requestParemeterParguid = Encriptador.EncriptarTexto(session_menuid.ToString());
+                if (session_menuid != null) requestParemeterParguid = Encriptador.Instance.EncriptarTexto(session_menuid.ToString());
             }
 
 
@@ -191,7 +191,7 @@ namespace Web.Principal.Utils
             {
                 if (context.HttpContext.Session.GetString("parguid") == null || context.HttpContext.Session.GetString("parguid") != requestParemeterParguid)
                 {
-                    var menuid = Security.Common.Encriptador.DesencriptarTexto(requestParemeterParguid);
+                    var menuid = Security.Common.Encriptador.Instance.DesencriptarTexto(requestParemeterParguid);
                     context.HttpContext.Session.SetString("parguid", menuid);
                 }
             }

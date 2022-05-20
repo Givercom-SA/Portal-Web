@@ -31,7 +31,7 @@ namespace Web.Principal.Hubs
         public async Task<List<Notificacion>> Matricular(string codigoUsuarioEncriptado)
         {
 
-            var codigoUsario = Encriptador.DesencriptarTexto(codigoUsuarioEncriptado);
+            var codigoUsario = Encriptador.Instance.DesencriptarTexto(codigoUsuarioEncriptado);
 
             _userConnectionManager.KeepUserConnection(codigoUsario, Context.ConnectionId);
 

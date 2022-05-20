@@ -22,7 +22,11 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
         public string Tipo { get; set; }
 
         public string UsuarioCrea { get; set; }
-        
+
         public int[] Menus { get; set; }
+        public int[] VistaMenu { get; set; }
+
+        public List<PerfilVM> Perfiles{ get; set; }
+
     }
 }

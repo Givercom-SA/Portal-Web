@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Servicio.Acceso.Models;
 using Servicio.Acceso.Models.LoginUsuario;
+using Servicio.Acceso.Models.Menu;
 using Servicio.Acceso.Models.Perfil;
 using System;
 using System.Collections.Generic;
@@ -68,40 +69,45 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new UsuarioResult();
 
-           
-                using (var cnn = new SqlConnection(strConn))
+
+            using (var cnn = new SqlConnection(strConn))
+            {
+
+                string spName = "[dbo].[TM_PDWAC_SP_USUARIO_LEER]";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@USU_ID", IdUsuario, DbType.Int32);
+                queryParameters.Add("@MENSAGE", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
+
+                result = cnn.Query<UsuarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                if (result == null)
                 {
-                    
-                    string spName = "[dbo].[TM_PDWAC_SP_USUARIO_LEER]";
-
-                    var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@USU_ID", IdUsuario, DbType.Int32);
-                    queryParameters.Add("@MENSAGE", dbType: DbType.String, direction: ParameterDirection.Output, size: 100);
-
-                    result = cnn.Query<UsuarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
-
-                    if (result == null)
-                    {
-                        result = new UsuarioResult();
-                        result.STR_MENSAJE_BD = queryParameters.Get<string>("@MENSAGE");
-                        result.IN_CODIGO_RESULTADO = 1;
-                    }
-                    else
-                    {
-                        // Traer Menus y Perfiles
-                        var resultMenus = ObtenerMenusLogin(result.USU_ID, result.PEFL_ID);
-                        result.Menus = resultMenus;
-
-                        var resultMenusUsuarioSecundario = ObtenerMenusUsuaroSecundario(result.USU_ID, result.ENTI_ID);
-                        result.MenusUserSecundario = resultMenusUsuarioSecundario;
-
-
-                           var resultPerfiles = ObtenerPerfilesLogin(result.USU_ID, result.PEFL_ID);
-                        result.Perfiles = resultPerfiles;
-                        result.IN_CODIGO_RESULTADO = 0;
-                    }
+                    result = new UsuarioResult();
+                    result.STR_MENSAJE_BD = queryParameters.Get<string>("@MENSAGE");
+                    result.IN_CODIGO_RESULTADO = 1;
                 }
-         
+                else
+                {
+                    // Traer Menus y Perfiles
+                    var resultMenus = ObtenerMenusLogin(result.USU_ID, result.PEFL_ID);
+                    result.Menus = resultMenus;
+
+                    var resultMenusUsuarioSecundario = ObtenerMenusUsuaroSecundario(result.USU_ID, result.ENTI_ID);
+                    result.MenusUserSecundario = resultMenusUsuarioSecundario.Menus;
+                    result.MenusUserSecundario.ForEach(x =>
+                    {
+
+                        x.VistaMenus = resultMenusUsuarioSecundario.VistaMenus.Where(y => y.IdMenu == x.IdMenu).ToList();
+                    });
+
+
+                    var resultPerfiles = ObtenerPerfilesLogin(result.USU_ID, result.PEFL_ID);
+                    result.Perfiles = resultPerfiles;
+                    result.IN_CODIGO_RESULTADO = 0;
+                }
+            }
+
 
             return result;
         }
@@ -128,22 +134,29 @@ namespace Servicio.Acceso.Repositorio
          
             return result;
         }
-        private List<MenuLogin> ObtenerMenusUsuaroSecundario(int IdUsuario, int IdEntidad)
+        private ListarPerfileMenuVistaResult ObtenerMenusUsuaroSecundario(int IdUsuario, int IdEntidad)
         {
-            var result = new List<MenuLogin>();
+            var result = new ListarPerfileMenuVistaResult();
             int Modo = 5; // Obtener Menus por Perfil
-          
-                using (var cnn = new SqlConnection(strConn))
-                {
-                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
 
-                    var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@Modo", Modo, DbType.Int32);
-                    queryParameters.Add("@IdUsuario", IdUsuario, DbType.Int32);
-                    queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
-                    result = cnn.Query<MenuLogin>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@Modo", Modo, DbType.Int32);
+                queryParameters.Add("@IdUsuario", IdUsuario, DbType.Int32);
+                queryParameters.Add("@IdEntidad", IdEntidad, DbType.Int32);
+
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure))
+                {
+                    result.Menus = resultCx.Read<MenuLogin>().ToList();
+                    result.VistaMenus = resultCx.Read<VistaMenu>().ToList();
                 }
-       
+
+
+            }
+
             return result;
         }
         public List<PerfilLogin> ObtenerPerfilesLogin(int IdUsuario, int IdPerfil)
@@ -237,9 +250,12 @@ namespace Servicio.Acceso.Repositorio
             return result;
         }
 
-        private List<MenuPerfil> ObtenerMenusPorPerfil(int IdPerfil)
+        private  Perfil ObtenerMenusPorPerfil(int IdPerfil)
         {
-            var result = new List<MenuPerfil>();
+            var result = new Perfil();
+            result.Menus = new List<MenuPerfil>();
+            result.VistaMenu= new List<VistaMenu>();
+         
             int Modo = 3; // Obtener Menus por Perfil
            
                 using (var cnn = new SqlConnection(strConn))
@@ -249,8 +265,17 @@ namespace Servicio.Acceso.Repositorio
                     var queryParameters = new DynamicParameters();
                     queryParameters.Add("@Modo", Modo, DbType.Int32);
                     queryParameters.Add("@IdPerfil", IdPerfil, DbType.Int32);
-                    result = cnn.Query<MenuPerfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
+                    
+
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure))
+                {
+                    result.Menus = resultCx.Read<MenuPerfil>().ToList();
+                    result.VistaMenu = resultCx.Read<VistaMenu>().ToList();
                 }
+
+
+
+            }
            
 
             return result;
@@ -281,12 +306,14 @@ namespace Servicio.Acceso.Repositorio
                     {
                         result.IN_CODIGO_RESULTADO = 0;
                         var resultMenus = ObtenerMenusPorPerfil(result.Perfil.IdPerfil);
-                        if (resultMenus != null)
-                        {
-                            result.Perfil.Menus = new List<MenuPerfil>();
-                            result.Perfil.Menus = resultMenus;
-                            result.IN_CODIGO_RESULTADO = 0;
-                        }
+
+                    if (resultMenus != null)
+                    {
+                        result.Perfil.Menus = resultMenus.Menus;
+                        result.Perfil.VistaMenu = resultMenus.VistaMenu; ;
+                        result.IN_CODIGO_RESULTADO = 0;
+                    }
+
                     }
                 }
            
@@ -331,26 +358,32 @@ namespace Servicio.Acceso.Repositorio
         {
             var result = new ListarMenusPerfilResult();
             int Modo = 0; // Obtener Todos los Menus
-         
-                using (var cnn = new SqlConnection(strConn))
+
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@Modo", Modo, DbType.Int32);
+
+
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure))
                 {
-                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
-
-                    var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@Modo", Modo, DbType.Int32);
-                    result.Menus = cnn.Query<MenuPerfil>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
-
-                    if (result == null)
-                    {
-                        result.STR_MENSAJE_BD = "Error interno al recuperar la información.";
-                        result.IN_CODIGO_RESULTADO = -1;
-                    }
-                    else
-                    {
-                        result.IN_CODIGO_RESULTADO = 0;
-                    }
+                    result.Menus = resultCx.Read<MenuPerfil>().ToList();
+                    result.VistaMenu = resultCx.Read<VistaMenu>().ToList();
                 }
-        
+
+                if (result == null)
+                {
+                    result.STR_MENSAJE_BD = "Error interno al recuperar la información.";
+                    result.IN_CODIGO_RESULTADO = -1;
+                }
+                else
+                {
+                    result.IN_CODIGO_RESULTADO = 0;
+                }
+            }
+
 
             return result;
         }
@@ -358,11 +391,8 @@ namespace Servicio.Acceso.Repositorio
         public PerfilResult CrearPerfil(PerfilParameter parameter)
         {
             var result = new PerfilResult();
-
-          
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
-
                 foreach (int MenuId in parameter.Menus)
                 {
                     DataRow drog = DtListaMenus.NewRow();
@@ -370,17 +400,30 @@ namespace Servicio.Acceso.Repositorio
                     DtListaMenus.Rows.Add(drog);
                 }
 
-                using (var cnn = new SqlConnection(strConn))
+            DataTable DtListaVistas = new DataTable("TM_PDWAC_TY_VISTA_MENU_PERFIL");
+            DtListaVistas.Columns.Add("MENU_ID", typeof(int));
+            DtListaVistas.Columns.Add("PERFIL_ID", typeof(int));
+            DtListaVistas.Columns.Add("VISTA_ID", typeof(int));
+
+            foreach (var itemVistas in parameter.VistasMenu)
+            {
+                DataRow drog = DtListaVistas.NewRow();
+                drog["MENU_ID"] = itemVistas.IdMenu;
+                drog["PERFIL_ID"] = itemVistas.IdPerfil;
+                drog["VISTA_ID"] = itemVistas.IdVista;
+                DtListaVistas.Rows.Add(drog);
+            }
+
+            using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_CREAR]";
-
                     var queryParameters = new DynamicParameters();
                     queryParameters.Add("@Nombre", parameter.Nombre);
                     queryParameters.Add("@Tipo", parameter.Tipo);
                     queryParameters.Add("@IdUsuarioCrea", parameter.IdUsuarioCrea);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
-
-                    result= cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                queryParameters.Add("@ListaVistas", DtListaVistas, DbType.Object);
+                result = cnn.Query<PerfilResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                     
                 }
@@ -395,7 +438,9 @@ namespace Servicio.Acceso.Repositorio
 
          
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
-                DtListaMenus.Columns.Add("MENU_ID", typeof(int));
+            
+
+            DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
                 foreach (int MenuId in parameter.Menus)
                 {
@@ -404,7 +449,21 @@ namespace Servicio.Acceso.Repositorio
                     DtListaMenus.Rows.Add(drog);
                 }
 
-                using (var cnn = new SqlConnection(strConn))
+            DataTable DtListaVistas = new DataTable("TM_PDWAC_TY_VISTA_MENU_PERFIL");
+            DtListaVistas.Columns.Add("MENU_ID", typeof(int));
+            DtListaVistas.Columns.Add("PERFIL_ID", typeof(int));
+            DtListaVistas.Columns.Add("VISTA_ID", typeof(int));
+
+            foreach (var itemVistas in parameter.VistasMenu)
+            {
+                DataRow drog = DtListaVistas.NewRow();
+                drog["MENU_ID"] = itemVistas.IdMenu;
+                drog["PERFIL_ID"] = itemVistas.IdPerfil;
+                drog["VISTA_ID"] = itemVistas.IdVista;
+                DtListaVistas.Rows.Add(drog);
+            }
+
+            using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_PERFIL_EDITAR]";
 
@@ -415,8 +474,9 @@ namespace Servicio.Acceso.Repositorio
                     queryParameters.Add("@Tipo", parameter.Tipo,DbType.String);
                     queryParameters.Add("@IdUsuarioModifica", parameter.IdUsuarioModifica, DbType.Int32);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
-                
-                    cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    queryParameters.Add("@ListaVistas", DtListaVistas, DbType.Object);
+
+                cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                     result.IN_CODIGO_RESULTADO = 0;
                 }

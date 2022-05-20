@@ -46,7 +46,7 @@
         @foreach (var item in Model.model.SolicituresFacturacionTereceros)
         {
             <tr>
-                <td><a href="@Url.Action("VerFacturacionTercero", "Facturacion", new { area = "GestionarEmbarques", id = item.IdFacturacionTercero })">@item.Codigo</a></td>
+                <td><a href="@Url.Action("VerFacturacionTercero", "Facturacion", new { area = "GestionarEmbarques",   parkey=Security.Common.Encriptador.Instance.EncriptarTexto( item.IdFacturacionTercero)})">@item.Codigo</a></td>
                 <td>@item.EmbarqueNroBL</td>
                 <td>@item.FechaRegistro</td>
                 <td>@item.EntidadDatos</td>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Security.Common;
 using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
@@ -62,15 +63,17 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditarUsuario(int Id)
+        public async Task<IActionResult> EditarUsuario(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
+
             CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
             parameter.IdUsuario = Id;
             var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
 
             PerfilParameterVM parameterPerfil = new PerfilParameterVM();
             parameterPerfil.Activo = 1;
-
             var resultPerfiles = await _serviceAcceso.ObtenerPerfiles(parameterPerfil);
 
             ViewBag.Perfiles = resultPerfiles.Perfiles;
@@ -101,179 +104,190 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.FechaModifica = result.usuario.FechaModificacion;
             model.CambioContrasenia = result.usuario.CambioContrasenia;
             model.ConfirmarCuenta = result.usuario.CorreoConfirmado;
-
             model.Usuario = await _serviceAcceso.ObtenerUsuarioPorId(Id);
 
-
-            model.Grupos = new List<GruposAutorizacion>();
-
-            var grupos = model.Usuario.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
-            for (int ii = 0; ii < grupos.Count(); ii++)
-            {
-
-                GruposAutorizacion grupo = new GruposAutorizacion();
-                grupo.Nombre = grupos[ii];
-
-
-                grupo.Menus = new List<MenuAutoricacion>();
-
-       
-
-                var itemMenu = model.Usuario.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
-
-
-                for(int jj = 0; jj < itemMenu.Count(); jj++) {
-
-
-                    MenuAutoricacion menu = new MenuAutoricacion();
-                    menu.Nombre = itemMenu[jj];
-                    menu.Perfiles = new List<PerfilAutorizacion>();
-
-                    for (int i = 0; i < model.Usuario.Perfiles.Count(); i++){
-
-                        var resultMenu = model.Usuario.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
-                                                                                               && x.IdPerfil == model.Usuario.Perfiles[i].IdPerfil
-                                                                                                   && x.Nombre.Equals(itemMenu[jj])
-                                                                                               ).ToList();
-
-                        if (resultMenu.Count() > 0)
-                        {
-                            menu.IdMenu = resultMenu[0].IdMenu;
-
-                            PerfilAutorizacion perfil = new PerfilAutorizacion();
-                            perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
-                            perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
-                            perfil.Checked = resultMenu[0].Permiso;
-
-                            menu.Perfiles.Add(perfil);
-                        }
-
-                    }
-
-
-                        grupo.Menus.Add(menu);
-
-
-                }
-
-
-
-                model.Grupos.Add(grupo);
-
-
-
-            }
-
-
-       
+            model.Grupos = obtenerGruposMenuPerfil(model.Usuario) 
+                ;
             return View(model);
         }
 
+        public List<GruposAutorizacion> obtenerGruposMenuPerfil(UsuarioRegistroVM Usuario) {
 
-
-        [HttpGet]
-        public async Task<IActionResult> VerUsuario(int Id)
-        {
-            CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
-            parameter.IdUsuario = Id;
-            var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
-
-            PerfilParameterVM parameterPerfil = new PerfilParameterVM();
-            parameterPerfil.Activo = 1;
-
-            var resultPerfiles = await _serviceAcceso.ObtenerPerfiles(parameterPerfil);
-
-            ViewBag.Perfiles = resultPerfiles.Perfiles;
-
-            if (result.usuario.IdEntidad == 0)
-            {
-                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO));
-            }
-            else
-            {
-                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
-            }
-
-            EditarClienteModel model = new EditarClienteModel();
-            model.Correo = result.usuario.Correo;
-            model.Nombres = result.usuario.Nombres;
-            model.ApellidoMaterno = result.usuario.ApellidoMaterno;
-            model.ApellidoPaterno = result.usuario.ApellidoPaterno;
-            model.Activo = result.usuario.Activo;
-            model.EsAdmin = result.usuario.EsAdmin;
-            model.Perfil = result.usuario.IdPerfil;
-            model.Items = result.usuario.Menus;
-            model.IdEntidad = result.usuario.IdEntidad;
-            model.IdUsuario = result.usuario.IdUsuario;
-            model.UsuarioModifica = result.usuario.UsuarioModifica;
-            model.UsuarioCrea = result.usuario.UsuarioCrea;
-            model.FechaCrea = result.usuario.FechaRegistro;
-            model.FechaModifica = result.usuario.FechaModificacion;
-            model.CambioContrasenia = result.usuario.CambioContrasenia;
-            model.ConfirmarCuenta = result.usuario.CorreoConfirmado;
-
-            model.Usuario = await _serviceAcceso.ObtenerUsuarioPorId(Id);
-
-            model.Grupos = new List<GruposAutorizacion>();
-
-
-            
-            var grupos = model.Usuario.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            var grupos = Usuario.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            List<GruposAutorizacion> gruposNuevos = new List<GruposAutorizacion>();
 
             for (int ii = 0; ii < grupos.Count(); ii++)
             {
-
                 GruposAutorizacion grupo = new GruposAutorizacion();
                 grupo.Nombre = grupos[ii];
-
-
                 grupo.Menus = new List<MenuAutoricacion>();
 
-
-
-                var itemMenu = model.Usuario.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
-
+                var itemMenu = Usuario.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
 
                 for (int jj = 0; jj < itemMenu.Count(); jj++)
                 {
-
-
                     MenuAutoricacion menu = new MenuAutoricacion();
                     menu.Nombre = itemMenu[jj];
                     menu.Perfiles = new List<PerfilAutorizacion>();
 
-                    for (int i = 0; i < model.Usuario.Perfiles.Count(); i++)
-                    {
-                        var resultMenu = model.Usuario.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
-                                                                                               && x.IdPerfil == model.Usuario.Perfiles[i].IdPerfil
-                                                                                                   && x.Nombre.Equals(itemMenu[jj])
-                                                                                               ).ToList();
-                        if (resultMenu.Count() > 0)
-                        {
-                            menu.IdMenu = resultMenu[0].IdMenu;
-                            PerfilAutorizacion perfil = new PerfilAutorizacion();
-                            perfil.IdPerfil = model.Usuario.Perfiles[i].IdPerfil;
-                            perfil.Nombre = model.Usuario.Perfiles[i].Nombre;
-                            perfil.Checked = resultMenu[0].Permiso;
+                    var resultMenuIdentificado = Usuario.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
+                                                                                      && x.Nombre.Equals(itemMenu[jj])
+                                                                                  );
 
-                            menu.Perfiles.Add(perfil);
+                
+
+                    if (resultMenuIdentificado != null)
+                    {
+                        for (int i = 0; i < Usuario.Perfiles.Count(); i++)
+                        {
+
+                            var menuPerfil = resultMenuIdentificado.Where(x => x.IdPerfil == Usuario.Perfiles[i].IdPerfil).FirstOrDefault();
+
+                            if (menuPerfil !=null)
+                            {
+                                menu.IdMenu = menuPerfil.IdMenu;
+
+                                PerfilAutorizacion perfil = new PerfilAutorizacion();
+                                perfil.IdPerfil = Usuario.Perfiles[i].IdPerfil;
+                                perfil.Nombre = Usuario.Perfiles[i].Nombre;
+                                perfil.Checked = menuPerfil.Permiso;
+                                perfil.Existe = true;
+                                menu.Perfiles.Add(perfil);
+                            }
+                            else
+                            {
+                                PerfilAutorizacion perfil = new PerfilAutorizacion();
+                          
+                                perfil.Existe = false;
+                                menu.Perfiles.Add(perfil);
+                            }
+
                         }
                     }
+                    else
+                    {
+                        PerfilAutorizacion perfil = new PerfilAutorizacion();
 
+                        perfil.Existe = false;
+                        menu.Perfiles.Add(perfil);
+                    }
+
+                    menu.VistaMenus = new List<VistaMenuAutorizacion>();
+                
+
+                    if (resultMenuIdentificado != null)
+                    {
+
+
+                        for (int iPerf = 0; iPerf < Usuario.Perfiles.Count(); iPerf++)
+                        {
+                            var menuPerfil = resultMenuIdentificado.Where(x => x.IdPerfil == Usuario.Perfiles[iPerf].IdPerfil).FirstOrDefault();
+                         
+
+                            if (menuPerfil != null){
+
+                                if (menuPerfil.VistaMenus.Count() > 0)
+                                {
+
+                                    foreach (var itemVistaMenu in menuPerfil.VistaMenus)
+                                    {
+
+                                    
+
+                                        if (itemVistaMenu.IdPerfil == Usuario.Perfiles[iPerf].IdPerfil)
+                                        {
+                                            VistaMenuAutorizacion vistaMenu = new VistaMenuAutorizacion();
+
+                                            vistaMenu.IdVistaMenu = itemVistaMenu.IdVistaMenu;
+                                            vistaMenu.IdPerfil = itemVistaMenu.IdPerfil;
+                                            vistaMenu.IdVista = itemVistaMenu.IdVista;
+                                            vistaMenu.Checked = itemVistaMenu.Checked;
+                                            vistaMenu.VistaNombre = itemVistaMenu.VistaNombre;
+                                            vistaMenu.Perfiles = new List<PerfilAutorizacion>();
+
+                                            PerfilAutorizacion perfilVista = new PerfilAutorizacion();
+                                            perfilVista.IdPerfil = Usuario.Perfiles[iPerf].IdPerfil;
+                                            perfilVista.Nombre = Usuario.Perfiles[iPerf].Nombre;
+                                            perfilVista.Checked = itemVistaMenu.Checked;
+                                            perfilVista.Existe = true;
+                                            vistaMenu.Perfiles.Add(perfilVista);
+
+                                            menu.VistaMenus.Add(vistaMenu);
+
+                                        }
+                                     
+
+                                     
+
+
+                                    }
+                                   
+
+                                }
+
+                            }
+                            
+                        }
+                    }
+                    
                     grupo.Menus.Add(menu);
+
                 }
 
-                model.Grupos.Add(grupo);
-
+                gruposNuevos.Add(grupo);
             }
 
+            return gruposNuevos;
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> VerUsuario(string parkey)
+        {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
 
+            CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
+            parameter.IdUsuario = Id;
+            var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
+
+            PerfilParameterVM parameterPerfil = new PerfilParameterVM();
+            parameterPerfil.Activo = 1;
+
+            var resultPerfiles = await _serviceAcceso.ObtenerPerfiles(parameterPerfil);
+            ViewBag.Perfiles = resultPerfiles.Perfiles;
+
+            if (result.usuario.IdEntidad == 0)
+            {
+                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO));
+            }
+            else
+            {
+                ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
+            }
+
+            EditarClienteModel model = new EditarClienteModel();
+            model.Correo = result.usuario.Correo;
+            model.Nombres = result.usuario.Nombres;
+            model.ApellidoMaterno = result.usuario.ApellidoMaterno;
+            model.ApellidoPaterno = result.usuario.ApellidoPaterno;
+            model.Activo = result.usuario.Activo;
+            model.EsAdmin = result.usuario.EsAdmin;
+            model.Perfil = result.usuario.IdPerfil;
+            model.Items = result.usuario.Menus;
+            model.IdEntidad = result.usuario.IdEntidad;
+            model.IdUsuario = result.usuario.IdUsuario;
+            model.UsuarioModifica = result.usuario.UsuarioModifica;
+            model.UsuarioCrea = result.usuario.UsuarioCrea;
+            model.FechaCrea = result.usuario.FechaRegistro;
+            model.FechaModifica = result.usuario.FechaModificacion;
+            model.CambioContrasenia = result.usuario.CambioContrasenia;
+            model.ConfirmarCuenta = result.usuario.CorreoConfirmado;
+            model.Usuario = await _serviceAcceso.ObtenerUsuarioPorId(Id);
+            model.Grupos = obtenerGruposMenuPerfil(model.Usuario);
 
             return View(model);
         }
 
-      
         [HttpGet]
         public async Task<IActionResult> Listar(ClienteModel model)
         {
@@ -320,8 +334,13 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalle(Int64 id)
+        public async Task<IActionResult> Detalle(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+         
+            Int64 id = Convert.ToInt64(dataDesencriptada);
+         
 
             ClienteDetalleModel model = new ClienteDetalleModel();
             model.Solicitud = new ViewModel.Datos.Solicitud.SolicitudVM();
@@ -337,52 +356,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             return View(model);
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Listar(ClienteModel model)
-        //{
-        //    ListarClienteParameterVM listarClienteParameter = new ListarClienteParameterVM();
-        //    if (model.isActivo < 0)
-        //    {
-        //        listarClienteParameter.isActivo = null;
-        //    }
-        //    else if (model.isActivo == 0)
-        //    {
-        //        listarClienteParameter.isActivo = false;
-        //    }
-        //    else {
-        //        listarClienteParameter.isActivo = true;
-        //    }
-
-             
-        //    listarClienteParameter.IdPerfil = model.IdPerfil;
-        //    listarClienteParameter.RazonSocialRepresentanteLegal = model.RazonSocuialRepresentanteLegal;
-        //    listarClienteParameter.TipoDocumento = model.IdTipoDocumento;
-        //    listarClienteParameter.NumeroDocumento = model.NumeroDocumento;
-
-        //    var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
-        //    var listServiceTipoDocumento = await _serviceMaestro.ObtenerParametroPorIdPadre(38);
-
-        //    model.ListarEstado = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
-        //    model.ListarTipoDocumento = new SelectList(listServiceTipoDocumento.ListaParametros, "ValorCodigo", "NombreDescripcion");
-
-        //    ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
-        //    parameter.Tipo = Utilitario.Constante.EmbarqueConstante.TipoPerfil.EXTERNO;
-
-        //    var listPerfiles = await _serviceAcceso.ObtenerPerfilesActivos(parameter);
-        //    model.ListarPerfiles = new SelectList(listPerfiles.Perfiles, "IdPerfil", "Nombre");
-
-
-        //    model.ListarClientes = await _serviceUsuario.ListarClientes(listarClienteParameter);
-
-
-
-        //    return View(model);
-        //}
-
-
-
-
 
         private async Task  cargarListas(string tipo)
         { 
@@ -455,7 +428,6 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.Usuario = usuario;
             return View(model);
         }
-
 
         [HttpPost]
         public async Task<JsonResult> ActualizarUsuario(EditarClienteModel usuario)

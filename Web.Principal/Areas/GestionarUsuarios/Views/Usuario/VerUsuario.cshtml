@@ -240,7 +240,7 @@
 
             $("#btnEditar").on("click", function (){
 
-                window.location = "@Url.Action("EditarUsuario","Usuario", new { area="GestionarUsuarios",Id=Model.IdUsuario })";
+                window.location = "@Url.Action("EditarUsuario","Usuario", new { area="GestionarUsuarios", parkey = Security.Common.Encriptador.Instance.EncriptarTexto(Model.IdUsuario.ToString()) })";
 
             });
 

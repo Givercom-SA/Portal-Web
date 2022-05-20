@@ -17,6 +17,7 @@ namespace Servicio.Acceso.Models.Perfil
         public string Tipo { get; set; }
         public int IdEntidad { get; set; }
         public List<int> Menus { get; set; }
+        public List<VistaMenu> VistasMenu { get; set; }
     }
 
 }

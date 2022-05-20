@@ -15,5 +15,8 @@ namespace Servicio.Usuario.Models.Usuario
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public int Permiso { get; set; }
+
+        public List<VistaMenu> VistaMenu { get; set; }
+
     }
 }

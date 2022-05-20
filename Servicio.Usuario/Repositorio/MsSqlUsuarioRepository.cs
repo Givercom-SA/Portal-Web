@@ -10,6 +10,7 @@ using Servicio.Usuario.Models.Usuario;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using Servicio.Usuario.Models.Cliente;
+using ViewModel.Datos.Perfil;
 
 namespace Servicio.Usuario.Repositorio
 {
@@ -25,6 +26,58 @@ namespace Servicio.Usuario.Repositorio
             _logger = logger;
         }
 
+
+        public DashboardClienteResult DashboardCliente(DashboardClienteParameter parameter) {
+
+            var result = new DashboardClienteResult();
+
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[dbo].[TM_PDWAC_SP_DASHBOARD_ENTIDAD_EXTERNO]";
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@FechaInicio", parameter.FechaInicio, dbType: DbType.DateTime);
+                queryParameters.Add("@FechaFin", parameter.FechaFin, dbType: DbType.DateTime);
+                queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.Int32);
+    
+
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure)) {
+                    result.DashboardsXFecha = resultCx.Read<DashboardFecha>().ToList();
+                    result.DashboardsXEstado = resultCx.Read<DashboardEstado>().ToList();
+                }
+
+                result.IN_CODIGO_RESULTADO = 0;
+                result.STR_MENSAJE_BD = "Ok";
+            }
+
+            return result;
+
+        }
+
+        public DashboardAdminResult DashboardAdmin(DashboardAdminParameter parameter)
+        {
+
+            var result = new DashboardAdminResult();
+
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[dbo].[TM_PDWAC_SP_DASHBOARD_ADMINISTRADOR]";
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@FechaInicio", parameter.FechaInicio, dbType: DbType.DateTime);
+                queryParameters.Add("@FechaFin", parameter.FechaFin, dbType: DbType.DateTime);
+                
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure))
+                {
+                    result.DashboardsXFecha = resultCx.Read<DashboardFecha>().ToList();
+                    result.DashboardsXEstado = resultCx.Read<DashboardEstado>().ToList();
+                }
+
+                result.IN_CODIGO_RESULTADO = 0;
+                result.STR_MENSAJE_BD = "Ok";
+            }
+
+            return result;
+
+        }
         public ListarUsuariosResult ObtenerResultados(ListarUsuariosParameter parameter)
         {
             var result = new ListarUsuariosResult();
@@ -324,7 +377,38 @@ namespace Servicio.Usuario.Repositorio
                     DtListaMenus.Rows.Add(drog);
                 }
 
-                using (var cnn = new SqlConnection(strConn))
+            DataTable DtListaVistas = new DataTable("TM_PDWAC_TY_VISTA_MENU_PERFIL");
+            DtListaVistas.Columns.Add("MENU_ID", typeof(int));
+            DtListaVistas.Columns.Add("PERFIL_ID", typeof(int));
+            DtListaVistas.Columns.Add("VISTA_ID", typeof(int));
+
+            List<VistaMenuVM> vistaMenus= new List<VistaMenuVM>();
+
+            parameter.PerfilMenu.Menus.ForEach(x=> {
+
+                if (x.VistaMenu != null) {
+                    var vistaMenu = x.VistaMenu.Where(z => z.IdVistaChecked != null).ToList();
+                    if (vistaMenu != null) {
+
+                        vistaMenu.ForEach(y=> {
+                            y.IdPerfil = parameter.IdPerfil;
+                            y.IdMenu = x.IdMenu;
+                            vistaMenus.Add(y);
+                        });
+                    }
+                }
+            });
+
+            foreach (var itemVistas in vistaMenus)
+            {
+                DataRow drog = DtListaVistas.NewRow();
+                drog["MENU_ID"] = itemVistas.IdMenu;
+                drog["PERFIL_ID"] = itemVistas.IdPerfil;
+                drog["VISTA_ID"] = itemVistas.IdVista;
+                DtListaVistas.Rows.Add(drog);
+            }
+
+            using (var cnn = new SqlConnection(strConn))
                 {
                     string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_INTERNO_EDITAR]";
 
@@ -338,8 +422,8 @@ namespace Servicio.Usuario.Repositorio
                     queryParameters.Add("@Activo", parameter.Activo);
                     queryParameters.Add("@IdUsuarioModifica", parameter.IdUsuarioModifica);
                     queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
-
-                    result= cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    queryParameters.Add("@ListaVistas", DtListaVistas, DbType.Object);
+                result = cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
 
                     
                 }
@@ -444,19 +528,35 @@ namespace Servicio.Usuario.Repositorio
         {
             int Modo = 2; // Listar Menus por IdUsuario y IdPerfil
             var result = new ListarUsuarioMenuResult();
-           
-                using (var cnn = new SqlConnection(strConn))
+            List<VistaMenu> vistaMenus = new List<VistaMenu>();
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@Modo", Modo, dbType: DbType.Int32);
+                queryParameters.Add("@IdMenu", 0, dbType: DbType.Int32);
+                queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.Int32);
+                queryParameters.Add("@IdPerfil", parameter.IdPerfil, dbType: DbType.Int32);
+                result.Menus = cnn.Query<Models.Usuario.UsuarioMenu>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
+
+                using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure))
                 {
-                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_MENU_FILTRAR]";
-                    var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@Modo", Modo, dbType: DbType.Int32);
-                    queryParameters.Add("@IdMenu", 0, dbType: DbType.Int32);
-                    queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.Int32);
-                    queryParameters.Add("@IdPerfil", parameter.IdPerfil, dbType: DbType.Int32);
-                    result.Menus = cnn.Query<Models.Usuario.UsuarioMenu>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
-                    result.IN_CODIGO_RESULTADO = 0;
+                    result.Menus = resultCx.Read<Models.Usuario.UsuarioMenu>().ToList();
+                    vistaMenus = resultCx.Read<VistaMenu>().ToList();
                 }
-          
+
+                result.Menus.ForEach(x =>
+                {
+                    if (vistaMenus != null)
+                    {
+                        x.VistaMenu = vistaMenus.Where(y => y.IdMenu == x.IdMenu).ToList();
+                    }
+                });
+
+                result.IN_CODIGO_RESULTADO = 0;
+
+            }
+
             return result;
         }
         public CambiarPerfilDefectoResult CambiarPerfilDefecto(CambiarPerfilDefectoParameter parameter)

@@ -185,7 +185,7 @@
 
           $("#btnEditar").on("click", function (){
 
-                window.location = "@Url.Action("EditarUsuario", "UsuarioSecundario", new { area = "GestionarUsuarios", Id = Model.IdUsuario })";
+                window.location = "@Url.Action("EditarUsuario", "UsuarioSecundario", new { area = "GestionarUsuarios", parkey = Security.Common.Encriptador.Instance.EncriptarTexto(Model.IdUsuario.ToString()) })";
 
             });
 

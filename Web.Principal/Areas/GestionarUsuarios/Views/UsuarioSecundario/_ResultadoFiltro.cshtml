@@ -17,7 +17,7 @@
         <tr>
 
             <td>       
-            <a  href='@Url.Action("VerUsuario","UsuarioSecundario", new { area="GestionarUsuarios",Id=item.IdUsuario })' title="Ver Usuario">@item.Correo
+            <a  href='@Url.Action("VerUsuario","UsuarioSecundario", new { area="GestionarUsuarios", parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.IdUsuario.ToString())})' title="Ver Usuario">@item.Correo
                 </a>
                 </td>
             <td>@item.getNombre()</td>

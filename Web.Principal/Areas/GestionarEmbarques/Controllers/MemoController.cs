@@ -20,6 +20,7 @@ using TransMares.Core;
 using Microsoft.Extensions.Logging;
 using Service.Common.Logging.Application;
 using ViewModel.Datos.Message;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -59,8 +60,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GestionarMemo(string KeyBL, string servicio)
+        public async Task<IActionResult> GestionarMemo(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+            string KeyBL = parametros[0];
+            string servicio = parametros[1];
+
             ActionResponse ActionResponse = new();
             string mensaje = string.Empty;
 
@@ -288,8 +295,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerSolicitud(string nroSolicitud)
+        public async Task<IActionResult> VerSolicitud(string parkey)
         {
+            string nroSolicitud = Encriptador.Instance.DesencriptarTexto(parkey);
+       
+
             var viewModel = await _serviceEmbarque.ObtenerSolicitudMemo(nroSolicitud);
 
             // Obtenermos los motivos de rechazo

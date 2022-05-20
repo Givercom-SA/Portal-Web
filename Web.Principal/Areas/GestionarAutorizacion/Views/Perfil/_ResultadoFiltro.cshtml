@@ -15,7 +15,7 @@
         {
         <tr>
             <td>@item.IdPerfil</td>
-            <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" title="Ver Información">@item.Nombre</a></td>
+            <td><a href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion",parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.IdPerfil.ToString())})" title="Ver Información">@item.Nombre</a></td>
             <td>@item.TipoPerfil</td>
             <td align="center">
                 @if (item.Activo)
@@ -32,8 +32,8 @@
                 <div class="dropdown no-caret">
                     <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
                     <div class="dropdown-menu dropdown-menu-end animated--fade-in-up" aria-labelledby="dropdownPeople6">
-                        <a class="dropdown-item" href='@Url.Action("EditarPerfil","Perfil", new { area = "GestionarAutorizacion", Id=@item.IdPerfil })' title="Editar"><i data-feather="edit"></i> &nbsp;Editar</a>
-                        <a class="dropdown-item" href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion", Id=item.IdPerfil})" title="Ver Información"><i data-feather="info"></i> &nbsp;Ver Informacion</a>
+                        <a class="dropdown-item" href='@Url.Action("EditarPerfil","Perfil", new { area = "GestionarAutorizacion",parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.IdPerfil .ToString())})' title="Editar"><i data-feather="edit"></i> &nbsp;Editar</a>
+                        <a class="dropdown-item" href="@Url.Action("VerPerfil","Perfil",new { area="GestionarAutorizacion",parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.IdPerfil.ToString())})" title="Ver Información"><i data-feather="info"></i> &nbsp;Ver Informacion</a>
                         <a class="dropdown-item" onclick="ConfirmarEliminar('@item.IdPerfil', '@item.Nombre')" href='javascript:void(0)' title="Eliminar"><i data-feather="trash-2"></i> &nbsp;Eliminar</a>
 
                     </div>

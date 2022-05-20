@@ -16,5 +16,7 @@ namespace ViewModel.Datos.Perfil
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public int Permiso { get; set; }
+
+        public VistaMenuVM[] VistaMenu { get; set; }
     }
 }

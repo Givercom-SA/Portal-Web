@@ -262,7 +262,16 @@ namespace Utilitario.Constante
             public static string APROBADO = "SA";
 
         }
+        public class DashboardEstadoGeneral
+        {
 
+            public static string PENDIENTE = "Pendiente";
+            public static string RECHAZADO = "Rechazado";
+            public static string APROBADO = "Aprobado";
+            public static string ANULADO = "Anulado";
+            
+
+        }
         public static class Campos
         {
 
@@ -299,6 +308,23 @@ namespace Utilitario.Constante
         }
 
 
+        public static class Dashboard_Proceso
+        {
+
+            public static string SOLICITUD_DIRECCIONAMIENTO_ALMACEN = "SOLICITUD_DIRECCIONAMIENTO_ALMACEN";
+            public static string NOTIFICACION_ARRIBO = "NOTIFICACION_ARRIBO";
+            public static string LIBERACION_CARGA = "LIBERACION_CARGA";
+            public static string CONFIRMACION_DIRECCIONAMIENTO_PERMANENTE = "CONFIRMACION_DIRECCIONAMIENTO_PERMANENTE";
+            public static string COBROS_PAGAR = "COBROS_PAGAR";
+            public static string ASIGNACION_AGENTE = "ASIGNACION_AGENTE";
+            public static string FACTURACION_TERCERO = "FACTURACION_TERCERO";
+            public static string SOLICITUD_FACTURACION = "SOLICITUD_FACTURACION";
+            public static string SOLICITUD_DIRECCIONAMIENTO = "SOLICITUD_DIRECCIONAMIENTO";
+            public static string SOLICITUD_DEVOLUCION = "SOLICITUD_DEVOLUCION";
+            public static string USUARIO_REGISTRADO = "USUARIO_REGISTRADO";
+        }
+
+        
 
 
 

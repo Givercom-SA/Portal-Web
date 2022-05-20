@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using ViewModel.Datos.Autorizacion;
 using Service.Common.Logging.Application;
 using Microsoft.Extensions.Logging;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 {
@@ -196,10 +197,14 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerUsuario(int Id)
+        public async Task<IActionResult> VerUsuario(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
+
             CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
             parameter.IdUsuario = Id;
+
             var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
 
             PerfilParameterVM parameterPerfil = new PerfilParameterVM();

@@ -19486,7 +19486,7 @@ body {
 }
 
     .timeline.timeline-xs .timeline-item .timeline-item-marker .timeline-item-marker-text {
-        width: 3rem;
+        width: 5rem;
         font-size: 0.7rem;
     }
 
@@ -19494,7 +19494,7 @@ body {
         height: 1.5rem;
         width: 1.5rem;
         font-size: 0.875rem;
-        border: 0.125rem solid #fff;
+        border: 0.125rem solid #ebebeb;
         margin-top: -0.125rem;
     }
 

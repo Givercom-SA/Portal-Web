@@ -125,7 +125,10 @@ namespace Servicio.Acceso.Profiles
                 .ForMember(s => s.TipoPerfil, o => o.MapFrom(s => s.TipoPerfil))
                 .ForMember(s => s.UsuarioCrea, o => o.MapFrom(s => s.UsuarioCrea))
                 .ForMember(s => s.UsuarioModifica, o => o.MapFrom(s => s.UsuarioModifica))
-                .ForMember(s => s.Menus, o => o.MapFrom(s => s.Menus));
+                .ForMember(s => s.Menus, o => o.MapFrom(s => s.Menus))
+                .ForMember(s => s.VistaMenu, o => o.MapFrom(s => s.VistaMenu))
+                .ForMember(s => s.Checked, o => o.MapFrom(s => s.Checked));
+                   
 
             CreateMap<PerfilParameterVM, PerfilParameter>();
 
@@ -134,6 +137,8 @@ namespace Servicio.Acceso.Profiles
                 .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
             CreateMap<MenuPerfil, MenuPerfilVM>();
+            CreateMap<VistaMenu, VistaMenuVM>();
+            CreateMap<VistaMenuVM, VistaMenu>();
 
             CreateMap<ListarMenusPerfilResult, ListarMenusPerfilResultVM>()
                 .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))

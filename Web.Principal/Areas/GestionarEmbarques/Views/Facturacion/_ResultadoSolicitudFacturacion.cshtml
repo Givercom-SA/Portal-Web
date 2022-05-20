@@ -29,7 +29,7 @@
                 <td class="text-center">
 
 
-                    <a href="@Url.Action("VerSolicitud","Facturacion",new { area="GestionarEmbarques", codigoSolicitud= item.IdSolicitudFacturacion})">   @item.CodigoSolicitud</a>
+                    <a href="@Url.Action("VerSolicitud","Facturacion",new { area="GestionarEmbarques", parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.IdSolicitudFacturacion.ToString())})">   @item.CodigoSolicitud</a>
                 </td>
                 <td>@item.NroBl</td>
                 <td>@item.FechaRegistro</td>

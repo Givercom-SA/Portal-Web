@@ -25,6 +25,8 @@ namespace ViewModel.Datos.Embarque.SolicitudFacturacion
         public bool AceptoFormulario { get; set; }
         public Int32 IdEntidadSolicita { get; set; }
         public Int32 IdUsuarioSolicita { get; set; }
+        public Int32 IdUsuarioCrea { get; set; }
+        
         public string CreditoDescripcion { get; set; }
 
         public string CodigoTipoEntidad { get; set; }

@@ -5,34 +5,25 @@
         Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
 }
 
-
 @if (Model != null)
 {
-
     <div class="card rounded-lg overflow-hidden mb-5  small">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table mb-0">
                     <thead>
-
                         <tr class="bg-dark text-white">
                             <th class="py-2" scope="col"></th>
-
                             @for (int i = 0; i < Model.Usuario.Perfiles.Count(); i++)
                             {
-                        <th class="py-2" scope="col">@Model.Usuario.Perfiles[i].Nombre</th>
-
+                                <th class="py-2" scope="col">@Model.Usuario.Perfiles[i].Nombre</th>
                             }
-
                         </tr>
                     </thead>
                     <tbody>
-
-
                         @for (int ii = 0; ii < Model.Grupos.Count(); ii++)
                         {
-
-                            <tr>
+                            <tr style=" background-color: #ededed;">
                                 <td class="p-3" scope="row">
                                     <label class=""><b>@Model.Grupos[ii].Nombre</b></label>
                                     <input type="hidden" asp-for="@Model.Grupos[ii].Nombre" />
@@ -45,65 +36,89 @@
                                 }
                             </tr>
 
-                         
-
                             @for (int jj = 0; jj < Model.Grupos[ii].Menus.Count(); jj++)
                             {
                                 <tr>
                                     <td>
-                                        <label class="">
+                                        <label class="" style=" color: #230808;">
                                             @Model.Grupos[ii].Menus[jj].Nombre
                                         </label>
-
-                                        <input type="hidden"  asp-for="@Model.Grupos[ii].Menus[jj].IdMenu" />
-                                        <input type="hidden"  asp-for="@Model.Grupos[ii].Menus[jj].Nombre" />
-
+                                        <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].IdMenu" />
+                                        <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Nombre" />
                                     </td>
-
 
                                     @for (int i = 0; i < Model.Grupos[ii].Menus[jj].Perfiles.Count(); i++)
                                     {
 
-                                <td class="text-center">
+                                        <td class="text-center">
+                                            @if (Model.Grupos[ii].Menus[jj].Perfiles[i].Existe)
+                                            {
 
 
-
-                                    @if (Model.Usuario.EsAdmin == 0)
-                                    {
-                                            if (String.IsNullOrEmpty(Disabled)) { 
-                                                <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                            @if (Model.Usuario.EsAdmin == 0)
+                                            {
+                                                if (String.IsNullOrEmpty(Disabled))
+                                                {
+                                                    <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                                }
+                                                else
+                                                {
+                                                    <input class="form-check-input border-primary" type="checkbox" disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
+                                                }
                                             }
-                                            else { 
-                                                <input class="form-check-input border-primary" type="checkbox" disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">    
+                                            else
+                                            {
+                                                <input class="form-check-input border-primary" type="checkbox" checked disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked">
                                             }
-                                    }
-                                    else
-                                    {
-                                        <input class="form-check-input border-primary" type="checkbox" checked disabled asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Checked"  >
-                                    }
 
-                                    <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].IdPerfil" />
-                                    <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Nombre" />
+                                            <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].IdPerfil" />
+                                            <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].Perfiles[i].Nombre" />
 
+                                            }
 
-                                </td>
+                                        </td>
                                     }
 
                                 </tr>
 
+                                @for (int iiVista = 0; iiVista < @Model.Grupos[ii].Menus[jj].VistaMenus.Count(); iiVista++)
+                                {
+                                    <tr>
+                                        <td>&nbsp;&nbsp;&nbsp; @Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].VistaNombre </td>
+
+                                        @for (int iPerfl = 0; iPerfl < Model.Grupos[ii].Menus[jj].Perfiles.Count(); iPerfl++)
+                                        {
+                                                     <td class="text-center">
+                                            @for (int i = 0; i < Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles.Count(); i++)
+                                            {
+
+                                                @if (Model.Usuario.EsAdmin == 0)
+                                                {
+                                                    if (String.IsNullOrEmpty(Disabled))
+                                                    {
+                                                        <input class="form-check-input border-primary" type="checkbox" asp-for="@Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles[i].Checked">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="form-check-input border-primary" type="checkbox" disabled asp-for="@Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles[i].Checked">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input class="form-check-input border-primary" type="checkbox" checked disabled asp-for="@Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles[i].Checked">
+                                                }
+                                                <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles[i].IdPerfil" />
+                                                <input type="hidden" asp-for="@Model.Grupos[ii].Menus[jj].VistaMenus[iiVista].Perfiles[i].Nombre" />
+                                            }
+                                                </td>
+                                        }
+                                            </tr>
+                                }
                             }
-
                         }
-
-
-
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-
-
 }

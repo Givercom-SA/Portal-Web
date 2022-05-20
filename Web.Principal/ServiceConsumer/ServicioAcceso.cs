@@ -157,10 +157,7 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
   
-      
-
-
-
+     
         public async Task<ListarPerfilesResultVM> ObtenerPerfiles(PerfilParameterVM parameter)
         {
             var json = JsonConvert.SerializeObject(parameter);

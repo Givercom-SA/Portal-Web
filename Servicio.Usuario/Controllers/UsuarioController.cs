@@ -331,5 +331,39 @@ namespace Servicio.Usuario.Controllers
             return _mapper.Map<CambiarPerfilDefectoResultVM>(result);
         }
 
+        [HttpPost]
+        [Route("dasboard-cliente")]
+        public ActionResult<DashboardClienteResultVM> DashboardCliente(DashboardClienteParameterVM parameter)
+        {
+            DashboardClienteResult result = new DashboardClienteResult();
+            try
+            {
+                result = _repository.DashboardCliente(_mapper.Map<DashboardClienteParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<DashboardClienteResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("dasboard-admin")]
+        public ActionResult<DashboardAdminResultVM> DashboardAdmin(DashboardAdminParameterVM parameter)
+        {
+            DashboardAdminResult result = new DashboardAdminResult();
+            try
+            {
+                result = _repository.DashboardAdmin(_mapper.Map<DashboardAdminParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<DashboardAdminResultVM>(result);
+        }
+
     }
 }

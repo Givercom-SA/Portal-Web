@@ -234,14 +234,11 @@
 
             $("#btnEditar").on("click", function (){
 
-                window.location = "@Url.Action("EditarUsuario","Cliente", new { area="GestionarUsuarios",Id=Model.IdUsuario })";
+                window.location = "@Url.Action("EditarUsuario","Cliente", new { area="GestionarUsuarios", parkey = Security.Common.Encriptador.Instance.EncriptarTexto(Model.IdUsuario.ToString())})";
 
             });
 
         });
-
-
-
 
     </script>
 }

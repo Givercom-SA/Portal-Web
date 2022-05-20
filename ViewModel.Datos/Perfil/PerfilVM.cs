@@ -24,14 +24,26 @@ namespace ViewModel.Datos.Perfil
         public string Tipo { get; set; }
         public string Dashboard { get; set; }
      
+        public bool Checked { get; set; }
         public List<MenuPerfilVM> Menus { get; set; }
+        public List<VistaMenuVM> VistaMenu { get; set; }
     }
 
-    //public class MenuPerfilVM
-    //{
-    //    public int IdMenu { get; set; }
-    //    public string Nombre { get; set; }
-    //    public string Grupo { get; set; }
-    //    public int Permiso { get; set; }
-    //}
+    public class VistaMenuVM
+    {
+        public int IdVistaMenu { get; set; }
+        public int IdMenu { get; set; }
+        public int IdPerfil { get; set; }
+        public int IdVista { get; set; }
+        public string VistaArea { get; set; }
+        public string VistaController { get; set; }
+        public string VistaAction { get; set; }
+        public string VistaVerbo { get; set; }
+        public string VistaNombre { get; set; }
+        public int VistaPrincipal { get; set; }
+        public int VistaOpcion { get; set; }
+        public bool Checked { get; set; }
+        public string IdVistaChecked { get; set; }
+        
+    }
 }

@@ -18,6 +18,8 @@ namespace ViewModel.Datos.Perfil
         public string Tipo { get; set; }
         public int IdEntidad { get; set; }
         public List<int> Menus { get; set; }
+
+        public List<VistaMenuVM> VistasMenu { get; set; }
     }
 
 }

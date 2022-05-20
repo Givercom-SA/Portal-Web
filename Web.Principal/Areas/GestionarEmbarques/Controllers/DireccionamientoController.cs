@@ -18,6 +18,7 @@ using static Utilitario.Constante.EmbarqueConstante;
 using Service.Common.Logging.Application;
 using Microsoft.Extensions.Logging;
 using Utilitario.Constante;
+using Security.Common;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -42,8 +43,16 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo, string servicio, string origen)
+        public async Task<IActionResult> Solicitud(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+
+            string codigo = parametros[0];
+            string servicio = parametros[1];
+            string origen= parametros[2];
+
             var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
             var listModalidad = await _serviceMaestro.ObtenerParametroPorIdPadre(62);
 
@@ -226,8 +235,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> VerSolicitud(string nroSolicitud)
+        public async Task<IActionResult> VerSolicitud(string parkey)
         {
+            var nroSolicitud = Encriptador.Instance.DesencriptarTexto(parkey);
+         
+
             var viewModel = await _serviceEmbarque.ObtenerSolicitudPorCodigo(nroSolicitud);
 
             // Obtenermos los motivos de rechazo

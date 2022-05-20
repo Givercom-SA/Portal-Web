@@ -16,7 +16,6 @@
     <Folder Include="Areas\GestionarAccesos\Data\" />
     <Folder Include="Areas\GestionarAutorizacion\Data\" />
     <Folder Include="Areas\GestionarDashboards\Data\" />
-    <Folder Include="Areas\GestionarDashboards\Models\" />
     <Folder Include="Areas\GestionarEmbarques\Data\" />
     <Folder Include="Areas\GestionarSolicitudes\Data\" />
     <Folder Include="Areas\GestionarUsuarios\Data\" />

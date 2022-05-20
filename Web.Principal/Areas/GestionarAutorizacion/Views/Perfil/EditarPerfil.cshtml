@@ -98,24 +98,11 @@
                             <input asp-for="@Model.FechaModifica" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
                         </div>
                     </div>
-
-
                     <div class="row gx-3 mb-3">
-
-                        <div class="col-md-6">
-                            <label class="small mb-1">Accesos</label>
-                            <fieldset class="border p-2 h-100">
-                               
-                                <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
-                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
-                                </div>
-                            </fieldset>
-                        </div>
-
                         <div class="col-md-6">
                             <label class="small mb-1">Estado</label>
-                            <fieldset class="border p-2 h-100">
-                       
+                            <fieldset class="border p-2">
+
 
                                 <div class="form-check form-check-solid">
                                     <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" type="radio" value="true">
@@ -129,17 +116,32 @@
 
                             </fieldset>
                         </div>
-
-
-
                     </div>
 
-                    <div id="MensajeResult"></div>
 
-                    <hr />
-                    <div class="mb-2 text-right">
-                        <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
-                    </div>
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-12">
+                                <label class="small mb-1">Accesos</label>
+                                <fieldset class="border p-2 h-100">
+
+                                    <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
+                                        @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
+                                    </div>
+                                </fieldset>
+                            </div>
+
+
+
+
+                        </div>
+
+                        <div id="MensajeResult"></div>
+
+                        <hr />
+                        <div class="mb-2 text-right">
+                            <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
+                        </div>
                 </form>
             </div>
         </div>

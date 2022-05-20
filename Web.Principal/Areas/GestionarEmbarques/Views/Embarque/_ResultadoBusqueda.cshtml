@@ -20,14 +20,16 @@
             <th>Origen</th>
             <th>Puerto de Carga</th>
             <th>Puerto de Descarga</th>
-            @if (Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION) )
+            @if (Model.Origen.Equals(Utilitario.Constante.EmbarqueConstante.Trazabilidad.EXPORTACION))
             {
                 <th>Fecha de Carga</th>
-            }else{
-        <th>Fecha de Descarga</th>
             }
-                <th>Nro. de Manifiesto</th>
-            </tr>
+            else
+            {
+                <th>Fecha de Descarga</th>
+            }
+            <th>Nro. de Manifiesto</th>
+        </tr>
     </thead>
     <tfoot>
         <tr>
@@ -44,17 +46,17 @@
     <tbody>
         @foreach (var item in Model.listEmbarques.listaEmbarques)
         {
-        <tr>
+            <tr>
 
-            <td>@item.NROOT</td>
-            <td><a href='@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", codigo=item.KEYBLD, anio=Model.Anio,tipofiltro=Model.TipoFiltro, filtro=Model.Filtro, servicio=Model.Servicio, origen=Model.Origen})'> @item.NROBL </a></td>
-            <td>@item.NRORO</td>
-            <td>@item.ORIGEN</td>
-            <td>@item.POL</td>
-            <td>@item.POD</td>
-            <td>@item.ETAPOD</td>
-            <td>@item.MANIFIESTO</td>
-        </tr>
+                <td>@item.NROOT</td>
+                <td><a href='@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", parkey=Security.Common.Encriptador.Instance.EncriptarTexto(""+item.KEYBLD +"|"+Model.Anio+"|"+Model.TipoFiltro+"|"+Model.Filtro+"|"+Model.Servicio+"|"+Model.Origen )})'> @item.NROBL </a></td>
+                <td>@item.NRORO</td>
+                <td>@item.ORIGEN</td>
+                <td>@item.POL</td>
+                <td>@item.POD</td>
+                <td>@item.ETAPOD</td>
+                <td>@item.MANIFIESTO</td>
+            </tr>
         }
     </tbody>
 </table>

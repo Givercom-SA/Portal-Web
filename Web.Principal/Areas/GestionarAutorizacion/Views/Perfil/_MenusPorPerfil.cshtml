@@ -6,23 +6,113 @@
 }
 @if (Model != null)
 {
-    <div class="list-group">
+    int correlativoPerfil = 0;
+    int correlativoMenu = 0;
+
+    <input type="hidden" name="Perfiles[@correlativoPerfil].IdPerfil" value="1" />
+
+    <ul class="list-group">
         @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
         {
-            <label class="list-group-item"><b>@grupo</b></label>
-            @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
-            {
-                <label class="list-group-item">
-                    @if (item.Permiso == 1)
+            
+
+            <li class="list-group-item">
+                <b>@grupo</b>
+
+
+
+                <ul class="list-group">
+
+                  
+
+                    @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
                     {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled> @item.Nombre
+                        var correlativoVistaMenu = 0;
+
+                        <li class="list-group-item">
+                            <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].IdMenu" value="@item.IdMenu" />
+
+
+                            @if (item.Permiso == 1)
+                            {
+                                <input class="form-check-input" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled /> @item.Nombre
+
+                                <ul class="list-group-dark">
+
+                                    @foreach (var itemVista in item.VistaMenu)
+                                    {
+                                    <li class="list-group-item">
+                                        <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista" value="@itemVista.IdVista" />
+
+                                        @if (itemVista.Checked)
+                                        {
+                                            <input class="form-check-input" type="checkbox" checked name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
+                                                   value="@itemVista.IdVista"
+                                                   @Disabled> @itemVista.VistaNombre
+                                        }
+                                        else
+                                        {
+                                                <input class="form-check-input" type="checkbox" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
+                                                       value="@itemVista.IdVista"
+                                                       @Disabled> @itemVista.VistaNombre
+                                        }
+
+
+
+                                    </li>
+
+                                            correlativoVistaMenu = correlativoVistaMenu + 1;
+                                        }
+
+                                </ul>
+
+                            }
+                            else
+                            {
+
+                                <input class="form-check-input" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled /> @item.Nombre
+
+
+                                <ul class="list-group">
+                                    @foreach (var itemVista in item.VistaMenu)
+                                    {
+                                    <li class="list-group-item">
+                                        <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista" value="@itemVista.IdVista" />
+
+                                        @if (itemVista.Checked)
+                                        {
+                                            <input class="form-check-input" type="checkbox" checked name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
+                                                   value="@itemVista.IdVista"
+                                                   @Disabled> @itemVista.VistaNombre
+                                            }
+                                            else
+                                            {
+                                                <input class="form-check-input" type="checkbox" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
+                                                       value="@itemVista.IdVista"
+                                                       @Disabled> @itemVista.VistaNombre
+                                                }
+
+
+
+
+                                    </li>
+                                            correlativoVistaMenu = correlativoVistaMenu + 1;
+
+                                        }
+                                </ul>
+                            }
+
+                        </li>
+
+                        correlativoMenu = correlativoMenu + 1;
+
                     }
-                    else
-                    {
-                        <input class="form-check-input" id="Menu_@item.IdMenu" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled> @item.Nombre
-                    }
-                </label>
-            }
+                </ul>
+
+            </li>
+
+            
+
         }
-    </div>
+    </ul>
 }

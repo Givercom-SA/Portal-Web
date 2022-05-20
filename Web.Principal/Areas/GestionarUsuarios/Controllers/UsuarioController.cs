@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Security.Common;
 using Service.Common.Logging.Application;
 using System;
 using System.Collections.Generic;
@@ -72,8 +73,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditarUsuario(int Id)
+        public async Task<IActionResult> EditarUsuario(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
+
             CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
             parameter.IdUsuario = Id;
             var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
@@ -111,8 +115,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> VerUsuario(int Id)
+        public async Task<IActionResult> VerUsuario(string parkey)
         {
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+            Int32 Id = Convert.ToInt32(dataDesencriptada);
+
             CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
             parameter.IdUsuario = Id;
             var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
@@ -672,6 +679,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.Activo = usuario.Activo;
                     parameterVM.IdUsuarioModifica = this.usuario.idUsuario;
                     parameterVM.Menus = usuario.Menus.ToList();
+                    parameterVM.PerfilMenu =usuario.PerfilVM;
 
                     var result = await _serviceUsuario.EditarUsuarioInterno(parameterVM);
                     ActionResponse.Codigo = result.CodigoResultado;

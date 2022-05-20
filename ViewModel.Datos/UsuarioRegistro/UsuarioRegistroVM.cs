@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilitario.Constante;
 using ViewModel.Datos.Acceso;
+using ViewModel.Datos.Perfil;
 
 namespace ViewModel.Datos.UsuarioRegistro
 {
@@ -142,7 +143,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string Grupo { get; set; }
         public string HttpMethod { get; set; }
         public bool Permiso { get; set; }
+        public List<VistaMenuVM> VistaMenus { get; set; }
 
-        
     }
 }
