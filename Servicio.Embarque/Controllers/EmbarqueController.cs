@@ -23,6 +23,8 @@ using ViewModel.Datos.Embarque.SolicitudFacturacion;
 using static Utilitario.Constante.EmbarqueConstante;
 using ViewModel.Datos.Message;
 using Servicio.Embarque.ServiceConsumer;
+using ViewModel.Datos.Embarque.LiberacionCarga;
+using Servicio.Embarque.Models.LiberacionCarga;
 
 namespace Servicio.Embarque.Controllers
 {
@@ -34,6 +36,7 @@ namespace Servicio.Embarque.Controllers
         private readonly INotificacionArriboRepository _repositoryNotificacion;
         private readonly IMemoRepository _repositoryMemo;
         private readonly ICobroPagarRepository _repositoryCobroPagar;
+        private readonly ILiberacionCargaRepository _repositoryLiberacionCarga;
         private readonly ServiceExterno.ServicioEmbarques _servicioEmbarques;
         private readonly IMapper _mapper;
         private readonly ServicioMessage _servicioMessage;
@@ -46,7 +49,8 @@ namespace Servicio.Embarque.Controllers
             IMapper mapper,
             IConfiguration configuration,
             ServicioMessage servicioMessage,
-            ServiceExterno.ServicioEmbarques servicioEmbarques)
+            ServiceExterno.ServicioEmbarques servicioEmbarques,
+            ILiberacionCargaRepository repositoryLiberacionCarga)
         {
             _repository = repository;
             _repositoryNotificacion = repositoryNotificacion;
@@ -56,8 +60,7 @@ namespace Servicio.Embarque.Controllers
             _configuration = configuration;
             _servicioMessage = servicioMessage;
             _servicioEmbarques =servicioEmbarques;
-
-
+            _repositoryLiberacionCarga = repositoryLiberacionCarga;
         }
 
         [HttpGet]
@@ -496,6 +499,25 @@ namespace Servicio.Embarque.Controllers
             return resultenvioMensaje;
         }
 
+
+        [HttpPost]
+        [Route("crear-liberacacion-carga")]
+        public ActionResult<CrearLiberacionCargaResultVM> CrearLiberacionCarga(CrearLiberacionCargaParameterVM parameter)
+        {
+            var result = _repositoryLiberacionCarga.CrearLiberacionCarga(_mapper.Map<CrearLiberacionCargaParameter>(parameter));
+            return _mapper.Map<CrearLiberacionCargaResultVM>(result);
+        }
+
+
+        [HttpPost]
+        [Route("crear-memo-enviado")]
+        public ActionResult<CrearMemoEnviadoResultVM> CrearMemoEnviado(CrearMemoEnviadoParameterVM parameter)
+        {
+            var result = _repositoryMemo.CrearMemoEnviado(_mapper.Map<CrearMemoEnviadoParameter>(parameter));
+            return _mapper.Map<CrearMemoEnviadoResultVM>(result);
+        }
+
+       
         private  async void enviarCorreo(string _correo, string _asunto, string _contenido)
         {
            

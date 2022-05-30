@@ -72,6 +72,8 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@SODI_CANTIDAD_CNT", parameter.CantidadCtn);
                     queryParameters.Add("@SODI_NAVEVIAJE", parameter.NaveViaje);
                     queryParameters.Add("@SODI_CONSIGNATARIO", parameter.Consignatario);
+                    queryParameters.Add("@SODI_EEMPRESA_GTRM_CODIGO", parameter.CodigoEmpresaGtrm);
+                    
                     queryParameters.Add("@ListDocumentos", dtDocumentos, DbType.Object);
 
                     result = cnn.Query<SolicitudDireccionamientoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -331,7 +333,36 @@ namespace Servicio.Embarque.Repositorio
         }
 
 
+        public CrearDireccionamientoPermanenteResult CrearDireccionamientoPermanente(CrearDireccionamientoPermanenteParameter parameter)
+        {
+            var result = new CrearDireccionamientoPermanenteResult();
 
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "TM_PDWAC_SP_DIRECCIONAMIENTO_PERMANANTE_CREAR";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@DIPE_EMBARQUE_KEYBL", parameter.KeyBLD, dbType: DbType.String);
+                    queryParameters.Add("@DIPE_NROBL", parameter.NroBL, dbType: DbType.String);
+                    queryParameters.Add("@DIPE_ORIGEN", parameter.Origen, dbType: DbType.String);
+                    queryParameters.Add("@DIPE_SERVICIO", parameter.Servicio, dbType: DbType.String);
+                    queryParameters.Add("@DIPE_EMPRESA_GTRM_CODIGO", parameter.IdEmpresaGtrm, dbType: DbType.String);
+                    queryParameters.Add("@DIPE_IDUSUARIO_CREA", parameter.IdUsuarioCrea, dbType: DbType.Int32);
+                    queryParameters.Add("@DIPE_IDSESION", parameter.IdSesion, dbType: DbType.Int32);
+
+                    result = cnn.Query<CrearDireccionamientoPermanenteResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IN_CODIGO_RESULTADO = -1;
+                result.STR_MENSAJE_BD = ex.Message;
+            }
+
+            return result;
+        }
 
     }
 }

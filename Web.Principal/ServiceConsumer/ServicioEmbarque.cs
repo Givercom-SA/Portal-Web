@@ -18,6 +18,7 @@ using ViewModel.Datos.ListaExpressRelease;
 using ViewModel.Datos.Embarque.SolicitudFacturacion;
 using Service.Common;
 using ViewModel.Datos.Entidad;
+using ViewModel.Datos.Embarque.LiberacionCarga;
 
 namespace Web.Principal.ServiceConsumer
 {
@@ -28,6 +29,7 @@ namespace Web.Principal.ServiceConsumer
         private const string SERVICIO_DIRECCIONAMIENTO = "Direccionamiento/";
         private const string SERVICIO_FACTURACION = "Facturacion/";
         private const string SERVICIO_ENTIDAD = "Entidad/";
+        private const string SERVICIO_LIBERACION_CARGA = "LiberacionCarga/";
 
         static HttpClient client = new HttpClient();
 
@@ -167,6 +169,41 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
 
+        public async Task<CrearLiberacionCargaResultVM> CrearLiberacionCarga(CrearLiberacionCargaParameterVM parameter)
+        {
+            const string SERVICIO = "crear-liberacacion-carga";
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<CrearLiberacionCargaResultVM>();
+
+            return resultado;
+        }
+
+        public async Task<CrearMemoEnviadoResultVM> CrearMemoEnviado(CrearMemoEnviadoParameterVM parameter)
+        {
+            const string SERVICIO = "crear-memo-enviado";
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<CrearMemoEnviadoResultVM>();
+
+            return resultado;
+        }
+
+        public async Task<CrearDireccionamientoPermanenteResultVM> CrearDireccionamientoPermanente(CrearDireccionamientoPermanenteParameterVM parameter)
+        {
+            const string SERVICIO = "crear-direccionamiento-permanente";
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<CrearDireccionamientoPermanenteResultVM>();
+
+            return resultado;
+        }
         public async Task<ListarAsignarAgenteResultVM> ListarAsignacion(AsignarAgenteListarParameterVM parameter)
         {
             const string SERVICIO = "listar-asignacion";

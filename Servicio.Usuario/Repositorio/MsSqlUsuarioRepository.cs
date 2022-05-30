@@ -38,7 +38,7 @@ namespace Servicio.Usuario.Repositorio
                 queryParameters.Add("@FechaInicio", parameter.FechaInicio, dbType: DbType.DateTime);
                 queryParameters.Add("@FechaFin", parameter.FechaFin, dbType: DbType.DateTime);
                 queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.Int32);
-    
+                queryParameters.Add("@CodigoEmpresaGtrm", parameter.CodigoEmpresaGtrm, dbType: DbType.String);
 
                 using (var resultCx = cnn.QueryMultiple(spName, queryParameters, commandType: CommandType.StoredProcedure)) {
                     result.DashboardsXFecha = resultCx.Read<DashboardFecha>().ToList();
@@ -69,6 +69,7 @@ namespace Servicio.Usuario.Repositorio
                 {
                     result.DashboardsXFecha = resultCx.Read<DashboardFecha>().ToList();
                     result.DashboardsXEstado = resultCx.Read<DashboardEstado>().ToList();
+                    result.DashboardUsuarioPerfil = resultCx.Read<DashboardUsuarioPerfil>().ToList();
                 }
 
                 result.IN_CODIGO_RESULTADO = 0;

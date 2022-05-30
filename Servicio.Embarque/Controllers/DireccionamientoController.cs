@@ -221,6 +221,14 @@ namespace Servicio.Embarque.Controllers
             return _mapper.Map<SolicitudDireccionamientoResultVM>(result);
         }
 
+        [HttpPost]
+        [Route("crear-direccionamiento-permanente")]
+        public ActionResult<CrearDireccionamientoPermanenteResultVM> CrearDireccionamientoPermanente(CrearDireccionamientoPermanenteParameterVM parameter)
+        {
+            var result = _repository.CrearDireccionamientoPermanente(_mapper.Map<CrearDireccionamientoPermanenteParameter>(parameter));
+            return _mapper.Map<CrearDireccionamientoPermanenteResultVM>(result);
+        }
+
         private async  Task<string> enviarCorreo(string _correo, string _asunto, string _contenido)
         {
      

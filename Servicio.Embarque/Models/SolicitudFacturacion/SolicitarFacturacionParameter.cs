@@ -49,8 +49,8 @@ namespace Servicio.Embarque.Models.SolicitudFacturacion
         public string ClienteNroDocumento { get; set; }
         public string ClienteRazonSocial { get; set; }
         public string ClienteTipoDocumento { get; set; }
-
-
+        public string CodigoEmpresaGtrm { get; set; }
+        
         public string CreditoDescripcion { get; set; }
         public string CodigoTipoEntidad { get; set; }
 

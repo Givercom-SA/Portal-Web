@@ -28,7 +28,8 @@ namespace ViewModel.Datos.Embarque.SolicitudFacturacionTercero
         public string AgenteAduanaNumeroDocumento { get; set; }
         public string LogoEmpresa { get; set; }
         public int IdUsuarioEvalua { get; set; }
-
+        public string CodigoEmpresaGtrm { get; set; }
+        
         public List<CobrosPendienteEmbarqueVM> CobrosPendientesEmbarque { get; set; }
 
 

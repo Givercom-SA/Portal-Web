@@ -11,7 +11,8 @@ namespace Servicio.Usuario.Models.Usuario
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public int IdUsuario { get; set; }
-   
+        public string CodigoEmpresaGtrm { get; set; }
+        
 
     }
 }

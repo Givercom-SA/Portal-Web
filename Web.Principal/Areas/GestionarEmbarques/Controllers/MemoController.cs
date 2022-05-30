@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Service.Common.Logging.Application;
 using ViewModel.Datos.Message;
 using Security.Common;
+using ViewModel.Datos.Embarque.LiberacionCarga;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -140,6 +141,17 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                             //Ejecutar Servicio
                             var resultService = await _serviceEmbarques.ActualizarMemoEnviadoEmbarque(KeyBL, result.NombreArchivo);
 
+                            CrearMemoEnviadoParameterVM crearMemoEnviadoParamterVM = new CrearMemoEnviadoParameterVM();
+                            crearMemoEnviadoParamterVM.KeyBLD = KeyBL;
+                            crearMemoEnviadoParamterVM.NroBL = embarque.NROBL;
+                            crearMemoEnviadoParamterVM.Origen ="";
+                            crearMemoEnviadoParamterVM.Servicio ="";
+                            crearMemoEnviadoParamterVM.IdEmpresaGtrm =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                            crearMemoEnviadoParamterVM.IdUsuarioCrea = this.usuario.idUsuario;
+                            crearMemoEnviadoParamterVM.IdSesion = Convert.ToInt32(this.usuario.Sesion.CodigoSesion);
+
+                           await _serviceEmbarque.CrearMemoEnviado(crearMemoEnviadoParamterVM);
+
                             // Evaluar
 
 
@@ -215,7 +227,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var embarque = await _serviceEmbarques.ObtenerEmbarque(parameter.KeyBL,parameter.Servicio);
             parameter.NroEmbarque = embarque.NROBL;
             parameter.CodigoEmpresaServicio =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
-
+            
             var result = await _serviceEmbarque.CrearSolicitudMemo(parameter);
 
             if (result.CodigoResultado == 0)

@@ -404,5 +404,38 @@ namespace Servicio.Embarque.Repositorio
 
             return result;
         }
+
+
+        public CrearMemoEnviadoResult CrearMemoEnviado(CrearMemoEnviadoParameter parameter)
+        {
+            var result = new CrearMemoEnviadoResult();
+
+            try
+            {
+                using (var cnn = new SqlConnection(strConn))
+                {
+                    string spName = "TM_PDWAC_SP_MEMO_ENVIADO_CREAR";
+                    var queryParameters = new DynamicParameters();
+                    queryParameters.Add("@MEEV_EMBARQUE_KEYBL", parameter.KeyBLD, dbType: DbType.String);
+                    queryParameters.Add("@MEEV_NROBL", parameter.NroBL, dbType: DbType.String);
+                    queryParameters.Add("@MEEV_ORIGEN", parameter.Origen, dbType: DbType.String);
+                    queryParameters.Add("@MEEV_SERVICIO", parameter.Servicio, dbType: DbType.String);
+                    queryParameters.Add("@MEEV_EMPRESA_GTRM_CODIGO", parameter.IdEmpresaGtrm, dbType: DbType.String);
+                    queryParameters.Add("@MEEV_IDUSUARIO_CREA", parameter.IdUsuarioCrea, dbType: DbType.Int32);
+                    queryParameters.Add("@MEEV_IDSESION", parameter.IdSesion, dbType: DbType.Int32);
+             
+                    result = cnn.Query<CrearMemoEnviadoResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result.IN_CODIGO_RESULTADO = -1;
+                result.STR_MENSAJE_BD = ex.Message;
+            }
+
+            return result;
+        }
+
     }
 }

@@ -44,7 +44,9 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
                 DashboardClienteParameterVM dashboardParameterVM = new DashboardClienteParameterVM();
                 
                 dashboardParameterVM.IdUsuario = this.usuario.idUsuario;
+                dashboardParameterVM.CodigoEmpresaGtrm =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
                 model.Dashboard = await _serviceUsuario.DashboardCliente(dashboardParameterVM);
+
 
                 return View(model);
             }

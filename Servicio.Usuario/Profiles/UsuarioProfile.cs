@@ -100,6 +100,7 @@ namespace Servicio.Usuario.Profiles
 
             CreateMap<DashboardEstado, DashboardEstadoVM>();
             CreateMap<DashboardFecha, DashboardFechaVM>();
+            CreateMap<DashboardUsuarioPerfil, DashboardUsuarioPerfilVM>();
 
             CreateMap<ListarClienteResult, ListarClientesResultVM>()
            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))

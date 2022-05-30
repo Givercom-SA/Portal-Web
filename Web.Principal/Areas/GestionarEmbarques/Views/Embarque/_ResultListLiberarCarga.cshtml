@@ -4,6 +4,11 @@
 
 <form id="frmLiberacionCarga" asp-action="AutorizarLiberacion" asp-area="GestionarEmbarques" asp-controller="Embarque">
 
+    <input type="hidden" asp-for="@Model.KeyBl">
+    <input type="hidden" asp-for="@Model.NroBl">
+    <input type="hidden" asp-for="@Model.Servicio">
+    <input type="hidden" asp-for="@Model.Origen">
+
 
 
 
@@ -61,10 +66,10 @@
     {
         <input type="hidden" id="hidenTieneDatos" value="0" />
         <div>
-            
+
             El embarque ya fue autorizado.
         </div>
-        
+
 
     }
 

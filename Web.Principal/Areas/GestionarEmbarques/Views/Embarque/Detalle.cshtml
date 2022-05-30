@@ -682,8 +682,7 @@
                                 }
 
                                 <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                    <a class="nav-link" href="javascript:registrarNotificacionArribo()" data-bs-toggle="modal"
-                                       data-bs-target="#modal_notificar_arribo">
+                                    <a class="nav-link" href="javascript:registrarNotificacionArribo()" >
 
 
                                         <div class="d-flex align-items-center">
@@ -759,7 +758,7 @@
                                     )
                                 {
                                     <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="javascript:LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
+                                        <a class="nav-link" href="javascript:LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')">
 
                                             <div class="d-flex align-items-center">
                                                 <div class="nav-link-icon" style="margin-right:10px">
@@ -796,7 +795,7 @@
                                 (Model.EmbarqueDetalle.CANTIDAD_DESGLOSE.Equals("0")))
                                 {
                                     <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="javascript:LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_autorizar_liberacion_carga">
+                                        <a class="nav-link" href="javascript:LiberarCarga('@Model.EmbarqueDetalle.KEYBLD')" >
 
                                             <div class="d-flex align-items-center">
                                                 <div class="nav-link-icon" style="margin-right:10px">
@@ -1502,9 +1501,6 @@
 
      function CloseModalAsignar() {
          $('#modal_asignar').modal('hide');
-
-
-
      }
 
      $("#btnVolver").click(function () {
@@ -1548,35 +1544,35 @@
 
      function registrarNotificacionArribo() {
 
-         $(".loader").fadeIn("slow");
+            $(".loader").fadeIn("slow");
 
-         var formData = new FormData();
-         formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
-         formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
-         formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
+            var formData = new FormData();
+            formData.append("keyBld", $('#EmbarqueDetalle_KEYBLD').val());
+            formData.append("nroBl", $('#EmbarqueDetalle_NROBL').val());
+            formData.append("anio", $('#EmbarqueDetalle_ETAPOD').val());
 
-         $.ajax({
-             type: "POST",
-             url: "/GestionarEmbarques/Embarque/ProgramarNotificaciones",
-             data: formData,
-             dataType: "json",
-             contentType: false,
-             processData: false
-         })
-             .done(function (msj) {
-                 $("#msj").html(msj);
-             })
-             .fail(function (xhr, status, error) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ProgramarNotificaciones", "Embarque", new {area= "GestionarEmbarques" })",
+                data: formData,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                beforeSend: function (tx) {
+                    $("#modal_notificar_arribo").modal("show");
+                }
+            }).done(function (msj) {
+                $("#msj").html(msj);
+            })
+                .fail(function (xhr, status, error) {
 
-             })
-             .always(function () {
-                 $(".loader").fadeOut("slow");
-             });
-     }
+                })
+                .always(function () {
+                    $(".loader").fadeOut("slow");
+                });
+        }
 
-
-
-    function AceptarExpressRelease() {
+     function AceptarExpressRelease() {
 
 
         if ($("#ckExpressRelease").is(':checked')==false) {
@@ -1624,9 +1620,6 @@
 
      }
 
-
-
-
      function AceptarParrafo() {
 
          $(".loader").fadeIn("slow");
@@ -1656,7 +1649,6 @@
                  $(".loader").fadeOut("slow");
              });
      }
-
 
      function VerificarAsignacionAgenteAduanas(keyBl) {
 
@@ -1698,8 +1690,7 @@
 
      }
 
-
-    function autorizarLiberacion() {
+     function autorizarLiberacion() {
 
 
 
@@ -1755,7 +1746,6 @@
 
     }
 
-
      function ValidarLiberacionCarga() {
 
          let validado = true;
@@ -1793,39 +1783,43 @@
 
      }
 
-     function LiberarCarga(keybl) {
+        function LiberarCarga(keybl) {
 
-         $.ajax({
-             type: "GET",
-             url: "@Url.Action("LiberarCarga", "Embarque",new { area="GestionarEmbarques"})",
-             data: { keyBl: keybl },
-             contentType: 'application/html; charset=utf-8',
-             type: 'GET',
-             dataType: 'html',
-             beforeSend: function () {
-                 $(".loader").fadeIn("slow");
-                 $("#divContentLiberarCarga").html("Procesando...")
-             },
-         })
-             .done(function (response) {
+            var formData = new FormData();
+            formData.append("KeyBl", '@Model.EmbarqueDetalle.KEYBLD');
+            formData.append("NroBl", '@Model.EmbarqueDetalle.NROBL');
+            formData.append("Servicio", '@Model.Servicio');
+            formData.append("Origen", '@Model.Origen');
 
-                 $("#divContentLiberarCarga").html(response);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LiberarCarga", "Embarque",new { area="GestionarEmbarques"})",
+                data: formData,
+                dataType: "html",
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                    $("#modal_autorizar_liberacion_carga").modal("show")
+                    $("#divContentLiberarCarga").html("Procesando...")
+                },
+            }).done(function (response) {
 
-                 DataTableLiberacionCarga();
+                $("#divContentLiberarCarga").html(response);
 
-                 ActualizarControles();
+                DataTableLiberacionCarga();
 
-             })
-             .fail(function (xhr, status, error) {
-                 $(".loader").fadeOut("slow");
-                 $("#divContentLiberarCarga").html(error)
-             })
-             .always(function () {
+                ActualizarControles();
 
-                 $(".loader").fadeOut("slow");
+            }).fail(function (xhr, status, error) {
+                    $(".loader").fadeOut("slow");
+                    $("#divContentLiberarCarga").html(error)
+             }).always(function () {
+
+                    $(".loader").fadeOut("slow");
              });
 
-     }
+        }
 
      function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente, pServicio) {
          $.ajax({
@@ -1868,7 +1862,7 @@
          });
      }
 
-        function IrSolicitudDireccionamiento() {
+     function IrSolicitudDireccionamiento() {
             hidenUrlDireccionamiento = $("#hidenUrlDireccionamiento");
             window.location.href = hidenUrlDireccionamiento.data("url");
      }
@@ -1922,14 +1916,13 @@
          $("#modal_confirmar_direccionamiento").modal("hide");
      }
 
-
      function MostrarMensajeValidacionOtros(mensaje) {
 
          $("#modal_mensaje_validacion_facturacion_tercero").modal("show");
 
      }
 
-        function ValidacionAsignacionCobros(parkey) {
+     function ValidacionAsignacionCobros(parkey) {
          $.ajax({
              url: '@Url.Action("ValidacionAsignacionCobros", "Embarque",new { area="GestionarEmbarques"})',
              data: { parkey: parkey},
@@ -1962,7 +1955,6 @@
              }
          });
      }
-
 
      function LiberarCargaMensaje(keyBl, pServicio) {
 

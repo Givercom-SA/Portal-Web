@@ -12,7 +12,7 @@ namespace ViewModel.Datos.UsuarioRegistro
 
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
-        
+        public string CodigoEmpresaGtrm { get; set; }
         public int IdUsuario { get; set; }
 
     }

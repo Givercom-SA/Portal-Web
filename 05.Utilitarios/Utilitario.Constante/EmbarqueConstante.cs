@@ -315,6 +315,7 @@ namespace Utilitario.Constante
             public static string NOTIFICACION_ARRIBO = "NOTIFICACION_ARRIBO";
             public static string LIBERACION_CARGA = "LIBERACION_CARGA";
             public static string CONFIRMACION_DIRECCIONAMIENTO_PERMANENTE = "CONFIRMACION_DIRECCIONAMIENTO_PERMANENTE";
+            public static string DIRECCIONAMIENTO_PERMANENTE = "DIRECCIONAMIENTO_PERMANENTE";
             public static string COBROS_PAGAR = "COBROS_PAGAR";
             public static string ASIGNACION_AGENTE = "ASIGNACION_AGENTE";
             public static string FACTURACION_TERCERO = "FACTURACION_TERCERO";
@@ -322,6 +323,8 @@ namespace Utilitario.Constante
             public static string SOLICITUD_DIRECCIONAMIENTO = "SOLICITUD_DIRECCIONAMIENTO";
             public static string SOLICITUD_DEVOLUCION = "SOLICITUD_DEVOLUCION";
             public static string USUARIO_REGISTRADO = "USUARIO_REGISTRADO";
+            public static string MEMO_ENVIADO = "MEMO_ENVIADO";
+            
         }
 
         

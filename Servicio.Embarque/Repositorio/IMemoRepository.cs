@@ -24,5 +24,6 @@ namespace Servicio.Embarque.Repositorio
         public SolicitudMemoEstadoresult ProcesarSolicitudMemo(string codSolicitud, int IdUsuarioEvalua, string codigoEstadoEvalua, string codigoMotivoRechazo);
         public ListarUsuarioResult ObtenerUsuariosPorPerfil(int IdPerfil);
         public NotificacionesMemoResult VerificarNotificacionMemo(NotificacionMemoParameter parameter);
+        public CrearMemoEnviadoResult CrearMemoEnviado(CrearMemoEnviadoParameter parameter);
     }
 }

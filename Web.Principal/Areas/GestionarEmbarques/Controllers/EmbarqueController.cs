@@ -24,6 +24,7 @@ using TransMares.Core;
 using ViewModel.Datos.Message;
 using ViewModel.Datos.Parametros;
 using Security.Common;
+using ViewModel.Datos.Embarque.LiberacionCarga;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -401,14 +402,22 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> LiberarCarga(string keyBl)
+        [HttpPost]
+        public async Task<IActionResult> LiberarCarga(LiberacionCargaListarModel liberacionCargaModel)
         {
+
             LiberacionCargaModel model = new LiberacionCargaModel();
+
+
+
             try
             {
+                model.KeyBl = liberacionCargaModel.KeyBl;
+                model.NroBl = liberacionCargaModel.NroBl;
+                model.Servicio = liberacionCargaModel.Servicio;
+                model.Origen = liberacionCargaModel.Origen;
 
-               var listaDesglose = await _serviceEmbarques.ObtenerDesglosesEmbarque(keyBl, 1,usuario.TipoEntidad, EmbarqueConstante.ProcesoSistema.LIBERACION_CARGA);
+                var listaDesglose = await _serviceEmbarques.ObtenerDesglosesEmbarque(liberacionCargaModel.KeyBl, 1,usuario.TipoEntidad, EmbarqueConstante.ProcesoSistema.LIBERACION_CARGA);
                 model.listaDesglose = listaDesglose.listaDesglose;
 
 
@@ -749,6 +758,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     parameterCrear.IdUsuarioModifica = 0;
                     parameterCrear.IdEntidadAsignado = IdEntidadAsignado;
                     parameterCrear.IdEntidadAsigna = usuario.IdEntidad;
+                    parameterCrear.CodigoEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
                     parameterCrear.LogoEmpresa = $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}";
 
                     var resultCrear = await _serviceEmbarque.AsignarAgenteCrear(parameterCrear);
@@ -967,12 +977,23 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AutorizarLiberacion( LiberacionCargaModel model)
+        public async Task<JsonResult> AutorizarLiberacion(CrearLiberacionCargaModel model)
         {
             ActionResponse = new ActionResponse();
 
             try
             {
+
+                CrearLiberacionCargaParameterVM crearLiberacionCargaParameterVM = new CrearLiberacionCargaParameterVM();
+                crearLiberacionCargaParameterVM.Detalles = new List<LiberacionCargaDetalleVM>();
+
+                crearLiberacionCargaParameterVM.KeyBLD = model.KeyBl;
+                crearLiberacionCargaParameterVM.NroBL = model.NroBl;
+                crearLiberacionCargaParameterVM.Servicio = model.Servicio;
+                crearLiberacionCargaParameterVM.Origen = model.Origen;
+                crearLiberacionCargaParameterVM.IdEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                crearLiberacionCargaParameterVM.IdUsuarioCrea =this.usuario.idUsuario;
+                crearLiberacionCargaParameterVM.IdSesion =Convert.ToInt32( this.usuario.Sesion.CodigoSesion);
 
                 var seleccions = model.listaDesglose.Where(x=>  x.Check==true);
 
@@ -980,18 +1001,33 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 {
                     foreach (var keyBld in seleccions)
                     {
-
-                        await _serviceEmbarques.ActualizarAutorizacionEmbarque(keyBld.KEYBLD);
+                       int rptaServicio= await _serviceEmbarques.ActualizarAutorizacionEmbarque(keyBld.KEYBLD);
 
                         ActionResponse.Mensaje = "Se realizo la liberación de carga de los embarques seleccionados.";
                         ActionResponse.Codigo = 0;
+
+                        if (rptaServicio == 1)
+                        {
+                            LiberacionCargaDetalleVM liberacionCargaDetalle = new LiberacionCargaDetalleVM();
+                            liberacionCargaDetalle.Consignatario = keyBld.CONSIGNATARIO;
+                            liberacionCargaDetalle.KeyBl = keyBld.KEYBLD;
+                            liberacionCargaDetalle.NroBl = keyBld.NROBL;
+                            crearLiberacionCargaParameterVM.Detalles.Add(liberacionCargaDetalle);
+                        }
                     }
                 }
                 else {
                     ActionResponse.Mensaje = "Debe seleccionar al menos un desglose";
                     ActionResponse.Codigo = 1;
-
                 }
+
+
+                if (crearLiberacionCargaParameterVM.Detalles.Count > 0) {
+
+                   await _serviceEmbarque.CrearLiberacionCarga(crearLiberacionCargaParameterVM);
+                }
+
+
 
             }
             catch(Exception ex)
@@ -1003,6 +1039,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             return Json(ActionResponse);
         }
+
+
     }
 
 }

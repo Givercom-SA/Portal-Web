@@ -37,6 +37,7 @@ namespace ViewModel.Datos.Embarque.AsignarAgente
 
         public int IdEntidadAsigna { get; set; }
         public int IdEntidadAsignado { get; set; }
+        public string CodigoEmpresaGtrm { get; set; }
 
 
     }

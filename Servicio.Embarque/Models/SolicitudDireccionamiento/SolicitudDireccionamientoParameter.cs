@@ -33,7 +33,8 @@ namespace Servicio.Embarque.Models.SolicitudDireccionamiento
 
         public string IdEntidadSeleccionado { get; set; }
 
-        
+        public string CodigoEmpresaGtrm { get; set; }
+
 
     }
 

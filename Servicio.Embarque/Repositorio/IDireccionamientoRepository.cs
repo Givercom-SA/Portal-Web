@@ -20,5 +20,6 @@ namespace Servicio.Embarque.Repositorio
         public SolicitudDireccionamientoResult ProcesarSolicitud(string codSolicitud, string CodigoEstado, string CodigoMotivoRechazo,int idUsiarioEvalua);
         public ListarUsuarioResult ObtenerUsuariosPorPerfil(int IdPerfil);
         public SolicitudDireccionamientoResult ValidarSolicitudDireccionamiento(string KeyBL);
+        public CrearDireccionamientoPermanenteResult CrearDireccionamientoPermanente(CrearDireccionamientoPermanenteParameter parameter);
     }
 }

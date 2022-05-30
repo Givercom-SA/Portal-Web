@@ -11,10 +11,8 @@ namespace ViewModel.Datos.UsuarioRegistro
     {
         public List<DashboardEstadoVM> DashboardsXEstado { get; set; }
         public List<DashboardFechaVM> DashboardsXFecha { get; set; }
+        public List<DashboardUsuarioPerfilVM> DashboardUsuarioPerfil { get; set; }
     }
 
-
-
-
-
 }
+

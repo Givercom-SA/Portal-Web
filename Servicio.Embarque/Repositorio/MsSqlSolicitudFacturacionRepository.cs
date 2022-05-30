@@ -225,6 +225,7 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@SOFA_MONTO_TOTAL", cobroClienteProvosionSeleleccionado.MontoTotal, DbType.Decimal);
                     queryParameters.Add("@SOFA_CREDITO_DESCRIPCION", parameter.CreditoDescripcion, DbType.String);
                     queryParameters.Add("@SOFA_CODTIPO_ENTIDAD", parameter.CodigoTipoEntidad, DbType.String);
+                    queryParameters.Add("@SOFA_EMPRESA_GTRM_CODIGO", parameter.CodigoEmpresaGtrm, DbType.String);
                     queryParameters.Add("@ListaProvosionCliente", dtClienteProvision, DbType.Object);
 
                     result = cnn.Query<SolicitarFacturacionResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();

@@ -47,6 +47,7 @@ namespace Servicio.Embarque
             services.AddSingleton<IMemoRepository, MsSqlMemoRepository>();
             services.AddSingleton<ISolicitudFacturacionRepository, MsSqlSolicitudFacturacionRepository>();
             services.AddSingleton<IEntidadRepository, MsSqlEntidadRepository>();
+            services.AddSingleton<ILiberacionCargaRepository, MsSqlLiberacionCargaRepository>();
 
             services.AddSingleton<ServicioUsuario>();
             services.AddSingleton<ServicioEmbarques>();

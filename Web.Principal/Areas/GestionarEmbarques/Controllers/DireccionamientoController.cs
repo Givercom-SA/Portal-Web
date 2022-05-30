@@ -139,6 +139,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             parameter.Documentos = listDoc;
             parameter.NombreCompleto =usuario.obtenerNombreCompleto();
+            parameter.CodigoEmpresaGtrm =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
             var result = await _serviceEmbarque.SolicitudDireccionamientoCrear(parameter);
 
             if (result.CodigoResultado == 0)
@@ -318,7 +319,17 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 var result = await _serviceEmbarques.RegistrarDireccionamientoPermanente(usuario.Sesion.CodigoTransGroupEmpresaSeleccionado,
                     KeyBL,CodigoTaf,usuario.CorreoUsuario);
 
-                if(result == 1)
+                CrearDireccionamientoPermanenteParameterVM crearDireccionamientoPermanenteParameterVM = new CrearDireccionamientoPermanenteParameterVM();
+                crearDireccionamientoPermanenteParameterVM.KeyBLD = KeyBL;
+                crearDireccionamientoPermanenteParameterVM.NroBL ="";
+                crearDireccionamientoPermanenteParameterVM.Servicio ="";
+                crearDireccionamientoPermanenteParameterVM.Origen ="";
+                crearDireccionamientoPermanenteParameterVM.IdEmpresaGtrm = usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                crearDireccionamientoPermanenteParameterVM.IdUsuarioCrea =this.usuario.idUsuario;
+                crearDireccionamientoPermanenteParameterVM.IdSesion =Convert.ToInt32(this.usuario.Sesion.CodigoSesion);
+                await _serviceEmbarque.CrearDireccionamientoPermanente(crearDireccionamientoPermanenteParameterVM);
+
+                if (result == 1)
                 {
                     ActionResponse.Codigo = 1;
                     ActionResponse.Mensaje = string.Format("Estimado cliente, de acuerdo a su confirmación se procederá con la instrucción al almacén {0}.", RazonSocial);

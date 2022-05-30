@@ -143,6 +143,8 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@IDUSUARIO_CREA", parameter.IdUsuarioCrea, dbType: DbType.Int32);
                     queryParameters.Add("@IDENTIDAD_ASIGNA", parameter.IdEntidadAsigna, dbType: DbType.Int32);
                     queryParameters.Add("@IDENTIDAD_ASIGNADO", parameter.IdEntidadAsignado, dbType: DbType.Int32);
+                    queryParameters.Add("@EMAA_EMPRESA_GTRM_CODIGO", parameter.CodigoEmpresaGtrm, dbType: DbType.String);
+                    
                     queryParameters.Add("@IdNuevo", direction: ParameterDirection.Output, dbType: DbType.Int32);
 
                     result = cnn.Query<AsignarAgenteResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -284,6 +286,8 @@ namespace Servicio.Embarque.Repositorio
                     queryParameters.Add("@EMFT_AGENTEA_RAZONSOCIAL", parameter.AgenteAduanaRazonSocial, dbType: DbType.String);
                     queryParameters.Add("@EMFT_AGENTEA_TIPODOCUMENTO", parameter.AgenteAduanaTipoDocumento, dbType: DbType.String);
                     queryParameters.Add("@EMFT_AGENTEA_NUMERODOCUMENTO", parameter.AgenteAduanaNumeroDocumento, dbType: DbType.String);
+                    queryParameters.Add("@EMFT_EMPRESA_GTRM_CODIGO", parameter.CodigoEmpresaGtrm, dbType: DbType.String);
+                    
                     queryParameters.Add("@LISTDETALLE", DtListaCobros, dbType: DbType.Object);
 
 

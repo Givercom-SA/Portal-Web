@@ -649,6 +649,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         model.IdUsuarioCrea = usuario.idUsuario;
                         
                         model.CodigoTipoEntidad = usuario.TipoEntidad;
+                        model.CodigoEmpresaGtrm =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
                         var result = await _serviceEmbarque.SolicitarFacturacionRegistrar(model);
 
                         if (result.CodigoResultado == 0)
@@ -1024,6 +1025,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     parameter.AgenteAduanaNumeroDocumento = model.SolicitarFacturacionTercero.AgenteAduanasNumeroDocumento;
                     parameter.AgenteAduanaRazonSocial = model.SolicitarFacturacionTercero.AgenteAduanasRazonSocial;
                     parameter.AgenteAduanaTipoDocumento = model.SolicitarFacturacionTercero.AgenteAduanasTipoDocumento;
+                    parameter.CodigoEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
 
                     var resultRegistroFacturacionTercero = await _serviceEmbarque.RegistrarFacturacionTercero(parameter);
                     ActionResponse.Codigo = resultRegistroFacturacionTercero.CodigoResultado;

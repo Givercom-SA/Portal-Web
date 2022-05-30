@@ -1,10 +1,10 @@
 ﻿
-@model Web.Principal.Areas.GestionarDashboards.Models.HomeModel 
+@model Web.Principal.Areas.GestionarDashboards.Models.HomeModel
 
 @{
     ViewBag.Title = "Dashboard";
 
-    string direccionamientoEstadoAprobado ="0";
+    string direccionamientoEstadoAprobado = "0";
     string direccionamientoEstadoRechazado = "0";
     string direccionamientoEstadoPendiente = "0";
 
@@ -35,7 +35,7 @@
     string resultConfirmacionDireccFecha = null;
     string resultConfirmacionDireccCantidad = null;
 
-    string resultAgenteADuanaFecha =null;
+    string resultAgenteADuanaFecha = null;
     string resultAgenteAduanaCantidad = null;
 
     string resultFacturacionFechas = null;
@@ -58,9 +58,15 @@
     string resultLiberacionCargaCantidad = null;
 
 
+    string resultMemoEnviadoFechas = null;
+    string resultMemoEnviadoCantidad = null;
 
-    var direccionamientoFecha = Model.Dashboard.DashboardsXFecha.Where(x => x.Proceso== Utilitario.Constante.EmbarqueConstante.Dashboard_Proceso.SOLICITUD_DIRECCIONAMIENTO).ToList();
-    if (direccionamientoFecha.Count()>0)
+    string resultDireccionamientoPermanenteFechas = null;
+    string resultDireccionamientoPermanenteCantidad = null;
+
+
+    var direccionamientoFecha = Model.Dashboard.DashboardsXFecha.Where(x => x.Proceso == Utilitario.Constante.EmbarqueConstante.Dashboard_Proceso.SOLICITUD_DIRECCIONAMIENTO).ToList();
+    if (direccionamientoFecha.Count() > 0)
     {
         var direccFecha = direccionamientoFecha.Select(x => x.FechaTexto);
         var direccCantidad = direccionamientoFecha.Select(x => x.Cantidad);
@@ -68,6 +74,17 @@
         resultDireccFecha = String.Join(", ", direccFecha.ToArray());
         resultDireccCantidad = String.Join(", ", direccCantidad.ToArray());
     }
+
+    var direccionamientoPermanenteFecha = Model.Dashboard.DashboardsXFecha.Where(x => x.Proceso == Utilitario.Constante.EmbarqueConstante.Dashboard_Proceso.DIRECCIONAMIENTO_PERMANENTE).ToList();
+    if (direccionamientoPermanenteFecha.Count() > 0)
+    {
+        var direccFecha = direccionamientoPermanenteFecha.Select(x => x.FechaTexto);
+        var direccCantidad = direccionamientoPermanenteFecha.Select(x => x.Cantidad);
+
+        resultDireccionamientoPermanenteFechas = String.Join(", ", direccFecha.ToArray());
+        resultDireccionamientoPermanenteCantidad = String.Join(", ", direccCantidad.ToArray());
+    }
+
 
     var direccionamientoAlmacenFecha = Model.Dashboard.DashboardsXFecha.Where(x => x.Proceso == Utilitario.Constante.EmbarqueConstante.Dashboard_Proceso.SOLICITUD_DIRECCIONAMIENTO_ALMACEN).ToList();
     if (direccionamientoAlmacenFecha.Count() > 0)
@@ -161,6 +178,16 @@
         resultLiberacionCargaCantidad = String.Join(", ", liberacionCargaCantidades.ToArray());
     }
 
+
+    var memoEnviadoFecha = Model.Dashboard.DashboardsXFecha.Where(x => x.Proceso == Utilitario.Constante.EmbarqueConstante.Dashboard_Proceso.MEMO_ENVIADO).ToList();
+    if (memoEnviadoFecha.Count() > 0)
+    {
+        var liberacionCargaFechas = memoEnviadoFecha.Select(x => x.FechaTexto);
+        var liberacionCargaCantidades = memoEnviadoFecha.Select(x => x.Cantidad);
+
+        resultMemoEnviadoFechas = String.Join(", ", liberacionCargaFechas.ToArray());
+        resultMemoEnviadoCantidad = String.Join(", ", liberacionCargaCantidades.ToArray());
+    }
 
     if (Model.Dashboard.DashboardsXEstado.Count() > 0)
     {
@@ -317,6 +344,7 @@
 </header>
 
 <div class="container-xl px-4 mt-n10">
+
     <div class="row">
         <div class="col-xxl-4 col-xl-12 mb-4">
             <div class="card h-100">
@@ -333,241 +361,190 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
     </div>
 
+    @* Versus Notificacion de Arribo, Liberacion de Carga y ASignacion de Cobros  *@
+
+    @if (resultNotificacionArriboCantidad?.Length > 0 ||
+  resultLiberacionCargaCantidad?.Length > 0 ||
+  resultCobrosPagarCantidad?.Length > 0)
+    {
+
+        <div class="row">
+
+            <div class="col-xl-12 mb-4">
+                <div class="card card-header-actions">
+                    <div class="card-header">
+                        Notificación de Arribo   vs Proceso de Liberación de Carga vs Asignación de Cobros Realizados
+
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bar"><canvas id="barVersus" height="80"></canvas></div>
 
 
-    <div class="row">
 
-
-
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Solicitud de Direccionamiento (Mes)
-
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar"><canvas id="barDireccionamiento" width="100%" height="20"></canvas></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 mb-4">
-            <div class="row">
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Aprobado</div>
-                                    <div class="text-lg fw-bold">@direccionamientoEstadoAprobado </div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Solicitud de Direccionamiento
-                        </div>
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Pendiente</div>
-                                    <div class="text-lg fw-bold">
-                                        @direccionamientoEstadoPendiente
-                                    </div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Solicitud de Direccionamiento
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Rechazado</div>
-                                    <div class="text-lg fw-bold">
-                                        @direccionamientoEstadoRechazado
-                                    </div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Solicitud de Direccionamiento
-                        </div>
-                    </div>
-                </div>
 
             </div>
-
-
         </div>
+    }
+    @* Asignacion de agente de aduanas *@
 
-    </div>
-
-
-    <div class="row">
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Almacenes Direccionados (Mes)
+    @if (agenteAduanaFecha.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header">
+                        Asignación de Agente de Aduanas (Mes)
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-area"><canvas id="chartAgenteAduana" width="100%" height="100px"></canvas></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas id="chartAlmacenesDireccionado" width="100%" height="30"></canvas></div>
+            </div>
+            <div class="col-xl-6  mb-4">
+                <div class="card">
+                    <div class="card-header"> Asignación de Agente de Aduana por Estado (Año)</div>
+                    <div class="card-body">
+                        <div class="chart-pie mb-4"><canvas id="pieCantidadAsignacionAgente" width="100%" height="50"></canvas></div>
+
+                    </div>
                 </div>
             </div>
         </div>
+    }
 
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Confirmación de Direccionamiento Permanente (Mes)
+    @* Facturacion a tercero *@
+    @if (facturacionTerceroFecha.Count() > 0)
+    {
+        <div class="row">
 
-                </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas id="chartConfirmacionDireccionamiento" width="100%" height="30"></canvas></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Solicitud de Facturación (Mes)
-
-                </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas id="charSolicitudFacturacion" width="100%" height="30"></canvas></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-6 mb-4">
-            <div class="row">
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Aprobado</div>
-                                    <div class="text-lg fw-bold">@facturacionEstadoAprobado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Solicitud de Facturación
-                        </div>
+            <div class="col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header">
+                        Asignación de Facturación a Tercero (Mes)
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bar"><canvas id="charFacturacionTercero" width="100%" height="20"></canvas></div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Pendiente</div>
-                                    <div class="text-lg fw-bold">@facturacionEstadoPendiente</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Solicitud de Facturación
+            <div class="col-xl-6  mb-4">
+                <!-- Pie chart example-->
+                <div class="card">
+                    <div class="card-header"> Solicitud de Facturación a Tercero por Estado (Año)</div>
+                    <div class="card-body">
+                        <div class="chart-pie mb-4"><canvas id="pieCantidadFacturacionTercero" width="100%" height="50"></canvas></div>
 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Rechazado</div>
-                                    <div class="text-lg fw-bold">@facturacionEstadoRechazado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Solicitud de Facturación
-                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
+    }
+    @* Solicitud de Facturacion *@
+    @if (solicitudFacturacionFecha.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header">
+                        Solicitud de Facturación (Mes)
 
-    </div>
-    <div class="row">
-
-
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Notificación de Arribo (Mes)
-
-
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar"><canvas id="chartNotificacionArribo" width="100%" height="20"></canvas></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Cobros Asignados (Mes)
-
-                </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas id="chatCobrosAsignados" width="100%" height="30"></canvas></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-area"><canvas id="charSolicitudFacturacion" width="100%" height="30"></canvas></div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-xl-6  mb-4">
 
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Confirmación de Liberación de Carga (Mes)
+                <div class="card">
+                    <div class="card-header"> Solicitud de Facturación por Estado (Año)</div>
+                    <div class="card-body">
+                        <div class="chart-pie mb-4"><canvas id="pieCantidadFacturacion" width="100%" height="50"></canvas></div>
 
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar"><canvas id="chatLiberacionCargar" width="100%" height="20"></canvas></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
+
+
+        </div>
+    }
+    @* Solicitud Devolucion de Garantia *@
+    @if (solicitudDevolucionFecha.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header">
+                        Solicitud de Devolución (Mes)
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-area"><canvas id="charSolicitudDevolucion" width="100%" height="30"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6  mb-4">
+                <div class="card">
+                    <div class="card-header"> Solicitud de Devolución por Estado (Año)</div>
+                    <div class="card-body">
+                        <div class="chart-pie mb-4"><canvas id="pieCantidadSolicitudDevolucion" width="100%" height="50"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+    @* Solicitud de Direccionamiento *@
+    @if (direccionamientoFecha.Count() > 0)
+    {
+        <div class="row">
+
+            <div class="col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header">
+                        Solicitud de Direccionamiento (Mes)
+
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bar"><canvas id="barDireccionamiento" width="100%" height="20"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-6  mb-4">
+
+                <div class="card">
+                    <div class="card-header"> Solicitud de Direccionamiento por Estado (Año)</div>
+                    <div class="card-body">
+                        <div class="chart-pie mb-4"><canvas id="pieCantidadSolicitudDireccionamiento" width="100%" height="50"></canvas></div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    }
+
+    
+<div class="row" style="">
+    @* Memo Enviado *@
+    @if (memoEnviadoFecha.Count() > 0)
+    {
         <div class="col-xl-6 mb-4">
             <div class="card card-header-actions h-100">
                 <div class="card-header">
-                    Memos Enviados (Mes)
+                    Memos Enviados(Mes)
 
                 </div>
                 <div class="card-body">
@@ -575,244 +552,23 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-    <div class="row">
+    }
+    @* Direccionamiento Permanente *@
+    @if (direccionamientoPermanenteFecha.Count() > 0)
+    {
         <div class="col-xl-6 mb-4">
             <div class="card card-header-actions h-100">
                 <div class="card-header">
-                    Asignación de Agente de Aduanas (Mes)
+                    Direccionamiento Permanente (Mes)
 
                 </div>
                 <div class="card-body">
-                    <div class="chart-area"><canvas id="chartAgenteAduana" width="100%" height="30"></canvas></div>
+                    <div class="chart-area"><canvas id="chartDireccionamientoPermanente" width="100%" height="30"></canvas></div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-6 mb-4">
-            <div class="row">
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Aprobado</div>
-                                    <div class="text-lg fw-bold">@agenteAduanaEstadoAprobado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Asignación de Agente de Aduanas
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Pendiente</div>
-                                    <div class="text-lg fw-bold">@agenteAduanaEstadoPendiente</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Asignación de Agente de Aduanas
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Anulado</div>
-                                    <div class="text-lg fw-bold">@agenteAduanaEstadoAnulado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-
-                            Asignación de Agente de Aduanas
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Rechazado</div>
-                                    <div class="text-lg fw-bold">@agenteAduanaEstadoRechazado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Asignación de Agente de Aduanas
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Asignación de Facturación a Tercero (Mes)
-
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar"><canvas id="charFacturacionTercero" width="100%" height="20"></canvas></div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-xl-6 mb-4">
-            <div class="row">
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Aprobado</div>
-                                    <div class="text-lg fw-bold">@facturacionTerceroEstadoAprobado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Asignación Facturacion a Tercero
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Pendiente</div>
-                                    <div class="text-lg fw-bold">@facturacionTerceroEstadoPendiente</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Asignación Facturacion a Tercero
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Rechazado</div>
-                                    <div class="text-lg fw-bold">@facturacionTerceroEstadoRechazado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Asignación Facturacion a Tercero
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-xl-6 mb-4">
-            <div class="card card-header-actions h-100">
-                <div class="card-header">
-                    Solicitud de Devolución (Mes)
-                </div>
-                <div class="card-body">
-                    <div class="chart-area"><canvas id="charSolicitudDevolucion" width="100%" height="30"></canvas></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 mb-4">
-            <div class="row">
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Aprobado</div>
-                                    <div class="text-lg fw-bold">@devolucionEstadoAprobado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Solicitud de Devolución
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Pendiente</div>
-                                    <div class="text-lg fw-bold">@devolucionEstadoPendiente</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Solicitud de Devolución
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-xl-6 mb-4">
-                    <div class="card bg-danger text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">Rechazado</div>
-                                    <div class="text-lg fw-bold">@devolucionEstadoRechazado</div>
-                                </div>
-                                <i class="feather-xl text-white-50" data-feather="check-square"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            Solicitud de Devolución
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
+    }
+</div>
 
 
 </div>
@@ -820,14 +576,14 @@
 @section Scripts{
 
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
-
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/1.0.0/chartjs-plugin-datalabels.min.js" integrity="sha512-XulchVN83YTvsOaBGjLeApZuasKd8F4ZZ28/aMHevKjzrrjG0lor+T4VU248fWYMNki3Eimk+uwdlQS+uZmu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="text/javascript">
 
-        // Set new default font family and font color to mimic Bootstrap's default styling
         (Chart.defaults.global.defaultFontFamily = "Metropolis"),
             '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         Chart.defaults.global.defaultFontColor = "#858796";
@@ -889,925 +645,1178 @@
             var mesesLiberacionCargaTexto = "@resultLiberacionCargaFechas";
             var mesesLiberacionCargaFecha = mesesLiberacionCargaTexto.split(",");
 
-            var ctx = document.getElementById("chartAlmacenesDireccionado");
+            var mesesMemoEnviadoTexto = "@resultMemoEnviadoFechas";
+            var mesesMemoEnvidoFecha = mesesMemoEnviadoTexto.split(",");
+
+            var mesesDireccionaminetoPermanenteTexto = "@resultDireccionamientoPermanenteFechas";
+            var mesesDireccionaminetoPermanenteFecha = mesesDireccionaminetoPermanenteTexto.split(",");
+
+
             var ctxDireccionamiento = document.getElementById("barDireccionamiento");
-            var ctxConfirmacionDireccionamiento = document.getElementById("chartConfirmacionDireccionamiento");
+            var ctxDireccionamientoPermanente = document.getElementById("chartDireccionamientoPermanente");
             var ctxcharFacturacionTercero = document.getElementById("charFacturacionTercero");
             var ctxSolicitudDevolucion = document.getElementById("charSolicitudDevolucion");
             var ctxAgenteAduana = document.getElementById("chartAgenteAduana");
             var ctxMemosEnviados = document.getElementById("chatMemosEnviados");
             var ctxSolicitudFacturacion = document.getElementById("charSolicitudFacturacion");
-            var ctxNotificacionArribo = document.getElementById("chartNotificacionArribo");
-            var ctxCobrosAsignados = document.getElementById("chatCobrosAsignados");
-            var ctxLiberacionCargar = document.getElementById("chatLiberacionCargar");
 
-            var chatAlmacenDireccion = new Chart(ctx, {
-                type: "bar",
-                data: {
-                    labels: mesesDireccAlmacenFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultDireccAlmacenCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
+
+            const etiquetas = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+
+            let resultNotificacionArriboCantidad = '@resultNotificacionArriboCantidad';
+            let resultLiberacionCargaCantidad = '@resultLiberacionCargaCantidad';
+            let resultCobrosPagarCantidad = '@resultCobrosPagarCantidad';
+
+            let dataSetVersus = [];
+
+            if (resultNotificacionArriboCantidad.length > 0) {
+
+                resultNotificacionArriboCantidad = resultNotificacionArriboCantidad.split(",");
+
+                let dataVersus = {
+                    label: 'Notificación de Arribo',
+                    data: setearDatosMesCompleto(etiquetas, mesesNotificacionArriboFecha, resultNotificacionArriboCantidad),
+                    fill: false,
+                    borderColor: 'rgb(229, 102, 102)',
+                    tension: 0.1
+                };
+                dataSetVersus.push(dataVersus);
+            }
+
+            if (resultLiberacionCargaCantidad.length > 0) {
+                resultLiberacionCargaCantidad = resultLiberacionCargaCantidad.split(",");
+
+                let dataVersus = {
+                    label: 'Liberación Carga',
+                    data: setearDatosMesCompleto(etiquetas, mesesLiberacionCargaFecha, resultLiberacionCargaCantidad),
+                    fill: false,
+                    borderColor: 'rgb(34, 12, 212)',
+                    tension: 0.1
+                };
+                dataSetVersus.push(dataVersus);
+            }
+
+            if (resultCobrosPagarCantidad.length > 0) {
+                resultCobrosPagarCantidad = resultCobrosPagarCantidad.split(",");
+
+                let dataVersus = {
+                    label: 'Asignación de Cobros',
+                    data: setearDatosMesCompleto(etiquetas, mesesCobrosPagarFecha, resultCobrosPagarCantidad),
+                    fill: false,
+                    borderColor: 'rgb( 54, 232, 10)',
+                    tension: 0.1
+                };
+                dataSetVersus.push(dataVersus);
+            }
+
+            if (resultNotificacionArriboCantidad.length > 0 ||
+                resultLiberacionCargaCantidad.length > 0 ||
+                resultCobrosPagarCantidad.length > 0) {
+
+                var ctxVersus = document.getElementById("barVersus");
+
+                new Chart(ctxVersus, {
+                    type: 'line',
+                    data: {
+
+                        labels: etiquetas,
+                        datasets: dataSetVersus
                     },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
                             }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
-                        }]
-                    },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
 
-            var chartDireccionamiento = new Chart(ctxDireccionamiento, {
-                type: "bar",
-                data: {
-                    labels: mesesDireccFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultDireccCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+            }
+
+
+            if (mesesDireccTexto.length > 0) {
+                var chartDireccionamiento = new Chart(ctxDireccionamiento, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesDireccFecha,
+
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultDireccCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
 
-            var chartConfirmacionDireccionamiento = new Chart(ctxConfirmacionDireccionamiento, {
-                type: "bar",
-                data: {
-                    labels: mesesConfirmacionDireccFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultConfirmacionDireccCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+                var ctxpieCantidadSolicitudDireccionamiento = document.getElementById("pieCantidadSolicitudDireccionamiento");
+                var pieCantidadSolicitudDireccionamiento = new Chart(ctxpieCantidadSolicitudDireccionamiento, {
+                    type: "doughnut",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Rechazada'],
+                        datasets: [{
+                            data: [@direccionamientoEstadoAprobado,@direccionamientoEstadoPendiente,@direccionamientoEstadoRechazado],
+                            backgroundColor: [
+                                "rgba(5, 179, 0, 1)",
+                                "rgba(240, 149, 17, 1)",
+                                "rgba(240, 54, 17, 1)",
+                                "rgba(13, 52, 244 , 1)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(5, 179, 0, 0.9)",
+                                "rgba(240, 149, 17, 0.9)",
+                                "rgba(240, 54, 17, 0.9)",
+                                "rgba(13, 52, 244 , 0.9)"
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)"
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10
+                        },
+                        legend: {
+                            display: true
+                        },
+                        cutoutPercentage: 80,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'white'
+                                    }
+                                },
+
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 
-            var charFacturacionTercero = new Chart(ctxcharFacturacionTercero, {
-                type: "bar",
-                data: {
-                    labels: mesesFacturacionTerceroFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultFacturacionTerceroCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+            if (mesesDireccionaminetoPermanenteTexto.length > 0) {
+                var chartDireccionamientoPermanente = new Chart(ctxDireccionamientoPermanente, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesDireccionaminetoPermanenteFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultDireccionamientoPermanenteCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 
-            var charSolicitudDevolucion = new Chart(ctxSolicitudDevolucion, {
-                type: "bar",
-                data: {
-                    labels: mesesDevolucionFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultSolicitudDevolucionCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+
+            // Barra asignacion de facturacion a tercero
+
+            if (mesesFacturacionTerceroTexto.length > 0) {
+                var charFacturacionTercero = new Chart(ctxcharFacturacionTercero, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesFacturacionTerceroFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultFacturacionTerceroCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
 
-            var chartAgenteAduana = new Chart(ctxAgenteAduana, {
-                type: "bar",
-                data: {
-                    labels: mesesAgenteADuanaFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultAgenteAduanaCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+                // Pie asignacion de facturacion a tercero
+
+                var ctxpieCantidadFacturacionTercero = document.getElementById("pieCantidadFacturacionTercero");
+
+                var pieCantidadFacturacionTercero = new Chart(ctxpieCantidadFacturacionTercero, {
+                    type: "doughnut",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Rechazada'],
+                        datasets: [{
+                            data: [@facturacionTerceroEstadoAprobado,@facturacionTerceroEstadoPendiente,@facturacionTerceroEstadoRechazado],
+                            backgroundColor: [
+                                "rgba(5, 179, 0, 1)",
+                                "rgba(240, 149, 17, 1)",
+                                "rgba(240, 54, 17, 1)",
+                                "rgba(13, 52, 244 , 1)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(5, 179, 0, 0.9)",
+                                "rgba(240, 149, 17, 0.9)",
+                                "rgba(240, 54, 17, 0.9)",
+                                "rgba(13, 52, 244 , 0.9)"
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)"
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10
+                        },
+                        legend: {
+                            display: true
+                        },
+                        cutoutPercentage: 80,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'white'
+                                    }
+                                },
+
                             }
                         }
                     }
-                    
-                }
-            });
+                });
 
-            var chartMemosEnviados  = new Chart(ctxMemosEnviados, {
-                type: "bar",
-                data: {
-                    labels: mesesDevolucionFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultSolicitudDevolucionCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottoresultConfirmacionDireccFechafirmacionDireccFecha: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+            }
+
+            if (mesesDevolucionTexto.length > 0) {
+                var charSolicitudDevolucion = new Chart(ctxSolicitudDevolucion, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesDevolucionFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultSolicitudDevolucionCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
 
-            var charSolicitudFacturacion = new Chart(ctxSolicitudFacturacion, {
-                type: "bar",
-                data: {
-                    labels: mesesFacturacionFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultFacturacionCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+                var ctxpieCantidadSolicitudDevolucion = document.getElementById("pieCantidadSolicitudDevolucion");
+
+                var pieCantidadSolicitudDevolucion = new Chart(ctxpieCantidadSolicitudDevolucion, {
+                    type: "doughnut",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Rechazada'],
+                        datasets: [{
+                            data: [@devolucionEstadoAprobado,@devolucionEstadoPendiente,@devolucionEstadoRechazado],
+                            backgroundColor: [
+                                "rgba(5, 179, 0, 1)",
+                                "rgba(240, 149, 17, 1)",
+                                "rgba(240, 54, 17, 1)",
+                                "rgba(13, 52, 244 , 1)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(5, 179, 0, 0.9)",
+                                "rgba(240, 149, 17, 0.9)",
+                                "rgba(240, 54, 17, 0.9)",
+                                "rgba(13, 52, 244 , 0.9)"
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)"
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10
+                        },
+                        legend: {
+                            display: true
+                        },
+                        cutoutPercentage: 80,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'white'
+                                    }
+                                },
+
                             }
                         }
                     }
-                }
-            });
+                });
 
-            var chartNotificacionArribo = new Chart(ctxNotificacionArribo, {
-                type: "bar",
-                data: {
-                    labels: mesesNotificacionArriboFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultNotificacionArriboCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+            }
+
+
+
+            if (mesesAgenteADuanaTexto.length > 0) {
+                // Barra asignacion de agente de aduanas
+                var chartAgenteAduana = new Chart(ctxAgenteAduana, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesAgenteADuanaFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultAgenteAduanaCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
+                            }
+                        }
+
+                    }
+                });
+
+                // Pie asignacion de agente de aduanas
+
+                var ctxpieCantidadAsignacionAgente = document.getElementById("pieCantidadAsignacionAgente");
+
+                var pieCantidadAsignacionAgente = new Chart(ctxpieCantidadAsignacionAgente, {
+                    type: "doughnut",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Anulado', 'Rechazado'],
+                        datasets: [{
+                            data: [@agenteAduanaEstadoAprobado,@agenteAduanaEstadoPendiente,@agenteAduanaEstadoAnulado,@agenteAduanaEstadoRechazado],
+                            backgroundColor: [
+                                "rgba(5, 179, 0, 1)",
+                                "rgba(240, 149, 17, 1)",
+                                "rgba(240, 54, 17, 1)",
+                                "rgba(13, 52, 244 , 1)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(5, 179, 0, 0.9)",
+                                "rgba(240, 149, 17, 0.9)",
+                                "rgba(240, 54, 17, 0.9)",
+                                "rgba(13, 52, 244 , 0.9)"
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)"
+                        }]
                     },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10
+                        },
+                        legend: {
+                            display: true
+                        },
+                        cutoutPercentage: 80,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'white'
+                                    }
+                                },
+
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 
-            var chatCobrosAsignados = new Chart(ctxCobrosAsignados, {
-                type: "bar",
-                data: {
-                    labels: mesesCobrosPagarFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultCobrosPagarCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+
+
+            if (mesesMemoEnviadoTexto.length > 0) {
+                var chartMemosEnviados = new Chart(ctxMemosEnviados, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesMemoEnvidoFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultMemoEnviadoCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottoresultConfirmacionDireccFechafirmacionDireccFecha: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
-
-            var chatLiberacionCargar = new Chart(ctxLiberacionCargar, {
-                type: "bar",
-                data: {
-                    labels: mesesLiberacionCargaFecha,
-                    datasets: [{
-                        label: "Cantidad",
-                        backgroundColor: "rgba(0, 97, 242, 1)",
-                        hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
-                        borderColor: "#4e73df",
-                        data: [@resultLiberacionCargaCantidad],
-                        maxBarThickness: 25
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 10,
-                            right: 25,
-                            top: 25,
-                            bottom: 0
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            time: {
-                                unit: "month"
-                            },
-                            gridLines: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                maxTicksLimit: 6
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                max: 50,
-                                maxTicksLimit: 5,
-                                padding: 10,
-                                // Include a dollar sign in the ticks
-                                callback: function (value, index, values) {
-                                    return "" + number_format(value);
-                                }
-                            },
-                            gridLines: {
-                                color: "rgb(234, 236, 244)",
-                                zeroLineColor: "rgb(234, 236, 244)",
-                                drawBorder: false,
-                                borderDash: [2],
-                                zeroLineBorderDash: [2]
-                            }
+                });
+            }
+            if (mesesFacturacionTexto.length > 0) {
+                var charSolicitudFacturacion = new Chart(ctxSolicitudFacturacion, {
+                    type: "bar",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: mesesFacturacionFecha,
+                        datasets: [{
+                            label: "Cantidad",
+                            backgroundColor: "rgba(0, 97, 242, 1)",
+                            hoverBackgroundColor: "rgba(0, 97, 242, 0.9)",
+                            borderColor: "#4e73df",
+                            data: [@resultFacturacionCantidad],
+                            maxBarThickness: 25
                         }]
                     },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleMarginBottom: 10,
-                        titleFontColor: "#6e707e",
-                        titleFontSize: 14,
-                        backgroundColor: "rgb(255,255,255)",
-                        bodyFontColor: "#858796",
-                        borderColor: "#dddfeb",
-                        borderWidth: 1,
-                        xPadding: 15,
-                        yPadding: 15,
-                        displayColors: false,
-                        caretPadding: 10,
-                        callbacks: {
-                            label: function (tooltipItem, chart) {
-                                var datasetLabel =
-                                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: "month"
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 4
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 6,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function (value, index, values) {
+                                        return "" + number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: "#6e707e",
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel =
+                                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                color: 'black',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'black'
+                                    }
+                                },
+                                anchor: 'end',
+                                align: 'end'
                             }
                         }
                     }
-                }
-            });
+                });
+
+                var ctxpieCantidadFacturacion = document.getElementById("pieCantidadFacturacion");
+
+                var pieCantidadFacturacion = new Chart(ctxpieCantidadFacturacion, {
+                    type: "doughnut",
+                    plugins: [ChartDataLabels],
+                    data: {
+                        labels: ['Aprobado', 'Pendiente', 'Rechazado'],
+                        datasets: [{
+                            data: [@facturacionEstadoAprobado,@facturacionEstadoPendiente,@facturacionEstadoRechazado],
+                            backgroundColor: [
+                                "rgba(5, 179, 0, 1)",
+                                "rgba(240, 149, 17, 1)",
+                                "rgba(13, 52, 244 , 1)"
+                            ],
+                            hoverBackgroundColor: [
+                                "rgba(5, 179, 0, 0.9)",
+                                "rgba(240, 149, 17, 0.9)",
+                                "rgba(13, 52, 244 , 0.9)"
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)"
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: "#dddfeb",
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10
+                        },
+                        legend: {
+                            display: true
+                        },
+                        cutoutPercentage: 80,
+                        plugins: {
+                            datalabels: {
+                                color: 'white',
+                                labels: {
+                                    title: {
+                                        font: {
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    value: {
+                                        color: 'white'
+                                    }
+                                },
+
+                            }
+                        }
+                    }
+                });
+            }
+
 
         });
 
-    </script>
+        function setearDatosMesCompleto(meses, datos_meses, datos) {
 
+            let meses_datos = [];
+
+            for (i = 0; i < meses.length; i++) {
+
+                let mes_encontrado = false;
+                let dato_mes = 0;
+
+
+                if (datos != null) {
+
+                    for (j = 0; j < datos.length; j++) {
+
+                        if (meses[i] == datos_meses[j].replace(/ /g, "")) {
+                            mes_encontrado = true;
+                            dato_mes = datos[j].replace(/ /g, "");
+                            break;
+                        }
+
+                    }
+
+
+                    if (mes_encontrado) {
+                        meses_datos[i] = dato_mes;
+
+                    } else {
+
+                        meses_datos[i] = null;
+
+                    }
+                }
+                else {
+                    meses_datos[i] = null;
+                }
+
+            }
+            return meses_datos;
+
+        }
+
+    </script>
 
 }
 

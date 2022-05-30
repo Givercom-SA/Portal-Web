@@ -36,8 +36,9 @@ namespace Servicio.Embarque.Models
 
         public int IdEntidadAsigna { get; set; }
         public int IdEntidadAsignado { get; set; }
+        public string CodigoEmpresaGtrm { get; set; }
 
-    
+        
 
 
     }

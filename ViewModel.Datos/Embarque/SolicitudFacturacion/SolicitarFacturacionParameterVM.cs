@@ -30,7 +30,8 @@ namespace ViewModel.Datos.Embarque.SolicitudFacturacion
         public string CreditoDescripcion { get; set; }
 
         public string CodigoTipoEntidad { get; set; }
-
+        public string CodigoEmpresaGtrm { get; set; }
+        
         public string TipoPagoString()
         {
 

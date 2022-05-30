@@ -22,6 +22,8 @@ using Servicio.Embarque.Models.SolicitudFacturacion;
 using ViewModel.Datos.Embarque.SolicitudFacturacion;
 using ViewModel.Datos.Entidad;
 using Servicio.Embarque.Models.Entidad;
+using Servicio.Embarque.Models.LiberacionCarga;
+using ViewModel.Datos.Embarque.LiberacionCarga;
 
 namespace Servicio.Embarque.Profiles
 {
@@ -50,7 +52,12 @@ namespace Servicio.Embarque.Profiles
             CreateMap<AsignarAgenteCrearParameter, AsignarAgenteCrearParameterVM>();
             CreateMap<AsignarAgenteEstadoParameter, AsignarAgenteEstadoParameterVM>();
             CreateMap<AsignarAgenteListarParameter, AsignarAgenteListarParameterVM>();
-            
+
+            CreateMap<CrearLiberacionCargaParameterVM , CrearLiberacionCargaParameter>().ForMember(s => s.Detalles, o => o.MapFrom(s => s.Detalles));
+            CreateMap<LiberacionCargaDetalleVM , LiberacionCargaDetalle>();
+
+            CreateMap<CrearMemoEnviadoParameterVM, CrearMemoEnviadoParameter>();
+
             CreateMap<ListarEntidadParameterVM, ListarEntidadParameter>();
 
             CreateMap<ListarEntidadResult, ListarEntidadResultVM>()
@@ -58,6 +65,12 @@ namespace Servicio.Embarque.Profiles
            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
            .ForMember(s => s.Entidades, o => o.MapFrom(s => s.Entidades));
             CreateMap<EntidadTipo, EntidadTipoVM>();
+
+
+            CreateMap<CrearLiberacionCargaResult, CrearLiberacionCargaResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+           .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
 
             CreateMap<ListarSolicitudesMemoParameterVM, ListarSolicitudesMemoParameter>();
 
@@ -165,6 +178,10 @@ namespace Servicio.Embarque.Profiles
             CreateMap<LeerSolicitudFacturacionBandejaResult, LeerSolicitudFacturacionBandejaResultVM>()
                 .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
                 .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<CrearMemoEnviadoResult, CrearMemoEnviadoResultVM>()
+             .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+             .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
             CreateMap<ListarSolicitudFacturacionBandejaParameter, ListarSolicitudFacturacionBandejaParameterVM>().ReverseMap();
             CreateMap<LeerSolicitudFacturacionBandejaParameter, LeerSolicitudFacturacionBandejaParameterVM>().ReverseMap();

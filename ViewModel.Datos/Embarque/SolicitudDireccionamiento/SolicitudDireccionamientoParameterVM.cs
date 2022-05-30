@@ -29,6 +29,8 @@ namespace ViewModel.Datos.Embarque.SolicitudDireccionamiento
         public string IdEntidadSeleccionado { get; set; }
 
         public string ImagenEmpresaLogo { get; set; }
+        public string CodigoEmpresaGtrm { get; set; }
+        
     }
 
     public class DocumentoVM {

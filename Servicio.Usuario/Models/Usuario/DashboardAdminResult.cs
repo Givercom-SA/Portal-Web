@@ -10,6 +10,7 @@ namespace Servicio.Usuario.Models.Usuario
     {
         public List<DashboardEstado> DashboardsXEstado { get; set; }
         public List<DashboardFecha> DashboardsXFecha { get; set; }
-
+        public List<DashboardUsuarioPerfil> DashboardUsuarioPerfil { get; set; }
+        
     }
 }

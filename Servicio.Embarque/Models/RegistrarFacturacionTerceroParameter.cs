@@ -27,7 +27,7 @@ namespace Servicio.Embarque.Models
         public string AgenteAduanaNumeroDocumento { get; set; }
         public List<CobroPendietenEmbarque> CobrosPendientesEmbarque { get; set; }
         public int IdUsuarioEvalua { get; set; }
-
+        public string CodigoEmpresaGtrm { get; set; }
     }
     public class CobroPendietenEmbarque
     {
