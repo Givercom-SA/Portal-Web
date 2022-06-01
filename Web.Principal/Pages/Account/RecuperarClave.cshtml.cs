@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ViewModel.Datos.LoginInicial;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Pages.Account
 {

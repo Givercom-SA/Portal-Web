@@ -14,7 +14,7 @@ using ViewModel.Datos.Solicitud;
 using ViewModel.Datos.SolictudAcceso;
 using Web.Principal.Areas.GestionarSolicitudes.Models;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Areas.GestionarSolicitudes.Controllers
 {
@@ -42,24 +42,102 @@ namespace Web.Principal.Areas.GestionarSolicitudes.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarSolicitudes(ListarSolicitudesParameterVM model)
+        public async Task<IActionResult> ListarSolicitudes(string parkey)
         {
-            var viewModel = (model == null) ? new ListarSolicitudesParameterVM() : model;
+            ListarSolicitudesParameterVM model = new ListarSolicitudesParameterVM();
+            ListarSolicitudesParameterVM viewModel = new ListarSolicitudesParameterVM();
+
+        
+
+          
+
+
+
             try
             {
+                if (parkey != null)
+                {
+                    var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                    string[] parametros = dataDesencriptada.Split('|');
+
+                    if (parametros.Count() > 1)
+                    {
+                        string FechaIngreso = parametros[0];
+                        string CampoCodSolicitud = parametros[1];
+                        string CampoRuc = parametros[2];
+                        string CampoRazonSocial = parametros[3];
+                        string NombreContacto = parametros[4];
+                        string CodEstado = parametros[5];
+
+
+                        // FechaIngreso=&CampoCodSolicitud=&CampoRuc=&CampoRazonSocial=&NombreContacto=&CodEstado=0
+                        model.FechaIngreso = FechaIngreso == "" ? null : Convert.ToDateTime(FechaIngreso);
+                        model.CampoCodSolicitud = CampoCodSolicitud;
+                        model.CampoRuc = CampoRuc;
+                        model.CampoRazonSocial = CampoRazonSocial;
+                        model.NombreContacto = NombreContacto;
+                        model.CodEstado = CodEstado;
+
+
+
+                    }
+                }
+
+
+                viewModel =model;
+
                 var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(34);
                 ViewBag.ListarEstado = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+
+
 
                 var listaSolicitud = await _serviceSolicitud.ObtenerSolicitudes(model);
 
                 if (listaSolicitud.CodigoResultado == 0)
                     viewModel.listaResultado = listaSolicitud.ListaSolicitudes;
+
+
+
             }
             catch (Exception err) {
                 _logger.LogError(err, "ListarSolicitudes");
             }
             return View(viewModel);
         }
+
+
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ListarSolicitudesParameterVM model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.FechaIngreso}|{model.CampoCodSolicitud}|{model.CampoRuc}|{model.CampoRazonSocial}|{model.NombreContacto}|{model.CodEstado}";
+                // FechaIngreso=&CampoCodSolicitud=&CampoRuc=&CampoRazonSocial=&NombreContacto=&CodEstado=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarSolicitudes", "Solicitudes", new { area = "GestionarSolicitudes" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
+
+
 
         [HttpGet]
         public async Task<IActionResult> VerSolicitud(string parkey)

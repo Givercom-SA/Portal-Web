@@ -16,7 +16,7 @@ using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 using Web.Principal.Areas.GestionarUsuarios.Models;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 {
@@ -289,11 +289,39 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Listar(ClienteModel model)
+        public async Task<IActionResult> Listar(string parkey)
         {
-
-
+            ClienteModel model = new ClienteModel();
             ListarClienteParameterVM listarClienteParameter = new ListarClienteParameterVM();
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string TipoDocumento = parametros[0];
+                    string NumeroDocumento = parametros[1];
+                    string RazonSocialRepresentanteLegal = parametros[2];
+                    string isActivo = parametros[3];
+                    string IdPerfil = parametros[4];
+
+                    // IdTipoDocumento=0&NumeroDocumento=&RazonSocuialRepresentanteLegal=&isActivo=-1&IdPerfil=0
+                    model.IdTipoDocumento = TipoDocumento;
+                    model.NumeroDocumento = NumeroDocumento;
+                    model.RazonSocuialRepresentanteLegal = RazonSocialRepresentanteLegal;
+                    model.isActivo = string.IsNullOrWhiteSpace(isActivo)?0:int.Parse(isActivo);
+                    model.IdPerfil = string.IsNullOrWhiteSpace(IdPerfil) ? 0 : int.Parse(IdPerfil) ;
+
+
+                }
+            }
+
+
+
+
             if (model.isActivo < 0)
             {
                 listarClienteParameter.isActivo = null;
@@ -332,6 +360,36 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ClienteModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.IdTipoDocumento}|{model.NumeroDocumento}|{model.RazonSocuialRepresentanteLegal}|{model.isActivo}|{model.IdPerfil}";
+                // IdTipoDocumento=0&NumeroDocumento=&RazonSocuialRepresentanteLegal=&isActivo=-1&IdPerfil=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("Listar", "Cliente", new { area = "GestionarUsuarios" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Detalle(string parkey)

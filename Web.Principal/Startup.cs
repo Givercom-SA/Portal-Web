@@ -21,11 +21,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceConsumer;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
-using static Web.Principal.Utils.AppSettingsKeys;
+using Web.Principal.Util;
+using static Web.Principal.Util.AppSettingsKeys;
 using log4netConfiguration = Service.Common.Logging.Appenders.Configuration;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Web.Principal.Hubs;
+using Web.Principal.Hub;
 using Web.Principal.Interface;
 
 namespace Web.Principal
@@ -285,7 +285,8 @@ namespace Web.Principal
               );
 
                 //endpoints.MapHub<NotificationHub>("/NotificationHub");
-                endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
+                endpoints.MapHub<NotificationUserHub>("/notificaciones");
+               // endpoints.MapHub<NotificacionHub>("/notificaciones");
 
             });
 

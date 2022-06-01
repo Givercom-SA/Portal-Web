@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using ViewModel.Datos.ListarSolicitudes;
 using ViewModel.Datos.Solicitud;
 using ViewModel.Datos.UsuarioRegistro;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.ServiceConsumer
 {

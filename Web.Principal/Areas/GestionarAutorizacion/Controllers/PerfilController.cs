@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceConsumer;
 using ViewModel.Datos.Perfil;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using Web.Principal.Areas.GestionarAutorizacion.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -37,8 +37,35 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarPerfiles(ListarPerfilesModel model)
+        public async Task<IActionResult> ListarPerfiles(string parkey)
         {
+            ListarPerfilesModel model = new ListarPerfilesModel();
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string Nombre = parametros[0];
+                    string Activo = parametros[1];
+                    string Tipo = parametros[2];
+                
+                    //   string url = $"{model.Nombre}|{model.Activo}|{model.Tipo}";
+
+                    model.Nombre = Nombre;
+                    model.Activo = Activo==""?0:Convert.ToInt32(Activo);
+                    model.Tipo = Tipo ;
+              
+
+
+                }
+            }
+
+
+
             PerfilParameterVM parameter = new();
             if (model != null)
             {
@@ -66,6 +93,34 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ListarPerfilesModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.Nombre}|{model.Activo}|{model.Tipo}";
+                //Nombre=&Activo=1&Tipo=TP01
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarPerfiles", "Perfil", new { area = "GestionarAutorizacion" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ListarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
+
+
 
         [HttpGet]
         public async Task<IActionResult> EditarPerfil(string parkey)

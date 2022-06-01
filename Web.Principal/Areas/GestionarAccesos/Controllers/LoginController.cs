@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ViewModel.Datos.Acceso;
 using Web.Principal.Areas.GestionarAccesos.Models;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Areas.GestionarAccesos.Controllers
 {

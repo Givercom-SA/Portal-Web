@@ -8,26 +8,34 @@ using System.Threading.Tasks;
 using Web.Principal.Entities;
 using Web.Principal.Interface;
 
-namespace Web.Principal.Hubs
+using Utilitario.Constante;
+using ViewModel.Notificacion;
+using Web.Principal.ServiceConsumer;
+
+namespace Web.Principal.Hub
 {
-    public class NotificationUserHub : Hub<INotificationHub>
+    public class NotificationUserHub : Hub<INotificacionHub>
     {
         private readonly IUserConnectionManager _userConnectionManager;
         private ILogger<NotificationUserHub> _logger;
+        private readonly NotificacionService _notificacionService;
         private IMemoryCache _memoryCache;
 
         public NotificationUserHub(IUserConnectionManager userConnectionManage,
             ILogger<NotificationUserHub> logger,
+               NotificacionService notificacionService,
             IMemoryCache memoryCache): base()
         {
             _userConnectionManager = userConnectionManage;
             _logger = logger;
             _memoryCache = memoryCache;
-
+            _notificacionService = notificacionService;
         }
 
 
-        public static List<Tuple<int, string>> Usuarios { get; set; } = new List<Tuple<int, string>>();
+
+        public static List<Tuple<int, string>> Usuario { get; set; } = new List<Tuple<int, string>>();
+
         public async Task<List<Notificacion>> Matricular(string codigoUsuarioEncriptado)
         {
 
@@ -35,9 +43,65 @@ namespace Web.Principal.Hubs
 
             _userConnectionManager.KeepUserConnection(codigoUsario, Context.ConnectionId);
 
+            var t = Tuple.Create(Convert.ToInt32(codigoUsario), Context.ConnectionId);
+            Usuario.Add(t);
+
             var notificacionesEnviar = new List<Notificacion>();
 
             return notificacionesEnviar;
+        }
+
+
+        public async Task LimpiarNotificaciones(string codigoUsuarioEncriptado)
+        {
+            try
+            {
+                var codigoUsuario = Int32.Parse(Encriptador.Instance.DesencriptarTexto(codigoUsuarioEncriptado));
+                await _notificacionService.LimpiarNotificacionesPorUsuario(codigoUsuario);
+
+                _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[codigoUsuario] = new List<NotificacionVM>();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sucedio un error al LimpiarNotificaciones");
+            }
+
+        }
+
+        public async Task RecibirNotificacionDB(Notificacion notificacion)
+        {
+            _logger.LogInformation("Se recibio de DB el mensaje :" + notificacion);
+
+            try
+            {
+                //Grabar en cache
+                _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[notificacion.CodigoUsuario]
+                    .Add(new NotificacionVM
+                    {
+                        Proceso = notificacion.Proceso,
+                        Mensaje = notificacion.Mensaje,
+                        Fecha = notificacion.CreacionFecha
+                    });
+
+                foreach (var t in Usuario)
+                {
+                    if (t.Item1 == notificacion.CodigoUsuario)
+                    {
+                        //Si es necesario realizar otra accion para un proceso diferente agregar un else if.
+                        await Clients.Client(t.Item2).RecibirNotificacion(notificacion);
+                    }
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[notificacion.CodigoUsuario] = new List<NotificacionVM>();
+                _logger.LogWarning("No se pudo obtener la informacion de Notificaciones desde Cache, se creará la información para el usuario : " + notificacion.CodigoUsuario);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sucedio un error al RecibirNotificacionDB");
+            }
+
         }
 
         //Called when a connection with the hub is terminated.

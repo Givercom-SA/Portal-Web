@@ -29,11 +29,11 @@
 </header>
 <!-- Main page content-->
 <div class="container-xl px-4 mt-n10">
-    <form method="get" id="formListAsignados">
+    <form method="post" id="formListAsignados" asp-controller="AsignarAgente" asp-area="GestionarEmbarques" asp-action="ListarEncriptar">
         <div class="card card-header-actions mb-4">
             <div class="card-header">
                 Filtros para Busqueda
-                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
+                <button class="btn btn-sm btn-primary"  onclick="btnBuscar()" type="button">Buscar</button>
             </div>
 
             <div class="card-body">
@@ -356,9 +356,6 @@
 
         });
 
-
-
-
         function DataTableListAgenteAsignados() {
 
             let dataTable = new simpleDatatables.DataTable("#datatable", {
@@ -381,7 +378,6 @@
             });
 
         }
-
 
         function ActualizarAll() {
             location.reload();
@@ -444,8 +440,6 @@
             $('#modal_confirmarAsignado').modal('show');
         }
 
-
-
         function ConfirmarAnular(IdAsignado, KeyBl, NroBl) {
             $('#ObservacionAnulacion').val("");
             $("#ResultConfirmar").html("");
@@ -455,6 +449,7 @@
             $('#modal_confirmar').modal('show');
 
         }
+
         function DataTableAsignacionAduanaHistorial() {
 
             try {
@@ -522,6 +517,61 @@
                   
                 });
 
+        }
+
+        function btnBuscar() {
+
+            var form = $('#formListAsignados')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: form.action,
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    $('#alertError').show();
+                    outputDetalleError.html(errorThrown);
+                    $(".loader").fadeOut("slow");
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+
+
+                        window.location.href = response.mensaje;
+
+
+                    }
+                    else if (response.codigo > 0) {
+
+
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+
+                    }
+                    else {
+
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+                },
+                complete: function (data) {
+                    $(".loader").fadeOut("slow");
+
+                }
+            });
         }
 
     </script>

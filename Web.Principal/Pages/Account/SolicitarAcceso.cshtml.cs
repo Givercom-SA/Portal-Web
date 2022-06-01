@@ -20,7 +20,7 @@ using ViewModel.Datos.SolictudAcceso;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Pages.Account
 {

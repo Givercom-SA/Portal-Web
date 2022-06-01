@@ -11,7 +11,7 @@ using ViewModel.Datos.Documento;
 using ViewModel.Datos.Entidad;
 using ViewModel.Datos.ListaCorreos;
 using ViewModel.Datos.Parametros;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.ServiceConsumer
 {

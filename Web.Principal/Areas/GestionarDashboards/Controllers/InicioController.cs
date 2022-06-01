@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ViewModel.Datos.UsuarioRegistro;
 using Web.Principal.Areas.GestionarDashboards.Models;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Areas.GestionarDashboards.Controllers
 {

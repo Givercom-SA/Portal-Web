@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using Web.Principal.Areas.GestionarEmbarques.Models;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
@@ -219,12 +219,47 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarSolicitudes(ListarSolicitudesModel model)
+        public async Task<IActionResult> ListarSolicitudes(string parkey)
         {
-            var viewModel = (model == null) ? new ListarSolicitudesModel() : model;
+            ListarSolicitudesModel viewModel = new ListarSolicitudesModel();
+     
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string CampoCodSolicitud = parametros[0];
+                    string CampoRuc = parametros[1];
+                    string CodEstado = parametros[2];
+                    // CampoCodSolicitud=&CampoRuc=&CodEstado=0
+                    viewModel.CampoCodSolicitud = CampoCodSolicitud;
+                    viewModel.CampoRuc = CampoRuc;
+                    viewModel.CodEstado = CodEstado;
+
+                }
+            }
+           
 
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(34);
             ViewBag.ListarEstado = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
+
+            if (string.IsNullOrEmpty(viewModel.CampoCodSolicitud)) {
+                viewModel.CampoCodSolicitud = " ";
+            }
+
+            if (string.IsNullOrEmpty(viewModel.CampoRuc))
+            {
+                viewModel.CampoRuc = " ";
+            }
+
+            if (string.IsNullOrEmpty(viewModel.CodEstado))
+            {
+                viewModel.CodEstado = "0";
+            }
 
             var listaSolicitud = await _serviceEmbarque.ObtenerSolicitudes(viewModel.CampoCodSolicitud ?? "0",
                 viewModel.CampoRuc ?? "0", viewModel.CodEstado ?? "0");
@@ -233,6 +268,34 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 viewModel.listaResultado = listaSolicitud.ListaSolicitudes;
 
             return View(viewModel);
+        }
+
+
+        public async Task<JsonResult> ListarEncriptar(ListarSolicitudesModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.CampoCodSolicitud}|{model.CampoRuc}|{model.CodEstado}";
+                // CampoCodSolicitud=&CampoRuc=&CodEstado=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarSolicitudes", "Direccionamiento", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
         }
 
         [HttpGet]

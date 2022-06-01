@@ -3,12 +3,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Service.Common;
 using Service.Common.Core;
-using Service.Common.Utils;
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ViewModel.Common.Response;
+using ViewModel.Notificacion;
+using Web.Principal.Util;
 using Service.Common.RequestFactory;
+using ViewModel.Notificacion.EnvioCorreoError;
 using Service.Common.Logging.Application;
 
 namespace Web.Principal.ServiceConsumer
@@ -35,47 +38,47 @@ namespace Web.Principal.ServiceConsumer
         //    _httpContext = httpContext;
         //}
 
-        //public async Task<ResponseViewModel<List<NotificacionVM>>> ObtenerNotificacionesPorUsuario(int codigoUsuario)
-        //{
-        //    ResponseViewModel<List<NotificacionVM>> resultado = null;
+        public async Task<ResponseViewModel<List<NotificacionVM>>> ObtenerNotificacionesPorUsuario(int codigoUsuario)
+        {
+            ResponseViewModel<List<NotificacionVM>> resultado = null;
 
-        //    var context = _httpContextAccessor.HttpContext;
-        //    const string SERVICIO = "obtener-notificaciones-por-usuario";
-        //    var uri = $"{URL_BASE}{SERVICIO}/{codigoUsuario}";
+            var context = _httpContextAccessor.HttpContext;
+            const string SERVICIO = "obtener-notificaciones-por-usuario";
+            var uri = $"{URL_BASE}{SERVICIO}/{codigoUsuario}";
 
-        //    try
-        //    {
-        //        var bearerToken = context.Session.GetUserContent().BearerToken;
-        //        resultado = await _RequestFactory.GetRequestObject<ResponseViewModel<List<NotificacionVM>>>(context, uri, bearerToken);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(e, "Sucedio un error al Obtener Notificaciones para el usuario : " + codigoUsuario);
-        //    }
+            try
+            {
+                var bearerToken = context.Session.GetUserContent().BearerToken;
+                resultado = await _RequestFactory.GetRequestObject<ResponseViewModel<List<NotificacionVM>>>(context, uri, bearerToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sucedio un error al Obtener Notificaciones para el usuario : " + codigoUsuario);
+            }
 
-        //    resultado = resultado ?? CustomResponse.GetErrorByResponse<List<NotificacionVM>>();
+            resultado = resultado ?? CustomResponse.GetErrorByResponse<List<NotificacionVM>>();
 
-        //    if (!resultado.IsSuccess)
-        //        _logger.LogWarning("Sucedio un error en el servicio : " + uri);
+            if (!resultado.IsSuccess)
+                _logger.LogWarning("Sucedio un error en el servicio : " + uri);
 
-        //    return resultado;
-        //}
+            return resultado;
+        }
 
-        //public async Task<ResponseViewModel<bool>> LimpiarNotificacionesPorUsuario(int codigoUsuario)
-        //{
-        //    var usuario = _httpContextAccessor.HttpContext.Session.GetUserContent();
+        public async Task<ResponseViewModel<bool>> LimpiarNotificacionesPorUsuario(int codigoUsuario)
+        {
+            var usuario = _httpContextAccessor.HttpContext.Session.GetUserContent();
 
-        //    const string SERVICIO = "limpiar-notificaciones-por-usuario";
-        //    var uri = $"{URL_BASE}{SERVICIO}/{codigoUsuario}";
-        //    var respuesta = await HttpRequestFactory.Get(uri);
+            const string SERVICIO = "limpiar-notificaciones-por-usuario";
+            var uri = $"{URL_BASE}{SERVICIO}/{codigoUsuario}";
+            var respuesta = await HttpRequestFactory.Get(uri);
 
-        //    var resultado = respuesta.ContentAsType<ResponseViewModel<bool>>();
+            var resultado = respuesta.ContentAsType<ResponseViewModel<bool>>();
 
-        //    if (!resultado.IsSuccess)
-        //        throw new Exception("Sucedio un error en el servicio : " + resultado.Message);
+            if (!resultado.IsSuccess)
+                throw new Exception("Sucedio un error en el servicio : " + resultado.Message);
 
-        //    return resultado;
-        //}
+            return resultado;
+        }
 
         //public async Task<EnvioCorreoErrorRespuestaVM> EnvioCorreoAfpNetError(EnvioCorreoErrorVM viewModel)
         //{

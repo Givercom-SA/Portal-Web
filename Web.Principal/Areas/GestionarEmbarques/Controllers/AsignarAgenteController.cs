@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using ViewModel.Datos.Embarque.AsignarAgente;
 using Web.Principal.Areas.GestionarEmbarques.Models;
 using Web.Principal.ServiceConsumer;
@@ -13,6 +13,9 @@ using static Utilitario.Constante.EmbarqueConstante;
 using Web.Principal.Areas.GestionarSolicitudes.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Utilitario.Constante;
+using Security.Common;
+using Service.Common.Logging.Application;
+using Microsoft.Extensions.Logging;
 
 namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 {
@@ -25,7 +28,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private readonly ServicioUsuario _serviceUsuario;
 
         private readonly IMapper _mapper;
-
+        private static ILogger _logger = ApplicationLogging.CreateLogger("AsignarAgenteController");
         public AsignarAgenteController(ServicioEmbarque serviceEmbarque,
             ServicioEmbarques serviceEmbarques,
             ServicioUsuario serviceUsuario,
@@ -44,9 +47,34 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListaAsignados(AsignacionModel model)
+        public async Task<IActionResult> ListaAsignados(string parkey)
         {
+            AsignacionModel model = new AsignacionModel();
             AsignacionModel modelView = new AsignacionModel();
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string NROBL = parametros[0];
+                    string NROOT = parametros[1];
+                    string Estado = parametros[2];
+                    // ListarAsignacionParameter.NROBL = &ListarAsignacionParameter.NROOT = &ListarAsignacionParameter.Estado = 0 & ListarAsignacionParameter.Estado =
+                    model.ListarAsignacionParameter.NROBL = NROBL;
+                    model.ListarAsignacionParameter.NROBL = NROOT;
+                    model.ListarAsignacionParameter.Estado = Estado;
+             
+
+                }
+            }
+
+            modelView = model;
+
+
 
             if (usuario.TipoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS))
             {
@@ -69,7 +97,33 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return View(modelView);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(AsignacionModel model)
+        {
+            ActionResponse = new ActionResponse();
 
+            try
+            {
+
+                string url = $"{model.ListarAsignacionParameter.NROBL}|{model.ListarAsignacionParameter.NROOT}|{model.ListarAsignacionParameter.Estado}";
+                // ListarAsignacionParameter.NROBL = &ListarAsignacionParameter.NROOT = &ListarAsignacionParameter.Estado = 0 & ListarAsignacionParameter.Estado =
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListaAsignados", "AsignarAgente", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
 
         [HttpGet]
         public async Task<IActionResult> ListarAgenteAduanasHistorial(string IdAgenteAduana)

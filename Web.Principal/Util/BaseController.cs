@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Utilitario.Constante;
 using ViewModel.Datos.UsuarioRegistro;
 
-namespace Web.Principal.Utils
+namespace Web.Principal.Util
 {
     public class BaseController : Controller
     {

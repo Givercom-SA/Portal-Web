@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using Web.Principal.Areas.GestionarEmbarques.Models;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
@@ -56,12 +56,37 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Buscar(EmbarqueBuscarModel model)
+        public async Task<IActionResult> Buscar(string parkey)
         {
-            var viewModel = (model == null) ? new EmbarqueBuscarModel() : model;
+            var model = new EmbarqueBuscarModel();
 
+          
             try
             {
+                if (parkey != null)
+                {
+                    var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                    string[] parametros = dataDesencriptada.Split('|');
+
+                    if (parametros.Count() > 1)
+                    {
+                        string servicio = parametros[0];
+                        string origen = parametros[1];
+                        string anio = parametros[2];
+                        string tipofiltro = parametros[3];
+                        string filtro = parametros[4];
+
+                        model.Servicio = servicio;
+                        model.Origen = origen;
+                        model.Anio = anio;
+                        model.TipoFiltro = tipofiltro;
+                        model.Filtro = filtro;
+
+                    }
+                }
+
+
                 if (model.Anio == null)
                     model.Anio = "";
 
@@ -777,6 +802,38 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             }
             return Json(ActionResponse);
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> BuscarEncriptar(EmbarqueBuscarModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url =$"{model.Servicio}|{model.Origen}|{model.Anio}|{model.TipoFiltro}|{model.Filtro}";
+ 
+
+                string urlEncriptado = this.GetUriHost() +Url.Action("Buscar","Embarque",new { area="GestionarEmbarques"})+"?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
+
+
+
 
         [HttpPost]
         public async Task<JsonResult> AsignarAgenteVerificar(string KeyBl)

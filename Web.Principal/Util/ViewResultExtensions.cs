@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web.Principal.Utils
+namespace Web.Principal.Util
 {
 
     public static class ViewResultExtensions

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Web.Principal.Entities;
 
-namespace Web.Principal.Hubs
+namespace Web.Principal.Hub
 {
-    public interface INotificationHub 
+    public interface INotificacionHub
     {
         Task RecibirNotificacion(Notificacion notificacion);
 

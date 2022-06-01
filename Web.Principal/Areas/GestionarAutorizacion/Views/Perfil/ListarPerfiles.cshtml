@@ -33,12 +33,12 @@
     <div class="card card-header-actions mb-4">
         <div class="card-header">
             Filtros para Búsqueda
-            <button class="btn btn-sm btn-primary" type="button" onclick="filtrarPerfil()">Buscar</button>
+            <button class="btn btn-sm btn-primary" type="button" onclick="btnBuscar()">Buscar</button>
         </div>
 
         <div class="card-body">
             <div class="sbp-preview-content">
-                <form asp-route-returnUrl="@Model.ReturnUrl" id="frmFiltrarPerfil" method="get" enctype="multipart/form-data">
+                <form asp-area="GestionarAutorizacion" asp-controller="Perfil" asp-action="ListarEncriptar" id="frmFiltrarPerfil" method="get" enctype="multipart/form-data">
 
                     <div class="row gx-3 mb-3">
 
@@ -352,16 +352,67 @@
             VerificarSiTieneAccesos(IdPerfil, Nombre);
         }
 
-        function filtrarPerfil() {
-
-            $("#frmFiltrarPerfil").submit();
-        }
+      
 
         function ActualizarForm() {
             window.location.reload();
         }
 
+        function btnBuscar() {
 
+            var form = $('#frmFiltrarPerfil')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: form.action,
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    $('#alertError').show();
+                    outputDetalleError.html(errorThrown);
+                    $(".loader").fadeOut("slow");
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+
+
+                        window.location.href = response.mensaje;
+
+
+                    }
+                    else if (response.codigo > 0) {
+
+
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+
+                    }
+                    else {
+
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+                },
+                complete: function (data) {
+                    $(".loader").fadeOut("slow");
+
+                }
+            });
+
+        }
 
     </script>
 }

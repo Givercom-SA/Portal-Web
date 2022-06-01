@@ -11,7 +11,7 @@ using ViewModel.Datos.ListarEventos;
 using ViewModel.Datos.ListarSolicitudes;
 using ViewModel.Datos.Solicitud;
 using ViewModel.Datos.SolictudAcceso;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.ServiceConsumer
 {

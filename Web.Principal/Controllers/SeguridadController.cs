@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Controllers
 {

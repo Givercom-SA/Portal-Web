@@ -18,7 +18,7 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string NumeroDocumento { get; set; }
         public string RazonSocial { get; set; }
         public string TipoEntidad { get; set; }
-
+        public string BearerToken { get; set; }
         public int idUsuario
         {
             get;set;

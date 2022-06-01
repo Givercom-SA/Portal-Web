@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using Web.Principal.Areas.GestionarEmbarques.Models;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
@@ -23,7 +23,7 @@ using Utilitario.Constante;
 using ViewModel.Datos.Embarque.SolicitudFacturacion;
 using ViewModel.Datos.Message;
 using Microsoft.AspNetCore.SignalR;
-using Web.Principal.Hubs;
+using Web.Principal.Hub;
 using Web.Principal.Interface;
 using Security.Common;
 
@@ -40,7 +40,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private readonly IMapper _mapper;
         private static ILogger _logger = ApplicationLogging.CreateLogger("FacturacionController");
 
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
+ 
         private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
         private readonly IUserConnectionManager _userConnectionManager;
 
@@ -49,7 +49,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                                     ServicioEmbarque serviceEmbarque,
                                     IMapper mapper,
                                     ServicioMessage servicioMessage,
-                                    IHubContext<NotificationHub> notificationHubContext,
+                                
             IHubContext<NotificationUserHub> notificationUserHubContext,
             IUserConnectionManager userConnectionManage)
         {
@@ -59,7 +59,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _servicioMessage = servicioMessage;
             _mapper = mapper;
 
-            _notificationHubContext = notificationHubContext;
+    
             _notificationUserHubContext = notificationUserHubContext;
             _userConnectionManager = userConnectionManage;
 
@@ -384,8 +384,34 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> ListarSolicitudes(ListarSolicitudFacturacionBandejaModel parametro)
+        public async Task<IActionResult> ListarSolicitudes(string parkey)
         {
+
+            ListarSolicitudFacturacionBandejaModel parametro = new ListarSolicitudFacturacionBandejaModel();
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string CodSolicitud = parametros[0];
+                    string NroBl = parametros[1];
+                    string NroDocumentoConsignatario = parametros[2];
+                    string Estado = parametros[3];
+
+                    // CodigoFacturacion=&NroBl=&NroDocumentoConsignatario=&Estado=0
+                    parametro.CodigoFacturacion = CodSolicitud;
+                    parametro.NroBl = NroBl;
+                    parametro.NroDocumentoConsignatario = NroDocumentoConsignatario;
+                    parametro.Estado = Estado;
+
+
+                }
+            }
+
 
             ListarSolicitudFacturacionBandejaModel model = new ListarSolicitudFacturacionBandejaModel();
 
@@ -412,6 +438,34 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             return View(model);
 
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ListarSolicitudFacturacionBandejaModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.CodigoFacturacion}|{model.NroBl}|{model.NroDocumentoConsignatario}|{model.Estado}";
+                // CodigoFacturacion=&NroBl=&NroDocumentoConsignatario=&Estado=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarSolicitudes", "Facturacion", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
         }
 
         [HttpGet]
@@ -1185,16 +1239,34 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             return View(model);
         }
+
         [HttpGet]
-        public async Task<IActionResult> BandejaFacturaTercero(ListarSolicitudFacturacionTerceroModel model)
+        public async Task<IActionResult> BandejaFacturaTercero(string parkey)
         {
 
             var resultSesion = HttpContext.Session.GetUserContent();
+            ListarSolicitudFacturacionTerceroModel model = new ListarSolicitudFacturacionTerceroModel();
 
-            if (model == null)
+            if (parkey != null)
             {
-                model = new ListarSolicitudFacturacionTerceroModel();
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string EmbarqueNroBL = parametros[0];
+                    string Cliente = parametros[1];
+                    string Estado = parametros[2];
+                    // EmbarqueNroBL=&Cliente=&Estado=0
+                    model.EmbarqueNroBL = EmbarqueNroBL;
+                    model.Cliente = Cliente;
+                    model.Estado = Estado;
+
+                }
             }
+
+
 
             ListarFacturacionTerceroParameterVM parameter = new ListarFacturacionTerceroParameterVM();
 
@@ -1239,7 +1311,32 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return View(model);
         }
 
+        public async Task<JsonResult> ListarEncriptar(ListarSolicitudFacturacionTerceroModel model)
+        {
+            ActionResponse = new ActionResponse();
 
+            try
+            {
+
+                string url = $"{model.EmbarqueNroBL}|{model.Cliente}|{model.Estado}";
+                // EmbarqueNroBL=&Cliente=&Estado=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("BandejaFacturaTercero", "Facturacion", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
     }
 
 }

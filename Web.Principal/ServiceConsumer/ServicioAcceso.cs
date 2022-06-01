@@ -10,7 +10,7 @@ using ViewModel.Datos.LoginInicial;
 using ViewModel.Datos.SolictudAcceso;
 using ViewModel.Datos.UsuarioRegistro;
 using ViewModel.Datos.Perfil;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using ViewModel.Datos.Acceso;
 using Service.Common;
 

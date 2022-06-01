@@ -27,13 +27,13 @@
 
 <!-- Main page content-->
 <div class="container-xl px-4 mt-n10">
-    <form asp-route-returnUrl="@Model.ReturnUrl" method="get">
+    <form  asp-area="GestionarEmbarques" asp-controller="Memo" asp-action="ListarEncriptar" method="post" id="frmListarSolicitudes">
 
 
         <div class="card card-header-actions mb-4">
             <div class="card-header">
                 Filtros para búsqueda
-                <button class="btn btn-sm btn-primary" type="submit">Buscar</button>
+                <button class="btn btn-sm btn-primary" onclick="btnBuscar()" type="button">Buscar</button>
             </div>
 
             <div class="card-body">
@@ -68,10 +68,20 @@
             <div class="card-body">
                 <!-- Billing history table-->
                 <div class="table-responsive table-billing-history">
+                    
+                    @if (Model.listaResultado != null && Model.listaResultado.Count() > 0)
+                    {
                     <partial name="_ResultadoBusqueda" model="@Model.listaResultado" />
+                    }
+                    else
+                    {
+                        @Html.Raw("No existen registros...");
+                    }
+                </div>
+
                 </div>
             </div>
-        </div>
+     
     </form>
 </div>
 
@@ -105,6 +115,60 @@
         });
 
 
+        function btnBuscar() {
+
+            var form = $('#frmListarSolicitudes')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: form.action,
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    $('#alertError').show();
+                    outputDetalleError.html(errorThrown);
+                    $(".loader").fadeOut("slow");
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+
+
+                        window.location.href = response.mensaje;
+
+
+                    }
+                    else if (response.codigo > 0) {
+
+
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+
+                    }
+                    else {
+
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+                },
+                complete: function (data) {
+                    $(".loader").fadeOut("slow");
+
+                }
+            });
+        }
 
 
     </script>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Web.Principal.Utils
+namespace Web.Principal.Util
 {
     public static class HttpResponseExtensions
     {

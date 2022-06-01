@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Web.Principal.Utils
+namespace Web.Principal.Util
 {
     public class ActionErrorResponse
     {

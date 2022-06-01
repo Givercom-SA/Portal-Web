@@ -1,7 +1,7 @@
 ﻿
 
 
-const connectionUser = new signalR.HubConnectionBuilder().withUrl("/NotificationUserHub")
+const connectionUser = new signalR.HubConnectionBuilder().withUrl("/notificaciones")
     .configureLogging(signalR.LogLevel.Error)
     .build();
 

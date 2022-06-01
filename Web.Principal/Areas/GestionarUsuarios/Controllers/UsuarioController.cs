@@ -23,7 +23,7 @@ using Web.Principal.Areas.GestionarUsuarios.Models;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 {
@@ -164,16 +164,39 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
+        public async Task<IActionResult> ListarUsuarios(string parkey)
         {
-            
 
-            if (model==null)
-                model = new Models.ListarUsuariosModel();
+
+            ListarUsuariosModel model = new ListarUsuariosModel();
 
             try
             {
-             
+
+
+                if (parkey != null)
+                {
+                    var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                    string[] parametros = dataDesencriptada.Split('|');
+
+                    if (parametros.Count() > 1)
+                    {
+                        string Correo = parametros[0];
+                        string Nombres = parametros[1];
+                        string isActivo = parametros[2];
+                        string IdPerfil = parametros[3];
+                  
+
+                        model.Correo = Correo ;
+                        model.Nombres = Nombres;
+                        model.isActivo = isActivo == "" ? 0 : Convert.ToInt32(isActivo);
+                        model.IdPerfil = IdPerfil == "" ? 0 : Convert.ToInt32(IdPerfil) ;
+                    
+
+                    }
+                }
+
                 ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
                 listarUsuarioParameterVM.Nombres = model.Nombres;
                 listarUsuarioParameterVM.Correo = model.Correo;
@@ -192,6 +215,35 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 _logger.LogError(err, "ListarUsuarios");
             }
             return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ListarUsuariosModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.Correo}|{model.Nombres}|{model.isActivo}|{model.IdPerfil}";
+                
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarUsuarios", "Usuario", new { area = "GestionarUsuarios" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
         }
 
 

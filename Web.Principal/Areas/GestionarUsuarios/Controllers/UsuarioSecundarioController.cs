@@ -7,7 +7,7 @@ using ViewModel.Datos.UsuarioRegistro;
 using ViewModel.Datos.Perfil;
 using Web.Principal.Areas.GestionarUsuarios.Models;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -491,9 +491,33 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
+        public async Task<IActionResult> ListarUsuarios(string parkey)
         {
-            
+            ListarUsuariosModel model = new ListarUsuariosModel();
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string Correo = parametros[0];
+                    string IdPerfil = parametros[1];
+                    string isActivo = parametros[2];
+               
+
+                    // Correo=&IdPerfil=0&IdPerfil=0&isActivo=-1&isActivo=-1
+                    model.Correo = Correo;
+                    model.IdPerfil = IdPerfil==null?0:Convert.ToInt32(IdPerfil);
+                    model.isActivo = isActivo==null?0:Convert.ToInt32( isActivo);
+        
+
+
+                }
+            }
+
+
             PerfilParameterVM parameterPerfil = new PerfilParameterVM();
             parameterPerfil.IdEntidad = Convert.ToInt32(ViewData["Identidad"]);
             var resultPerfiles = await _serviceAcceso.ObtenerPerfilesPorEntidad(parameterPerfil);
@@ -514,6 +538,34 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             return View(model);
 
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptar(ListarUsuariosModel model)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+
+                string url = $"{model.Correo}|{model.IdPerfil}|{model.isActivo}";
+                // Correo=&IdPerfil=0&IdPerfil=0&isActivo=-1&isActivo=-1
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarUsuarios", "UsuarioSecundario", new { area = "GestionarUsuarios" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
         }
 
         //[HttpPost]

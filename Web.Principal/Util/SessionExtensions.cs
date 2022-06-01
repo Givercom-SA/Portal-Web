@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViewModel.Datos.UsuarioRegistro;
 
-namespace Web.Principal.Utils
+namespace Web.Principal.Util
 {
     public static class SessionExtensions
     {

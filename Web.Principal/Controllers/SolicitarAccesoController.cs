@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViewModel.Datos.SolictudAcceso;
 using Web.Principal.ServiceConsumer;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 
 namespace Web.Principal.Controllers
 {

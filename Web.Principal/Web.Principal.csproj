@@ -27,7 +27,9 @@
     <Folder Include="wwwroot\tmpdwac\Direccionamiento\" />
     <Folder Include="wwwroot\tmpdwac\memo\" />
   </ItemGroup>
-
+<ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+</ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\js\datatables\datatables-simple-demo.js" />
   </ItemGroup>
@@ -61,6 +63,7 @@
     <ProjectReference Include="..\05.Utilitarios\Utilitario.Seguridad\Utilitario.Seguridad.csproj" />
     <ProjectReference Include="..\TransMares.Core\TransMares.Core.csproj" />
     <ProjectReference Include="..\ViewModel.Datos\ViewModel.Datos.csproj" />
+    <ProjectReference Include="..\ViewModel.Notificacion\ViewModel.Notificacion.csproj" />
   </ItemGroup>
 
   <ItemGroup>

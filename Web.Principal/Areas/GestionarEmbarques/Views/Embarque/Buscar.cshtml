@@ -9,8 +9,6 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
-
-
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
         <div class="page-header-content pt-4">
@@ -28,7 +26,7 @@
 </header>
 
 <div class="container-xl px-4">
-    <form asp-route-returnUrl="@Model.ReturnUrl" method="get" enctype="multipart/form-data" id="frmBuscarEmbarque">
+    <form asp-controller="Embarque" asp-area="GestionarEmbarques" asp-action="BuscarEncriptar" method="post" enctype="multipart/form-data" id="frmBuscarEmbarque">
 
         <div class="card card-header-actions mt-n10">
             <div class="card-header">Filtros para Búsqueda    <button class="btn btn-sm btn-primary" type="button" onclick="onBuscarEmbarque()">Buscar</button></div>
@@ -149,44 +147,11 @@
 
 @section Scripts{
 
-
-
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
 
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" crossorigin="anonymous"></script>
     <script src="~/js/datatables/umd.js"></script>
-
-    <script>
-
-
-
-
-        $(function () {
-
-
-
-            let dataTable = new simpleDatatables.DataTable("#datatable", {
-                searchable: true,
-                labels: {
-                    "noRows": "No hay información",
-                    perPage: "{select} Registros por página",
-                    "info": "Mostrando {start} a {end} de {rows} Registros",
-                    placeholder: "Filtro rápido...",
-                },
-                columns: [
-                  
-                    {
-                        select: 6,
-                        type: "date",
-                        format: "DD/MM/YYYY"
-                    }
-                ]
-            });
-
-        });
-
-    </script>
 
 
 
@@ -208,7 +173,86 @@
                 }
             }
 
+
+            let dataTable = new simpleDatatables.DataTable("#datatable", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+                columns: [
+
+                    {
+                        select: 6,
+                        type: "date",
+                        format: "DD/MM/YYYY"
+                    }
+                ]
+            });
+
         });
+
+
+        function buscarEmbarques() {
+
+            var form = $('#frmBuscarEmbarque')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: form.action,
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    $('#alertError').show();
+                    outputDetalleError.html(errorThrown);
+                    $(".loader").fadeOut("slow");
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+
+
+                        window.location.href= response.mensaje;
+
+
+                    }
+                    else if (response.codigo > 0) {
+
+
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+
+                    }
+                    else {
+
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+                },
+                complete: function (data) {
+                    $(".loader").fadeOut("slow");
+
+                }
+            });
+        }
+
+
+
+
 
 
         function onChangeAnio(obj) {
@@ -225,7 +269,6 @@
             }
 
         }
-
 
         function onChangeTipoCriterio(obj) {
 
@@ -258,6 +301,7 @@
             }
 
         }
+
         function onChangeOrigen(obj) {
 
             let objTihs = $(obj);
@@ -316,7 +360,7 @@
 
             if (blValidar) {
 
-                $("#frmBuscarEmbarque").submit();
+                buscarEmbarques();
             }
 
 

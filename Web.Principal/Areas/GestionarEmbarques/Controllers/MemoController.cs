@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.ServiceExterno;
-using Web.Principal.Utils;
+using Web.Principal.Util;
 using Web.Principal.Areas.GestionarEmbarques.Models;
 using Web.Principal.Model;
 using Web.Principal.ServiceConsumer;
@@ -283,9 +283,29 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ListarSolicitudes(ListarSolicitudesMemoModel model)
+        public async Task<IActionResult> ListarSolicitudes(string parkey)
         {
-            var viewModel = (model == null) ? new ListarSolicitudesMemoModel() : model;
+
+            ListarSolicitudesMemoModel viewModel = new ListarSolicitudesMemoModel();
+
+            if (parkey != null)
+            {
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+                if (parametros.Count() > 1)
+                {
+                    string CodSolicitud = parametros[0];
+                    string CodEstado = parametros[1];
+
+                    // CodSolicitud=&Ruc=&CodEstado=0
+                    viewModel.CodSolicitud = CodSolicitud==""?null: CodSolicitud;
+                    viewModel.CodEstado = CodEstado == "" ? null : CodEstado;
+                    
+
+                }
+            }
 
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(34);
             ViewBag.ListarEstado = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
@@ -305,7 +325,32 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             return View(viewModel);
         }
+        public async Task<JsonResult> ListarEncriptar(ListarSolicitudesMemoModel model)
+        {
+            ActionResponse = new ActionResponse();
 
+            try
+            {
+
+                string url = $"{model.CodSolicitud}|{model.CodEstado}";
+                // CodSolicitud=&Ruc=&CodEstado=0
+
+                string urlEncriptado = this.GetUriHost() + Url.Action("ListarSolicitudes", "Memo", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
+
+                ActionResponse.Codigo = 0;
+                ActionResponse.Mensaje = urlEncriptado;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "BuscarEncriptar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+            return Json(ActionResponse);
+        }
         [HttpGet]
         public async Task<IActionResult> VerSolicitud(string parkey)
         {
