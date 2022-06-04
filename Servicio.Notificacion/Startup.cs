@@ -112,16 +112,19 @@ namespace Servicio.Notificacion
 
             app.UseAuthentication();
 
+          
 
             app.UseSignalRClient<WebClient>(Configuration.GetSection(AppSettingsKeys.ConnectionStrings.AFPnetHub));
             app.UseSqlTableDependency<NotificacionSubscription>(Configuration[AppSettingsKeys.ConnectionStrings.AFPnetServiceBroker]);
 
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

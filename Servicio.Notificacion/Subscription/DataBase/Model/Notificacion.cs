@@ -22,7 +22,22 @@ namespace Servicio.Notificacion.Subscription.Model
         [Column(name: "Vc_Mensaje")]
         public string Mensaje { get; set; }
 
+        [Column(name: "Vc_Titulo")]
+        public string Titulo { get; set; }
+
         [Column(name: "Dt_Creacion_Fecha")]
         public DateTime CreacionFecha { get; set; }
+
+        [Column(name: "Fl_Leido")]
+        public bool Leido { get; set; }
+        [Column(name: "Fl_ContadorVisible")]
+        public bool ContadorVisible { get; set; }
+        
+
+        [Column(name: "Vc_Link")]
+        public string Link { get; set; }
+
+        public string FechaFormato { get; set; }
+
     }
 }

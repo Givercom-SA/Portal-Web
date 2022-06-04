@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using QueryHandlers.Common;
 using Service.Common;
 using Service.Common.BaseServiceController;
+using Servicio.Notificacion.QueryHandler.LimpiarContadorNotificacionPorUsuario;
 using Servicio.Notificacion.QueryHandler.LimpiarNotificacionesPorUsuario;
 using Servicio.Notificacion.QueryHandler.ObtenerNotificacionesPorUsuario;
 using ViewModel.Notificacion;
@@ -77,6 +78,25 @@ namespace Servicio.Notificacion.Controllers
             }
 
         }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("limpiar-contador-notificaciones-por-usuario/{codigoUsuario}")]
+        public IActionResult LimpiarContadorNotificacionPorUsuario(int codigoUsuario)
+        {
+            try
+            {
+                var param = new LimpiarContadorNotificacionesPorUsuarioParameter { CodigoUsuario = codigoUsuario };
+                _queryDispatcher.Dispatch(param);
 
+                return Ok(CustomResponse.GetOkByResponse(true));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sucedio un error al obtener notificaciones por usuario : " + codigoUsuario);
+
+                return StatusCode(500, CustomResponse.GetErrorByResponse<bool>(e.Message));
+            }
+
+        }
     }
 }

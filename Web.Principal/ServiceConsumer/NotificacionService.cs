@@ -26,17 +26,17 @@ namespace Web.Principal.ServiceConsumer
         private readonly string URL_BASE_AFPNET_ERROR;
         private static ILogger _logger = ApplicationLogging.CreateLogger("BaseController");
 
-        //public NotificacionService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
-        //{
-        //    this.URL_BASE = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE}";
-        //    _httpContextAccessor = httpContextAccessor;
-        //}
-        //public NotificacionService(IConfiguration configuration, HttpContext httpContext)
-        //{
+        public NotificacionService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        {
+            this.URL_BASE = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE}";
+            _httpContextAccessor = httpContextAccessor;
+        }
+        public NotificacionService(IConfiguration configuration, HttpContext httpContext)
+        {
 
-        //    this.URL_BASE_AFPNET_ERROR = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE_AFPNET_ERROR}";
-        //    _httpContext = httpContext;
-        //}
+            this.URL_BASE_AFPNET_ERROR = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE_AFPNET_ERROR}";
+            _httpContext = httpContext;
+        }
 
         public async Task<ResponseViewModel<List<NotificacionVM>>> ObtenerNotificacionesPorUsuario(int codigoUsuario)
         {
@@ -79,7 +79,21 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
+        public async Task<ResponseViewModel<bool>> LimpiarContadorNotificacionesPorUsuario(int codigoUsuario)
+        {
+            var usuario = _httpContextAccessor.HttpContext.Session.GetUserContent();
 
+            const string SERVICIO = "limpiar-contador-notificaciones-por-usuario";
+            var uri = $"{URL_BASE}{SERVICIO}/{codigoUsuario}";
+            var respuesta = await HttpRequestFactory.Get(uri);
+
+            var resultado = respuesta.ContentAsType<ResponseViewModel<bool>>();
+
+            if (!resultado.IsSuccess)
+                throw new Exception("Sucedio un error en el servicio : " + resultado.Message);
+
+            return resultado;
+        }
         //public async Task<EnvioCorreoErrorRespuestaVM> EnvioCorreoAfpNetError(EnvioCorreoErrorVM viewModel)
         //{
         //    const string SERVICIO = "envio-correo-error-afpnet";

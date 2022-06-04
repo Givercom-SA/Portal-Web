@@ -9,7 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ViewModel.Datos.Notificacion;
+using Utilitario.Constante;
+using ViewModel.Notificacion;
 
 namespace Web.Principal
 {
@@ -27,7 +28,7 @@ namespace Web.Principal
 
                 try {
 
-                    cache.GetOrCreate("Notificaciones", s =>
+                    cache.GetOrCreate(SistemaConstante.Cache.Notificaciones, s =>
                     {
                         return new Dictionary<int, List<NotificacionVM>>();
                     });
@@ -44,14 +45,8 @@ namespace Web.Principal
 
             host.Run();
 
-            //CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+     
     }
 }
