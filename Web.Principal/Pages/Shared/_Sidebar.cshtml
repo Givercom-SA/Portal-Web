@@ -1,4 +1,128 @@
 ﻿@model List<ViewModel.Datos.UsuarioRegistro.MenuLoginVM>
+
+@{
+
+    void procesarSidebar(IEnumerable<ViewModel.Datos.UsuarioRegistro.MenuLoginVM> menus, ref int correlativoMenu)
+    {
+        // Areas
+
+        var listAreas = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.AREA) && x.Permiso==true).OrderBy(Z => Z.Orden);
+
+        if (listAreas.Any())
+        {
+
+            foreach (var itemArea in listAreas)
+            {
+                var hijos = Model.Where(x => x.IdPadre == itemArea.IdMenu &&  x.Permiso == true).ToList();
+
+                // Construir area
+
+                <div class="sidenav-menu-heading">@itemArea.Nombre</div>
+
+
+                if (hijos.Count() > 0)
+                {
+                    correlativoMenu++;
+
+
+                    procesarSidebar(hijos, ref correlativoMenu);
+
+
+                }
+                else
+                {
+                    correlativoMenu++;
+                }
+
+
+
+            }
+
+
+        }
+        else
+        {
+
+            // Grupo
+
+            var listGrupos = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.GRUPO) && x.Permiso == true).OrderBy(Z => Z.Orden);
+
+            if (listGrupos.Any())
+            {
+
+                foreach (var itemGrupo in listGrupos)
+                {
+
+                    var hijosGrupo = Model.Where(x => x.IdPadre == itemGrupo.IdMenu && x.Permiso == true).ToList();
+
+                    <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapse_@itemGrupo.IdMenu" aria-expanded="false" aria-controls="collapse_@itemGrupo.IdMenu">
+                        <div class="nav-link-icon">
+                            <i data-feather="grid"></i>
+                        </div>
+                        @itemGrupo.Nombre
+                        <div class="sidenav-collapse-arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
+                    </a>
+
+                    @if (hijosGrupo.Count() > 0)
+                    {
+
+                        correlativoMenu++;
+
+                        <div class="collapse" id="collapse_@itemGrupo.IdMenu" data-bs-parent="#accordionSidenav">
+
+                            <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages_@itemGrupo.IdMenu">
+                                @{procesarSidebar(hijosGrupo, ref correlativoMenu);}
+                            </nav>
+                        </div>
+
+
+                    }
+                    else
+                    {
+                        correlativoMenu++;
+                    }
+
+
+
+                                        }
+
+                                    }
+                                    else
+                                    {
+
+
+                                        // Item
+                                        var listMenu = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.MENU) && x.Permiso == true).OrderBy(Z => Z.Orden);
+                                        if (listMenu.Any())
+                                        {
+
+                                            foreach (var itemMenu in listMenu)
+                                            {
+
+
+                                                var parametro = Security.Common.Encriptador.Instance.EncriptarTexto(Convert.ToString(itemMenu.IdMenu));
+
+
+
+                        <a class="nav-link" href="@Url.Action(itemMenu.Accion,itemMenu.Controlador,new { area=itemMenu.Area, parguid=parametro})">@itemMenu.Nombre</a>
+
+                        correlativoMenu++;
+
+                    }
+
+                }
+
+            }
+
+        }
+    }
+
+
+
+}
+
 <div class="sidenav-menu">
     <div class="nav accordion" id="accordionSidenav">
         <div class="sidenav-menu-heading"></div>
@@ -6,7 +130,9 @@
 
         <div class="sidenav-menu-heading d-sm-none">Cuenta</div>
         <a class="nav-link d-sm-none" href="#!">
-            <div class="nav-link-icon"><i data-feather="bell"></i></div>
+            <div class="nav-link-icon">
+                <i data-feather="bell"></i>
+            </div>
             Alertas
             <span class="badge bg-warning-soft text-warning ms-auto">4 Nuevos!</span>
         </a>
@@ -14,42 +140,35 @@
         <div class="sidenav-menu-heading">Core</div>
         <!-- Sidenav Accordion (Dashboard)-->
         <a class="nav-link" href="@Url.Action("Home","Inicio",new { area="GestionarDashboards"})">
-            <div class="nav-link-icon"><i data-feather="activity"></i></div>
+            <div class="nav-link-icon">
+                <i data-feather="activity"></i>
+            </div>
             Dashboards
 
         </a>
 
-        <div class="sidenav-menu-heading">Gestionar</div>
+        @{
+            int correlativoMenu = 0;
 
+            procesarSidebar(Model,ref correlativoMenu);
 
-        @if (Model != null)
-        {
-            @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
-            {
-                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapse_@grupo" aria-expanded="false" aria-controls="collapse_@grupo">
-                    <div class="nav-link-icon"><i data-feather="grid"></i></div>
-                    @grupo
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-
-                <div class="collapse" id="collapse_@grupo" data-bs-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages_@grupo">
-                        @foreach (var item in Model.Where(x => x.Grupo.Equals(grupo)))
-                        {
-                            <a class="nav-link" asp-controller="@item.Controlador" asp-action="@item.Accion" asp-area="@item.Area">@item.Nombre</a>
-                        }
-                    </nav>
-                </div>
-            }
         }
 
-        <!-- Sidenav Menu Heading (Core)-->
-        <div class="sidenav-menu-heading">Seguridad</div>
-        <!-- Sidenav Accordion (Dashboard)-->
-        <a class="nav-link" href="@Url.Action("LogOut", "Login", new { area = "GestionarAccesos" })">
-            <div class="nav-link-icon"><i data-feather="activity"></i></div>
-            Cerrar Sesión
 
+        <div class="sidenav-menu-heading">Seguridad</div>
+
+        <a class="nav-link" href="@Url.Action("CambiarContrasenia", "Usuario", new { area = "GestionarUsuarios", nuevo="0" })">
+            <div class="nav-link-icon">
+                <i data-feather="settings"></i>
+            </div>
+            Cambiar Contraseña
+
+        </a>
+        <a class="nav-link" href="@Url.RouteUrl("CerrarSesionAsync")">
+            <div class="nav-link-icon">
+                <i data-feather="log-out"></i>
+            </div>
+            Cerrar Sesión
         </a>
 
     </div>

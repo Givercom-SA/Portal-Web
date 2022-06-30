@@ -33,20 +33,18 @@
 
         <div class="card-body">
             <div class="sbp-preview-content">
-              
 
-
-                <form id="frmPerfil">
+                <form id="frmPerfil" asp-area="GestionarAutorizacion" asp-controller="Perfil" asp-action="CrearPerfil">
 
 
                     <div class="row gx-3 mb-3">
-                        <!-- Form Group (first name)-->
+
                         <div class="col-md-6">
                             <label asp-for="@Model.Nombre" class="small mb-1"></label>
                             <input asp-for="@Model.Nombre" class="form-control" type="text" placeholder="Ingresar Nombre" />
                             <span asp-validation-for="@Model.Nombre" class="text-danger small"></span>
                         </div>
-                        <!-- Form Group (last name)-->
+
                         <div class="col-md-6">
                             <label class="small mb-1">Tipo</label>
                             <select asp-for="@Model.Tipo"
@@ -61,28 +59,29 @@
 
 
                     <div class="row gx-3 mb-3">
-                        <!-- Form Group (organization name)-->
+
+                        <div class="col-md-6">
+                            <label asp-for="@Model.Dashboard" class="small mb-1"></label>
+                            <input asp-for="@Model.Dashboard" class="form-control" type="text" placeholder="Ingresar dashboard" />
+                            <span asp-validation-for="@Model.Dashboard" class="text-danger small"></span>
+                        </div>
                         <div class="col-md-6">
                             <label class="small mb-1">Usuario de Creación</label>
                             <input asp-for="@Model.UsuarioCrea" class="form-control" readonly type="text" />
                         </div>
 
-
                     </div>
 
-                    <div class="mb-3">
+             
 
+                    <div class="mb-3">
                         <label class="small mb-1">Accesos</label>
-               
                         <fieldset class="border p-2 h-100">
-                           
                             <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
                                 @await Html.PartialAsync("_MenusPorPerfil", ViewBag.Menus as List<ViewModel.Datos.Perfil.MenuPerfilVM>)
                             </div>
                         </fieldset>
                     </div>
-
-
 
                     <div id="MensajeResult" class="small"></div>
                     <hr />
@@ -95,80 +94,131 @@
     </div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" id="modal_mensaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Perfil Creado</h5>
+                <h5 class="modal-title">Información</h5>
+
             </div>
-            <div class="modal-body" id="mensaje"></div>
-            <div class="modal-footer">
-                <button id="btnCerrar" class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar y Actualizar</button>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output> 
             </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
         </div>
     </div>
 </div>
 
 
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
     <script>
 
-
         $(document).ready(function () {
             $(".loader").fadeOut("slow");
         });
 
-
         $("#frmPerfil").submit(function (e) {
-            $('#MensajeResult').html("");
+
+     
+
             e.preventDefault();
+
             var isValid = $('#frmPerfil').valid();
+
             if (isValid) {
                 var form = $('#frmPerfil')[0];
                 var formData = new FormData(form);
                 $.ajax({
                     type: "POST",
-                    url: "/GestionarAutorizacion/Perfil/CrearPerfil",
+                    url: form.action,
                     data: formData,
                     contentType: false,
                     processData: false,
                     beforeSend: function () {
                         $(".loader").fadeIn("slow");
-                    }
-                }).done(function (result) {
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
 
+                        $(".loader").fadeOut("slow");
+
+                        $("#dialogError").modal("show");
+
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+                    },
+                    success: function (result) {
                         $(".loader").fadeOut("slow");
 
                         if (result != null) {
                             if (result.codigo == 0) {
-                                $('#mensaje').html(result.mensaje);
-                                $('#modal_mensaje').modal('show');
+                                 
+                                $('#dialogOk').modal('show');
+                                $('#outputMensajeOk').html(result.mensaje);
+
                             } else {
-                                ShowAlertMensage('MensajeResult', 'warning', '', result.mensaje, 0, null);
+                                $('#dialogAlerta').modal('show');
+                                $('#outputMensaje').html(result.mensaje);
                             }
                         } else {
-
+                            $('#dialogError').modal('show');
+                            $('#outputMensajeError').html(result.mensaje);
                         }
-                    })
-                    .fail(function (xhr, status, error) {
 
-                        $(".loader").fadeOut("slow");
-                    }).always(function () {
+                    },
+                    complete: function (data) {
 
-                      
-                    });
+
+
+                    }
+
+                });
+
             }
         });
-
-        $("#btnCerrar").click(function () {
-            $('#modal_mensaje').modal('hide');
-            window.location.href = "/GestionarAutorizacion/Perfil/ListarPerfiles";
-        });
-
-    
+        
+        
+        function ActualizarForm() {
+            $('#dialogOk').modal('hide');
+            window.location.href = "@Url.Action("ListarPerfiles", "Perfil", new { area= "GestionarAutorizacion" })";
+        }
 
     </script>
 }

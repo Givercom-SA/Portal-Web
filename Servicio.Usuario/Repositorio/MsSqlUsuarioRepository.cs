@@ -282,43 +282,86 @@ namespace Servicio.Usuario.Repositorio
         }
 
         public UsuarioSecundarioResult CrearUsuario(CrearUsuarioSecundarioParameter parameter)
-        { 
+        {
             var result = new UsuarioSecundarioResult();
 
-           
-                DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
-                DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
-                foreach (int MenuId in parameter.Menus)
+            DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
+            DtListaMenus.Columns.Add("MENU_ID", typeof(int));
+
+            var menusSeleccionados = parameter.PerfilesMenus.Single().Menus.Where(x => x.IdMenuChecked != null).ToList();
+
+            foreach (var itemMenu in menusSeleccionados)
+            {
+                DataRow drog = DtListaMenus.NewRow();
+                drog["MENU_ID"] = itemMenu.IdMenu;
+                DtListaMenus.Rows.Add(drog);
+            }
+
+
+
+            DataTable DtListaVistas = new DataTable("TM_PDWAC_TY_VISTA_MENU_PERFIL");
+            DtListaVistas.Columns.Add("MENU_ID", typeof(int));
+            DtListaVistas.Columns.Add("PERFIL_ID", typeof(int));
+            DtListaVistas.Columns.Add("VISTA_ID", typeof(int));
+
+            List<VistaMenuVM> vistaMenus = new List<VistaMenuVM>();
+
+            menusSeleccionados.ForEach(x =>
+            {
+
+                if (x.VistaMenu != null)
                 {
-                    DataRow drog = DtListaMenus.NewRow();
-                    drog["MENU_ID"] = MenuId;
-                    DtListaMenus.Rows.Add(drog);
+                    var vistaMenu = x.VistaMenu.Where(z => z.IdVistaChecked != null).ToList();
+                    if (vistaMenu != null)
+                    {
+
+                        vistaMenu.ForEach(y =>
+                        {
+                            y.IdPerfil = parameter.IdPerfil;
+                            y.IdMenu = x.IdMenu;
+                            vistaMenus.Add(y);
+                        });
+                    }
                 }
+            });
 
-                using (var cnn = new SqlConnection(strConn))
-                {
-                    string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_CREAR]";
+            foreach (var itemVistas in vistaMenus)
+            {
+                DataRow drog = DtListaVistas.NewRow();
+                drog["MENU_ID"] = itemVistas.IdMenu;
+                drog["PERFIL_ID"] = itemVistas.IdPerfil;
+                drog["VISTA_ID"] = itemVistas.IdVista;
+                DtListaVistas.Rows.Add(drog);
+            }
 
-                    var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@IdEntidad", parameter.IdEntidad);
-                    queryParameters.Add("@IdPerfil", parameter.IdPerfil);
-                    queryParameters.Add("@Correo", parameter.Correo);
-                    queryParameters.Add("@Contrasenia", parameter.Contrasenia);
-                    queryParameters.Add("@Nombres", parameter.Nombres);
-                    queryParameters.Add("@ApellidoPaterno", parameter.ApellidoPaterno);
-                    queryParameters.Add("@ApellidoMaterno", parameter.ApellidoMaterno);
-                    queryParameters.Add("@EsAdmin", parameter.EsAdmin);
-                    queryParameters.Add("@Activo", parameter.Activo);
-                    queryParameters.Add("@IdUsuarioCrea", parameter.IdUsuarioCrea);
-                    queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
-                    queryParameters.Add("@IdUsuarioNuevo", direction: ParameterDirection.Output, dbType: DbType.Int32);
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_CREAR]";
 
-                    cnn.Query(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@IdEntidad", parameter.IdEntidad);
+                queryParameters.Add("@IdPerfil", parameter.IdPerfil);
+                queryParameters.Add("@Correo", parameter.Correo);
+                queryParameters.Add("@Contrasenia", parameter.Contrasenia);
+                queryParameters.Add("@Nombres", parameter.Nombres);
+                queryParameters.Add("@ApellidoPaterno", parameter.ApellidoPaterno);
+                queryParameters.Add("@ApellidoMaterno", parameter.ApellidoMaterno);
+                queryParameters.Add("@EsAdmin", parameter.EsAdmin);
+                queryParameters.Add("@Activo", parameter.Activo);
+                queryParameters.Add("@IdUsuarioCrea", parameter.IdUsuarioCrea);
+                queryParameters.Add("@ListaMenus", DtListaMenus, DbType.Object);
+                queryParameters.Add("@ListaVistas", DtListaVistas, DbType.Object);
 
-                    result.IN_CODIGO_RESULTADO = queryParameters.Get<System.Int32>("@IdUsuarioNuevo");
-                }
-         
+                queryParameters.Add("@IdUsuarioNuevo", direction: ParameterDirection.Output, dbType: DbType.Int32);
+
+                result= cnn.Query<UsuarioSecundarioResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                result.IdUsuario = queryParameters.Get<System.Int32>("@IdUsuarioNuevo");
+                
+
+            }
+
 
             return result;
         }
@@ -371,10 +414,11 @@ namespace Servicio.Usuario.Repositorio
                 DataTable DtListaMenus = new DataTable("TM_PDWAC_TY_MENU");
                 DtListaMenus.Columns.Add("MENU_ID", typeof(int));
 
-                foreach (int MenuId in parameter.Menus)
+            var menusSeleccionados= parameter.PerfilesMenus.Single().Menus.Where(z => z.IdMenuChecked != null).ToList();
+                foreach (var itemMenus in menusSeleccionados)
                 {
                     DataRow drog = DtListaMenus.NewRow();
-                    drog["MENU_ID"] = MenuId;
+                    drog["MENU_ID"] = itemMenus.IdMenu;
                     DtListaMenus.Rows.Add(drog);
                 }
 
@@ -385,7 +429,7 @@ namespace Servicio.Usuario.Repositorio
 
             List<VistaMenuVM> vistaMenus= new List<VistaMenuVM>();
 
-            parameter.PerfilMenu.Menus.ForEach(x=> {
+            menusSeleccionados.ForEach(x=> {
 
                 if (x.VistaMenu != null) {
                     var vistaMenu = x.VistaMenu.Where(z => z.IdVistaChecked != null).ToList();
@@ -522,6 +566,24 @@ namespace Servicio.Usuario.Repositorio
                     }
                 }
            
+            return result;
+        }
+        public UsuarioSecundarioResult ObtenerUsuario(CrearUsuarioSecundarioParameter parameter)
+        {
+            var result = new UsuarioSecundarioResult();
+
+            using (var cnn = new SqlConnection(strConn))
+            {
+                string spName = "[SEGURIDAD].[TM_PDWAC_SP_USUARIO_OBTENER]";
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@IdUsuario", parameter.IdUsuario, dbType: DbType.Int32);
+                queryParameters.Add("@Correo", parameter.Correo, dbType: DbType.String);
+                result.usuario = cnn.Query<Models.Usuario.Usuario>(spName, queryParameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                result.IN_CODIGO_RESULTADO = 0;
+
+             
+            }
+
             return result;
         }
 

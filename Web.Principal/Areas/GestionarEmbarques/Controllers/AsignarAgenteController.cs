@@ -63,12 +63,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     string NROBL = parametros[0];
                     string NROOT = parametros[1];
                     string Estado = parametros[2];
-                    // ListarAsignacionParameter.NROBL = &ListarAsignacionParameter.NROOT = &ListarAsignacionParameter.Estado = 0 & ListarAsignacionParameter.Estado =
+                    
                     model.ListarAsignacionParameter.NROBL = NROBL;
                     model.ListarAsignacionParameter.NROBL = NROOT;
                     model.ListarAsignacionParameter.Estado = Estado;
-             
-
                 }
             }
 
@@ -106,14 +104,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             {
 
                 string url = $"{model.ListarAsignacionParameter.NROBL}|{model.ListarAsignacionParameter.NROOT}|{model.ListarAsignacionParameter.Estado}";
-                // ListarAsignacionParameter.NROBL = &ListarAsignacionParameter.NROOT = &ListarAsignacionParameter.Estado = 0 & ListarAsignacionParameter.Estado =
 
                 string urlEncriptado = this.GetUriHost() + Url.Action("ListaAsignados", "AsignarAgente", new { area = "GestionarEmbarques" }) + "?parkey=" + Encriptador.Instance.EncriptarTexto(url);
 
                 ActionResponse.Codigo = 0;
                 ActionResponse.Mensaje = urlEncriptado;
-
-
 
             }
             catch (Exception ex)
@@ -334,6 +329,97 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
 
+            return Json(ActionResponse);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AsignarAgenteVerificar(string KeyBl)
+        {
+            ActionResponse = new ActionResponse();
+            try
+            {
+                VerificarAsignacionAgenteAduanasParameterVM parameter = new VerificarAsignacionAgenteAduanasParameterVM();
+                parameter.KEYBLD = KeyBl;
+
+                var resultVerificarAsignacionAgenteAduanas = await _serviceEmbarque.VerificarAsignacionAgenteAduanas(parameter);
+
+                ActionResponse.Codigo = resultVerificarAsignacionAgenteAduanas.CodigoResultado;
+                ActionResponse.Mensaje = resultVerificarAsignacionAgenteAduanas.MensajeResultado;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AsignarAgenteVerificar");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+
+            return Json(ActionResponse);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado, string servicio)
+        {
+            ActionResponse = new ActionResponse();
+
+            try
+            {
+                if (IdUsuarioAsignado == 0)
+                {
+                    ActionResponse.Codigo = -1;
+                    ActionResponse.Mensaje = "Debe seleccionar un agente de aduanas.";
+                }
+                else
+                {
+                    var resultSesion = HttpContext.Session.GetUserContent();
+
+                    EmbarqueDetalleModel model = new EmbarqueDetalleModel();
+                    model.EmbarqueDetalle = new Model.EmbarqueModel();
+
+                    var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
+
+                    var parameterCrear = new AsignarAgenteCrearParameterVM();
+                    parameterCrear.KEYBLD = embarque.KEYBLD;
+                    parameterCrear.NROOT = embarque.NROOT;
+                    parameterCrear.NROBL = embarque.NROBL;
+                    parameterCrear.NRORO = embarque.NRORO;
+                    parameterCrear.EMPRESA = embarque.EMPRESA;
+                    parameterCrear.ORIGEN = embarque.ORIGEN;
+                    parameterCrear.CONDICION = embarque.CONDICION;
+                    parameterCrear.POL = embarque.POL;
+                    parameterCrear.POD = embarque.POD;
+                    parameterCrear.ETAPOD = embarque.ETAPOD;
+                    parameterCrear.EQUIPAMIENTO = embarque.EQUIPAMIENTO;
+                    parameterCrear.MANIFIESTO = embarque.MANIFIESTO;
+                    parameterCrear.COD_LINEA = embarque.COD_LINEA;
+                    parameterCrear.DES_LINEA = embarque.DES_LINEA;
+                    parameterCrear.CONSIGNATARIO = embarque.CONSIGNATARIO;
+                    parameterCrear.COD_INSTRUCCION = embarque.COD_INSTRUCCION;
+                    parameterCrear.DES_INSTRUCCION = embarque.DES_INSTRUCCION;
+                    parameterCrear.IdUsuarioAsigna = usuario.idUsuario;
+                    parameterCrear.IdUsuarioAsignado = IdUsuarioAsignado;
+                    parameterCrear.CorreoUsuarioAsignado = Correo;
+                    parameterCrear.Observacion = string.Empty;
+                    parameterCrear.Estado = "1"; // Pendiente
+                    parameterCrear.IdUsuarioCrea = usuario.idUsuario;
+                    parameterCrear.IdUsuarioModifica = 0;
+                    parameterCrear.IdEntidadAsignado = IdEntidadAsignado;
+                    parameterCrear.IdEntidadAsigna = usuario.IdEntidad;
+                    parameterCrear.CodigoEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                    parameterCrear.LogoEmpresa = $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}";
+
+                    var resultCrear = await _serviceEmbarque.AsignarAgenteCrear(parameterCrear);
+
+                    ActionResponse.Codigo = resultCrear.CodigoResultado;
+                    ActionResponse.Mensaje = resultCrear.MensajeResultado;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AsignarAgente");
+                ActionResponse.Codigo = -100;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
             return Json(ActionResponse);
         }
 

@@ -160,6 +160,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             model.EmbarqueDetalle = new Model.EmbarqueModel();
             model.Servicio = servicio;
             model.Origen = origen;
+            model.ParKey = parkey;
 
             try
             {
@@ -387,23 +388,45 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AsignarCobroPagar(string id, string servicio, string origen)
+        public async Task<IActionResult> AsignarCobroPagar(string parkey)
         {
             ViewBag.CantidadBlsHijos = 0;
+
+
+        
+
             ListCobrosPendienteEmbarqueVM model = new();
             
             try
             {
+
+
+
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+
+                string IdKeyBl = parametros[0];
+                string anio = parametros[1];
+                string tipofiltro = parametros[2];
+                string filtro = parametros[3];
+                string servicio = parametros[4];
+                string origen = parametros[5];
+
+
                 model.Servicio = servicio;
                 model.Origen = origen;
+                model.ParKey = parkey;
 
-                var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(id, servicio);
+                var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(IdKeyBl, servicio);
 
-                var listaBls = await _serviceEmbarques.ObtenerDesglosesEmbarque(id, 0,usuario.TipoEntidad,EmbarqueConstante.ProcesoSistema.ASIGNACION_PROCESO);
+                var listaBls = await _serviceEmbarques.ObtenerDesglosesEmbarque(IdKeyBl, 0,usuario.TipoEntidad,EmbarqueConstante.ProcesoSistema.ASIGNACION_PROCESO);
                 ViewBag.ListaBlsHijos = new SelectList(listaBls.listaDesglose, "KEYBLD", "CONSIGNATARIO");
                 ViewBag.CantidadBlsHijos = listaBls.listaDesglose.Count();
 
-                var resultCobrosPendietne  = await CobrosPendientesEmabarque(id, embarqueSeleccionado.NROBL, "");
+                var resultCobrosPendietne  = await CobrosPendientesEmabarque(IdKeyBl, embarqueSeleccionado.NROBL, "");
 
                 model.CobrosPendientesEmbarque = resultCobrosPendietne.CobrosPendientesEmbarque;
                 model.CobrosPendientesEmbarque.OrderBy(x => x.ID);
@@ -412,7 +435,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     model.existeDesglosePendiente = 1;
                 }
 
-                model.KEYBL = id;
+                model.KEYBL = IdKeyBl;
                 model.BL = embarqueSeleccionado.NROBL;
 
             }
@@ -437,16 +460,30 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             try
             {
-                model.KeyBl = liberacionCargaModel.KeyBl;
+
+
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(liberacionCargaModel.ParKey);
+
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+
+                string IdKeyBl = parametros[0];
+                string anio = parametros[1];
+                string tipofiltro = parametros[2];
+                string filtro = parametros[3];
+                string servicio = parametros[4];
+                string origen = parametros[5];
+
+
+
+                model.KeyBl = IdKeyBl;
                 model.NroBl = liberacionCargaModel.NroBl;
-                model.Servicio = liberacionCargaModel.Servicio;
-                model.Origen = liberacionCargaModel.Origen;
+                model.Servicio = servicio;
+                model.Origen = origen;
 
-                var listaDesglose = await _serviceEmbarques.ObtenerDesglosesEmbarque(liberacionCargaModel.KeyBl, 1,usuario.TipoEntidad, EmbarqueConstante.ProcesoSistema.LIBERACION_CARGA);
+                var listaDesglose = await _serviceEmbarques.ObtenerDesglosesEmbarque(IdKeyBl, 1,usuario.TipoEntidad, EmbarqueConstante.ProcesoSistema.LIBERACION_CARGA);
                 model.listaDesglose = listaDesglose.listaDesglose;
-
-
-
 
             }
             catch (Exception ex)
@@ -735,74 +772,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return new JsonResult(ActionResponse);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> AsignarAgente(string codigo, int IdUsuarioAsignado, string Correo, int IdEntidadAsignado, string servicio)
-        {
-            ActionResponse = new ActionResponse();
-
-            try
-            {
-                if (IdUsuarioAsignado == 0)
-                {
-                    ActionResponse.Codigo = -1;
-                    ActionResponse.Mensaje = "Debe seleccionar un agente de aduanas.";
-                }
-                else
-                {
-                    var resultSesion = HttpContext.Session.GetUserContent();
-
-                    EmbarqueDetalleModel model = new EmbarqueDetalleModel();
-                    model.EmbarqueDetalle = new Model.EmbarqueModel();
-
-                    var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
-
-                    var parameterCrear = new AsignarAgenteCrearParameterVM();
-                    parameterCrear.KEYBLD = embarque.KEYBLD;
-                    parameterCrear.NROOT = embarque.NROOT;
-                    parameterCrear.NROBL = embarque.NROBL;
-                    parameterCrear.NRORO = embarque.NRORO;
-                    parameterCrear.EMPRESA = embarque.EMPRESA;
-                    parameterCrear.ORIGEN = embarque.ORIGEN;
-                    parameterCrear.CONDICION = embarque.CONDICION;
-                    parameterCrear.POL = embarque.POL;
-                    parameterCrear.POD = embarque.POD;
-                    parameterCrear.ETAPOD = embarque.ETAPOD;
-                    parameterCrear.EQUIPAMIENTO = embarque.EQUIPAMIENTO;
-                    parameterCrear.MANIFIESTO = embarque.MANIFIESTO;
-                    parameterCrear.COD_LINEA = embarque.COD_LINEA;
-                    parameterCrear.DES_LINEA = embarque.DES_LINEA;
-                    parameterCrear.CONSIGNATARIO = embarque.CONSIGNATARIO;
-                    parameterCrear.COD_INSTRUCCION = embarque.COD_INSTRUCCION;
-                    parameterCrear.DES_INSTRUCCION = embarque.DES_INSTRUCCION;
-                    parameterCrear.IdUsuarioAsigna = usuario.idUsuario;
-                    parameterCrear.IdUsuarioAsignado = IdUsuarioAsignado;
-                    parameterCrear.CorreoUsuarioAsignado = Correo;
-                    parameterCrear.Observacion = string.Empty;
-                    parameterCrear.Estado = "1"; // Pendiente
-                    parameterCrear.IdUsuarioCrea = usuario.idUsuario;
-                    parameterCrear.IdUsuarioModifica = 0;
-                    parameterCrear.IdEntidadAsignado = IdEntidadAsignado;
-                    parameterCrear.IdEntidadAsigna = usuario.IdEntidad;
-                    parameterCrear.CodigoEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
-                    parameterCrear.LogoEmpresa = $"{this.GetUriHost()}/img/{usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}";
-
-                    var resultCrear = await _serviceEmbarque.AsignarAgenteCrear(parameterCrear);
-
-                    ActionResponse.Codigo = resultCrear.CodigoResultado;
-                    ActionResponse.Mensaje = resultCrear.MensajeResultado;
-
-
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AsignarAgente");
-                ActionResponse.Codigo = -100;
-                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
-            }
-            return Json(ActionResponse);
-        }
-
+  
 
         [HttpPost]
         public async Task<JsonResult> BuscarEncriptar(EmbarqueBuscarModel model)
@@ -835,29 +805,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
 
-        [HttpPost]
-        public async Task<JsonResult> AsignarAgenteVerificar(string KeyBl)
-        {
-            ActionResponse = new ActionResponse();
-            try { 
-            VerificarAsignacionAgenteAduanasParameterVM parameter = new VerificarAsignacionAgenteAduanasParameterVM();
-            parameter.KEYBLD = KeyBl;
-
-            var resultVerificarAsignacionAgenteAduanas = await _serviceEmbarque.VerificarAsignacionAgenteAduanas(parameter);
-
-            ActionResponse.Codigo = resultVerificarAsignacionAgenteAduanas.CodigoResultado;
-            ActionResponse.Mensaje = resultVerificarAsignacionAgenteAduanas.MensajeResultado;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AsignarAgenteVerificar");
-                ActionResponse.Codigo = -100;
-                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
-            }
-
-            return Json(ActionResponse);
-        }
-
+    
         [HttpPost]
         public async Task<JsonResult> ProgramarNotificaciones(string keyBld, string nroBl, string anio)
         {
@@ -936,79 +884,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
    
-
-        [HttpPost]
-        public async Task<JsonResult> AprobarRechazarFacturacionTercero(int Id, string Estado, string Correo)
-        {
-            ActionResponse = new ActionResponse();
-            string EstadoNombre = string.Empty;
-            switch (Estado)
-            {
-                case "SA": EstadoNombre = "aprobó"; break;
-                case "SR": EstadoNombre = "rechazó"; break;
-            }
-
-            try
-            {
-                List<int> listDetalle = new List<int>();
-
-                var sepListarDetalle = await _serviceEmbarque.ListarFacturacionTercerosDetalle(Id);
-
-                switch (Estado)
-                {
-                    case "SA":
-
-                        foreach (var item in sepListarDetalle.ListFacturacionTerceroDetalle)
-                        {
-                            if (sepListarDetalle.TipoEntidad.Equals("AA"))
-                            {
-                                listDetalle.Add(await _serviceEmbarques.ActualizarPagosTercero(sepListarDetalle.EmbarqueKeyBL, long.Parse(item.IdProvision), "", sepListarDetalle.AgenteNumeroDocumento, sepListarDetalle.AgenteRazonSocial));
-                            }
-                            else
-                            {
-                                listDetalle.Add(await _serviceEmbarques.ActualizarPagosTercero(sepListarDetalle.EmbarqueKeyBL, long.Parse(item.IdProvision), sepListarDetalle.CodigoCliente, sepListarDetalle.NroDocumento, sepListarDetalle.ClienteNombre));
-                            }
-                        }
-
-                        ; break;
-                    case "SR":
-
-                        break;
-
-                }
-
-
-
-                var parameter = new RegistrarFacturacionTerceroParameterVM
-                {
-                    Id = Id,
-                    Estado = Estado,
-                    Correo = Correo,
-                    LogoEmpresa = $"{this.GetUriHost()}/img/{this.usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}",
-                    EmbarqueNroBL = sepListarDetalle.EmbarqueNroBL,
-                    IdUsuarioEvalua=usuario.idUsuario,
-                    IdUsuario= usuario.idUsuario.ToString()
-
-                };
-                var result = await _serviceEmbarque.ActualizarFacturacionTercero(parameter);
-                if (result.CodigoResultado == 0)
-                {
-                    result.MensajeResultado = string.Format("La solicitud se {0} correctamente.", EstadoNombre);
-                }
-                ActionResponse.Codigo = result.CodigoResultado;
-                ActionResponse.Mensaje = result.MensajeResultado;
-
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "AprobarRechazarFacturacionTercero");
-                ActionResponse.Codigo = -1;
-                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
-            }
-
-            return Json(ActionResponse);
-        }
 
         [HttpPost]
         public async Task<IActionResult> AceptarExpressRelease(string keyBld, string nroBl)

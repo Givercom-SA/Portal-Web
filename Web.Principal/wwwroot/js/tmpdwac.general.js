@@ -7,25 +7,10 @@
     });
 }
 
-function confirmarIrHaciaOPAfiliado(urlOPAfiliado) {
-    showAFPModal({
-        type: 'c',
-        size: 'md',
-        message: 'Se redireccionará a la opción "Obligaciones de Pago - Por Afiliado".<br><br>Si desea volver a esta pantalla, tendrá que seleccionar nuevamente la opción "Obligaciones de Pago - Por Devengue". ¿Desea continuar?',
-        buttons: {
-            ok: { function: irHaciaOPAfiliado, params: urlOPAfiliado},
-            cancel: { function: hideAFPModal }
-        }
-    });
-}
-
-function irHaciaOPAfiliado(urlOPAfiliado) {
-    window.location = urlOPAfiliado;
-}
 
 
 
-var primeraCarga = true;
+
 if (!navegadorValido()) window.location.href = "/Error/NavegadorNoSoportado";
 
 function navegadorValido() {
@@ -380,66 +365,13 @@ $(document).on('change', '.datepicker[data-rango="fin"]', function() {
 })
 
 
-/*
-Periodos devengue -- Para validar selects contenidos en un div con clase form-grup
-Util si un formulario tiene mas de un periodo de devengue
-*/
-$(document).on('change', '[data-control="periodo-devengue"][data-rango="inicio"]', function (){
-    llenarDevengueFin(this);
-});
-
-$(document).on('change', '[data-control="periodo-devengue"][data-rango="fin"]', function () {
-    llenarDevengueInicio(this);
-});
-
-function llenarDevengueFin(comboDevengueInicio) {
-    //recuperando el array de los devengues iniciales.
-    var arrayDevengueFin = arrayDevengues;
-    var valorActual = parseInt($(comboDevengueInicio).val() || 0);
-    var valorActualFin = $('[data-control="periodo-devengue"][data-rango="fin"]').val();
-
-    if (valorActual !== 0) {
-        //eliminando los devengues que no cumplen lo del valor inicial.
-        arrayDevengueFin = $(arrayDevengueFin).filter(function (i, e) { return e.value >= valorActual || e.value === ''; });
-    }
-    //llenando los options del combo fin.
-    var $dropdown = $('[data-control="periodo-devengue"][data-rango="fin"]');
-    $dropdown.find('option').remove().end();
-    $.each(arrayDevengueFin, function () {
-        $dropdown.append($("<option />").val(this.value).text(this.text).prop('selected', valorActualFin === this.value));
-    });
-}
-
-function llenarDevengueInicio(comboDevengueFinal) {
-    //recuperando el array de los devengues iniciales.
-    var arrayDevengueInicial = arrayDevengues;
-    var valorActual = parseInt($(comboDevengueFinal).val() || 0);
-    var valorActualInicio = $('[data-control="periodo-devengue"][data-rango="inicio"]').val();
-
-    if (valorActual !== 0) {
-        //eliminando los devengues que no cumplen lo del valor inicial.
-        arrayDevengueInicial = $(arrayDevengueInicial).filter(function (i, e) { return e.value <= valorActual || e.valule === ''; });
-    }
- 
-    //llenando los options del combo inicio.
-    var $dropdown = $('[data-control="periodo-devengue"][data-rango="inicio"]');
-    $dropdown.find('option').remove().end();
-    $.each(arrayDevengueInicial, function () {
-        $dropdown.append($("<option />").val(this.value).text(this.text).prop('selected', valorActualInicio === this.value));
-    });
-}
 
 
-function devengueFormatoWeb(devengue) {
-    try {
-        return devengue.substring(0, 4) + "-" + devengue.substring(4, 6)
-    } catch (e) {
-        return devengue;
-    }
-}
+
 
 // Formularios
-$(document).on('change', 'form [data-val-required][data-rango]', function() {
+$(document).on('change', 'form [data-val-required][data-rango]', function () {
+
     var $elementos = $(this)
         .parents('.form-group')
         .find('[data-val-required][data-rango]');
@@ -462,60 +394,8 @@ $(document).on('change', 'form [data-val-required][data-rango]', function() {
     $(this).parents('form').valid();
 });
 
-function establecerTipoBusqueda(inputrb, limpiarValores) {
 
-    var formId = '#' + $(inputrb).closest('form').attr('id');
 
-    if (!formId) {
-        formId = 'form';
-    }
-
-    reiniciarValidacionesFormulario(formId);
-    if (limpiarValores) limpiarValoresFormulario(formId);
-
-    $(formId)
-        .find('input[type="text"], input[type="checkbox"].chk-form-section, input[type="radio"].chk-form-section, input[type="password"], input[type="file"], select, button.btn-form-section')
-        .attr('disabled', 'disabled')
-        .addClass('ignore');
-
-    $(formId)
-        .find('div').find('input[type="file"]')
-        .attr('disabled', 'disabled')
-        .addClass('ignore');
-
-    $(formId).find('.custom-file-label')
-        .addClass('custom-file-label-disabled')
-        .removeClass('custom-file-label-enabled');
-
-    var $formGroups = $(inputrb)
-        .parents('.seccion-formulario-busqueda')
-        .find('.form-group');
-
-    $.each($formGroups, function() {
-        var $inputs = $(this).find('input[type="text"], input[type="checkbox"].chk-form-section, input[type="radio"].chk-form-section, input[type="password"], input[type="file"], select, button.btn-form-section');
-
-        var cantidad = $inputs.length;
-
-        $inputs.removeAttr('disabled');
-
-        if (cantidad == 1) {
-            $inputs.removeClass('ignore');
-        }
-
-        $(this).find('.custom-file-label')
-            .removeClass('custom-file-label-disabled')
-            .addClass('custom-file-label-enabled');
-    });
-
-}
-
-$(document).on('change', 'form .seccion-formulario-busqueda input[type="radio"][name="TipoBusqueda"]', function() {
-    establecerTipoBusqueda(this, true);
-});
-
-$(document).on('change', 'select.validar-campo', function() {
-    configurarValidarDocumentoIdentidad(this);
-});
 
 function configurarValidarDocumentoIdentidad(input, tipoDoc2) {
     if (typeof input === "string") {

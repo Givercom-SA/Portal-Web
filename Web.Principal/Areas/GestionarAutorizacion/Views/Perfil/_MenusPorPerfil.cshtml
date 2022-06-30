@@ -3,116 +3,285 @@
     string Disabled = string.Empty;
     if (ViewData.ContainsKey("ModoLectura"))
         Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
-}
-@if (Model != null)
-{
-    int correlativoPerfil = 0;
-    int correlativoMenu = 0;
 
-    <input type="hidden" name="Perfiles[@correlativoPerfil].IdPerfil" value="1" />
 
-    <ul class="list-group">
-        @foreach (string grupo in Model.Select(x => x.Grupo).Distinct().ToList())
+
+    void procesarMenu(IEnumerable<ViewModel.Datos.Perfil.MenuPerfilVM> menus, ref int correlativoMenu)
+    {
+
+
+
+        // Areas
+
+
+        var listAreas = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.AREA)).OrderBy(Z => Z.Orden);
+
+        if (listAreas.Any())
         {
-            
 
-            <li class="list-group-item">
-                <b>@grupo</b>
+            foreach (var itemArea in listAreas)
+            {
+                var hijos = Model.Where(x => x.IdPadre == itemArea.IdMenu).ToList();
 
+                // Construir area
 
+                <li class='list-group-item' style="BACKGROUND-COLOR: #9b9dbd; ">
 
-                <ul class="list-group">
+                    <input type='hidden' name='Perfiles[0].Menus[@correlativoMenu].IdMenu' value='@itemArea.IdMenu' />
 
-                  
-
-                    @foreach (var item in Model.Where(y => y.Grupo.Equals(grupo)))
+                    @if (itemArea.Permiso == 1)
                     {
-                        var correlativoVistaMenu = 0;
+                        <input class='form-check-input' type='checkbox' name='Menus' value='@itemArea.IdMenu' checked @Disabled /> <b>[S] @itemArea.Nombre </b>
+                    }
+                    else
+                    {
+                        <input class='form-check-input' type='checkbox' name='Menus' value='@itemArea.IdMenu' @Disabled /> <b>[S] @itemArea.Nombre </b>
+                    }
 
-                        <li class="list-group-item">
-                            <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].IdMenu" value="@item.IdMenu" />
 
 
-                            @if (item.Permiso == 1)
+                    @if (hijos.Count() > 0)
+                    {
+                        correlativoMenu++;
+
+                        <ul class='ist-group'>
+
+                            @{procesarMenu(hijos, ref correlativoMenu);}
+
+
+                        </ul>
+                     }
+                    else
+                    {
+                        correlativoMenu++;
+                    }
+
+
+                </li>
+
+            }
+
+
+        }
+        else
+        {
+
+            // Grupo
+
+            var listGrupos = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.GRUPO)).OrderBy(Z => Z.Orden);
+
+            if (listGrupos.Any())
+            {
+
+                foreach (var itemGrupo in listGrupos)
+                {
+
+                    var hijosGrupo = Model.Where(x => x.IdPadre == itemGrupo.IdMenu).ToList();
+
+                    <li class='list-group-item' style="BACKGROUND-COLOR: #babcd9;">
+
+                        <input type='hidden' name='Perfiles[0].Menus[@correlativoMenu].IdMenu' value='@itemGrupo.IdMenu' />
+
+                        @if (itemGrupo.Permiso == 1)
+                        {
+                            <input class='form-check-input' type='checkbox' name='Menus' value='@itemGrupo.IdMenu' checked @Disabled /> <b>[G] @itemGrupo.Nombre </b>
+                        }
+                        else
+                        {
+                            <input class='form-check-input' type='checkbox' name='Menus' value='@itemGrupo.IdMenu' @Disabled /> <b>[G] @itemGrupo.Nombre </b>
+                        }
+
+
+                        @if (hijosGrupo.Count() > 0)
+                        {
+
+                            correlativoMenu++;
+                            <ul class='ist-group'>
+
+                                @{procesarMenu(hijosGrupo, ref correlativoMenu);
+
+                                }
+
+
+                            </ul>
+
+                        }
+                        else
+                        {
+                            correlativoMenu++;
+                        }
+
+                    </li>
+
+                }
+
+            }
+            else
+            {
+
+
+                // Item
+                var listMenu = menus.Where(x => x.TipoMenu.Equals(Utilitario.Constante.ParametroConstante.TipoMenu.MENU)).OrderBy(Z => Z.Orden);
+                if (listMenu.Any())
+                {
+
+                    foreach (var itemMenu in listMenu)
+                    {
+
+                        var hijosMenus = Model.Where(x => x.IdPadre == itemMenu.IdMenu).ToList();
+
+                        <li class='list-group-item' style="BACKGROUND-COLOR: #d3d4e5; ">
+                            <input type='hidden' name='Perfiles[0].Menus[@correlativoMenu].IdMenu' value='@itemMenu.IdMenu' />
+
+                            @if (itemMenu.Permiso == 1)
                             {
-                                <input class="form-check-input" type="checkbox" name="Menus" value="@item.IdMenu" checked @Disabled /> @item.Nombre
-
-                                <ul class="list-group-dark">
-
-                                    @foreach (var itemVista in item.VistaMenu)
-                                    {
-                                    <li class="list-group-item">
-                                        <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista" value="@itemVista.IdVista" />
-
-                                        @if (itemVista.Checked)
-                                        {
-                                            <input class="form-check-input" type="checkbox" checked name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
-                                                   value="@itemVista.IdVista"
-                                                   @Disabled> @itemVista.VistaNombre
-                                        }
-                                        else
-                                        {
-                                                <input class="form-check-input" type="checkbox" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
-                                                       value="@itemVista.IdVista"
-                                                       @Disabled> @itemVista.VistaNombre
-                                        }
+                                <input class='form-check-input' type='checkbox' name='Menus' value='@itemMenu.IdMenu' checked @Disabled /> <b>[M] @itemMenu.Nombre </b>
+                            }
+                            else
+                            {
+                                <input class='form-check-input' type='checkbox' name='Menus' value='@itemMenu.IdMenu' @Disabled /> <b>[M] @itemMenu.Nombre </b>
+                            }
 
 
+                            @if (hijosMenus.Count() > 0)
+                            {
+                                correlativoMenu++;
+                                <ul class='ist-group'>
 
-                                    </li>
-
-                                            correlativoVistaMenu = correlativoVistaMenu + 1;
-                                        }
+                                    @{procesarMenu(hijosMenus, ref correlativoMenu);}
 
                                 </ul>
 
                             }
                             else
                             {
-
-                                <input class="form-check-input" type="checkbox" name="Menus" value="@item.IdMenu" @Disabled /> @item.Nombre
-
-
-                                <ul class="list-group">
-                                    @foreach (var itemVista in item.VistaMenu)
-                                    {
-                                    <li class="list-group-item">
-                                        <input type="hidden" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista" value="@itemVista.IdVista" />
-
-                                        @if (itemVista.Checked)
-                                        {
-                                            <input class="form-check-input" type="checkbox" checked name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
-                                                   value="@itemVista.IdVista"
-                                                   @Disabled> @itemVista.VistaNombre
-                                            }
-                                            else
-                                            {
-                                                <input class="form-check-input" type="checkbox" name="Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked"
-                                                       value="@itemVista.IdVista"
-                                                       @Disabled> @itemVista.VistaNombre
-                                                }
+                                // Vista Opcion
 
 
+                                if (itemMenu.VistaMenu.Any())
+                                {
+                                    int correlativoVistaMenu = 0;
 
+                                    <ul class='list-group-dark'>
+                                        @{procesarVistaOpcion(itemMenu.VistaMenu, itemMenu.VistaMenu, 0, correlativoMenu, ref correlativoVistaMenu);}
+                                    </ul>
+                                }
 
-                                    </li>
-                                            correlativoVistaMenu = correlativoVistaMenu + 1;
-
-                                        }
-                                </ul>
+                                correlativoMenu++;
                             }
 
                         </li>
 
-                        correlativoMenu = correlativoMenu + 1;
-
                     }
-                </ul>
 
-            </li>
+                }
 
-            
+            }
 
         }
+    }
+
+    void procesarVistaOpcion(ViewModel.Datos.Perfil.VistaMenuVM[] vistaOpcion,
+                                                                ViewModel.Datos.Perfil.VistaMenuVM[] vistaOpcionTodos,
+                                                                int correlativoPerfil,
+                                                                int correlativoMenu,
+                                                                ref int correlativoVistaMenu)
+    {
+
+
+        var listMenus = vistaOpcion.Where(x => x.VistaOpcion == 0).OrderBy(Z => Z.Orden);
+
+        if (listMenus.Any())
+        {
+
+            @foreach (var itemVista in listMenus)
+            {
+
+                var listhijosMenus = vistaOpcionTodos.Where(x => x.IdPadre == itemVista.IdVista && x.VistaOpcion == 1).ToArray();
+
+
+
+
+                <li class='list-group-item'>
+                    <input type='hidden' name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista' value='@itemVista.IdVista' />
+
+                    @if (itemVista.Checked)
+                    {
+                        <input class='form-check-input' type='checkbox' checked name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked'
+                               value='@itemVista.IdVista'
+                               @Disabled>
+                        @Html.Raw(" [V] ")
+                        @itemVista.VistaNombre
+                    }
+                    else
+                    {
+                        <input class='form-check-input' type='checkbox' name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked'
+                               value='@itemVista.IdVista'
+                               @Disabled>@Html.Raw(" [V] ") @itemVista.VistaNombre
+                        }
+
+
+
+                    @if (listhijosMenus.Any())
+                    {
+                        correlativoVistaMenu++;
+                        <ul class='ist-group'>
+
+                            @{procesarVistaOpcion(listhijosMenus, vistaOpcionTodos, correlativoPerfil, correlativoMenu, ref correlativoVistaMenu);}
+
+                        </ul>
+                    }
+
+                </li>
+
+                correlativoVistaMenu++;
+
+
+            }
+
+        }
+        else
+        {
+
+            var listOpciones = vistaOpcion.Where(x => x.VistaOpcion == 1).OrderBy(z => z.Orden);
+
+            if (listOpciones.Any())
+            {
+                @foreach (var itemOpcion in listOpciones)
+                {
+                    <li class='list-group-item'>
+                        <input type='hidden' name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVista' value='@itemOpcion.IdVista' />
+                        @if (itemOpcion.Checked)
+                        {
+                            <input class='form-check-input' type='checkbox' checked name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked'
+                                   value='@itemOpcion.IdVista'
+                                   @Disabled>@Html.Raw(" [O] ") @itemOpcion.VistaNombre
+                            }
+                            else
+                            {
+                                <input class='form-check-input' type='checkbox' name='Perfiles[@correlativoPerfil].Menus[@correlativoMenu].VistaMenu[@correlativoVistaMenu].IdVistaChecked'
+                                       value='@itemOpcion.IdVista'
+                                       @Disabled>@Html.Raw(" [O] ") @itemOpcion.VistaNombre
+                                }
+                    </li>
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+@if (Model != null)
+{
+    int correlativoPerfil = 0;
+    int correlativoMenu = 0;
+
+    <input type='hidden' name='Perfiles[@correlativoPerfil].IdPerfil' value='1' />
+
+    <ul class='list-group'>
+        @{procesarMenu(Model, ref correlativoMenu);}
     </ul>
 }

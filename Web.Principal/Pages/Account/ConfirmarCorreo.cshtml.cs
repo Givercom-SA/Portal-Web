@@ -28,13 +28,13 @@ namespace Web.Principal.Pages.Account
             _serviceUsuario = serviceUsuario;
         }
 
-        public async Task OnGet(int? token)
+        public async Task OnGet(string token)
         {
-            if(token==null || token<=0)
+            if(string.IsNullOrWhiteSpace(token))
                 Response.Redirect("/");
             else
             {
-                var result =await _serviceUsuario.ConfirmarCorreoUsuario(token.Value);
+                var result =await _serviceUsuario.ConfirmarCorreoUsuario(Int32.Parse(Security.Common.Encriptador.Instance.DesencriptarTexto(token)));
                 if(result.CodigoResultado == -1)
                     Response.Redirect("/");
             }

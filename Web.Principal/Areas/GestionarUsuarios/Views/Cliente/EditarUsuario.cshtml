@@ -274,7 +274,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Solicitud Creada</h5>
+                <h5 class="modal-title">Usuario Creada</h5>
 
             </div>
             <div class="modal-body">
@@ -370,9 +370,17 @@
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
 
-                            $('#alertError').show();
-                            outputDetalleError.html(errorThrown);
+
                             $(".loader").fadeOut("slow");
+
+
+                            $("#dialogError").modal("show");
+
+                                if (jqXHR.status == 401) {
+                                    $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                                } else {
+                                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                                }
 
                         },
                         success: function (response) {

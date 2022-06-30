@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Servicio.Acceso.Models.LoginUsuario;
+using Servicio.Acceso.Models.Menu;
 using Servicio.Acceso.Models.Perfil;
 using Servicio.Acceso.Models.SolicitarAcceso;
+using Servicio.Acceso.Models.Vista;
 using Servicio.Acceso.Repositorio;
 using Servicio.Acceso.ServiceConsumer;
 using System;
@@ -16,10 +18,12 @@ using System.Threading.Tasks;
 using TransMares.Core;
 using ViewModel.Datos.Acceso;
 using ViewModel.Datos.LoginInicial;
+using ViewModel.Datos.Menu;
 using ViewModel.Datos.Message;
 using ViewModel.Datos.Perfil;
 using ViewModel.Datos.SolictudAcceso;
 using ViewModel.Datos.UsuarioRegistro;
+using ViewModel.Datos.Vista;
 
 namespace Servicio.Acceso.Controllers
 {
@@ -66,7 +70,70 @@ namespace Servicio.Acceso.Controllers
             }
             return _mapper.Map<UsuarioRegistroVM>(result);
         }
-
+        [HttpPost]
+        [Route("menu-registrar")]
+        public ActionResult<MantenimientoMenuResultVM> MenuRegistrar([FromBody] MantenimientoMenuParameterVM parameter)
+        {
+            MantenimientoMenuResult result = new MantenimientoMenuResult();
+            try
+            {
+                result = _repository.RegistrarMenu(_mapper.Map<MantenimientoMenuParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<MantenimientoMenuResultVM>(result);
+        }
+        [HttpPost]
+        [Route("menu-modificar")]
+        public ActionResult<MantenimientoMenuResultVM> MenuModificar([FromBody] MantenimientoMenuParameterVM parameter)
+        {
+            MantenimientoMenuResult result = new MantenimientoMenuResult();
+            try
+            {
+                result = _repository.ModificarMenu(_mapper.Map<MantenimientoMenuParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<MantenimientoMenuResultVM>(result);
+        }
+        [HttpPost]
+        [Route("vista-registrar")]
+        public ActionResult<MantenimientoVistaResultVM> VistaRegistrar([FromBody] MantenimientoVistaParameterVM parameter)
+        {
+            MantenimientoVistaResult result = new MantenimientoVistaResult();
+            try
+            {
+                result = _repository.RegistrarVista(_mapper.Map<MantenimientoVistaParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<MantenimientoVistaResultVM>(result);
+        }
+        [HttpPost]
+        [Route("vista-modificar")]
+        public ActionResult<MantenimientoVistaResultVM> VistaModificar([FromBody] MantenimientoVistaParameterVM parameter)
+        {
+            MantenimientoVistaResult result = new MantenimientoVistaResult();
+            try
+            {
+                result = _repository.ModificarVista(_mapper.Map<MantenimientoVistaParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<MantenimientoVistaResultVM>(result);
+        }
         [HttpGet]
         [Route("usuario-leer/{IdUsuario}")]
         public ActionResult<UsuarioRegistroVM> UsuarioLeer(int IdUsuario)
@@ -82,6 +149,91 @@ namespace Servicio.Acceso.Controllers
             }
             return _mapper.Map<UsuarioRegistroVM>(result);
         }
+
+        [HttpGet]
+        [Route("vistas-todos")]
+        public ActionResult<ListarTodoVistaResultVM> ListarTodoVistas()
+        {
+            ListarTodoVistaResult result = new ListarTodoVistaResult();
+            try
+            {
+                result = _repository.ListarTodoVistas();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarTodoVistaResultVM>(result);
+        }
+
+        [HttpGet]
+        [Route("menus-todos")]
+        public ActionResult<ListarTodoMenusResultVM> ListarTodoMenus()
+        {
+            ListarTodoMenuResult result = new ListarTodoMenuResult();
+            try
+            {
+                result = _repository.ListarTodoMenus();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarTodoMenusResultVM>(result);
+        }
+
+        [HttpGet]
+        [Route("leer-menu/{IdMenu}")]
+        public ActionResult<LeerMenusResultVM> LeerMenu(int IdMenu)
+        {
+            LeerMenuResult leerMenusResultVM = new LeerMenuResult();
+            try
+            {
+                leerMenusResultVM = _repository.LeerMenus(IdMenu);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<LeerMenusResultVM>(leerMenusResultVM);
+        }
+        [HttpGet]
+        [Route("vistas-para-menu")]
+        public ActionResult<LeerMenusResultVM> ListarTodasVistasParaMenu()
+        {
+            LeerMenuResult leerMenusResultVM = new LeerMenuResult();
+            try
+            {
+                leerMenusResultVM = _repository.ListarTodasVistasParaMenu();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<LeerMenusResultVM>(leerMenusResultVM);
+        }
+
+        [HttpGet]
+        [Route("leer-vista/{IdVista}")]
+        public ActionResult<LeerVistaResultVM> LeerVista(int IdVista)
+        {
+            LeerVistaResult leerVista = new LeerVistaResult();
+            try
+            {
+                leerVista = _repository.LeerVista(IdVista);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<LeerVistaResultVM>(leerVista);
+        }
+
 
         [HttpPost]
         [Route("solicitar-acceso")]
@@ -338,6 +490,56 @@ namespace Servicio.Acceso.Controllers
             return _mapper.Map<ObtenerPerfilResultVM>(result);
         }
 
+
+        [HttpPost]
+        [Route("obtener-perfil-usuario")]
+        public ActionResult<ObtenerPerfilResultVM> ObtenerPerfilUsuario([FromBody] PerfilParameterVM parameter)
+        {
+            ObtenerPerfilResult result = new ObtenerPerfilResult();
+            try
+            {
+                result = _repository.ObtenerPerfilPorUsuario(parameter.IdPerfil,parameter.IdUsuario);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ObtenerPerfilResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("obtener-menus")]
+        public ActionResult<ListarMenusResultVM> ObtenerMenus([FromBody] ListarMenusParameterVM parameter)
+        {
+            ListarMenuResult result = new ListarMenuResult();
+            try
+            {
+                result = _repository.ListarMenus(_mapper.Map<ListarMenuParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarMenusResultVM>(result);
+        }
+        [HttpPost]
+        [Route("obtener-vistas")]
+        public ActionResult<ListarVistasResultVM> ObtenerVistas([FromBody] ListarVistaParameterVM parameter)
+        {
+            ListarVistaResult result = new ListarVistaResult();
+            try
+            {
+                result = _repository.ListarVistas(_mapper.Map<ListarVistaParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarVistasResultVM>(result);
+        }
         [HttpPost]
         [Route("obtener-perfiles-entidad")]
         public ActionResult<ListarPerfilesResultVM> ObtenerPerfilesPorEntidad([FromBody] PerfilParameterVM parameter)
@@ -384,6 +586,57 @@ namespace Servicio.Acceso.Controllers
                 return StatusCode(500, e.Message);
             }
             return _mapper.Map<PerfilResultVM>(result);
+        }
+
+
+        [HttpPost]
+        [Route("vista-listar-area")]
+        public ActionResult<ListarAreaControllerActionResultVM> ListarSoloArea([FromBody] ListarAreaControllerActionParameterVM parameter)
+        {
+            ListarAreaControllerActionResult result = new ListarAreaControllerActionResult();
+            try
+            {
+                result = _repository.ListarSoloAreas(_mapper.Map<ListarAreaControllerActionParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarAreaControllerActionResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("vista-listar-controller")]
+        public ActionResult<ListarAreaControllerActionResultVM> ListarSoloController([FromBody] ListarAreaControllerActionParameterVM parameter)
+        {
+            ListarAreaControllerActionResult result = new ListarAreaControllerActionResult();
+            try
+            {
+                result = _repository.ListarSoloController(_mapper.Map<ListarAreaControllerActionParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarAreaControllerActionResultVM>(result);
+        }
+        [HttpPost]
+        [Route("vista-listar-action")]
+        public ActionResult<ListarAreaControllerActionResultVM> ListarSoloAction([FromBody] ListarAreaControllerActionParameterVM parameter)
+        {
+            ListarAreaControllerActionResult result = new ListarAreaControllerActionResult();
+            try
+            {
+                result = _repository.ListarSoloAction(_mapper.Map<ListarAreaControllerActionParameter>(parameter));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<ListarAreaControllerActionResultVM>(result);
         }
 
         [HttpPost]

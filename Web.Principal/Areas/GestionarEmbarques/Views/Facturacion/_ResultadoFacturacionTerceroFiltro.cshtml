@@ -7,13 +7,13 @@
         switch (Estado)
         {
             case "SP": //Pendiente
-                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge badge-light text-body'>{1}</span></a>",id, EstadoNombre);
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> {1}</a>", id, EstadoNombre);
                 break;
             case "SA": //Aprobado
-                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge bg-light text-success'>{1}</span></a>",id, EstadoNombre);
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'>{1}</a>",id, EstadoNombre);
                 break;
             case "SR": //Rechazado
-                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> <span class='badge bg-light text-danger'>{1}</span></a>", id, EstadoNombre);
+                strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'> {1}</a>", id, EstadoNombre);
                 break;
         }
         return strEstado;

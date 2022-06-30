@@ -25,11 +25,7 @@ namespace Servicio.Notificacion
     {
         public Startup(IConfiguration configuration)
         {
-            /*Log.Logger = new LoggerConfiguration()
-               .Enrich
-               .FromLogContext()
-               .WriteTo.RollingFile(@"C:/Logs/AFPnet/Serilog.log", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level:u4}] {Message}{NewLine}{Exception}")               
-               .CreateLogger();*/
+           
 
             Configuration = configuration;
         }
@@ -70,8 +66,8 @@ namespace Servicio.Notificacion
 
             var serviceProvider = new RegistroDependencias(services)
                 .QueryModule
-                    .UseConnectionStringPCR(Configuration.GetConnectionString("AFPnet"))
-                    .UseConnectionStringAfiliado(Configuration.GetConnectionString("AFPnet.Afiliado"))
+                    .UseConnectionStringPCR(Configuration.GetConnectionString("mssqldb"))
+                    //.UseConnectionStringAfiliado(Configuration.GetConnectionString("mssqldb.Afiliado"))
                     .UseAssemblyTypes(typeof(Startup).Assembly)
                     .Register()
                 .ServiceModule

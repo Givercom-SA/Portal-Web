@@ -52,6 +52,10 @@ namespace Servicio.Embarque.Profiles
             CreateMap<AsignarAgenteCrearParameter, AsignarAgenteCrearParameterVM>();
             CreateMap<AsignarAgenteEstadoParameter, AsignarAgenteEstadoParameterVM>();
             CreateMap<AsignarAgenteListarParameter, AsignarAgenteListarParameterVM>();
+            CreateMap<CrearDireccionamientoPermanenteParameter, CrearDireccionamientoPermanenteParameterVM>();
+            CreateMap<CrearDireccionamientoPermanenteParameterVM, CrearDireccionamientoPermanenteParameter>();
+
+
 
             CreateMap<CrearLiberacionCargaParameterVM , CrearLiberacionCargaParameter>().ForMember(s => s.Detalles, o => o.MapFrom(s => s.Detalles));
             CreateMap<LiberacionCargaDetalleVM , LiberacionCargaDetalle>();
@@ -67,6 +71,10 @@ namespace Servicio.Embarque.Profiles
             CreateMap<EntidadTipo, EntidadTipoVM>();
 
 
+            CreateMap<CrearDireccionamientoPermanenteResult, CrearDireccionamientoPermanenteResultVM>()
+        .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+           .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+            
             CreateMap<CrearLiberacionCargaResult, CrearLiberacionCargaResultVM>()
         .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));

@@ -95,6 +95,52 @@
     </form>
 </div>
 
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialogOk" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 
 
@@ -157,9 +203,16 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
+
                     $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
 
                 },
                 success: function (response) {
@@ -189,7 +242,7 @@
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+
 
                 }
             });

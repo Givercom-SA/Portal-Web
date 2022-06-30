@@ -31,28 +31,23 @@
             });
 
 
-
-        //$("#modalClientes").modal("show");
         if (nombreEmpresaSeleccionado=="")
         {
-        $("#modalEmpresaTransmares").modal("show");
+         $("#modalEmpresaTransmares").modal("show");
         }
 
-
-        //listarClientes();
 
     });
 
-        function sessionKeepAlive() {
+    function sessionKeepAlive() {
 
             $.get("@Url.RouteUrl("KeepAlive")", function (data) { });
-        }
-
-
+      }
 
     function listarClientes() {
 
         try {
+
             let dtsClientes = new simpleDatatables.DataTable("#dtsClientes", {
                 searchable: true,
                 labels: {
@@ -62,53 +57,59 @@
                     placeholder: "Filtro rápido...",
                 },
             });
-        } catch (err) {
 
+        } catch (err) {
 
         }
 
     }
 
-
     function ListarEntidadTipo() {
 
-         $.ajax({
-             type: "GET",
-             url: "@Url.Action("ListarEntidadTipo", "Entidad",new { area="GestionarEmbarques"})",
-             data: null,
-             async: true,
-             contentType: 'application/html; charset=utf-8',
-             type: 'GET',
-             dataType: 'html',
-             beforeSend: function () {
-                 $("#btnSuperBarListarEntidadTipo").prop("disabled", true);
-                 $("#spinnerSuperBarListarEntidadTipo").show();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ListarEntidadTipo", "Entidad",new { area="GestionarEmbarques"})",
+            data: null,
+            async: true,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () {
 
-             },
-         })
-             .done(function (response) {
+                $("#btnSuperBarListarEntidadTipo").prop("disabled", true);
+                $("#spinnerSuperBarListarEntidadTipo").show();
 
-                     $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
-                 $("#spinnerSuperBarListarEntidadTipo").hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
 
-                 $("#modelEntidades").modal("show");
-                 $("#divContentEnitdad").html(response);
+                $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
+                $("#spinnerSuperBarListarEntidadTipo").hide();
 
-                 ListarEntidadTipoDataTable();
+                $("#dialogPrincipalError").modal("show");
 
+                if (jqXHR.status == 401) {
+                    $("#outputMensajePrincipalError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                }
 
-             })
-             .fail(function (xhr, status, error) {
-                 $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
-                 $("#spinnerSuperBarListarEntidadTipo").hide();
+            },
+            success: function (response) {
 
-                 alert(error);
+                $("#btnSuperBarListarEntidadTipo").prop("disabled", false);
+                $("#spinnerSuperBarListarEntidadTipo").hide();
 
-             })
-             .always(function () {
+                $("#modelEntidades").modal("show");
+                $("#divContentEnitdad").html(response);
 
+                ListarEntidadTipoDataTable();
 
-             });
+            },
+            complete: function (data) {
+                $(".loader").fadeOut("slow");
+
+            }
+        });
 
      }
 
@@ -136,25 +137,32 @@
 
     function SeleccionarEntidad(IdEntidad, IdPerfil, Contador) {
 
-        
+
 
         $.ajax({
 
-             url: '@Url.Action("CambiarSessionEntidad", "Login",new { area="GestionarAccesos"})',
+             url: '@Url.Action("CambiarSessionEntidad", "Entidad",new { area="GestionarEmbarques"})',
              data: { id: IdEntidad, idPerfil: IdPerfil},
             contentType: 'json',
             async: true,
              type: 'GET',
              dataType: 'json',
              beforeSend: function () {
-                 
+
                  $("#spinnerListaEntidadSeleccionar_" + Contador).show();
-              
+
 
              },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#spinnerListaEntidadSeleccionar_" + Contador).hide();
-                alert("Ocurrio un errore inesperado");
+
+                $("#dialogPrincipalError").modal("show");
+
+                if (jqXHR.status == 401) {
+                    $("#outputMensajePrincipalError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                }
 
              },
              success: function (response) {
@@ -168,11 +176,12 @@
          });
 
     }
+
     function CerrarSesionModo() {
 
         $.ajax({
 
-            url: '@Url.Action("CerrarSesionInspector", "Login",new { area="GestionarAccesos"})',
+            url: '@Url.Action("CerrarSesionInspector", "Entidad",new { area="GestionarEmbarques"})',
             async: true,
              contentType: 'json',
              type: 'GET',
@@ -182,11 +191,18 @@
                  $("#spinnerSuperBarCerrarSesionModo").show();
              },
             error: function (jqXHR, textStatus, errorThrown) {
-                
-                
+
+
                 $("#btnSuperCerrarSesionModo").prop("disabled", false);
                 $("#spinnerSuperBarCerrarSesionModo").hide();
-                 alert("Ocurrio un errore inesperado.");
+
+                $("#dialogPrincipalError").modal("show");
+
+                if (jqXHR.status == 401) {
+                    $("#outputMensajePrincipalError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                }
              },
              success: function (response) {
                  $("#btnSuperCerrarSesionModo").prop("disabled", false);
@@ -202,6 +218,5 @@
          });
 
     }
-
 
 </script>

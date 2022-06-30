@@ -44,6 +44,9 @@ namespace Servicio.Acceso.Models.Perfil
         public bool Checked { get; set; }
         public string IdVistaChecked
         { get; set; }
+        public int IdPadre { get; set; }
+        public int Orden { get; set; }
+        
 
     }
 

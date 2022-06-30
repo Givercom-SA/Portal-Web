@@ -29,7 +29,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12" style="text-align:right;">
-            <form method="post" asp-area="" asp-controller="Seguridad" asp-action="CerrarSesionAsync">
+            <form method="post" action="@Url.RouteUrl("CerrarSesionAsync")">
                 <button type="button" class="btn btn-sm btn-info" onclick= "history.go(-1)">Volver</button>
                 <button type="submit" class="btn btn-sm btn-secondary">Cerrar Sesión</button>
             </form>

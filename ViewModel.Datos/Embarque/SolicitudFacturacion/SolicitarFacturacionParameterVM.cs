@@ -68,7 +68,9 @@ namespace ViewModel.Datos.Embarque.SolicitudFacturacion
 
         public string Servicio { get; set; }
         public string Origen { get; set; }
-      
+
+        public string ParKey { get; set; }
+
         public List<CobroClienteVM> CobrosPendientesCliente { get; set; }
 
     }

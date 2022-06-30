@@ -36,11 +36,11 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         private readonly ServicioEmbarque _serviceEmbarque;
         private readonly ServicioMaestro _servicMaestro;
         private readonly ServicioMessage _servicioMessage;
-        
+
         private readonly IMapper _mapper;
         private static ILogger _logger = ApplicationLogging.CreateLogger("FacturacionController");
 
- 
+
         private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
         private readonly IUserConnectionManager _userConnectionManager;
 
@@ -49,7 +49,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                                     ServicioEmbarque serviceEmbarque,
                                     IMapper mapper,
                                     ServicioMessage servicioMessage,
-                                
+
             IHubContext<NotificationUserHub> notificationUserHubContext,
             IUserConnectionManager userConnectionManage)
         {
@@ -59,7 +59,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _servicioMessage = servicioMessage;
             _mapper = mapper;
 
-    
+
             _notificationUserHubContext = notificationUserHubContext;
             _userConnectionManager = userConnectionManage;
 
@@ -84,7 +84,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             ListCobrosPendienteEmbarqueVM model = new ListCobrosPendienteEmbarqueVM();
 
-            model.CobrosPendientesEmbarque = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(keyBl,"1");
+            model.CobrosPendientesEmbarque = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(keyBl, "1");
 
             if (CobrosPendientes != null)
             {
@@ -107,10 +107,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                     model.CobrosPendientesEmbarque.RemoveAll(xx => uids.Contains(xx.ID));
 
-                    
+
                 }
             }
-        
+
 
             model.KEYBL = keyBl;
             model.BL = NroBL;
@@ -137,7 +137,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             model.EstaAsginadoAgenteAduanas = "0";
             model.SolicitarFacturacionTercero.TipoEntidad = "CE";
 
-            if (resultVerificarAsignacionAgenteAduanas.CodigoResultado==1
+            if (resultVerificarAsignacionAgenteAduanas.CodigoResultado == 1
                 && resultVerificarAsignacionAgenteAduanas.EstadoAsignacion == EmbarqueEstadoAgenteAduanas.APROBADO) {
                 model.EstaAsginadoAgenteAduanas = "1";
                 model.SolicitarFacturacionTercero.AgenteAduanasRazonSocial = resultVerificarAsignacionAgenteAduanas.RazonSocial.Trim();
@@ -147,7 +147,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             model.Tenor = new Tenor();
             model.Tenor.NroEmbarque = NroBL;
-            model.Tenor.RazonSocialEmpresaLogeada = userSesion.RazonSocial ;
+            model.Tenor.RazonSocialEmpresaLogeada = userSesion.RazonSocial;
             model.Tenor.RucEmpresaLogeada = userSesion.NumeroDocumento;
             model.Tenor.RepresentanteLegalEmpresaLogeada = userSesion.obtenerNombreCompleto();
 
@@ -159,29 +159,29 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         public async Task<IActionResult> BuscarSolicitudFacturaTerceroClientes(ListCobrosPendienteEmbarqueVM model)
         {
 
-                var viewmodel = model.SolicitarFacturacionTercero;
+            var viewmodel = model.SolicitarFacturacionTercero;
 
-                viewmodel.ClientesFacturarTerceros = new List<ClienteFacturarTerceroVM>();
+            viewmodel.ClientesFacturarTerceros = new List<ClienteFacturarTerceroVM>();
 
-                string tipoDocumento = "";
+            string tipoDocumento = "";
 
 
-                if (viewmodel.TipoDocumento.Equals(TipoDocumento.DNI))
-                {
-                    tipoDocumento = EntidadTransmaresTipoDocumento.DNI;
-                }
-                else
-                    if (viewmodel.TipoDocumento.Equals(TipoDocumento.RUC))
-                {
-                    tipoDocumento = EntidadTransmaresTipoDocumento.RUC;
-                }
+            if (viewmodel.TipoDocumento.Equals(TipoDocumento.DNI))
+            {
+                tipoDocumento = EntidadTransmaresTipoDocumento.DNI;
+            }
+            else
+                if (viewmodel.TipoDocumento.Equals(TipoDocumento.RUC))
+            {
+                tipoDocumento = EntidadTransmaresTipoDocumento.RUC;
+            }
 
-                viewmodel.ClientesFacturarTerceros = await _serviceEmbarques.ObtenerEntidades(tipoDocumento,
-                                                                                                viewmodel.NumeroDocumento == null ? "" : viewmodel.NumeroDocumento,
-                                                                                                viewmodel.RazonSocialNombres == null ? "" : viewmodel.RazonSocialNombres,
-                                                                                                EntidadTransmaresOpcion.REGISTRO_INSTRUCCION_FACTU_TERCERO,
-                                                                                                EntidadTransmaresTipoEntidad.REGISTRO_INSTRUCCION_FACTU_TERCERO);
-                model.SolicitarFacturacionTercero = viewmodel;
+            viewmodel.ClientesFacturarTerceros = await _serviceEmbarques.ObtenerEntidades(tipoDocumento,
+                                                                                            viewmodel.NumeroDocumento == null ? "" : viewmodel.NumeroDocumento,
+                                                                                            viewmodel.RazonSocialNombres == null ? "" : viewmodel.RazonSocialNombres,
+                                                                                            EntidadTransmaresOpcion.REGISTRO_INSTRUCCION_FACTU_TERCERO,
+                                                                                            EntidadTransmaresTipoEntidad.REGISTRO_INSTRUCCION_FACTU_TERCERO);
+            model.SolicitarFacturacionTercero = viewmodel;
 
 
             return PartialView("_SolicitudFactTerceroClientes", model);
@@ -190,16 +190,30 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
         [HttpGet()]
-        public async Task<IActionResult> SolicitudFacturacion(string keyBl, string servicio, string origen) { 
-        
+        public async Task<IActionResult> SolicitudFacturacion(string parkey) {
+
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
+
+            string[] parametros = dataDesencriptada.Split('|');
+
+
+            string IdKeyBl = parametros[0];
+            string anio = parametros[1];
+            string tipofiltro = parametros[2];
+            string filtro = parametros[3];
+            string servicio = parametros[4];
+            string origen = parametros[5];
+
+
             SolicitarFacturacionParameterVM model = new SolicitarFacturacionParameterVM();
-            var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(keyBl, servicio);
+            var embarqueSeleccionado = await _serviceEmbarques.ObtenerEmbarque(IdKeyBl, servicio);
             model.CobrosPendientesCliente = new List<CobroClienteVM>();
-            var cobrosPendientesFacturar = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(keyBl, "1");
-            model.KEYBLD = keyBl;
+            var cobrosPendientesFacturar = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(IdKeyBl, "1");
+            model.KEYBLD = IdKeyBl;
             model.NroBl = embarqueSeleccionado.NROBL;
             model.Servicio = servicio;
             model.Origen = origen;
+            model.ParKey = parkey;
 
             var listTipoDocumnentoResult = await _servicMaestro.ObtenerParametroPorIdPadre(38);
             if (listTipoDocumnentoResult.CodigoResultado == 0)
@@ -209,17 +223,17 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             ListarProvisionFacturacionTerceroParameterVM listarProvisionFacturacionTerceroParameterVM = new ListarProvisionFacturacionTerceroParameterVM();
             listarProvisionFacturacionTerceroParameterVM.Provision = new List<ProvisionVM>();
-            listarProvisionFacturacionTerceroParameterVM.KeyBl =keyBl;
+            listarProvisionFacturacionTerceroParameterVM.KeyBl = IdKeyBl;
 
-            foreach (var item in cobrosPendientesFacturar) 
+            foreach (var item in cobrosPendientesFacturar)
             {
                 ProvisionVM provisionVM = new ProvisionVM();
-                provisionVM.keyBl =item.keyBl;
+                provisionVM.keyBl = item.keyBl;
                 provisionVM.NroBl = item.NroBl;
                 provisionVM.IdProvision = item.ID;
                 listarProvisionFacturacionTerceroParameterVM.Provision.Add(provisionVM);
             }
-            
+
             var ProvisionFacturacionTercero = await _serviceEmbarque.ObtenerProvicionFacturacionTercero(listarProvisionFacturacionTerceroParameterVM);
 
             if (ProvisionFacturacionTercero.PrivisionFacturacionTercero.Count() == 0)
@@ -232,7 +246,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 objCobroCLiente.RazonSocialCliente = usuario.RazonSocial;
                 objCobroCLiente.IdFacturacionTercero = "0";
 
-                objCobroCLiente.MontoTotal = Math.Truncate(cobrosPendientesFacturar.Sum(x => Convert.ToDouble(x.Total)) * 100) / 100 ;
+                objCobroCLiente.MontoTotal = Math.Truncate(cobrosPendientesFacturar.Sum(x => Convert.ToDouble(x.Total)) * 100) / 100;
 
                 model.CobrosPendientesCliente.Add(objCobroCLiente);
 
@@ -279,7 +293,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                     cobroCLiente.CobrosPendientesEmbarque = cobrosPendientesFacturar.Where(x => idProvisiones.Contains(x.ID)).ToList();
 
-                    cobroCLiente.MontoTotal= cobroCLiente.CobrosPendientesEmbarque.Sum(x => Convert.ToDouble( x.Total));
+                    cobroCLiente.MontoTotal = cobroCLiente.CobrosPendientesEmbarque.Sum(x => Convert.ToDouble(x.Total));
 
                     model.CobrosPendientesCliente.Add(cobroCLiente);
                 }
@@ -296,7 +310,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 {
                     var objCobroCLiente = new CobroClienteVM();
                     objCobroCLiente.CobrosPendientesEmbarque = cobrosPendientesFacturar;
-                    objCobroCLiente.TipoDocumentoCliente ="RUC";
+                    objCobroCLiente.TipoDocumentoCliente = "RUC";
                     objCobroCLiente.NroDocumentoCliente = usuario.Sesion.RucIngresadoUsuario;
                     objCobroCLiente.RazonSocialCliente = usuario.RazonSocial;
                     objCobroCLiente.IdFacturacionTercero = "0";
@@ -306,7 +320,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 }
 
                 // Excluir provisiones registrados
-                var listSolicitudFacturacionRegistrado = await _serviceEmbarque.ListarSolicitudFacturacionPorKeyBl(keyBl);
+                var listSolicitudFacturacionRegistrado = await _serviceEmbarque.ListarSolicitudFacturacionPorKeyBl(IdKeyBl);
                 List<string> IDsProvosionRegistrado = new List<string>();
 
                 foreach (var itemrReg in listSolicitudFacturacionRegistrado.SolicitudFacturaciones)
@@ -328,10 +342,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             // verificar si tiene credito
 
-            var resultCredito= await  _serviceEmbarques.AplicaCredito(keyBl,
+            var resultCredito = await _serviceEmbarques.AplicaCredito(IdKeyBl,
               usuario.obtenerTipoEntidadTransmares(),
               usuario.NumeroDocumento,
-              null,0);
+              null, 0);
 
             List<CreditoCobroModel> listCreditos = new List<CreditoCobroModel>();
 
@@ -339,7 +353,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             {
                 model.AplicaCredito = true;
 
-                var listarFormaCredito = await _serviceEmbarques.ObtenerCreditoCobro(keyBl,
+                var listarFormaCredito = await _serviceEmbarques.ObtenerCreditoCobro(IdKeyBl,
                usuario.obtenerTipoEntidadTransmares(),
                usuario.NumeroDocumento,
                null, 1);
@@ -360,7 +374,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         public async Task<IActionResult> VerSolicitud(string parkey)
         {
             var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
-            int codigoSolicitud =Int32.Parse(dataDesencriptada);
+            int codigoSolicitud = Int32.Parse(dataDesencriptada);
 
             VerSolicitudFacturacionModel model = new VerSolicitudFacturacionModel();
 
@@ -373,8 +387,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             {
                 model.LeerSolicitudFacturacionBandejaResult = resultLeerSolicitudFacturacion;
             }
-            
-            
+
+
 
 
 
@@ -469,7 +483,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GestionarSolicitudFacturacion(string parkey)
+        public async Task<IActionResult> ValidarPrevioSolicitudFacturacion(string parkey)
         {
 
             var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
@@ -478,7 +492,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             string KeyBL = parametros[0];
             string servicio = parametros[1];
 
-            ActionResponse ActionResponse = new();            
+            ActionResponse ActionResponse = new();
             ActionResponse.Codigo = 0;
             ActionResponse.Mensaje = "";
 
@@ -548,13 +562,13 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                             ActionResponse.Mensaje = $"Estimado cliente, ya existe una solicitud en proceso (Nro. Solicitud: {listSolicitudFacturacionRegistrado.SolicitudFacturaciones.ElementAt(0).CodigoSolicitud}).";
                     }
                     else {
-                        ActionResponse.Mensaje = $"Estimado cliente, ya existe más de una solicitud de facturación. (Nro. de Solicitudes: {   String.Join(", ", listSolicitudFacturacionRegistrado.SolicitudFacturaciones.Select(x=>x.CodigoSolicitud).ToArray())})";
+                        ActionResponse.Mensaje = $"Estimado cliente, ya existe más de una solicitud de facturación. (Nro. de Solicitudes: {   String.Join(", ", listSolicitudFacturacionRegistrado.SolicitudFacturaciones.Select(x => x.CodigoSolicitud).ToArray())})";
                     }
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e,"FacturacionController");
+                _logger.LogError(e, "FacturacionController");
                 ActionResponse.Codigo = -1;
                 ActionResponse.Mensaje = "Error al consultar el servicio.";
             }
@@ -566,7 +580,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             SolicitarFacturacionParameterVM model = new SolicitarFacturacionParameterVM();
             var cobrosPendientesFacturar = await _serviceEmbarques.ObtenerCobrosPendienteEmbarque(keyBl, "1");
 
-        
+
             model.KEYBLD = keyBl;
             model.NroBl = nroBl;
 
@@ -595,7 +609,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 model.CobrosPendientesCliente = new List<CobroClienteVM>();
                 var objCobroCLiente = new CobroClienteVM();
                 objCobroCLiente.CobrosPendientesEmbarque = cobrosPendientesFacturar;
-   
+
 
                 objCobroCLiente.MontoTotal = Math.Truncate(cobrosPendientesFacturar.Sum(x => Convert.ToDouble(x.Total)) * 100) / 100;
 
@@ -658,7 +672,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             if (model.CobrosPendientesCliente == null)
                 return true;
 
-            if (model.CobrosPendientesCliente.Count() <=0 )
+            if (model.CobrosPendientesCliente.Count() <= 0)
                 return true;
 
             if (listSolicitudFacturacionRegistrado == null)
@@ -672,7 +686,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
 
-          if(  listSolicitudFacturacionRegistrado.SolicitudFacturaciones.Count() == model.CobrosPendientesCliente.Count())
+            if (listSolicitudFacturacionRegistrado.SolicitudFacturaciones.Count() == model.CobrosPendientesCliente.Count())
                 return false;
 
 
@@ -688,7 +702,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         {
             var ActionResponse = new ActionResponse();
             ActionResponse.Codigo = 0;
-            ActionResponse.Mensaje= "";
+            ActionResponse.Mensaje = "";
             model.FechaTope = DateTime.Now.ToString("yyyy-MM-dd");
 
             try
@@ -701,9 +715,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         model.IdEntidadSolicita = usuario.IdEntidad;
                         model.IdUsuarioSolicita = usuario.idUsuario;
                         model.IdUsuarioCrea = usuario.idUsuario;
-                        
+
                         model.CodigoTipoEntidad = usuario.TipoEntidad;
-                        model.CodigoEmpresaGtrm =this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                        model.CodigoEmpresaGtrm = this.usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
                         var result = await _serviceEmbarque.SolicitarFacturacionRegistrar(model);
 
                         if (result.CodigoResultado == 0)
@@ -792,9 +806,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             try
             {
-                var resultSolicitudFacturacion = 
+                var resultSolicitudFacturacion =
                     await _serviceEmbarque.LeerSolicitudFacturacionBandeja(
-                        new LeerSolicitudFacturacionBandejaParameterVM() {  IdSolicitudFacturacion = model.IdSolicitudFacturacion });
+                        new LeerSolicitudFacturacionBandejaParameterVM() { IdSolicitudFacturacion = model.IdSolicitudFacturacion });
 
                 if (model.Estado.Equals("SR"))
                 {
@@ -815,7 +829,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                         EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
                             resultSolicitudFacturacion.SolicitudFacturacion.NroBl,
-                            "Rechazada", 
+                            "Rechazada",
                             resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                             $"Motivo: {model.Mensaje}");
 
@@ -829,7 +843,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     }
 
                 }
-                else if(model.Estado.Equals("SA")) 
+                else if (model.Estado.Equals("SA"))
                 {
                     RegistroSolicitudRequestModel registroSolicitudRequestModel = new RegistroSolicitudRequestModel();
                     registroSolicitudRequestModel.pIdSolicitudPW = resultSolicitudFacturacion.SolicitudFacturacion.IdSolicitudFacturacion.ToString();
@@ -839,10 +853,10 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     registroSolicitudRequestModel.pEmpresa = usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
                     registroSolicitudRequestModel.pKeybld = resultSolicitudFacturacion.SolicitudFacturacion.KeyBld;
                     registroSolicitudRequestModel.pRucCliente = resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteRUC;
-                    registroSolicitudRequestModel.pTipoCliente =usuario.obtenerTipoEntidadTransmares(resultSolicitudFacturacion.SolicitudFacturacion.CodigoTipoEntidad);
-                    registroSolicitudRequestModel.pUsuarioPW = resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo ;
+                    registroSolicitudRequestModel.pTipoCliente = usuario.obtenerTipoEntidadTransmares(resultSolicitudFacturacion.SolicitudFacturacion.CodigoTipoEntidad);
+                    registroSolicitudRequestModel.pUsuarioPW = resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo;
                     registroSolicitudRequestModel.pUsuarioFinPW = usuario.CorreoUsuario;
-                    registroSolicitudRequestModel.pFechaEvaluacion =DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                    registroSolicitudRequestModel.pFechaEvaluacion = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
                     if (
                         (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO) &&
@@ -860,7 +874,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     if (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CREDITO)
                     {
                         registroSolicitudRequestModel.pFormaPago = resultSolicitudFacturacion.SolicitudFacturacion.CodigoCredito;
-                    } 
+                    }
 
                     if (resultSolicitudFacturacion.SolicitudFacturacion.TipoPago == Utilitario.Constante.EmbarqueConstante.TipoPago.CONTADO)
                     {
@@ -884,8 +898,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                         registroSolicitudRequestModel.pNumeroOperacion = null;
                         registroSolicitudRequestModel.pTipoPago = "1";
                     }
-                   
-                     var resultRegistrarSolicitudFacturacion = await _serviceEmbarques.RegistrarSolicitudFacturacion(registroSolicitudRequestModel);
+
+                    var resultRegistrarSolicitudFacturacion = await _serviceEmbarques.RegistrarSolicitudFacturacion(registroSolicitudRequestModel);
                     // Registrar detalle en TAF
 
                     bool blDetalleFacturacionOk = true;
@@ -910,22 +924,22 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     if (resultRegistrarSolicitudFacturacion.Respuesta == 1 && blDetalleFacturacionOk) {
 
                         SolicitarFacturacionEstadoParameterVM solicitarFacturacionEstadoParameterVM = new SolicitarFacturacionEstadoParameterVM();
-                        solicitarFacturacionEstadoParameterVM.Estado ="SA";
-                        solicitarFacturacionEstadoParameterVM.IdSolicitudFacturacion =model.IdSolicitudFacturacion;
-                        solicitarFacturacionEstadoParameterVM.IdUsuarioEvalua =usuario.idUsuario ;
-                        solicitarFacturacionEstadoParameterVM.ObservacionRechazo =model.Mensaje;
+                        solicitarFacturacionEstadoParameterVM.Estado = "SA";
+                        solicitarFacturacionEstadoParameterVM.IdSolicitudFacturacion = model.IdSolicitudFacturacion;
+                        solicitarFacturacionEstadoParameterVM.IdUsuarioEvalua = usuario.idUsuario;
+                        solicitarFacturacionEstadoParameterVM.ObservacionRechazo = model.Mensaje;
                         solicitarFacturacionEstadoParameterVM.IdSolicitudTAFF = resultRegistrarSolicitudFacturacion.IdSolicitudTAF;
 
                         var resultRegistroSolicitudFacturacionEstado = await _serviceEmbarque.RegistrarSolicitudFacturacionEstado(solicitarFacturacionEstadoParameterVM);
                         if (resultRegistroSolicitudFacturacionEstado.CodigoResultado == 0)
                         {
 
-                          await  EnviarAlerta("Solicitud de Facturación",
-                              $"Aprobado Nro. {resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud}" ,
-                              DateTime.Now.ToString("dd/MM/yyyy"));
+                            await EnviarAlerta("Solicitud de Facturación",
+                                $"Aprobado Nro. {resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud}",
+                                DateTime.Now.ToString("dd/MM/yyyy"));
 
                             EnviarCorreoRespuestaSolicitud(resultSolicitudFacturacion.SolicitudFacturacion.CodigoSolicitud,
-                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "Aprobada", 
+                                resultSolicitudFacturacion.SolicitudFacturacion.NroBl, "Aprobada",
                                 resultSolicitudFacturacion.SolicitudFacturacion.SolicitanteCorreo,
                                 "");
 
@@ -936,8 +950,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                             ActionResponse.Codigo = 1;
                             ActionResponse.Mensaje = $"Se registro la solicitud de facturación, pero ocurrio un error al momento de actualizar los datos de la solicitud.";
                         }
-                        
-                    }else {
+
+                    } else {
                         ActionResponse.Codigo = 1;
                         ActionResponse.Mensaje = $"Ocurrio un error inesperado en los servicios de Transmares Group. Por favor volver a intentar más tarde.";
                     }
@@ -955,7 +969,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
 
 
-        private async Task  EnviarAlerta (string titulo, string mensaje, string fecha) {
+        private async Task EnviarAlerta(string titulo, string mensaje, string fecha) {
 
             //await  _notificationHubContext.Clients.All.SendAsync("sendToUser", titulo, mensaje, fecha);
             try
@@ -971,13 +985,13 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             }
             catch (Exception err) {
 
-                _logger.LogError(err,"Enviar Alerta");
+                _logger.LogError(err, "Enviar Alerta");
 
             }
 
         }
 
-        private  async void EnviarCorreoRespuestaSolicitud(string pSolicitud, string pNroBl, string pEstado, string pCorreo, string MotivoRechazo)
+        private async void EnviarCorreoRespuestaSolicitud(string pSolicitud, string pNroBl, string pEstado, string pCorreo, string MotivoRechazo)
         {
             EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
             enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
@@ -998,7 +1012,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                 if (model.TipoPago.Equals(TipoPago.CREDITO)) {
                     actionResponse = await validarDisponibilidadCredito(model.TipoPago, model.KEYBLD, model.CodigoCredito);
                 }
-                
+
 
             }
             catch (Exception err) {
@@ -1091,9 +1105,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
                         // Lista de correos para enviar
                         var listaFinanzas = await _servicMaestro.ObtenerCorreosPorPerfil(4);
-                        
+
                         // Envio de correo
-               
+
 
                         EnviarMessageCorreoParameterVM enviarMessageCorreoParameterVM = new EnviarMessageCorreoParameterVM();
                         enviarMessageCorreoParameterVM.RequestMessage = new RequestMessage();
@@ -1136,7 +1150,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             }
             catch (Exception err)
             {
-                _logger.LogError(err,"Registro de Facturacion a Tercero");
+                _logger.LogError(err, "Registro de Facturacion a Tercero");
                 ActionResponse.Codigo = -100;
                 ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde";
             }
@@ -1311,7 +1325,83 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             return View(model);
         }
 
-        public async Task<JsonResult> ListarEncriptar(ListarSolicitudFacturacionTerceroModel model)
+
+        [HttpPost]
+        public async Task<JsonResult> AprobarRechazarFacturacionTercero(int Id, string Estado, string Correo)
+        {
+            ActionResponse = new ActionResponse();
+            string EstadoNombre = string.Empty;
+            switch (Estado)
+            {
+                case "SA": EstadoNombre = "aprobó"; break;
+                case "SR": EstadoNombre = "rechazó"; break;
+            }
+
+            try
+            {
+                List<int> listDetalle = new List<int>();
+
+                var sepListarDetalle = await _serviceEmbarque.ListarFacturacionTercerosDetalle(Id);
+
+                switch (Estado)
+                {
+                    case "SA":
+
+                        foreach (var item in sepListarDetalle.ListFacturacionTerceroDetalle)
+                        {
+                            if (sepListarDetalle.TipoEntidad.Equals("AA"))
+                            {
+                                listDetalle.Add(await _serviceEmbarques.ActualizarPagosTercero(sepListarDetalle.EmbarqueKeyBL, long.Parse(item.IdProvision), "", sepListarDetalle.AgenteNumeroDocumento, sepListarDetalle.AgenteRazonSocial));
+                            }
+                            else
+                            {
+                                listDetalle.Add(await _serviceEmbarques.ActualizarPagosTercero(sepListarDetalle.EmbarqueKeyBL, long.Parse(item.IdProvision), sepListarDetalle.CodigoCliente, sepListarDetalle.NroDocumento, sepListarDetalle.ClienteNombre));
+                            }
+                        }
+
+                        ; break;
+                    case "SR":
+
+                        break;
+
+                }
+
+
+
+                var parameter = new RegistrarFacturacionTerceroParameterVM
+                {
+                    Id = Id,
+                    Estado = Estado,
+                    Correo = Correo,
+                    LogoEmpresa = $"{this.GetUriHost()}/img/{this.usuario.Sesion.ImagenTransGroupEmpresaSeleccionado}",
+                    EmbarqueNroBL = sepListarDetalle.EmbarqueNroBL,
+                    IdUsuarioEvalua = usuario.idUsuario,
+                    IdUsuario = usuario.idUsuario.ToString()
+
+                };
+                var result = await _serviceEmbarque.ActualizarFacturacionTercero(parameter);
+                if (result.CodigoResultado == 0)
+                {
+                    result.MensajeResultado = string.Format("La solicitud se {0} correctamente.", EstadoNombre);
+                }
+                ActionResponse.Codigo = result.CodigoResultado;
+                ActionResponse.Mensaje = result.MensajeResultado;
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "AprobarRechazarFacturacionTercero");
+                ActionResponse.Codigo = -1;
+                ActionResponse.Mensaje = "Error inesperado, por favor volver a intentar mas tarde.";
+            }
+
+            return Json(ActionResponse);
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ListarEncriptarFacturacionTercero(ListarSolicitudFacturacionTerceroModel model)
         {
             ActionResponse = new ActionResponse();
 

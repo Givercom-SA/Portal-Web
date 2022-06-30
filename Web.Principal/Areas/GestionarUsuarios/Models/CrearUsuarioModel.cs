@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ViewModel.Datos.Perfil;
 using ViewModel.Datos.UsuarioRegistro;
 
 
@@ -98,7 +99,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public int Perfil { get; set; }
         public int[] Menus { get; set; }
         public String ReturnUrl { get; set; }
-
+        public List<PerfilVM> Perfiles { get; set; }
     }
   
 }

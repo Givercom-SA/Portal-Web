@@ -8,10 +8,13 @@ using CapchaDLL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Utilitario.Constante;
 using ViewModel.Datos.Acceso;
 using ViewModel.Datos.LoginInicial;
+using ViewModel.Notificacion;
 using Web.Principal.ServiceConsumer;
 using Web.Principal.Util;
 
@@ -21,16 +24,23 @@ namespace Web.Principal.Pages.Account
     {
         private readonly IConfiguration _configuration;
         private readonly ServicioAcceso _serviceAcceso;
+        private IMemoryCache _memoryCache;
+        private readonly ServicioNotificacion _notificacionService;
+        
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(
             IConfiguration configuration,
             ILogger<LoginModel> logger,
+                     IMemoryCache memoryCache,
+            ServicioNotificacion notificacionService,
             ServicioAcceso serviceAcceso)
         {
             _configuration = configuration;
             _logger = logger;
             _serviceAcceso = serviceAcceso;
+            _notificacionService = notificacionService;
+            _memoryCache = memoryCache;
         }
 
         [BindProperty]
@@ -134,6 +144,25 @@ namespace Web.Principal.Pages.Account
                 if (user.CodigoResultado == 0)
                 {
                     HttpContext.Session.SetUserContent(user);
+
+                    #region Obtener Notificaciones
+                    //Se actualiza las Notificaciones no leidas, en caso no se pueda obtener el valor entonces se pone el valor por default                    
+                    var resNotificacionesDeUsuario = await _notificacionService.ObtenerNotificacionesPorUsuario(user.idUsuario);
+
+                    if (resNotificacionesDeUsuario.IsSuccess)
+                    {
+                        _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[user.idUsuario]
+                        = resNotificacionesDeUsuario.Result;
+                    }
+                    else
+                    {
+                        _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[user.idUsuario]
+                        = new List<NotificacionVM>();
+                    }
+
+                    #endregion
+
+
                     return Redirect("/GestionarDashboards/Inicio/Home");
                 }
                 else

@@ -162,8 +162,8 @@
                             <label class="small mb-1">Accesos</label>
                             <fieldset class="border p-2">
 
-                                <div style="height:180px;" class="overflow-auto small" id="MenuCheckBox">
-                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Items)
+                                <div style="height:350px;" class="overflow-auto small" id="MenuCheckBox">
+                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
                                 </div>
                             </fieldset>
                         </div>
@@ -285,7 +285,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Error!!</h5>
+                <h5 class="modal-title text-danger">Error!!</h5>
             </div>
             <div class="modal-body" id="divMensajeDanger"></div>
             <div class="modal-footer">
@@ -300,7 +300,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Alerta!!</h5>
+                <h5 class="modal-title text-warning">Alerta!!</h5>
             </div>
             <div class="modal-body" id="divMensajeWarning"></div>
             <div class="modal-footer">
@@ -323,27 +323,49 @@
         $('input[type=radio][name=Perfil]').change(function () {
             var IdUsuario = '@ViewBag.IdUsuario';
             var IdPerfil = this.value;
+
             $.ajax({
                 type: "GET",
                 url: "/GestionarUsuarios/Usuario/MenusPorPerfil?IdPerfil=" + IdPerfil + "&IdUsuario=" + IdUsuario,
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
-                dataType: 'html'
-            })
-            .done(function (result) {
-                if (result != null) {
+                dataType: 'html',
+                 beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#MenuCheckBox').html(result);
+                        $(".loader").fadeOut("slow");
+                        $('#divModalDanger').modal('show');
 
-                } else {
 
-                }
-            })
-            .fail(function (xhr, status, error) {
+                        if (jqXHR.status == 401) {
+                            $("#divMensajeDanger").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#divMensajeDanger").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
 
-            })
-            .always(function () {
+                    },
+                success: function (result) {
 
+                        $(".loader").fadeOut("slow");
+
+                        if (result != null) {
+
+                            $('#MenuCheckBox').html(result);
+
+                        } else {
+                            
+                            $('#divModalWarning').modal('show');
+                            $('#divMensajeWarning').html("Ocurrio un error inesperado, por favor volver a intentar.");
+                        }
+
+                    },
+                    complete: function (data) {
+
+
+
+                    }
             });
         });
 
@@ -357,7 +379,7 @@
                 $('#frmUsuario').submit();
             }
 
-            
+
 
 
         });
@@ -385,8 +407,14 @@
                     error: function (jqXHR, textStatus, errorThrown) {
 
                         $(".loader").fadeOut("slow");
-                        $('#divMensajeDanger').html(errorThrown.mensaje);
                         $('#divModalDanger').modal('show');
+
+
+                        if (jqXHR.status == 401) {
+                            $("#divMensajeDanger").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#divMensajeDanger").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
 
                     },
                     success: function (response) {
@@ -418,7 +446,7 @@
                     complete: function (data) {
 
 
-                        $(".loader").fadeOut("slow");
+
                     }
                 });
             } else {
@@ -439,27 +467,43 @@
                 formData.append("Clave", $('#Contrasenia').val());
                 $.ajax({
                     type: "POST",
-                    url: "/GestionarUsuarios/Usuario/CambiarClave",
+                    url: "@Url.Action("CambiarClave", "Usuario", new  { area= "GestionarUsuarios" })",
                     data: formData,
                     contentType: false,
                     processData: false,
                     beforeSend: function ()
                     {
                         $(".loader").fadeIn("slow");
-                    }
-                })
-                    .done(function (result) {
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+
+
+                        $(".loader").fadeOut("slow");
+                        $('#modal_restablecer').modal('hide');
+                        $('#divModalDanger').modal('show');
+
+
+
+                        if (jqXHR.status == 401) {
+                            $("#divMensajeDanger").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#divMensajeDanger").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+                    },
+                    success: function (result) {
+
                         $(".loader").fadeOut("slow");
 
                         if (result != null) {
-                            if (result.codigo == 0)
-                            {
+                            if (result.codigo == 0) {
                                 $('#modal_restablecer').modal('hide');
                                 $('#modal_mensaje_result').modal('show');
 
                             } else {
-                                
-                                
+
+
                                 $('#divMensajeWarning').html(result.mensaje);
                                 $('#divModalWarning').modal('show');
 
@@ -468,19 +512,14 @@
                             $('#divMensajeDanger').html("Error inesperado, volver a intentar por favor.");
                             $('#divModalDanger').modal('show');
                         }
-                    })
-                    .fail(function (xhr, status, error) {
 
-                        $(".loader").fadeOut("slow");
-                        $('#divMensajeDanger').html(error.mensaje);
-                        $('#divModalDanger').modal('show');
+                    },
+                    complete: function (data) {
 
 
 
-                    })
-                    .always(function () {
-
-                    });
+                    }
+                });
             }
         }
 
@@ -492,7 +531,7 @@
             $('#modal_restablecer').modal('show');
         });
 
-       
+
 
 
     </script>

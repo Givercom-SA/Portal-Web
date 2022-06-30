@@ -9,8 +9,8 @@ namespace Servicio.Notificacion.Util
     {
         public static class ConnectionStrings
         {
-            public const string AFPnetServiceBroker = "ConnectionStrings:AFPnetServiceBroker";
-            public const string AFPnetHub = "ConnectionStrings:AFPnetHub";
+            public const string AFPnetServiceBroker = "ConnectionStrings:TMPDWACServiceBroker";
+            public const string AFPnetHub = "ConnectionStrings:TMPDWACHub";
         }
     }
 }

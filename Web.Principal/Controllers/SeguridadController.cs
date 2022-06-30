@@ -13,7 +13,7 @@ namespace Web.Principal.Controllers
 {
 
     [AllowAnonymous]
-    public class SeguridadController : Controller
+    public class SeguridadController : BaseLibreController
     {
 
         private readonly ILogger<SeguridadController> _logger;
@@ -25,12 +25,9 @@ namespace Web.Principal.Controllers
             _configuration = configuration;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
 
+        [HttpGet("RequestTimeout", Name = "RequestTimeout")]
         public IActionResult RequestTimeout()
         {
             return View();
@@ -43,30 +40,45 @@ namespace Web.Principal.Controllers
         }
 
 
-        [HttpGet("CerrarSesionAsync", Name = "CerrarSesionAsync"), HttpPost("CerrarSesionAsync", Name = "CerrarSesionAsync")]
+    
+
+        [HttpGet ("CerrarSesionAsync", Name = "CerrarSesionAsync"), HttpPost ("CerrarSesionAsync", Name = "CerrarSesionAsync")]
         [AllowAnonymous]
         public async Task<IActionResult> CerrarSesionAsync()
         {
             try
             {
+               var usuario = HttpContext.Session.GetUserContent();
                 HttpContext.Response.Cookies.Delete("CoreSessionDemo");
                 HttpContext.Session.Clear();
+
+                return Redirect("~/");
             }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                
+                return Redirect("~/");
             }
-            return Redirect("~/");
         }
 
-
+        [HttpGet("Seguridad/Login", Name = "Login"), HttpPost("Seguridad/Login", Name = "Login")]
         [AllowAnonymous]
-        public  IActionResult Login()
+        public async Task<IActionResult> Login()
         {
-          
-            return Redirect("~/");
+            try
+            {
+               
+
+                return Redirect("~/");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return Redirect("~/");
+            }
         }
+
+
 
 
     }

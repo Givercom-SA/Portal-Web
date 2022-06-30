@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ViewModel.Datos.UsuarioRegistro;
 
-
 namespace Web.Principal.Areas.GestionarUsuarios.Models
 {
     public class CambiarContraseniaModel
@@ -26,13 +25,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
 
         [Required(ErrorMessage = "Se requiere id usuario")]
         public Int32 IdUsuario { get; set; }
-
-       
-
-
-
+        public string contraseniaActual { get; set; }
+        public string contraseniaNueva { get; set; }        
+        public string EsNuevo { get; set; }
     }
-
-
-  
 }

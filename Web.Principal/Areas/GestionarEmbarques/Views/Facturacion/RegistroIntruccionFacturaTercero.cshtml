@@ -449,7 +449,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-info">Información</h5>
-
+                
             </div>
             <div class="modal-body">
                 <output id="outputMensajeOk"></output>
@@ -644,7 +644,7 @@
                 blValido = false;
             }
 
-           
+
             if ($("#ddlTipoDocumento").children("option:selected").val() == "0") {
 
                 let cadena = $("#txtRazonSocial").val().replace(/\s/g, "");
@@ -669,10 +669,21 @@
                         $(".loader").fadeIn("slow");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        $(".loader").fadeOut("slow");
+
+                      $(".loader").fadeOut("slow");
+
+                      $("#dialogPrincipalError").modal("show");
+
+                     if (jqXHR.status == 401) {
+                        $("#outputMensajePrincipalError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
                     },
                     success: function (response) {
 
+                        $(".loader").fadeOut("slow");
                         $("#divContenedorClientesFacturarTercero").html(response);
 
                         TriggerCLienteFacTerceroTable();
@@ -682,7 +693,7 @@
 
                         $('#modal_solicitud_fact_tercero').modal('show');
                         $('#modal_cobros_pendientes_cobrar').modal('hide');
-                        $(".loader").fadeOut("slow");
+
                     }
                 });
             }
@@ -731,50 +742,50 @@
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
 
-                        $('#alertError').show();
-
-                        outputDetalleError.html('Resultado: ' + errorThrown);
-
+                 
                         $(".loader").fadeOut("slow");
+
+                        $("#dialogPrincipalError").modal("show");
+                        
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajePrincipalError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                        }
 
                     },
                     success: function (response) {
 
                         $(".loader").fadeOut("slow");
 
-
-                        if (response.codigo == 0) {
-
-
-                            $("#dialogTenor").modal("hide")
-                            $('#alertInfo').show();
+                        if (response.codigo == 0)
+                        {
+                            $("#dialogTenor").modal("hide");
                             $("#dialogOk").modal("show");
-                            outputMensajeOk.html('Se registro con éxito');
 
-                            outputDetalleOK.html('Se registro con éxito');
+                            outputMensajeOk.html('Se registro con éxito');
 
                         }
                         else if (response.codigo == -100) {
 
-                            $('#alertError').show();
-
-                            outputDetalleError.html("Resultado: " + response.mensaje);
+                            $("#dialogTenor").modal("hide");
+                            $("#dialogPrincipalError").modal("show");
+                            $("#outputMensajePrincipalError").html("Resultado: " + response.mensaje);
+                            
                         }
                         else {
 
-
-                            $('#alertWarning').show();
-
-                            outputDetalleAlerta.html("Resultado: " + response.mensaje);
+                            $("#dialogTenor").modal("hide");
+                            $('#dialogAlerta').modal("show");
+                            $("#outputMensaje").html(response.mensaje);
 
                         }
-
-
+ peru
 
                     },
                     complete: function (data) {
 
-                        $(".loader").fadeOut("slow");
+                        
 
                     }
                 });

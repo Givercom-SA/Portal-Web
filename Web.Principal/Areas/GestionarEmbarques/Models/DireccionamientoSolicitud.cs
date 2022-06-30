@@ -57,6 +57,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Models
         public string NroBL { get; set; }
         public string Servicio { get; set; }
         public string Origen { get; set; }
+        public string ParKey { get; set; }
         
+
     }
 }

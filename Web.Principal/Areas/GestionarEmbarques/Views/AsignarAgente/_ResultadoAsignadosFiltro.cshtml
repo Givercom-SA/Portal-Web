@@ -45,14 +45,9 @@
             {
             <tr>
 
-                @if (item.Estado == "2")
-                {
-                    <td><a href="@Url.Action("Detalle", "Embarque", new { codigo = item.KEYBLD })">@item.NROBL</a></td>
-                }
-                else
-                {
+               
                     <td>@item.NROBL</td>
-                }
+                
                 <td>@item.FechaRegistro</td>
                 <td>@item.ORIGEN</td>
                 <td>@item.POL</td>

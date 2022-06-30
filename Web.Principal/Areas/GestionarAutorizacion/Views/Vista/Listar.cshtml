@@ -1,0 +1,448 @@
+﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.ListarVistasModel 
+@{
+    ViewData["Title"] = "Vistas";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="arrow-right-circle"></i></div>
+                        @ViewData["Title"]
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá gestionar las vista del sistema.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<div class="container-xl px-4 mt-n10">
+
+
+    <!-- Payment methods card-->
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Filtros para Búsqueda
+            <button class="btn btn-sm btn-primary" type="button" onclick="btnBuscar()">Buscar</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+                <form asp-area="GestionarAutorizacion" asp-controller="Vista" asp-action="ListarEncriptar" id="frmFiltrarVista" method="get" enctype="multipart/form-data">
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-3">
+                            <label class="small mb-1">Nombre</label>
+                            <input class="form-control" asp-for="@Model.Nombre" type="text" placeholder="Ingresa nombre" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small mb-1">Area</label>
+                            <select asp-for="@Model.Area"
+                                    asp-items="Model.ListArea" id="ddlArea" onchange="listarController()"
+                                    class="form-select small">
+                                <option value="-1">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small mb-1">Controller</label>
+                            <select asp-for="@Model.Controller" id="ddlController" onchange="listarAction()"
+                                    asp-items="Model.ListController"
+                                    class="form-select small">
+                                <option value="-1">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small mb-1">Action</label>
+                            <select asp-for="@Model.Action" id="dllAction"
+                                    asp-items="Model.ListAction"
+                                    class="form-select small">
+                                <option value="-1">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-3">
+                            <label class="small mb-1">Vista Padre</label>
+                            <select asp-for="@Model.IdVistaPadre"
+                                    asp-items="Model.ListarVistaPadres"
+                                    class="form-select small">
+                                <option value="0">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small mb-1">Estado</label>
+                            <select asp-for="@Model.Activo"
+                                    asp-items="Model.ListEstado"
+                                    class="form-select small">
+                                <option value="-1">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-header-actions mb-4">
+        <div class="card-header ">
+            Registros Encontrados
+            @Html.ActionLink("Nuevo", "Nuevo", "Vista", new { area = "GestionarAutorizacion" }, new { @class = "btn btn-sm btn-primary" })
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-billing-history">
+              
+                    <partial name="_ResultadoFiltro" model="@Model.Vistas" />
+              
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_perfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ver Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="ContentVerPerfil"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_confirmar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar Perfil</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div data-idperfil="0" id="ContentConfirmar"></div>
+                <div id="ResultConfirmar"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnEliminar" class="btn btn-primary" type="button">SI</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="modal_mensaje_result" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perfil</h5>
+            </div>
+            <div class="modal-body">  Perfil desactivaod con éxito.  </div>
+            <div class="modal-footer">
+                <button id="btnCerrar" class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="cerrarActualizarPoup()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" ></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" ></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" ></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="@Url.Content("~/js/datatables/simple-datatables.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $(".loader").fadeOut("slow");
+
+            let dataTable = new simpleDatatables.DataTable("#datatable", {
+                searchable: true,
+                labels: {
+                    "noRows": "No hay información",
+                    perPage: "{select} Registros por página",
+                    "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
+                },
+            });
+
+        });
+
+
+
+         function listarController() {
+
+
+            try {
+
+
+                let varArea  = $("#ddlArea").children("option:selected").val();
+
+                var formData = new FormData();
+
+                formData.append("Area", varArea);
+                formData.append("Controller", "");
+                formData.append("Action", "");
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListarSoloController", "Vista",new { area="GestionarAutorizacion"})',
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                        $('#ddlArea').attr('disabled', 'disabled');
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+                        $('#ddlArea').removeAttr('disabled');
+
+                             $("#dialogError").modal("show");
+
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+
+                    },
+                    success: function (result) {
+
+                        $(".loader").fadeOut("slow");
+
+                        $('#ddlArea').removeAttr('disabled');
+
+
+
+                        if (result != null) {
+
+                            if (result.codigo == 0) {
+
+                                $("#ddlController").html("");
+                                $("#ddlController").append(new Option("Todos", "-1"));
+
+                                for (i = 0; i < result.objeto.length; i++) {
+
+                                    $("#ddlController").append(new Option(result.objeto[i].controller, result.objeto[i].controller));
+
+                                }
+
+                            }
+
+
+
+                        }
+
+                    },
+                    complete: function (data) {
+
+
+
+                    }
+                });
+
+            }
+            catch (error) {
+                $('#$(".loader").fadeOut("slow");').removeAttr('disabled');
+            }
+
+        }
+
+        function listarAction() {
+
+
+            try {
+
+                let varArea = $("#ddlArea").children("option:selected").val();
+                let varController = $("#ddlController").children("option:selected").val();
+
+                var formData = new FormData();
+
+                formData.append("Area", varArea);
+                formData.append("Controller", varController);
+                formData.append("Action", "");
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListarSoloAction", "Vista",new { area="GestionarAutorizacion"})',
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                        $('#ddlController').attr('disabled', 'disabled');
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+                        $('#ddlController').removeAttr('disabled');
+
+                             $("#dialogError").modal("show");
+
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+
+                    },
+                    success: function (result) {
+
+                        $(".loader").fadeOut("slow");
+
+                        $('#ddlController').removeAttr('disabled');
+
+
+
+                        if (result != null) {
+
+                            if (result.codigo == 0) {
+
+                                $("#dllAction").html("");
+                                $("#dllAction").append(new Option("Todos", "-1"));
+
+                                for (i = 0; i < result.objeto.length; i++) {
+
+                                    $("#dllAction").append(new Option(result.objeto[i].action, result.objeto[i].action));
+
+                                }
+
+                            }
+
+
+
+                        }
+
+                    },
+                    complete: function (data) {
+
+
+
+                    }
+                });
+
+            }
+            catch (error) {
+                $('#$(".loader").fadeOut("slow");').removeAttr('disabled');
+            }
+
+        }
+
+                function btnBuscar() {
+
+                    var form = $('#frmFiltrarVista')[0];
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: form.action,
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+                        window.location.href = response.mensaje;
+                    }
+                    else if (response.codigo > 0) {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    }
+                    else {
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
+                    }
+                },
+                complete: function (data) {
+
+
+                }
+            });
+
+        }
+
+    </script>
+}

@@ -52,7 +52,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.MenuPerfil.Perfiles = user.Perfiles;
             model.MenuPerfil.Grupos = new List<GruposAutorizacion>();
 
-            var grupos = user.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            var grupos = user.MenusLogin.Select(x => x.Grupo).Distinct().ToList();
 
             for (int ii = 0; ii < grupos.Count(); ii++)
             {
@@ -61,7 +61,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 grupo.Nombre = grupos[ii];
                 grupo.Menus = new List<MenuAutoricacion>();
 
-                var itemMenu = user.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
+                var itemMenu = user.MenusLogin.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
 
 
                 for (int jj = 0; jj < itemMenu.Count(); jj++)
@@ -72,7 +72,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                     for (int i = 0; i < user.Perfiles.Count(); i++)
                     {
-                        var resultMenu = user.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
+                        var resultMenu = user.MenusLogin.Where(x => x.Grupo == grupos[ii]
                                                                                                && x.IdPerfil == user.Perfiles[i].IdPerfil
                                                                                                    && x.Nombre.Equals(itemMenu[jj])
                                                                                                ).ToList();
@@ -148,7 +148,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
 
 
-            var grupos = user.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            var grupos = user.MenusLogin.Select(x => x.Grupo).Distinct().ToList();
 
             for (int ii = 0; ii < grupos.Count(); ii++)
             {
@@ -157,7 +157,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 grupo.Nombre = grupos[ii];
                 grupo.Menus = new List<MenuAutoricacion>();
 
-                var itemMenu = user.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
+                var itemMenu = user.MenusLogin.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
 
 
                 for (int jj = 0; jj < itemMenu.Count(); jj++)
@@ -168,7 +168,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                     for (int i = 0; i < user.Perfiles.Count(); i++)
                     {
-                        var resultMenu = user.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
+                        var resultMenu = user.MenusLogin.Where(x => x.Grupo == grupos[ii]
                                                                                                && x.IdPerfil == user.Perfiles[i].IdPerfil
                                                                                                    && x.Nombre.Equals(itemMenu[jj])
                                                                                                ).ToList();
@@ -247,7 +247,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
 
 
-            var grupos = user.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            var grupos = user.MenusLogin.Select(x => x.Grupo).Distinct().ToList();
 
             for (int ii = 0; ii < grupos.Count(); ii++)
             {
@@ -256,7 +256,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 grupo.Nombre = grupos[ii];
                 grupo.Menus = new List<MenuAutoricacion>();
 
-                var itemMenu = user.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
+                var itemMenu = user.MenusLogin.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
 
 
                 for (int jj = 0; jj < itemMenu.Count(); jj++)
@@ -267,7 +267,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
                     for (int i = 0; i < user.Perfiles.Count(); i++)
                     {
-                        var resultMenu = user.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
+                        var resultMenu = user.MenusLogin.Where(x => x.Grupo == grupos[ii]
                                                                                                && x.IdPerfil == user.Perfiles[i].IdPerfil
                                                                                                    && x.Nombre.Equals(itemMenu[jj])
                                                                                                ).ToList();

@@ -1,0 +1,291 @@
+﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.LeerMenusModel
+@{
+    ViewData["Title"] = "Detalle Menu";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", true);
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        @ViewData["Title"]
+                    </h1>
+                    <div class="page-header-subtitle">Con esta opción usted podrá visualizar los datos del menu.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            @ViewData["Title"]
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Nombre Menu</label>
+                        <input class="form-control" readonly type="text" asp-for="@Model.Menu.Nombre" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">  Area</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.Area" />
+                    </div>
+                </div>
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Controller</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.Controlador" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="small mb-1"> Action</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.Accion" />
+                    </div>
+                </div>
+
+
+                <div class="row gx-3 mb-3">
+
+
+                    <div class="col-md-6">
+                        <label class="small mb-1"> Tipo Menu</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.TipoMenuNombre" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Menu Padre</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.IdPadre" />
+                    </div>
+                </div>
+
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1">Visible</label>
+                        @if (Model.Menu.Visible)
+                        {
+
+                            <input class="form-control" type="text" readonly value="SI" />
+                        }
+                        else
+                        {
+                            <input class="form-control" type="text" readonly value="NO" />
+
+                        }
+
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1">Estado</label>
+
+                        @if (Model.Menu.Activo)
+                        {
+
+                            <input class="form-control" type="text" readonly value="Activo" />
+                        }
+                        else
+                        {
+                            <input class="form-control" type="text" readonly value="No Activo" />
+
+                        }
+
+
+                    </div>
+                </div>
+
+
+                <div class="row gx-3 mb-3">
+
+
+                    <div class="col-md-6">
+                        <label class="small mb-1"> Orden</label>
+                        <input class="form-control" type="text" readonly asp-for="@Model.Menu.Orden" />
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label class="small mb-1"> Visible</label>
+                        @if (Model.Menu.Visible)
+                        {
+                            <input class="form-control" type="text" readonly asp-for="@Model.Menu.Visible" value="SI" />
+                        }
+                        else
+                        {
+                            <input class="form-control" type="text" readonly asp-for="@Model.Menu.Visible" value="NO" />
+                        }
+                    </div>
+
+                </div>
+
+
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Usuario de Creación</label>
+                        <input class="form-control" readonly type="text" asp-for="@Model.Menu.UsuarioCreaNombres" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Fecha de Creación</label>
+                        <input class="form-control" readonly type="text" asp-for="@Model.Menu.FechaRegistro" />
+                    </div>
+                </div>
+
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-6">
+                        <label a class="small mb-1">Ultimo Usuario que Modifica</label>
+                        <input class="form-control" readonly type="text" asp-for="@Model.Menu.UsuarioModificaNombres" />
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Ultima Fecha de Modificación</label>
+                        <input class="form-control" readonly type="text" asp-for="@Model.Menu.FechaRegistro" />
+                    </div>
+                </div>
+
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-12">
+                        <label class="small mb-1">Vistas</label>
+                        <fieldset class=" p-2 h-300">
+
+                            <div style="height:300px;" class="overflow-auto small" id="MenuCheckBox">
+                                @await Html.PartialAsync("_VistasPorMenu", Model.Menu.Vistas)
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div id="MensajeResult"></div>
+
+                <hr />
+                <div class="mb-2 text-right">
+                    <button id="btnEditar" class="btn btn-primary" type="button">Editar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" data-bs-backdrop="static" id="modalConfirmarActualizacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Actualización de Menu</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estas seguro de registrar los cambios?
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="registrarActualizacion()" class="btn btn-primary" type="button">SI</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+
+        let outputMensajeOk = $("#outputMensajeOk");
+        let outputMensajeError = $("#outputMensajeError");
+        let outputMensaje = $("#outputMensaje");
+
+
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            $("#btnEditar").on("click", function () {
+
+                window.location = "@Url.Action("Editar","Menu",new { area="GestionarAutorizacion", parkey = Security.Common.Encriptador.Instance.EncriptarTexto(Model.Menu.IdMenu.ToString())})";
+
+            });
+
+
+        });
+
+
+
+    </script>
+}

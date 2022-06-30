@@ -27,7 +27,7 @@
 
 <!-- Main page content-->
 <div class="container-xl px-4 mt-n10">
-    <form  asp-area="GestionarEmbarques" asp-controller="Memo" asp-action="ListarEncriptar" method="post" id="frmListarSolicitudes">
+    <form asp-area="GestionarEmbarques" asp-controller="Memo" asp-action="ListarEncriptar" method="post" id="frmListarSolicitudes">
 
 
         <div class="card card-header-actions mb-4">
@@ -44,9 +44,9 @@
                             <input class="form-control" asp-for="@Model.CodSolicitud" type="text" placeholder="Ingresar código de solicitud" />
                         </div>
                         <div class="col-md-3">
-                        <label asp-for="@Model.Ruc" class="small mb-1"></label>
-                        <input class="form-control" asp-for="@Model.Ruc" type="text" placeholder="Ingresar RUC/DNI Consignatario" />
-                    </div>
+                            <label asp-for="@Model.Ruc" class="small mb-1"></label>
+                            <input class="form-control" asp-for="@Model.Ruc" type="text" placeholder="Ingresar RUC/DNI Consignatario" />
+                        </div>
                         <div class="col-md-3">
                             <label asp-for="@Model.CodEstado" class="small mb-1"></label>
                             <select asp-for="@Model.CodEstado" id="ddlEmpresa"
@@ -68,10 +68,10 @@
             <div class="card-body">
                 <!-- Billing history table-->
                 <div class="table-responsive table-billing-history">
-                    
+
                     @if (Model.listaResultado != null && Model.listaResultado.Count() > 0)
                     {
-                    <partial name="_ResultadoBusqueda" model="@Model.listaResultado" />
+                        <partial name="_ResultadoBusqueda" model="@Model.listaResultado" />
                     }
                     else
                     {
@@ -79,10 +79,56 @@
                     }
                 </div>
 
-                </div>
             </div>
-     
+        </div>
+
     </form>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogOk" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -132,31 +178,32 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
-                    $(".loader").fadeOut("slow");
+                         $(".loader").fadeOut("slow");
+                     $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
 
                 },
                 success: function (response) {
 
                     $(".loader").fadeOut("slow");
+
                     if (response.codigo == 0) {
 
-
                         window.location.href = response.mensaje;
-
-
                     }
                     else if (response.codigo > 0) {
-
 
                         $("#dialogAlerta").modal("show");
                         $("#outputMensaje").html(response.mensaje);
 
-
                     }
                     else {
-
 
                         $("#dialogError").modal("show");
                         $("#outputMensajeError").html(response.mensaje);
@@ -164,7 +211,7 @@
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+                 
 
                 }
             });

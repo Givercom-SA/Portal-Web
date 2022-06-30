@@ -113,7 +113,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
         public List<GruposAutorizacion> obtenerGruposMenuPerfil(UsuarioRegistroVM Usuario) {
 
-            var grupos = Usuario.MenusUserSecundario.Select(x => x.Grupo).Distinct().ToList();
+            var grupos = Usuario.MenusLogin.Select(x => x.Grupo).Distinct().ToList();
             List<GruposAutorizacion> gruposNuevos = new List<GruposAutorizacion>();
 
             for (int ii = 0; ii < grupos.Count(); ii++)
@@ -122,7 +122,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 grupo.Nombre = grupos[ii];
                 grupo.Menus = new List<MenuAutoricacion>();
 
-                var itemMenu = Usuario.MenusUserSecundario.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
+                var itemMenu = Usuario.MenusLogin.Where(y => y.Grupo.Equals(grupos[ii])).Select(x => x.Nombre).Distinct().ToList();
 
                 for (int jj = 0; jj < itemMenu.Count(); jj++)
                 {
@@ -130,7 +130,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     menu.Nombre = itemMenu[jj];
                     menu.Perfiles = new List<PerfilAutorizacion>();
 
-                    var resultMenuIdentificado = Usuario.MenusUserSecundario.Where(x => x.Grupo == grupos[ii]
+                    var resultMenuIdentificado = Usuario.MenusLogin.Where(x => x.Grupo == grupos[ii]
                                                                                       && x.Nombre.Equals(itemMenu[jj])
                                                                                   );
 

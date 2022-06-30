@@ -48,15 +48,14 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             _servicioMessage = servicioMessage;
         }
 
-        public async Task<IActionResult> Solicitud(string codigo, string servicio,string origen)
+        public async Task<IActionResult> Solicitud(string parkey)
         {
             var listTipoDoc = await _serviceMaestro.ObtenerParametroPorIdPadre(66);
 
             ViewBag.ListTipoDoc = new SelectList(listTipoDoc.ListaParametros, "ValorCodigo", "NombreDescripcion");
-            ViewBag.KeyBL = codigo;
-            ViewBag.Servicio = servicio;
-            ViewBag.Origen = origen;
+            ViewBag.ParKey = parkey;
 
+            
             return View();
         }
 
@@ -203,11 +202,20 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         public async Task<JsonResult> Solicitud()
         {
             ActionResponse = new ActionResponse();
+            
+            var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(Request.Form["parkey"].ToString());
+            string[] parametros = dataDesencriptada.Split('|');
+            string IdKeyBl = parametros[0];
+            string anio = parametros[1];
+            string tipofiltro = parametros[2];
+            string filtro = parametros[3];
+            string servicio = parametros[4];
+            string origen = parametros[5];
 
             var parameter = new SolicitudMemoParameterVM
             {
-                KeyBL = Request.Form["KeyBL"].ToString(),
-                Servicio = Request.Form["Servicio"].ToString(),
+                KeyBL = IdKeyBl,
+                Servicio = servicio,
                 IdUsuarioCrea = usuario.idUsuario,
                 Correo = usuario.CorreoUsuario
             };
@@ -363,7 +371,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(28);
             ViewBag.ListarMotivosRechazos = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
-
+            viewModel.TipoPerfil = this.usuario.TipoPerfil;
 
             return View(viewModel);
         }

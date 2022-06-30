@@ -27,7 +27,7 @@
             foreach (var item in Model)
             {
         <tr>
-            <td><a href='@Url.Action("VerSolicitud", "Solicitudes", new {   parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.CodigoSolicitud)})'> #@item.CodigoSolicitud </a></td>
+            <td><a href='@Url.Action("VerSolicitud", "Solicitudes", new {   parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.CodigoSolicitud)})'>@item.CodigoSolicitud </a></td>
             <td>@item.FechaRegistro.ToShortDateString()</td>
 
             <td>@item.TipoDocumento</td>

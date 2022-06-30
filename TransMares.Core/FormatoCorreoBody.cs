@@ -338,6 +338,65 @@ namespace TransMares.Core
             return HtmlSend;
         }
 
+        public string formatoBodyBienvenidaUsuarioInterno(string pNombre, string pContrasenia, string pUrl, string ImagenGrupo)
+        {
+            String HtmlSend = "";
+
+            HtmlSend = $@"
+                <!DOCTYPE html>
+                <html xmlns='http://www.w3.org/1999/xhtml'>
+
+                    <head runat='server'>
+                        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+                        <title></title>
+                    </head>
+
+                    <body>
+                        <center>
+                            <div class='col-lg-12'>
+                                <p class='card-text' style='height: 20px;'></p>
+                            </div>
+                            <div style='width:500px;background:#133bf0;border-radius:  10px 10px 10px 10px;border: 0px solid #000000; '>
+                                <div style='height:30px'></div>
+
+                                <table style='height: 407px; border-collapse: collapse' width='421' class='tabb'>
+                                    <tbody style=' background:#ffffff '>
+                                        <tr>
+                                            <td style='padding: 12px;' colspan='3'>
+                                                <span style='font-size: 25px; color: white;'>&nbsp; &nbsp; </span>
+                                                <img src='{ImagenGrupo}'
+                                                    style='height: auto;    width: 40%;'>
+                                                <p style='font-family:Arial, Helvetica, sans-serif;'>  Estimado {pNombre},<br />
+                                                    Te damos la bienvenida a Transmares Group.<br />
+                                                </p> Tu contraseña autogenerado es:  {pContrasenia}</p>
+
+                                                <center>
+                                                <p style='font-family:Arial, Helvetica, sans-serif;'>
+                                                    Para Confirmar tu correo has click <a href='{pUrl} '>Aqui</a>
+                                                </p>
+                                            </center>
+                                                <center>
+                                                    <p style = 'font-family:Arial, Helvetica, sans-serif;' >
+                                                        ¡Estamos felices que cuentes con nosotros!
+                                                        <br /> El equipo de Transmares te lo agradece
+                                                     </p>
+                                                 </center>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class='col-lg-12'>
+                                    <p class='card-text' style='height: 20px;'></p>
+                                </div>
+                            </div>
+                        </center>
+                    </body>
+
+                </html>";
+
+            return HtmlSend;
+        }
+
         public string formatoBodyBienvenidaAprobado(string pRuc, string pRazon, string pNombreRL, string correo, string clave, string imagenGrupo, string pUrl)
         {
             String HtmlSend = "";

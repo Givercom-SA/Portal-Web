@@ -22,6 +22,6 @@ namespace Servicio.Usuario.Models.Usuario
         public bool Checked { get; set; }
         public string IdVistaChecked
         { get; set; }
-
+        public int Orden { get; set; }
     }
 }

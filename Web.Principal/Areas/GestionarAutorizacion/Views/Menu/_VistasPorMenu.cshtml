@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ViewModel.Datos.Perfil.VistaMenuVM>
+@{
+    string Disabled = string.Empty;
+    if (ViewData.ContainsKey("ModoLectura"))
+        Disabled = ((bool)ViewData["ModoLectura"]) ? "disabled" : "";
+
+
+
+
+
+    void procesarVistaOpcion(IEnumerable<ViewModel.Datos.Perfil.VistaMenuVM> vistaOpcion,
+                                                                IEnumerable<ViewModel.Datos.Perfil.VistaMenuVM> vistaOpcionTodos,
+                                                                ref int correlativoVistaMenu)
+    {
+
+
+        var listMenus = vistaOpcion.Where(x => x.VistaOpcion == 0).OrderBy(Z => Z.Orden);
+
+        if (listMenus.Any())
+        {
+
+            @foreach (var itemVista in listMenus)
+            {
+
+                var listhijosMenus = vistaOpcionTodos.Where(x => x.IdPadre == itemVista.IdVista && x.VistaOpcion == 1).ToArray();
+
+
+
+
+                <li class='list-group-item'>
+                    <input type='hidden' name='Menu.Vistas[@correlativoVistaMenu].IdVista' value='@itemVista.IdVista' />
+
+                    @if (itemVista.Checked)
+                    {
+                        <input class='form-check-input' type='checkbox' checked name='Menu.Vistas[@correlativoVistaMenu].IdVistaChecked'
+                               value='@itemVista.IdVista'
+                               @Disabled>
+                        @Html.Raw(" [V] ")
+                        @itemVista.VistaNombre
+                    }
+                    else
+                    {
+                        <input class='form-check-input' type='checkbox' name='Menu.Vistas[@correlativoVistaMenu].IdVistaChecked'
+                               value='@itemVista.IdVista'
+                               @Disabled>@Html.Raw(" [V] ") @itemVista.VistaNombre
+                        }
+
+
+
+                    @if (listhijosMenus.Any())
+                    {
+                        correlativoVistaMenu++;
+                        <ul class='ist-group'>
+
+                            @{procesarVistaOpcion(listhijosMenus, vistaOpcionTodos, ref correlativoVistaMenu);}
+
+                        </ul>
+                    }
+
+                </li>
+
+                correlativoVistaMenu++;
+
+
+            }
+
+        }
+        else
+        {
+
+            var listOpciones = vistaOpcion.Where(x => x.VistaOpcion == 1).OrderBy(z => z.Orden);
+
+            if (listOpciones.Any())
+            {
+                @foreach (var itemOpcion in listOpciones)
+                {
+                    <li class='list-group-item'>
+                        <input type='hidden' name='Menu.Vistas[@correlativoVistaMenu].IdVista' value='@itemOpcion.IdVista' />
+                        @if (itemOpcion.Checked)
+                        {
+                            <input class='form-check-input' type='checkbox' checked name='Menu.Vistas[@correlativoVistaMenu].IdVistaChecked'
+                                   value='@itemOpcion.IdVista'
+                                   @Disabled>@Html.Raw(" [O] ") @itemOpcion.VistaNombre
+                            }
+                            else
+                            {
+                                <input class='form-check-input' type='checkbox' name='Menu.Vistas[@correlativoVistaMenu].IdVistaChecked'
+                                       value='@itemOpcion.IdVista'
+                                       @Disabled>@Html.Raw(" [O] ") @itemOpcion.VistaNombre
+                                }
+                    </li>
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+@if (Model != null)
+{
+    
+    int correlativoVistaMenu = 0;
+
+    <ul class='list-group'>
+        @{procesarVistaOpcion(Model, Model, ref correlativoVistaMenu);}
+    </ul>
+}

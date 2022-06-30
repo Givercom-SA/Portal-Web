@@ -130,9 +130,9 @@ namespace Servicio.Embarque.Repositorio
                     string spName = "TM_PDWAC_SP_SOLICITUDDIRECCIONAMIENTO_LISTAR";
 
                     var queryParameters = new DynamicParameters();
-                    queryParameters.Add("@SODI_CODIGO", nroSolicitud.Trim());
-                    queryParameters.Add("@SODI_RUC", RucDni.Trim());
-                    queryParameters.Add("@SODI_ESTADO", codEstado.Trim());
+                    queryParameters.Add("@SODI_CODIGO", nroSolicitud?.Trim());
+                    queryParameters.Add("@SODI_RUC", RucDni?.Trim());
+                    queryParameters.Add("@SODI_ESTADO", codEstado?.Trim());
 
                     result.ListaSolicitudes = cnn.Query<SolicitudResult>(spName, queryParameters, commandType: CommandType.StoredProcedure).ToList();
                     result.IN_CODIGO_RESULTADO = 0;

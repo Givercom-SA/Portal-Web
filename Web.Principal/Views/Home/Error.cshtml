@@ -6,15 +6,26 @@
 }
 
 
-@if (Model.ShowRequestId)
-{
-    <h2 class="text-danger">@Model.ErrorMessage</h2>
+<html>
 
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+<head>
 
+    <link rel="stylesheet" href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.css")" />
+
+</head>
 
 
+<body>
 
+    @if (Model.ShowRequestId)
+    {
+        <h2 class="text-danger">@Model.ErrorMessage</h2>
+
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+
+</body>
+
+</html>

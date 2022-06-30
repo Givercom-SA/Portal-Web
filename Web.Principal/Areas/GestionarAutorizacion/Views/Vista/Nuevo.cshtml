@@ -1,0 +1,367 @@
+﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.NuevoVistasModel  
+@{
+    ViewData["Title"] = "Nuevo Vista";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="loader" style="">
+    <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+</div>
+
+<header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+    <div class="container-xl px-4">
+        <div class="page-header-content pt-4">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto mt-4">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                        @ViewData["Title"]
+                    </h1>
+                    <div class="page-header-subtitle">Aquí puedes crear una vista.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-xl px-4 mt-n10">
+    <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            @ViewData["Title"]
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+        </div>
+
+        <div class="card-body">
+            <div class="sbp-preview-content">
+
+                <form id="frmVista" asp-area="GestionarAutorizacion" asp-controller="Vista" asp-action="Nuevo">
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Nombre Vista</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.VistaNombre" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaNombre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">  Area</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.VistaArea" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaArea" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row gx-3 mb-3">
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Es Principal</label>
+                            <select class="form-select small" asp-for="@Model.NuevaVista.Vista.VistaPrincipal">
+                                <option value="-1">Seleccionar</option>
+                                <option value="1">SI</option>
+                                <option value="0">NO</option>
+                            </select>
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaPrincipal" class="text-danger small"></span>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Controller</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.VistaController" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaController" class="text-danger small"></span>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row gx-3 mb-3">
+
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Es Opción</label>
+                            <select class="form-select small" asp-for="@Model.NuevaVista.Vista.VistaOpcion">
+                                <option value="-1">Seleccionar</option>
+                                <option value="1">SI</option>
+                                <option value="0">NO</option>
+                            </select>
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaOpcion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="small mb-1"> Acción</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.VistaAction" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaAction" class="text-danger small"></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Vista Padre</label>
+                            <select class="form-select small"
+                                    asp-for="@Model.NuevaVista.Vista.IdPadre"
+                                    asp-items="@Model.ListarVistaPadres">
+                                <option value="">No Asignado</option>
+
+
+                            </select>
+                            <span asp-validation-for="@Model.NuevaVista.Vista.IdPadre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="small mb-1"> Verbo</label>
+                           
+                            <select class="form-select small"
+                                    asp-for="@Model.NuevaVista.Vista.VistaVerbo">
+                                <option value="">Seleccionar</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="PATCH">PATCH</option>
+
+
+                            </select>
+                            <span asp-validation-for="@Model.NuevaVista.Vista.VistaVerbo" class="text-danger small"></span>
+                        </div>
+
+
+                    </div>
+                    <div class="row gx-3 mb-3">
+
+
+
+                        <div class="col-md-6">
+                            <label class="small mb-1"> Orden</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.vistaOrden" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.vistaOrden" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1"> Control Html</label>
+                            <input class="form-control" type="text" asp-for="@Model.NuevaVista.Vista.NombreControlHtml" maxlength="100" />
+                            <span asp-validation-for="@Model.NuevaVista.Vista.NombreControlHtml" class="text-danger small"></span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row gx-3 mb-3">
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Usuario de Creación</label>
+                            <input class="form-control" readonly type="text" asp-for="@Model.UsuarioCrea" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="small mb-1">Fecha de Creación</label>
+                            <input class="form-control" readonly type="text" asp-for="@Model.FechaRegistro" />
+                        </div>
+                    </div>
+
+
+
+
+                    <hr />
+                    <div class="mb-2 text-right">
+                        <button id="btnGuardar" class="btn btn-primary" type="button">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" data-bs-backdrop="static" id="modalConfirmarActualizacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Registro de Vista</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estimado usuario, esta seguro de registrar la nueva vista?
+
+            </div>
+            <div class="modal-footer">
+                <button onclick="registrarActualizacion()" class="btn btn-primary" type="button">SI</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError" class="small"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+
+        let outputMensajeOk = $("#outputMensajeOk");
+        let outputMensajeError = $("#outputMensajeError");
+        let outputMensaje = $("#outputMensaje");
+
+        
+        $(document).ready(function () {
+
+            $(".loader").fadeOut("slow");
+
+
+            $("#btnGuardar").click(function () {
+
+                var isValid = $('#frmVista').valid();
+
+                if (isValid) {
+                    $("#modalConfirmarActualizacion").modal("show");
+                }
+                else {
+                    $("#frmVista").validate();
+
+                }
+              
+
+            });
+
+
+            
+
+            $("#frmVista").submit(function (e) {
+
+                
+
+                e.preventDefault();
+
+                var isValid = $('#frmVista').valid();
+
+                if (isValid) {
+
+                    var form = $('#frmVista')[0];
+                    var formData = new FormData(form);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Nuevo","Vista",new { area="GestionarAutorizacion"})",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                            $("#modalConfirmarActualizacion").modal("hide");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $(".loader").fadeOut("slow");
+                            $("#dialogPrincipalError").modal("show");
+                            $("#modalConfirmarActualizacion").modal("hide");
+
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajePrincipalError").html("Estimado usuario, no tiene acceso a este recurso.");
+                            } else {
+                                $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                            }
+
+                        },
+                        success: function (response) {
+                            $(".loader").fadeOut("slow");
+
+                            if (response != null) {
+                                if (response.codigo == 0) {
+
+                                    $('#outputMensajeOk').html(response.mensaje);
+                                    $('#dialogOk').modal('show');
+
+                                } else {
+
+
+                                    $('#outputMensaje').html(response.mensaje);
+                                    $('#dialogAlerta').modal('show');
+                                }
+                            } else {
+
+                                $('#outputMensajeError').html("Error inesperado, volver a intentar por favor.");
+                                $('#dialogAlerta').modal('show');
+                            }
+
+
+
+                        },
+                        complete: function (data) {
+                            $(".loader").fadeOut("slow");
+
+                        }
+                    });
+                }
+            });
+
+        });
+
+        
+        function registrarActualizacion() {
+
+           
+                $("#frmVista").submit();
+          
+        }
+
+        function ActualizarForm() {
+
+      
+            window.location.href = "@Url.Action("Listar","Vista",new { area="GestionarAutorizacion"})";
+        }
+        
+    </script>
+}

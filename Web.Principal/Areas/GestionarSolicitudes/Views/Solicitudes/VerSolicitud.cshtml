@@ -143,20 +143,20 @@
                                             {
 
 
-                                            <li>@item.NombreEntidad </li>
+                                                <li>@item.NombreEntidad </li>
 
 
                                             }
                                         </ul>
 
-                                        @for (var item=0; item < Model.SolicitudVM.ListaTipoEntidad.Count(); item++)
+                                        @for (var item = 0; item < Model.SolicitudVM.ListaTipoEntidad.Count(); item++)
                                         {
 
-                                        <input type="checkbox"
-                                               data-codtipoentidad="@Model.SolicitudVM.ListaTipoEntidad.ElementAt(item).CodigoEntidad"
-                                               checked="checked"
-                                               style="display:none" class="cssTipoEntidad" />
-                                            }
+                                            <input type="checkbox"
+                                                   data-codtipoentidad="@Model.SolicitudVM.ListaTipoEntidad.ElementAt(item).CodigoEntidad"
+                                                   checked="checked"
+                                                   style="display:none" class="cssTipoEntidad" />
+                                        }
 
                                     }
 
@@ -219,74 +219,74 @@
                 @if (Model.SolicitudVM.ListaTipoEntidad.ToList().Exists(x => x.CodigoEntidad.Equals(Utilitario.Constante.EmbarqueConstante.TipoEntidad.AGENTE_ADUANAS)))
                 {
 
-                <hr />
+                    <hr />
 
-                <fieldset>
+                    <fieldset>
 
-                    <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
+                        <legend class="small" style="font-weight:bold">Datos de Agente de Aduanas</legend>
 
 
-                    <div class="row mb-3">
-                        <div class="col-6 small">
-                            <div class="row">
-                                <div class="col-6">
-                                    @Html.Raw("Habilitar Servicio de Proceso de Facturación : ")
+                        <div class="row mb-3">
+                            <div class="col-6 small">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Html.Raw("Habilitar Servicio de Proceso de Facturación : ")
+                                    </div>
+                                    <div class="col-6">
+
+                                        <input type="checkbox" disabled checked="@Model.SolicitudVM.ProcesoFacturacion" />
+
+
+
+
+                                    </div>
                                 </div>
-                                <div class="col-6">
+                            </div>
 
-                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.ProcesoFacturacion" />
+                            <div class="col-6 small">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Html.Raw("Términos y Condiciones Generales de Contratación - T&CGC : ")
+                                    </div>
+                                    <div class="col-6">
+
+                                        <input type="checkbox" disabled checked="@Model.SolicitudVM.TerminoCondicionGeneralContracion" />
 
 
 
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col-6 small">
+                                <div class="row">
+                                    <div class="col-6">
+                                        @Html.Raw("Código de Sunat: ")
+                                    </div>
+                                    <div class="col-6">
+                                        <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.CodigoSunat" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6 small">
+                                <div class="row">
 
                                 </div>
                             </div>
+
                         </div>
 
-                        <div class="col-6 small">
-                            <div class="row">
-                                <div class="col-6">
-                                    @Html.Raw("Términos y Condiciones Generales de Contratación - T&CGC : ")
-                                </div>
-                                <div class="col-6">
-
-                                    <input type="checkbox" disabled checked="@Model.SolicitudVM.TerminoCondicionGeneralContracion" />
 
 
-
-
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="row mb-3">
-                        <div class="col-6 small">
-                            <div class="row">
-                                <div class="col-6">
-                                    @Html.Raw("Código de Sunat: ")
-                                </div>
-                                <div class="col-6">
-                                    <input class="form-control  small" type="text" disabled value="@Model.SolicitudVM.CodigoSunat" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-6 small">
-                            <div class="row">
-
-                            </div>
-                        </div>
-
-                    </div>
-
-
-
-                </fieldset>
+                    </fieldset>
                 }
 
 
@@ -388,9 +388,9 @@
 
                     if (Model.SolicitudVM.CodigoEstado.Equals(Utilitario.Constante.EmbarqueConstante.EstadoGeneral.PENDIENTE))
                     { <hr />
-                    <button class="btn btn-primary" type="button" onclick="procesarSolicitud()"> Aceptar </button>
+                        <button class="btn btn-primary" type="button" onclick="procesarSolicitud()"> Aceptar </button>
 
-                    <button class="btn btn-primary" type="button" onclick="MostrarModalMotivoRechazo()"> Rechazar </button>
+                        <button class="btn btn-primary" type="button" onclick="MostrarModalMotivoRechazo()"> Rechazar </button>
                     }
 
                 }
@@ -416,7 +416,7 @@
 
 
 
-    <form id="frmEvaluarSolicitud" asp-action="RechazarSolicitud" asp-controller="Solicitudes" asp-area="GestionarSolicitudes" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;">
+    <form id="frmEvaluarSolicitud" asp-action="RechazarSolicitud" asp-controller="Solicitudes" asp-area="GestionarSolicitudes" method="post" enctype="multipart/form-data" onsubmit="AJAXRechazarSolicitud(this);return false;">
 
         <div class="modal fade" id="dialogMotivoRechazo" tabindex="-1" role="dialog" aria-labelledby="dialogMotivoRechazoTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -427,12 +427,12 @@
                     <div class="modal-body">
                         <label>Ingresar motivo de rechazo</label>
                         <textarea id="txtMotivoRechazo" asp-for="@Model.MotivoRechazo" class="form-control" maxlength="250"> </textarea>
-                        <span asp-validation-for="@Model.MotivoRechazo" id="spanMotivoRechazo" class="small text-danger"></span> 
+                        <span asp-validation-for="@Model.MotivoRechazo" id="spanMotivoRechazo" class="small text-danger"></span>
                         <input type="hidden" asp-for="@Model.CodigoSolicitud" />
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="CerrarModalMotivoRechazo()">Cerrar</button>
-                        <button type="submit" class="btn btn-primary" >Registrar</button>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -442,11 +442,28 @@
 </div>
 
 
-<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header page-header-dark">
+            <div class="modal-header">
                 <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -456,29 +473,11 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-warning">Alerta</h5>
-                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <output id="outputMensajeAlerta"></output>
-            </div>
-            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade" id="dialogOk" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-info">Información</h5>
+                <h5 class="modal-title">Información</h5>
 
             </div>
             <div class="modal-body">
@@ -490,11 +489,10 @@
 </div>
 
 
-
 @section Scripts {
 
 
-   
+
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
 
@@ -523,7 +521,7 @@
 
         function OtrosDatos(obj) {
 
-  
+
 
 
             $(".cssTipoEntidad").each(function (index) {
@@ -531,11 +529,11 @@
                 if ($(this).is(':checked')) {
 
 
-                   
+
                     let objTipoEntidad = new Object();
                     objTipoEntidad.CodTipoEntidad = $(this).data('codtipoentidad');
 
-       
+
 
                     if (objTipoEntidad.CodTipoEntidad == "TC03") {
 
@@ -547,7 +545,7 @@
 
                     if (objTipoEntidad.CodTipoEntidad == "TC02") {
 
-                        
+
 
                         $("#divCadenaSuministro").show();
                         $("#divVeracidadInfo").show();
@@ -567,7 +565,7 @@
             });
 
 
-    
+
         }
 
 
@@ -577,7 +575,7 @@
             else $("#divMotRechazo" + valor).hide();
         }
 
-       
+
 
         function MostrarModalMotivoRechazo() {
             $('#dialogMotivoRechazo').modal('show');
@@ -587,7 +585,7 @@
             $('#dialogMotivoRechazo').modal('toggle');
         }
 
- 
+
         function procesarSolicitud() {
             var codSolicitud = $("#hddCodigoSolicitud").val();
 
@@ -597,34 +595,41 @@
                 data: { codSolicitud: codSolicitud },
                 beforeSend: function (xhr) {
                     $(".loader").fadeIn("slow");
-                }
+                },
+                 error: function (jqXHR, textStatus, errorThrown) {
 
-            }).done(function (data) {
+                            $(".loader").fadeOut("slow");
 
-                $(".loader").fadeOut("slow");
+                            $("#dialogError").modal("show");
 
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                            } else {
+                                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                            }
 
-                if (data.codigo == 0) {
-                    $("#dialogOk").modal("show");
-                    $("#outputMensajeOk").html(data.mensaje);
-                }
-                else if (data.codigo > 0) {
-                    $("#dialogAlerta").modal("show");
-                    $("#outputMensajeAlerta").html(data.mensaje);
-                } else {
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html(data.mensaje);
+                        },
+                        success: function (response) {
 
-                }
+                            $(".loader").fadeOut("slow");
 
+                            if (response.codigo == 0) {
+                                $("#dialogOk").modal("show");
+                                $("#outputMensajeOk").html(response.mensaje);
+                            }
+                            else if (response.codigo > 0) {
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensajeAlerta").html(response.mensaje);
+                            } else {
+                                $("#dialogError").modal("show");
+                                $("#outputMensajeError").html(response.mensaje);
 
+                            }
 
-            }).fail(function (errjqXHR, textStatus, errorThrown) {
+                        },
+                        complete: function (response) {
 
-                $(".loader").fadeOut("slow");
-
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html(errorThrown);
+                        }
 
             });
         }
@@ -633,7 +638,7 @@
              window.location.href = '@Url.Action("ListarSolicitudes","Solicitudes",new {area="GestionarSolicitudes"})';
         }
 
-         function AJAXSubmit(oFormElement) {
+        function AJAXRechazarSolicitud(oFormElement) {
 
 
 
@@ -656,52 +661,42 @@
                         error: function (jqXHR, textStatus, errorThrown) {
 
                             $(".loader").fadeOut("slow");
-
+                            $("#dialogMotivoRechazo").modal("hide");
                             $("#dialogError").modal("show");
-                            $("#outputMensajeError").html(errorThrown);
+
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                            } else {
+                                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                            }
+
+
 
                         },
                         success: function (response) {
 
                             $(".loader").fadeOut("slow");
+                            $("#dialogMotivoRechazo").modal("hide");
+
 
                             if (response.codigo == 0) {
 
-                                $("#dialogMotivoRechazo").modal("hide");
-
                                 $("#dialogOk").modal("show");
                                 $("#outputMensajeOk").html(response.mensaje);
-
-                                
-
                             }
                             else if (response.codigo > 0) {
-
-                               // $("#dialogAlerta").modal("show");
-                               // $("#outputMensajeAlerta").html(response.mensaje);
-
-
+                                
                                 for (var item = 0; item < response.listActionListResponse.length; item++) {
 
                                     if (response.listActionListResponse[item].nombreCampo == "MotivoRechazo") {
                                         $("#spanMotivoRechazo").html(response.listActionListResponse[item].mensaje);
                                         $("#txtMotivoRechazo").focus();
                                     }
-                                     
-                                
-
-
                                 }
-
-
-
-
-
 
                             } else {
 
-                                $("#dialogMotivoRechazo").modal("hide");
-
+                               
                                 $("#dialogError").modal("show");
                                 $("#outputMensajeError").html(response.mensaje);
                             }
@@ -720,7 +715,7 @@
                 $(".loader").fadeOut("slow");
 
                 $("#dialogError").modal("show");
-                $("#outputMensajeError").html("[400] Ocurrio un error inesperado, por favor intente nuevamente.");
+                $("#outputMensajeError").html("Ocurrio un error no controlado, por favor intente nuevamente.");
 
 
             }

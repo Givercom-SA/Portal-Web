@@ -36,7 +36,7 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         {
             HomeModel model = new HomeModel();
             if (!usuario.isCambioClave)
-                return RedirectToAction("CambiarContrasenia", "Login", new { area = "GestionarAccesos" , nuevo = "1" });
+                return RedirectToAction("CambiarContrasenia", "Usuario", new { area = "GestionarUsuarios" , nuevo = "1" });
 
 
             if (usuario.Dashboard == "Home")
@@ -60,18 +60,13 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         [HttpGet]
         public async Task<IActionResult> Administracion()
         {
-
             if (!usuario.isCambioClave)
-                return RedirectToAction("CambiarContrasenia", "Login", new { area = "GestionarAccesos", nuevo = "1" });
+                return RedirectToAction("CambiarContrasenia", "Usuario", new { area = "GestionarUsuarios", nuevo = "1" });
 
             AdminModel model = new AdminModel();
-
             DashboardAdminParameterVM dashboardParameterVM = new DashboardAdminParameterVM();
-
-            
             model.Dashboard = await _serviceUsuario.DashboardAdmin(dashboardParameterVM);
             
-
             return View(model);
         }
 
@@ -81,7 +76,7 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
         public async Task<IActionResult> Operaciones()
         {
             if (!usuario.isCambioClave)
-                return RedirectToAction("CambiarContrasenia", "Login", new { area = "GestionarAccesos", nuevo = "1" });
+                return RedirectToAction("CambiarContrasenia", "Usuario", new { area = "GestionarUsuarios", nuevo = "1" });
 
             return View();
         }
@@ -96,8 +91,13 @@ namespace Web.Principal.Areas.GestionarDashboards.Controllers
             var resultCambioPerfil = await _serviceUsuario.CambiarPerfilDefecto(new ViewModel.Datos.UsuarioRegistro.CambiarPerfilDefectoParameterVM() { IdUsuario = actualSesion.idUsuario, IdPerfil = IdPerfil });
             var sesionUsuario = await _serviceAcceso.ObtenerUsuarioPorId(actualSesion.idUsuario);
 
-            actualSesion.MenusUserSecundario = sesionUsuario.MenusUserSecundario;
+            actualSesion.MenusLogin = sesionUsuario.MenusLogin;
             actualSesion.Menus = sesionUsuario.Menus;
+
+            actualSesion.TipoPerfil = sesionUsuario.TipoPerfil;
+            actualSesion.IdPerfil = sesionUsuario.IdPerfil;
+            actualSesion.IdEntidad = sesionUsuario.IdEntidad;
+            actualSesion.TipoEntidad = sesionUsuario.TipoEntidad;
 
             HttpContext.Session.SetUserContent(actualSesion);
             HttpContext.Session.SetSession("IdPerfilSesion", IdPerfil);

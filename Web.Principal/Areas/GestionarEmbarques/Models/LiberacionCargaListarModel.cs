@@ -14,10 +14,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Models
     public class LiberacionCargaListarModel 
     {
 
-        public string KeyBl { get; set; }
+        public string ParKey { get; set; }
         public string NroBl { get; set; }
-        public string Servicio { get; set; }
-        public string Origen { get; set; }
+    
    
     }
 

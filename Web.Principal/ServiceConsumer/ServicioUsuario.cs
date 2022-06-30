@@ -183,6 +183,19 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
 
+        public async Task<UsuarioSecundarioResultVM> ObtenerUsuario(CrearUsuarioSecundarioParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            const string SERVICIO = "obtener-usuario";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+            var resultado = response.ContentAsType<UsuarioSecundarioResultVM>();
+
+            return resultado;
+        }
+       
+
         public async Task<ListarUsuarioMenuResultVM> ObtenerListaUsuarioMenu(CrearUsuarioSecundarioParameterVM parameter)
         {
             var json = JsonConvert.SerializeObject(parameter);

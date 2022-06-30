@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AccesoDatos.Utils;
@@ -22,6 +23,7 @@ namespace ViewModel.Datos.Perfil
         public string UsuarioModifica { get; set; }
 
         public string Tipo { get; set; }
+
         public string Dashboard { get; set; }
      
         public bool Checked { get; set; }
@@ -44,6 +46,8 @@ namespace ViewModel.Datos.Perfil
         public int VistaOpcion { get; set; }
         public bool Checked { get; set; }
         public string IdVistaChecked { get; set; }
-        
+        public int IdPadre { get; set; }
+        public int Orden { get; set; }
+
     }
 }

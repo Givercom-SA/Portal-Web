@@ -12,7 +12,6 @@ namespace ViewModel.Datos.UsuarioRegistro
         {
 
         }
-
         public string ImagenGrupoTrans { get; set; }
         public int IdUsuario { get; set; }
         public int IdPerfil { get; set; }
@@ -30,10 +29,8 @@ namespace ViewModel.Datos.UsuarioRegistro
         public string UrlConfirmacion { get; set; }
         public bool RequiereConfirmacion { get; set; }
         public List<int> Menus { get; set; }
-
         public List<MenuVM> MenusPerfil { get; set; }
-        public PerfilVM PerfilMenu { get; set; }
-
+        public  List<PerfilVM> PerfilesMenus { get; set; }
 
     }
 }

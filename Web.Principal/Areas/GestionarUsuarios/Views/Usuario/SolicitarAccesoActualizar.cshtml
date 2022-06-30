@@ -640,9 +640,7 @@
             $("#divOutputError").hide();
             $("#divOutputAlerta").hide();
 
-            let json = "";
-            let outputOk = $("#outputOk");
-            let outputError = $("#outputError");
+
             let outputAlerta = $("#outputAlerta");
 
             $(".loader").fadeIn("slow");
@@ -654,103 +652,119 @@
 
             try {
 
-                const response = await fetch(oFormElement.action, {
-                    method: 'POST',
-                    body: formData
-                });
 
-                if (response.ok) {
+                var isValid = $('#frmSolicitarAcceso').valid();
+                if (isValid) {
 
-                    let jsonResponseForm = await response.json();
+                    var form = $('#frmSolicitarAcceso')[0];
 
-                    if (jsonResponseForm.codigo != 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: formData.action,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
 
-                        $("#divOutputAlerta").show();
-                        outputAlerta.html(jsonResponseForm.mensaje);
+                            $(".loader").fadeIn("slow");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
 
-                        for (var item = 0; item < jsonResponseForm.listActionListResponse.length; item++) {
+                            $(".loader").fadeOut("slow");
 
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "RazonSocial") {
-                                $("#spanInputRazonSocial").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                                $("#txtRazonSocial").focus();
+                            $("#dialogError").modal("show");
+
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                            } else {
+                                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
                             }
 
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "NumeroDocumento") {
-                                $("#spanNumeroDocumento").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                                $("#txtNumeroDocumento").focus();
+                        },
+                        success: function (jsonResponseForm) {
+
+
+                            $(".loader").fadeOut("slow");
+
+                            if (jsonResponseForm.codigo != 0) {
+
+                                $("#divOutputAlerta").show();
+                                outputAlerta.html(jsonResponseForm.mensaje);
+
+                                for (var item = 0; item < jsonResponseForm.listActionListResponse.length; item++) {
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "RazonSocial") {
+                                        $("#spanInputRazonSocial").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                        $("#txtRazonSocial").focus();
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "NumeroDocumento") {
+                                        $("#spanNumeroDocumento").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                        $("#txtNumeroDocumento").focus();
+                                    }
+
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TipoEntidad2") {
+                                        $("#spanTipoEntidad").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Files") {
+                                        $("#spanFiles").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoSeguridadCadenaSuministra") {
+                                        $("#spanAcuerdoCadenaSumistro").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoCorrectoUsoEndosesElectronico") {
+                                        $("#spanEndose").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "declaracionJUridaVeracidadInformacio") {
+                                        $("#spanVeracidadInfo").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "seBrindaOperacionesCargaFCL") {
+                                        $("#spanOperacionCargaFCL").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "CodigoSunat") {
+
+                                        $("#spanCodigoSunat").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+                                    if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TerminoCondicionesGeneralesContraTCGC") {
+
+                                        $("#spanTerminosCondicionesGeneerales").html(jsonResponseForm.listActionListResponse[item].mensaje);
+                                    }
+
+
+                                }
+                            } else {
+
+                                $("#dialogOk").modal("show");
+                                $("#outputMensajeOk").html(jsonResponseForm.mensaje);
+                                $("#divValidarOutputOk").hide();
+                                $("#outputValidarOk").html('');
+                                $("#divValidarOutputAlerta").hide();
+                                $("#outputValidarAlerta").html('');
+                                $("#divValidarOutputError").hide();
+                                $("#outputValidarError").html('');
                             }
-
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TipoEntidad2") {
-                                $("#spanTipoEntidad").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "Files") {
-                                $("#spanFiles").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoSeguridadCadenaSuministra") {
-                                $("#spanAcuerdoCadenaSumistro").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "acuerdoCorrectoUsoEndosesElectronico") {
-                                $("#spanEndose").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "declaracionJUridaVeracidadInformacio") {
-                                $("#spanVeracidadInfo").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "seBrindaOperacionesCargaFCL") {
-                                $("#spanOperacionCargaFCL").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "CodigoSunat") {
-
-                                $("#spanCodigoSunat").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
-                            if (jsonResponseForm.listActionListResponse[item].nombreCampo == "TerminoCondicionesGeneralesContraTCGC") {
-
-                                $("#spanTerminosCondicionesGeneerales").html(jsonResponseForm.listActionListResponse[item].mensaje);
-                            }
-
+                        },
+                        complete: function (data) {
 
                         }
-                    } else {
-
-                      
-             
-                        
-                        $("#dialogOk").modal("show");
-                        $("#outputMensajeOk").html(jsonResponseForm.mensaje);
-
-                        $("#divValidarOutputOk").hide();
-                        $("#outputValidarOk").html('');
-                        $("#divValidarOutputAlerta").hide();
-                        $("#outputValidarAlerta").html('');
-                        $("#divValidarOutputError").hide();
-                        $("#outputValidarError").html('');
-
-                    }
-
-                    $(".loader").fadeOut("slow");
-                } else {
-
-                    $(".loader").fadeOut("slow");
-
-
-                    $("#divOutputError").show();
-                    outputError.html(response.status + ' ' + response.statusText);
-
+                    });
                 }
 
             } catch (error) {
 
                 $(".loader").fadeOut("slow");
-                $("#divOutputError").show();
-                outputError.html('Result: ' + error);
+                $("#dialogError").modal("show");
+                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + error);
+
 
             }
         }

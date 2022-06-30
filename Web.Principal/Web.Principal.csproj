@@ -6,20 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\tarifario\**" />
     <Compile Remove="wwwroot\fonts\metropolis\**" />
+    <Content Remove="Pages\tarifario\**" />
     <Content Remove="wwwroot\fonts\metropolis\**" />
+    <EmbeddedResource Remove="Pages\tarifario\**" />
     <EmbeddedResource Remove="wwwroot\fonts\metropolis\**" />
+    <None Remove="Pages\tarifario\**" />
     <None Remove="wwwroot\fonts\metropolis\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\GestionarAccesos\Data\" />
+    <Folder Include="Areas\GestionarAccesos\Models\" />
     <Folder Include="Areas\GestionarAutorizacion\Data\" />
     <Folder Include="Areas\GestionarDashboards\Data\" />
     <Folder Include="Areas\GestionarEmbarques\Data\" />
     <Folder Include="Areas\GestionarSolicitudes\Data\" />
     <Folder Include="Areas\GestionarUsuarios\Data\" />
-    <Folder Include="Pages\tarifario\" />
     <Folder Include="wwwroot\fonts\" />
     <Folder Include="wwwroot\tmpdwac\ftp\" />
     <Folder Include="wwwroot\tmpdwac\facturacion_tercero\" />

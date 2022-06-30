@@ -4,6 +4,7 @@ namespace ViewModel.Notificacion
 {
     public class NotificacionVM
     {
+        public Int64 Id { get; set; }
         public string Proceso { get; set; }
 
         public string Mensaje { get; set; }

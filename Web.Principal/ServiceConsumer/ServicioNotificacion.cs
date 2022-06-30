@@ -16,7 +16,7 @@ using Service.Common.Logging.Application;
 
 namespace Web.Principal.ServiceConsumer
 {
-    public class NotificacionService : IServiceConsumer
+    public class ServicioNotificacion : IServiceConsumer
     {
         private IHttpContextAccessor _httpContextAccessor;
         private HttpContext _httpContext;
@@ -26,12 +26,12 @@ namespace Web.Principal.ServiceConsumer
         private readonly string URL_BASE_AFPNET_ERROR;
         private static ILogger _logger = ApplicationLogging.CreateLogger("BaseController");
 
-        public NotificacionService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public ServicioNotificacion(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             this.URL_BASE = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE}";
             _httpContextAccessor = httpContextAccessor;
         }
-        public NotificacionService(IConfiguration configuration, HttpContext httpContext)
+        public ServicioNotificacion(IConfiguration configuration, HttpContext httpContext)
         {
 
             this.URL_BASE_AFPNET_ERROR = $"{configuration[AppSettingsKeys.Servicio.Notificacion]}{SERVICIO_BASE_AFPNET_ERROR}";
@@ -94,14 +94,15 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
-        //public async Task<EnvioCorreoErrorRespuestaVM> EnvioCorreoAfpNetError(EnvioCorreoErrorVM viewModel)
-        //{
-        //    const string SERVICIO = "envio-correo-error-afpnet";
-        //    var uri = $"{URL_BASE_AFPNET_ERROR}{SERVICIO}";
-        //    var bearerToken = _httpContext.Session.GetUserContent().BearerToken;
-        //    var resultado = await _RequestFactory.SendRequest<EnvioCorreoErrorVM, EnvioCorreoErrorRespuestaVM>(viewModel, _httpContext, uri, bearerToken);
-        //    return resultado;
-        //}
+
+        public async Task<EnvioCorreoErrorRespuestaVM> EnvioCorreoAfpNetError(EnvioCorreoErrorVM viewModel)
+        {
+            const string SERVICIO = "envio-correo-error-afpnet";
+            var uri = $"{URL_BASE_AFPNET_ERROR}{SERVICIO}";
+            var bearerToken = _httpContext.Session.GetUserContent().BearerToken;
+            var resultado = await _RequestFactory.SendRequest<EnvioCorreoErrorVM, EnvioCorreoErrorRespuestaVM>(viewModel, _httpContext, uri, bearerToken);
+            return resultado;
+        }
 
     }
 }

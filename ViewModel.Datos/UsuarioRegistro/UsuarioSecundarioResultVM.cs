@@ -10,5 +10,6 @@ namespace ViewModel.Datos.UsuarioRegistro
    public class UsuarioSecundarioResultVM : BaseResultVM
     {
         public UsuarioVM usuario { get; set; }
+        public int IdUsuario { get; set; }
     }
 }

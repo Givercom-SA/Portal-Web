@@ -257,7 +257,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/GestionarEmbarques/AsignarAgente/AprobarRechazar",
+                    url: "@Url.Action("AprobarRechazar", "AsignarAgente", new { area= "GestionarEmbarques" })",
                     data: formData,
                     dataType: "json",
                     contentType: false,
@@ -268,22 +268,98 @@
                     error: function (jqXHR, textStatus, errorThrown) {
 
                         $(".loader").fadeOut("slow");
+                        $("#dialogError").modal("show");
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
 
                     },
                     success: function (result) {
+                        $(".loader").fadeOut("slow");
                         if (result != null) {
                             if (result.codigo == 0) {
                                 $('#modal_confirmarAsignado').modal('hide');
-                                $('#outputMensajeOk').html(result.mensaje);
                                 $('#dialogOk').modal('show');
+                                $('#outputMensajeOk').html(result.mensaje);
                                 ActualizarAsignadosAgenteAduanas();
-                                //
                             } else {
-                                ShowAlertMensage('ResultConfirmar', 'warning', '', result.mensaje, 0, null);
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensaje").html(result.mensaje);
                             }
                         } else {
-
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle");
                         }
+                    },
+                    complete: function (data) {
+
+                        
+
+                    }
+                });
+
+
+
+            });
+
+            $("#btnAnular").click(function () {
+
+                $("#ResultConfirmarAnulacion").html("");
+                var formData = new FormData();
+
+                formData.append("IdAsignacion", $('#IdAsignado').val());
+                formData.append("Observacion", $('#ObservacionAnulacion').val());
+
+                formData.append("KeyBl", $('#KeyBl').val());
+                formData.append("NroBl", $('#NroBl').val());
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AnularAsignacion", "AsignarAgente", new { area= "GestionarEmbarques" })',
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+                        $("#dialogError").modal("show");
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+
+                    },
+                    success: function (result) {
+
+                        $("#ObservacionAnulacion").html("");
+
+
+                        if (result != null) {
+                            if (result.codigo == 0) {
+
+                                $('#modal_confirmar').modal('hide');
+                                $('#dialogOk').modal('show');
+                                $('#outputMensajeOk').html(result.mensaje);
+
+                                ActualizarAsignadosAgenteAduanas();
+
+                            } else {
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensaje").html(result.mensaje);
+                            }
+                        } else {
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle");
+                        }
+
                     },
                     complete: function (data) {
 
@@ -293,65 +369,7 @@
                 });
 
 
-
             });
-
-             $("#btnAnular").click(function () {
-
-                 $("#ResultConfirmarAnulacion").html("");
-            var formData = new FormData();
-
-            formData.append("IdAsignacion", $('#IdAsignado').val());
-                 formData.append("Observacion", $('#ObservacionAnulacion').val());
-
-            formData.append("KeyBl", $('#KeyBl').val());
-            formData.append("NroBl", $('#NroBl').val());
-
-            $.ajax({
-                type: "POST",
-                url:'@Url.Action("AnularAsignacion", "AsignarAgente", new { area= "GestionarEmbarques" })',
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $(".loader").fadeIn("slow");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-
-                    $(".loader").fadeOut("slow");
-
-                },
-                success: function (result) {
-
-                    $("#ObservacionAnulacion").html("");
-
-
-                    if (result != null) {
-                        if (result.codigo == 0) {
-
-                            $('#modal_confirmar').modal('hide');
-                            $('#outputMensajeOk').html(result.mensaje);
-                            $('#dialogOk').modal('show');
-                            ActualizarAsignadosAgenteAduanas();
-
-                        } else {
-                            ShowAlertMensage('ResultConfirmarAnulacion', 'warning', '', result.mensaje, 0, null);
-                        }
-                    } else {
-
-                    }
-
-                },
-                complete: function (data) {
-
-                    $(".loader").fadeOut("slow");
-
-                }
-            });
-
-
-        });
 
 
         });
@@ -374,7 +392,7 @@
                         type: "date",
                         format: "DD/MM/YYYY"
                     }
-                    ]
+                ]
             });
 
         }
@@ -389,7 +407,7 @@
             var formData = $('#formListAsignados').serialize();
 
             $.ajax({
-                url: '/AsignarAgente/PartialAsignadoAgente',
+                url: "@Url.Action("PartialAsignadoAgente", "AsignarAgente", new {area="GestionarEmbarques" })",
                 data: formData,
                 type: 'POST',
                 beforeSend: function () {
@@ -398,18 +416,28 @@
                     $("#divListAsignado").html("Procesando...")
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+
                     $(".loader").fadeOut("slow");
-                    $("#divListAsignado").html("Ocurrio un error inesperado, por favor buscar nuevamente");
+                    $("#dialogError").modal("show");
+                    $("#divListAsignado").html("")
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess" + " <br/> Listar asignaciones.");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
+
+
+
                 },
                 success: function (response) {
-
+                    $(".loader").fadeOut("slow");
                     $("#divListAsignado").html(response);
                     DataTableListAgenteAsignados();
 
                 },
                 complete: function (data) {
 
-                    $(".loader").fadeOut("slow");
+
                 }
             });
         }
@@ -480,8 +508,8 @@
 
         function AsignacionAduanaHistorial(IdAsignacionAduana) {
 
-          
-         
+
+
             $.ajax({
                 type: "GET",
                 url: "@Url.Action("ListarAgenteAduanasHistorial", "AsignarAgente",new { area="GestionarEmbarques"})",
@@ -495,27 +523,32 @@
                     $("#divContentAsignacionAgenteHistorial").html("Procesando...")
 
                 },
-            })
-                .done(function (response) {
+                 error: function (jqXHR, textStatus, errorThrown) {
                     $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
+
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+
                     $('#modal_asginacion_aduana_historial').modal('show');
                     $("#divContentAsignacionAgenteHistorial").html(response);
 
                     DataTableAsignacionAduanaHistorial();
+                },
+                complete: function (data) {
 
-                })
-                .fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-                     
 
-                    $('#dialogError').modal('show');
-                    $("#outputMensajeError").html(error);
-
-                })
-                .always(function () {
-
-                  
-                });
+                }
+            });
 
         }
 
@@ -535,40 +568,34 @@
                     $(".loader").fadeIn("slow");
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
                     $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
+
 
                 },
                 success: function (response) {
 
                     $(".loader").fadeOut("slow");
                     if (response.codigo == 0) {
-
-
                         window.location.href = response.mensaje;
-
-
                     }
                     else if (response.codigo > 0) {
-
-
                         $("#dialogAlerta").modal("show");
                         $("#outputMensaje").html(response.mensaje);
-
-
                     }
                     else {
-
-
                         $("#dialogError").modal("show");
                         $("#outputMensajeError").html(response.mensaje);
-
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+
 
                 }
             });

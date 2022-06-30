@@ -146,23 +146,12 @@ namespace Web.Principal
 
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
-            
-
-            //app.UseStatusCodePages("text/plain","Pagina de codigos de estado, codigo {0}");
-            //app.UseStatusCodePages(async context => {
-            //    await context.HttpContext.Response.WriteAsync(
-            //        "Pagina de codigos de estado, codigo:" +
-            //        context.HttpContext.Response.StatusCode);
-            //});
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
- 
-
 
             var defaultCulture = "es-PE";
             var ci = new CultureInfo(defaultCulture);
@@ -177,14 +166,11 @@ namespace Web.Principal
                 SupportedUICultures = supportedCultures
             });
 
-        
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-            
+
                 endpoints.MapControllerRoute(
                     name: "Projects",
                     pattern: "{area:exists}/{controller=SolicitarAcceso}/{action=ValidarCodigo}"
@@ -214,13 +200,11 @@ namespace Web.Principal
                                  pattern: "{area=GestionarUsuarios}/{controller=Usuarios}/{action=ListarUsuarios}/{id?}"
                              );
 
-
                 endpoints.MapAreaControllerRoute(
                          name: "GestionarAccesos",
                          areaName: "GestionarAccesos",
                          pattern: "{area=GestionarAccesos}/{controller=SolicitarAcceso}/{action=Index}/{id?}"
                            );
-
 
                 endpoints.MapAreaControllerRoute(
                  name: "GestionarAutorizacion",
@@ -246,11 +230,11 @@ namespace Web.Principal
                pattern: "{area=GestionarEmbarques}/{controller=Facturacion}/{action=Lista}"
                     );
 
-            endpoints.MapAreaControllerRoute(
-               name: "GestionarEmbarques",
-               areaName: "GestionarEmbarques",
-               pattern: "{area=GestionarEmbarques}/{controller=Direccionamiento}/{action=Lista}"
-                    );
+                endpoints.MapAreaControllerRoute(
+                   name: "GestionarEmbarques",
+                   areaName: "GestionarEmbarques",
+                   pattern: "{area=GestionarEmbarques}/{controller=Direccionamiento}/{action=Lista}"
+                        );
 
                 endpoints.MapAreaControllerRoute(
                name: "GestionarEmbarques",
@@ -258,25 +242,21 @@ namespace Web.Principal
                pattern: "{area=GestionarEmbarques}/{controller=Memo}/{action=Lista}"
                     );
 
-                endpoints.MapControllerRoute(
-                         name: "Seguridad",
-                         pattern: "{controller=Seguridad}/{action=Index}"
-                              );
+
+            
 
                 endpoints.MapControllerRoute(
                    name: "Autenticacion",
                    pattern: "{controller=Autenticacion}/{action=Index}"
                         );
 
-     
-
                 endpoints.MapControllerRoute(
                 name: "Error",
                 pattern: "{controller=Error}/{action=Index}"
                      );
-                endpoints.MapControllerRoute(
-            name: "Home",
-            pattern: "{controller=Home}/{action=Index}"
+                        endpoints.MapControllerRoute(
+                        name: "Home",
+                        pattern: "{controller=Home}/{action=Index}"
                  );
 
                 endpoints.MapControllerRoute(
@@ -284,20 +264,13 @@ namespace Web.Principal
                  pattern: "{SolicitarAcceso=Home}/{action=Index}"
               );
 
-                //endpoints.MapHub<NotificationHub>("/NotificationHub");
                 endpoints.MapHub<NotificationUserHub>("/notificaciones");
-               // endpoints.MapHub<NotificacionHub>("/notificaciones");
 
             });
-
-
 
             loggerFactory.AddLog4Net(new[] { log4netConfiguration.CreateRollingFileAppender(Configuration, env.ApplicationName) });
             lifeTime = LifeTimeBuilder.LifeTimeRegister(lifeTime, env.ApplicationName);
 
-
-
         }
-
     }
 }

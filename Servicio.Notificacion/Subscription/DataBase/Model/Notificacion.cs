@@ -37,7 +37,7 @@ namespace Servicio.Notificacion.Subscription.Model
         [Column(name: "Vc_Link")]
         public string Link { get; set; }
 
-        public string FechaFormato { get; set; }
+        public string FechaFormato { get { return this.CreacionFecha.ToString("dddd dd MMMM HH:mm:ss"); } }
 
     }
 }

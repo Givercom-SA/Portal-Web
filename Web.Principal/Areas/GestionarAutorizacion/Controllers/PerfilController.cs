@@ -86,10 +86,13 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
             var listServiceEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(76);
             var listServiceTipoPerfil = await _serviceMaestro.ObtenerParametroPorIdPadre(41);
 
+   
 
             model.ListEstado = new SelectList(listServiceEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
             model.ListTipo = new SelectList(listServiceTipoPerfil.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
+
+          
 
             return View(model);
         }
@@ -120,13 +123,13 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
             return Json(ActionResponse);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> EditarPerfil(string parkey)
         {
             var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
             int Id = Int32.Parse(dataDesencriptada);
+
+            PerfilModel model = new PerfilModel();
 
             PerfilParameterVM parameter = new PerfilParameterVM();
             parameter.IdPerfil = Id;
@@ -135,19 +138,28 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
 
             var listServiceTipoPerfil = await _serviceMaestro.ObtenerParametroPorIdPadre(41);
 
-
-
             ViewBag.ListTipo = new SelectList(listServiceTipoPerfil.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
             resultPerfil.perfil.IdPerfil = Id;
-            resultPerfil.perfil.Menus.ForEach(x => {
-                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z=>z.IdMenu==x.IdMenu).ToArray();
-                
-            }); 
-            
-            
+            resultPerfil.perfil.Menus.ForEach(x =>
+            {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
 
-            return View(resultPerfil.perfil);
+            });
+
+            ViewBag.Menus = resultPerfil.perfil.Menus;
+
+            model.Nombre = resultPerfil.perfil.Nombre;
+            model.Tipo = resultPerfil.perfil.Tipo;
+            model.Dashboard = resultPerfil.perfil.Dashboard;
+            model.IdPerfil = resultPerfil.perfil.IdPerfil;
+            model.Activo = resultPerfil.perfil.Activo;
+            model.FechaModifica = resultPerfil.perfil.FechaModifica==null ? "":Convert.ToDateTime( resultPerfil.perfil.FechaModifica).ToString("dd/MM/yyyy HH:mm:ss");
+            model.UsuarioModifica = resultPerfil.perfil.UsuarioModifica;
+            model.UsuarioCrea = resultPerfil.perfil.UsuarioCrea;
+            model.FechaRegistro =resultPerfil.perfil.FechaRegistro.ToString("dd/MM/yyyy HH:mm:ss");
+            
+            return View(model);
 
         }
 
@@ -193,11 +205,7 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
 
             ViewBag.Menus = result.Menus;
 
-
-            model.UsuarioCrea = this.usuario.NombresUsuario + " " + this.usuario.ApellidoPaternousuario; ;
-
-      
-
+            model.UsuarioCrea = this.usuario.NombresUsuario + " " + this.usuario.ApellidoPaternousuario; 
 
             return View(model);
 
@@ -217,6 +225,7 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
                     parameterVM.Nombre = perfil.Nombre;
                     parameterVM.Menus = perfil.Menus.ToList();
                     parameterVM.Tipo = perfil.Tipo;
+                    parameterVM.Dashboard = perfil.Dashboard;
                     parameterVM.IdUsuarioCrea = this.usuario.idUsuario;
 
                     List<VistaMenuVM> vistaMenus = new List<VistaMenuVM>();
@@ -259,7 +268,7 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
             else
             {
                 ActionResponse.Codigo = -1;
-                ActionResponse.Mensaje = "Estimado usuario, ingresar en los campos obligatorios.";
+                ActionResponse.Mensaje = "Estimado usuario, ingresar los campos obligatorios.";
             }
 
             return Json(ActionResponse);
@@ -283,6 +292,7 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Controllers
                     parameterVM.Menus = perfil.Menus.ToList();
                     parameterVM.IdUsuarioModifica =this.usuario.idUsuario;
                     parameterVM.Tipo =perfil.Tipo;
+                    parameterVM.Dashboard = perfil.Dashboard;
 
                     List<VistaMenuVM> vistaMenus = new List<VistaMenuVM>();
 

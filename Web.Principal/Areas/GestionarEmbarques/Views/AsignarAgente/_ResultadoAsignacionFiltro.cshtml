@@ -12,16 +12,16 @@
             switch (Estado)
             {
                 case "1": //Pendiente
-                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge badge-light text-body'>{1}</span></a>", id, EstadoNombre);
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'>{1}</a>", id, EstadoNombre);
                     break;
                 case "2": //Aprobado
-                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-success'>{1}</span></a>", id, EstadoNombre);
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'>{1}</a>", id, EstadoNombre);
                     break;
                 case "3": //Rechazado
-                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-danger'>{1}</span></a>", id, EstadoNombre);
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'>{1}</a>", id, EstadoNombre);
                     break;
                 case "4": //Anulado
-                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})'><span class='badge bg-light text-danger'><del>{1}</del></span></a>", id, EstadoNombre);
+                    strEstado = string.Format("<a href='javascript:AbrirHistorial({0})' style='color:red'><del>{1}</del></a>", id, EstadoNombre);
                     break;
             }
             return strEstado;
@@ -46,7 +46,7 @@
             @foreach (var item in Model.AsignacionAduanas)
             {
             <tr>
-                <td><a href="@Url.Action("Detalle","Embarque",new { codigo=item.KEYBLD })">@item.NROBL</a></td>
+                <td>@item.NROBL</td>
                 <td>@item.FechaRegistro</td>
                 <td>@item.ORIGEN</td>
                 <td>@item.POL</td>

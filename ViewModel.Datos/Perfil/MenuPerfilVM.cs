@@ -12,11 +12,27 @@ namespace ViewModel.Datos.Perfil
         {
 
         }
+
+        private string strTipoMenu;
+
         public int IdMenu { get; set; }
         public string Nombre { get; set; }
         public string Grupo { get; set; }
         public int Permiso { get; set; }
+        public int IdPadre { get; set; }
+        public bool Visible { get; set; }
+        public string TipoMenu { get {
 
+                if (strTipoMenu == null)
+                    return "";
+                else
+                    return strTipoMenu;
+
+            } set { strTipoMenu = value; } }
+        public int Orden { get; set; }
+        public string IdMenuChecked { get; set; }
+        
         public VistaMenuVM[] VistaMenu { get; set; }
+
     }
 }

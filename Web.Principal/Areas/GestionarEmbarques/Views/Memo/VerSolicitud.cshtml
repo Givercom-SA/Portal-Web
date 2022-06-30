@@ -47,7 +47,7 @@
 
                         <div class="row">
                             <div class="col-6 col-sm-6 ">
-                                @Html.Raw("Número de Embarque :")
+                                @Html.Raw("Número de Embarque")
                             </div>
                             <div class="col-6 col-sm-6 ">
                                 <input class="form-control  small" type="text" disabled value="@Model.NroEmbarque" />
@@ -59,7 +59,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                @Html.Raw("Fecha de Registro: ")
+                                @Html.Raw("Fecha de Registro")
                             </div>
                             <div class="col-6">
                                 <input class="form-control  small" type="text" disabled value="@Model.FechaRegistro" />
@@ -76,28 +76,33 @@
 
                         <div class="row">
                             <div class="col-6 col-sm-6 ">
-                                @Html.Raw("Estado :")
+                                @Html.Raw("Estado")
                             </div>
                             <div class="col-6 col-sm-6 ">
-                                @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+
+                                <input type="hidden" id="hidenEstadoMemo" value="@Model.EstadoCodigo" />
+
+                                @if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
                                 {
-                                    <select asp-for="@Model.EstadoCodigo" class="form-select small" disabled
-                                            id="cmbEstado"
-                                            onchange="visualizarMotRechazo(this)">
-                                        <option value="SP">Pendiente</option>
-                                        <option value="SA">Aprobar</option>
-                                        <option value="SR">Rechazar</option>
-                                    </select>
+                                    @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                    {
+
+                                        <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="@Model.EstadoCodigo" class="form-select small"
+                                                id="cmbEstado"
+                                                onchange="visualizarMotRechazo(this)">
+                                            <option value="0">Seleccionar</option>
+                                            <option value="SA">Aprobar</option>
+                                            <option value="SR">Rechazar</option>
+                                        </select>
+                                    }
                                 }
                                 else
                                 {
-                                    <select asp-for="@Model.EstadoCodigo" class="form-select small"
-                                            id="cmbEstado"
-                                            onchange="visualizarMotRechazo(this)">
-                                        <option value="0">Seleccionar</option>
-                                        <option value="SA">Aprobar</option>
-                                        <option value="SR">Rechazar</option>
-                                    </select>
+                                    <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
                                 }
                             </div>
                         </div>
@@ -106,7 +111,7 @@
                         <div id="divMotRechazo" style="display:none;">
                             <div class="row">
                                 <div class="col-6">
-                                    @Html.Raw("Motivo Rechazo: ")
+                                    @Html.Raw("Motivo Rechazo")
                                 </div>
 
                                 <div class="col-6">
@@ -140,9 +145,10 @@
                     <div class="col-6 col-sm-6  small ">
                         <div class="row">
                             <div class="col-6 col-sm-6 ">
-                                @if (Model.EstadoCodigo.Equals("SP"))
+                                @if (Model.EstadoCodigo.Equals("SP") &&
+                                  Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
                                 {
-                                    <button class="btn btn-sm btn-primary" type="button" onclick="RegistrarEstado()"> Guardar </button>
+                                    <button class="btn btn-primary" type="button" onclick="RegistrarEstado()"> Guardar </button>
                                 }
                             </div>
                             <div class="col-6 col-sm-6 ">
@@ -307,7 +313,20 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="dialogOk" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
 
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y actualizar</button></div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
 
@@ -319,13 +338,13 @@
 
         $(document).ready(function () {
 
-            let codEstadRechazoLoad = $("#cmbEstado").val();
+            let codEstadRechazoLoad = $("#hidenEstadoMemo").val();
             if (codEstadRechazoLoad == "SR") $("#divMotRechazo").show();
             else $("#divMotRechazo").hide();
 
             var listaEstadoSelects = document.getElementsByClassName("classEstadoDoc");
 
-         
+
 
         });
 
@@ -353,7 +372,7 @@
             listDocumentos.Documentos = [];
             listDocumentos.CodigoMotivoRechazo = codEstadRechazo;
             listDocumentos.codigoEstadoEvalua = codEstado;
-         
+
             if (codEstado == "0") {
                 $("#dialogAlerta").modal("show");
                 $("#outputMensaje").html("Debe seleccionar un estado APROBAR o RECHAZAR.");
@@ -395,38 +414,47 @@
                 beforeSend: function (xhr) {
 
                     $(".loader").fadeIn("slow");
-                }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-            }).done(function (data) {
-
-                $(".loader").fadeOut("slow");
-
-                if (data.codigo == 0) {
-
-                    $("#modalResultRegistro").modal("show");
-                    $("#mensaje").html(data.mensaje);
-
-                } else if (data.codigo > 0) {
-
-
-                    $("#dialogAlerta").modal("show");
-                    $("#outputMensaje").html(data.mensaje);
-
-                } else {
-
+                         $(".loader").fadeOut("slow");
                     $("#dialogError").modal("show");
-                    $("#outputMensajeError").html(data.mensaje);
+
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+
+                    if (response.codigo == 0) {
+
+                        $("#modalResultRegistro").modal("show");
+                        $("#mensaje").html(response.mensaje);
+
+                    } else if (response.codigo > 0) {
+
+
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    } else {
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+                    }
+
+                },
+                complete: function (data) {
+
+
                 }
-
-
-
-            }).fail(function () {
-
-                $(".loader").fadeOut("slow");
-
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html("Ocurrio un error inesperado, por favor volver a intentar más tarde.");
-
 
             });
         }

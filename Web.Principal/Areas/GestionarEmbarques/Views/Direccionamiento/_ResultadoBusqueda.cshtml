@@ -23,7 +23,7 @@
             foreach (var item in Model)
             {
         <tr>
-            <td><a href='@Url.Action("VerSolicitud", "Direccionamiento", new {parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.Codigo .ToString())  })'> #@item.Codigo </a></td>
+            <td><a href='@Url.Action("VerSolicitud", "Direccionamiento", new {parkey=Security.Common.Encriptador.Instance.EncriptarTexto(item.Codigo .ToString())  })'>@item.Codigo </a></td>
             <td>@item.FechaRegistro.ToShortDateString()</td>
             <td>@item.NombreModalidad</td>
             <td>@item.NroEmbarque</td>

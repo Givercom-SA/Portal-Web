@@ -225,25 +225,28 @@
                                 @Html.Raw("Estado :")
                             </div>
                             <div class="col-6 col-sm-6 ">
-                                @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                @if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
                                 {
-                                    <select asp-for="@Model.EstadoCodigo" class="form-select small classEstadoDoc" disabled
-                                            id="cmbEstado"
-                                            onchange="visualizarMotRechazo(this, '@(Model.Id)')">
-                                        <option value="SP">Pendiente</option>
-                                        <option value="SA">Aprobar</option>
-                                        <option value="SR">Rechazar</option>
-                                    </select>
-                                }
+                                    @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                    {
+                                        <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+
+
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="@Model.EstadoCodigo" class="form-select small classEstadoDoc"
+                                                id="cmbEstado"
+                                                onchange="visualizarMotRechazo(this,'@(Model.Id)')">
+                                            <option value="0">Seleccionar</option>
+                                            <option value="SA">Aprobar</option>
+                                            <option value="SR">Rechazar</option>
+                                        </select>
+                                    }}
                                 else
                                 {
-                                    <select asp-for="@Model.EstadoCodigo" class="form-select small classEstadoDoc"
-                                            id="cmbEstado"
-                                            onchange="visualizarMotRechazo(this, '@(Model.Id)')">
-                                        <option value="0">Seleccionar</option>
-                                        <option value="SA">Aprobar</option>
-                                        <option value="SR">Rechazar</option>
-                                    </select>
+                                    <input class="form-control  small" type="text" disabled value="@Model.EstadoNombre" />
+
                                 }
                             </div>
                         </div>
@@ -257,22 +260,30 @@
                                 </div>
 
                                 <div class="col-6">
-                                    @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
-                                    {
+                                    <input  type="hidden" id="hidenEstadoDireccionamiento" value="@Model.EstadoCodigo" />
 
-                                        <select class="form-select small" id="cmbRechazo" disabled
-                                                asp-for="@Model.CodMotivoRechazo"
-                                                asp-items="@ViewBag.ListarMotivosRechazos">
-                                            <option value="0">Seleccione</option>
-                                        </select>
+                                    @if (Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO))
+                                    {
+                                        @if (Model.EstadoCodigo == "SA" || Model.EstadoCodigo == "SR")
+                                        {
+                                            <input class="form-control  small" type="text" disabled value="@Model.MotivoRechazo" />
+                                          
+                                        }
+                                        else
+                                        {
+                                            <select class="form-select small" id="cmbRechazo"
+                                                    asp-for="@Model.CodMotivoRechazo"
+                                                    asp-items="@ViewBag.ListarMotivosRechazos">
+                                                <option value="0">Seleccione</option>
+                                            </select>
+                                        }
+
+
+
                                     }
                                     else
                                     {
-                                        <select class="form-select small" id="cmbRechazo"
-                                                asp-for="@Model.CodMotivoRechazo"
-                                                asp-items="@ViewBag.ListarMotivosRechazos">
-                                            <option value="0">Seleccione</option>
-                                        </select>
+                                        <input class="form-control  small" type="text" disabled value="@Model.MotivoRechazo" />
                                     }
                                 </div>
 
@@ -288,9 +299,10 @@
                     <div class="col-6 col-sm-6  small ">
                         <div class="row">
                             <div class="col-6 col-sm-6 ">
-                                @if (Model.EstadoCodigo.Equals("SP"))
-                                {
-                                    <button class="btn btn-sm btn-primary" type="button" onclick="GuardarGestionDireccionamiento()"> Guardar </button>
+
+                                @if (Model.EstadoCodigo.Equals("SP") &&   
+                                    Model.TipoPerfil.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO)){
+                                    <button class="btn btn-primary" type="button" onclick="GuardarGestionDireccionamiento()"> Guardar </button>
                                 }
                             </div>
                             <div class="col-6 col-sm-6 ">
@@ -298,14 +310,7 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
-
-
-
 
                 <div style="position: absolute; bottom: 1rem; right: 1rem;">
                     <!-- Toast -->
@@ -453,10 +458,10 @@
 
         $(document).ready(function () {
 
-            let codEstadRechazo = $("#cmbEstado").val();
+            let codEstadRechazo = $("#hidenEstadoDireccionamiento").val();
             if (codEstadRechazo == "SR") $("#divMotRechazo").show();
                 else $("#divMotRechazo").hide();
-        
+
         });
 
         function visualizarMotRechazo(obj, valor) {
@@ -497,11 +502,11 @@
 
                 var codDocumento = $("#hddCodDoc_" + index).val();
                 var codEstadRechazo = $("#cmbRechazo").val();
-                
+
 
                 DireccionamientoDocumentoParameter.EstadoCodigo = codEstado ;
                 DireccionamientoDocumentoParameter.CodigoMotivoRechazo = codEstadRechazo;
-       
+
 
                 if (codEstadRechazo == "0" && codEstado == "SR") {
                     cantidadNoSeleccionados = cantidadNoSeleccionados + 1;
@@ -552,27 +557,33 @@
                 data: listDireccionamientoDocumento,
                 beforeSend: function (xhr) {
                     $(".loader").fadeIn("slow");
+                },
+                 error: function (jqXHR, textStatus, errorThrown) {
+
+                     $(".loader").fadeOut("slow");
+                     $("#dialogError").modal("show");
+                    
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    $("#modalResultRegistro").modal("show");
+
+                },
+                complete: function (data) {
+         
+
                 }
 
-            }).done(function (data) {
-
-
-
-
-                $(".loader").fadeOut("slow");
-                $("#modalResultRegistro").modal("show");
-
-
-
-            }).fail(function () {
-
-                $(".loader").fadeOut("slow");
-
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html("Error inesperado de sistema");
-
-                 
             });
+
         }
 
 

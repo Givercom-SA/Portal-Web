@@ -11,6 +11,10 @@ using ViewModel.Datos.UsuarioRegistro;
 using ViewModel.Datos.Perfil;
 using ViewModel.Datos.Acceso;
 using Servicio.Acceso.Models.LoginUsuario;
+using Servicio.Acceso.Models.Menu;
+using ViewModel.Datos.Menu;
+using Servicio.Acceso.Models.Vista;
+using ViewModel.Datos.Vista;
 
 namespace Servicio.Acceso.Profiles
 {
@@ -36,11 +40,32 @@ namespace Servicio.Acceso.Profiles
                 .ForMember(s => s.TipoEntidad, o => o.MapFrom(s => s.PERFIL_TIPO_ENTIDAD))
                 .ForMember(s => s.Dashboard, o => o.MapFrom(s => s.PEFL_DASHBOARD))
                 .ForMember(s => s.TipoPerfil, o => o.MapFrom(s => s.PEFL_TIPO))
+                .ForMember(s => s.Accesos, o => o.MapFrom(s => s.ListaAcceso))
+
                 ;
 
             CreateMap<MenuLogin, MenuLoginVM>();
             CreateMap<PerfilLogin, PerfilLoginVM>();
 
+
+            CreateMap<ItemAcceso, MenuElementoVM>()
+                .ForMember(d => d.MenuId, o => o.MapFrom(s => s.MenuId))
+                .ForMember(d => d.Name, o => o.MapFrom(s => string.IsNullOrEmpty(s.Name) ? string.Empty : s.Name.Trim()))
+                .ForMember(d => d.HttpArea, o => o.MapFrom(s => string.IsNullOrEmpty(s.HttpArea) ? string.Empty : s.HttpArea.Trim().ToLower()))
+                .ForMember(d => d.HttpController, o => o.MapFrom(s => string.IsNullOrEmpty(s.HttpController) ? string.Empty : s.HttpController.Trim().ToLower()))
+                .ForMember(d => d.HttpAction, o => o.MapFrom(s => string.IsNullOrEmpty(s.HttpAction) ? string.Empty : s.HttpAction.Trim().ToLower()))
+                .ForMember(d => d.HttpMethod, o => o.MapFrom(s => string.IsNullOrEmpty(s.HttpMethod) ? string.Empty : s.HttpMethod.Trim().ToLower()))
+                .ForMember(d => d.IsMainForm, o => o.MapFrom(s => s.IsMainForm))
+                .ForMember(d => d.ItemType, o => o.MapFrom(s => s.ItemType))
+                .ForMember(d => d.NameControlHtml, o => o.MapFrom(s => s.NameControlHtml))
+                .ForMember(d => d.ParentId, o => o.MapFrom(s => s.ParentId))
+                .ForMember(d => d.Order, o => o.MapFrom(s => s.Order))
+                .ForMember(d => d.IdPerfil, o => o.MapFrom(s => s.IdPerfil))
+                .ForMember(d => d.IdVistaMenuPerfil, o => o.MapFrom(s => s.IdVistaMenuPerfil))
+                .ForMember(d => d.IdVista, o => o.MapFrom(s => s.IdVista))
+                .ForMember(d => d.IdVistaMenu, o => o.MapFrom(s => s.IdVistaMenu))
+                .ForMember(d => d.Checked, o => o.MapFrom(s => s.Checked))
+                .ForAllOtherMembers(x => x.Ignore());
 
             CreateMap<CodigoGeneradoValidacionParameterVM, CodigoGeneradoValidacionParameter>()
            .ForMember(s => s.CODTIPO_DOCUMENTO, o => o.MapFrom(s => s.CodigoTipoDocumento))
@@ -60,6 +85,58 @@ namespace Servicio.Acceso.Profiles
             .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
             .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
+            CreateMap<ListarMenuResult, ListarMenusResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<LeerMenuResult, LeerMenusResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<MantenimientoVistaResult, MantenimientoVistaResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<ListarAreaControllerActionResult, ListarAreaControllerActionResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<AreaControllerActionVM, AreaControllerAction>();
+            CreateMap<AreaControllerAction, AreaControllerActionVM>();
+
+            CreateMap<MenuVM, Menu>();
+            CreateMap<Menu, MenuVM>();
+
+            CreateMap<ListarVistaResult, ListarVistasResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<MantenimientoMenuResult, MantenimientoMenuResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<LeerVistaResult, LeerVistaResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<ListarTodoVistaResult, ListarTodoVistaResultVM>()
+            .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+            .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+            CreateMap<ListarTodoMenuResult, ListarTodoMenusResultVM>()
+           .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+           .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+
+
+            CreateMap<VistaVM, Vista>();
+            CreateMap<Vista, VistaVM>();
+
+            CreateMap<VistaTodoVM, VistaTodo>();
+            CreateMap<VistaTodo, VistaTodoVM>();
 
 
 
@@ -100,7 +177,7 @@ namespace Servicio.Acceso.Profiles
           .ForMember(s => s.CodigoSunat, o => o.MapFrom(s => s.CodigoSunat))
           .ForMember(s => s.Documento, o => o.MapFrom(s => s.Documento))
           .ForMember(s => s.SOLI_BRINDA_AGENCIAMIENTO_ADUANA, o => o.MapFrom(s => s.BrindaAgenciamientoAduanas))
-          
+
           ;
 
             CreateMap<TipoEntidadVM, TipoEntidad>()
@@ -128,13 +205,13 @@ namespace Servicio.Acceso.Profiles
                 .ForMember(s => s.Menus, o => o.MapFrom(s => s.Menus))
                 .ForMember(s => s.VistaMenu, o => o.MapFrom(s => s.VistaMenu))
                 .ForMember(s => s.Checked, o => o.MapFrom(s => s.Checked));
-                   
+
 
             CreateMap<PerfilParameterVM, PerfilParameter>();
 
-        CreateMap<PerfilResult, PerfilResultVM>()
-                .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
-                .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
+            CreateMap<PerfilResult, PerfilResultVM>()
+                    .ForMember(s => s.CodigoResultado, o => o.MapFrom(s => s.IN_CODIGO_RESULTADO))
+                    .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD));
 
             CreateMap<MenuPerfil, MenuPerfilVM>();
             CreateMap<VistaMenu, VistaMenuVM>();
@@ -166,8 +243,19 @@ namespace Servicio.Acceso.Profiles
                .ForMember(s => s.MensajeResultado, o => o.MapFrom(s => s.STR_MENSAJE_BD))
                .ForMember(s => s.Empresa, o => o.MapFrom(s => s.Empresa))
                ;
-            
-            CreateMap<ListarPerfilActivosParameterVM, ListarPerfilesActivosParameter>() ;
+
+            CreateMap<ListarAreaControllerActionParameterVM, ListarAreaControllerActionParameter>();
+            CreateMap<ListarAreaControllerActionParameter, ListarAreaControllerActionParameterVM>();
+
+            CreateMap<ListarPerfilActivosParameterVM, ListarPerfilesActivosParameter>();
+            CreateMap<ListarMenusParameterVM, ListarMenuParameter>();
+            CreateMap<ListarMenuParameter, ListarMenusParameterVM>();
+
+            CreateMap<ListarVistaParameterVM, ListarVistaParameter>();
+            CreateMap<ListarVistaParameter, ListarVistaParameterVM>();
+
+            CreateMap<MantenimientoVistaParameterVM, MantenimientoVistaParameter>();
+            CreateMap<MantenimientoMenuParameterVM, MantenimientoMenuParameter>();
 
             CreateMap<ListarPerfilesActivosResult, ListarPerfilesActivosResultVM>()
                 .ForMember(s => s.Perfiles, o => o.MapFrom(s => s.Perfiles));

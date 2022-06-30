@@ -25,6 +25,7 @@ namespace Servicio.Usuario.Repositorio
         public UsuarioSecundarioResult EditarUsuarioInterno(CrearUsuarioSecundarioParameter parameter);
         public UsuarioSecundarioResult CambiarClaveUsuario(CrearUsuarioSecundarioParameter parameter);
         public UsuarioSecundarioResult ObtenerUsuarioSecundario(CrearUsuarioSecundarioParameter parameter);
+        public UsuarioSecundarioResult ObtenerUsuario(CrearUsuarioSecundarioParameter parameter);
         public ListarUsuarioMenuResult ObtenerListaUsuarioMenu(CrearUsuarioSecundarioParameter parameter);
         public UsuarioSecundarioResult HabilitarUsuario(CrearUsuarioSecundarioParameter parameter);
         public bool ExisteUsuario(string Correo);

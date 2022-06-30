@@ -40,6 +40,8 @@ namespace ViewModel.Datos.Embarque.SolicitudDireccionamiento
         public DateTime? FechaEvaluacion { get; set; }
         public string UsuarioEvalua { get; set; }
 
+        public string TipoPerfil { get; set; }
+
         public IEnumerable<DocumentoResultVM> ListaDocumentos { get; set; }
 
         public IEnumerable<EventosResultVM> ListaEventos { get; set; }

@@ -13,6 +13,8 @@ using ViewModel.Datos.Perfil;
 using Web.Principal.Util;
 using ViewModel.Datos.Acceso;
 using Service.Common;
+using ViewModel.Datos.Menu;
+using ViewModel.Datos.Vista;
 
 namespace Web.Principal.ServiceConsumer
 {
@@ -54,8 +56,70 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
+        public async Task<LeerMenusResultVM> LeerMenu(int IdMenu)
+        {
+
+            const string SERVICIO = "leer-menu";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}/{IdMenu}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<LeerMenusResultVM>();
+
+            return resultado;
+        }
+        public async Task<LeerMenusResultVM> ListarTodasVistasParaMenu()
+        {
+
+            const string SERVICIO = "vistas-para-menu";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<LeerMenusResultVM>();
+
+            return resultado;
+        }
+
+        
+        public async Task<LeerVistaResultVM> LeerVista(int IdVista)
+        {
+
+            const string SERVICIO = "leer-vista";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}/{IdVista}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<LeerVistaResultVM>();
 
 
+            return resultado;
+        }
+
+        public async Task<ListarTodoVistaResultVM> ListarTodoVistas()
+        {
+
+            const string SERVICIO = "vistas-todos";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<ListarTodoVistaResultVM>();
+
+
+            return resultado;
+
+        }
+
+        public async Task<ListarTodoMenusResultVM> ListarTodoMenus()
+        {
+
+            const string SERVICIO = "menus-todos";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.GetAsync(uri);
+
+            var resultado = response.ContentAsType<ListarTodoMenusResultVM>();
+
+
+            return resultado;
+
+        }
         public async Task<SolicitarAccesoResultVM> SolicitarAcceso(SolicitarAccesoParameterVM parameter)
         {
             var json = JsonConvert.SerializeObject(parameter);
@@ -70,7 +134,97 @@ namespace Web.Principal.ServiceConsumer
             return resultado;
         }
 
+        public async Task<ListarAreaControllerActionResultVM> ListarSoloArea(ListarAreaControllerActionParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
 
+            const string SERVICIO = "vista-listar-area";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarAreaControllerActionResultVM>();
+
+            return resultado;
+        }
+        public async Task<ListarAreaControllerActionResultVM> ListarSoloController(ListarAreaControllerActionParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "vista-listar-controller";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarAreaControllerActionResultVM>();
+
+            return resultado;
+        }
+        public async Task<ListarAreaControllerActionResultVM> ListarSoloAction(ListarAreaControllerActionParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "vista-listar-action";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarAreaControllerActionResultVM>();
+
+            return resultado;
+        }
+        public async Task<MantenimientoVistaResultVM> VistaModificar(MantenimientoVistaParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "vista-modificar";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<MantenimientoVistaResultVM>();
+
+            return resultado;
+        }
+        public async Task<MantenimientoVistaResultVM> VistaRegistrar(MantenimientoVistaParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "vista-registrar";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<MantenimientoVistaResultVM>();
+
+            return resultado;
+        }
+        public async Task<MantenimientoMenuResultVM> MenuRegistrar(MantenimientoMenuParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "menu-registrar";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<MantenimientoMenuResultVM>();
+
+            return resultado;
+        }
+        public async Task<MantenimientoMenuResultVM> MenuModificar(MantenimientoMenuParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "menu-modificar";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<MantenimientoMenuResultVM>();
+
+            return resultado;
+        }
         public async Task<CodigoGeneradoValidacionResultVM> GenerarCodigoVerificacion(CodigoGeneradoValidacionParameterVM parameter)
         {
             var json = JsonConvert.SerializeObject(parameter);
@@ -81,6 +235,33 @@ namespace Web.Principal.ServiceConsumer
             var response = await client.PostAsync(uri, data);
 
             var resultado = response.ContentAsType<CodigoGeneradoValidacionResultVM>();
+
+            return resultado;
+        }
+
+        public async Task<ListarVistasResultVM> ListarVistas(ListarVistaParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "obtener-vistas";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarVistasResultVM>();
+
+            return resultado;
+        }
+        public async Task<ListarMenusResultVM> ListarMenus(ListarMenusParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            const string SERVICIO = "obtener-menus";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<ListarMenusResultVM>();
 
             return resultado;
         }
@@ -200,7 +381,20 @@ namespace Web.Principal.ServiceConsumer
 
             return resultado;
         }
+        public async Task<TraerPerfilResultVM> ObtenerPerfilUsuario(PerfilParameterVM parameter)
+        {
+            var json = JsonConvert.SerializeObject(parameter);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
 
+            const string SERVICIO = "obtener-perfil-usuario";
+            var uri = $"{URL_BASE}{SERVICIO_ACCESOS}{SERVICIO}";
+            var response = await client.PostAsync(uri, data);
+
+            var resultado = response.ContentAsType<TraerPerfilResultVM>();
+
+            return resultado;
+        }
+       
         public async Task<ListarPerfilesResultVM> ObtenerPerfilesPorEntidad(PerfilParameterVM parameter)
         {
             var json = JsonConvert.SerializeObject(parameter);

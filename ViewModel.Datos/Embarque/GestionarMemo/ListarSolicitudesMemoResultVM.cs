@@ -34,7 +34,8 @@ namespace ViewModel.Datos.Embarque.GestionarMemo
         public DateTime? FechaEvalua { get; set; }
 
         public string EstadoEvalua { get; set; }
-
+        public string TipoPerfil { get; set; }
+        
         public IEnumerable<DocumentoMemoResultVM> ListaDocumentos { get; set; }
 
         public IEnumerable<EventosMemoResultVM> ListaEventos { get; set; }

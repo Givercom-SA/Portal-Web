@@ -219,9 +219,15 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
                     $(".loader").fadeOut("slow");
+                    $('#dialogError').modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
 
                 },
                 success: function (response) {
@@ -314,25 +320,50 @@
                     $("#btnAprobar").prop('disabled', true);
 
 
-                }
-            })
-                .done(function (result) {
+                },
 
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".loader").fadeOut("slow");
+
+                    $("#modal_aceptar").modal("hide");
+                    $("#modal_rechazar").modal("hide");
+
+                    
+                    $("#btnCancelarRechazo").prop('disabled', false);
+                    $("#btnCancelarRechazo").prop('disabled', false);
+
+                    $("#btnCancelarAprobar").prop('disabled', false);
+                    $("#btnAprobar").prop('disabled', false);
+
+
+
+                    $("#dialogError").modal("show");
+                    
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
+                },
+                success: function (response) {
                     $(".loader").fadeOut("slow");
                     $("#modal_aceptar").modal("hide");
                     $("#modal_rechazar").modal("hide");
 
-                    if (result != null) {
+                    if (response != null) {
 
-                        if (result.codigo == 0) {
+                        if (response.codigo == 0) {
 
                             $("#dialogOk").modal("show");
-                            $("#outputMensajeOk").html(result.mensaje);
+                            $("#outputMensajeOk").html(response.mensaje);
 
                         } else {
 
                             $("#dialogAlerta").modal("show");
-                            $("#outputMensaje").html(result.mensaje);
+                            $("#outputMensaje").html(response.mensaje);
 
                             $("#btnCancelarRechazo").prop('disabled', false);
                             $("#btnCancelarRechazo").prop('disabled', false);
@@ -345,7 +376,7 @@
 
 
                         $("#dialogError").modal("show");
-                        $("#outputMensajeError").html(result.mensaje);
+                        $("#outputMensajeError").html(response.mensaje);
 
                         $("#btnCancelarRechazo").prop('disabled', false);
                         $("#btnCancelarRechazo").prop('disabled', false);
@@ -354,24 +385,14 @@
                         $("#btnAprobar").prop('disabled', false);
 
                     }
-                })
-                .fail(function (xhr, status, error) {
+
+                },
+                complete: function (data) {
                     $(".loader").fadeOut("slow");
-                    $("#btnCancelarRechazo").prop('disabled', false);
-                    $("#btnCancelarRechazo").prop('disabled', false);
 
-                    $("#btnCancelarAprobar").prop('disabled', false);
-                    $("#btnAprobar").prop('disabled', false);
+                }
 
-
-
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html("Erro: " + error);
-
-                })
-                .always(function () {
-
-                });
+            }) ;
 
         }
 

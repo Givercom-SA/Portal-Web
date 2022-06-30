@@ -667,7 +667,7 @@
 
 
                                     <li class="list-group-item" style="padding: 0.5rem 0rem;">
-                                        <a class="nav-link" href="javascript:VerificarAsignacionAgenteAduanas('@Model.EmbarqueDetalle.KEYBLD')" data-bs-toggle="modal" data-bs-target="#modal_asignar">
+                                        <a class="nav-link" href="javascript:VerificarAsignacionAgenteAduanas('@Model.EmbarqueDetalle.KEYBLD')" >
 
                                             <div class="d-flex align-items-center">
                                                 <div class="nav-link-icon" style="margin-right:10px">
@@ -1365,41 +1365,46 @@
 
         function GestionarMemo(parkey) {
 
-         $.ajax({
-             type: "GET",
-             url: '@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques"})?parkey=' + parkey,
-             contentType: 'application/json; charset=utf-8',
-             dataType: 'json',
-             beforeSend: function () {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GestionarMemo", "Memo", new { area= "GestionarEmbarques"})?parkey=' + parkey,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                beforeSend: function () {
 
-                 $(".loader").fadeIn("slow");
-             }
-         })
-         .done(function (result) {
-             if (result.codigo == 0) {
-                 location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?codigo=' + KeyBL + '&servicio=' + pServicio + "&origen=" + pOrigen;
-             } else if (result.codigo == -1) {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-                 $("#ResultMemo").html(result.mensaje);
-                 $('#modal_gestionar_memo').modal('show');
-                 $("#dialogGestionMamo_Titulo").html(result.titulo);
+                    $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
 
-             } else {
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
 
+                },
+                success: function (result) {
+                    $(".loader").fadeOut("slow");
+                    if (result.codigo == 0) {
+                        location.href = '@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques"})?parkey=@Model.ParKey';
+                    } else if (result.codigo == -1)
+                    {
+                        $("#ResultMemo").html(result.mensaje);
+                        $('#modal_gestionar_memo').modal('show');
+                        $("#dialogGestionMamo_Titulo").html(result.titulo);
+                    } else {
+                        $('#modal_gestionar_memo').modal('show');
+                        $("#dialogGestionMamo_Titulo").html(result.titulo);
+                    }
+                },
+                complete: function (data) {
 
-                 $('#modal_gestionar_memo').modal('show');
-                 $("#dialogGestionMamo_Titulo").html(result.titulo);
-             }
-
-         })
-         .fail(function (xhr, status, error) {
-             $("#dialogError").modal("show");
-             $("#outputMensajeError").html(error);
-         })
-         .always(function () {
-             $(".loader").fadeOut("slow");
-         });
-     }
+                }
+            });
+        }
 
      function GestionarSolicitudFacturacion(){
 
@@ -1409,35 +1414,46 @@
          debugger;
          $.ajax({
              type: "GET",
-             url: "@Url.Action("GestionarSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques"})?parkey=" + parkey,
+             url: "@Url.Action("ValidarPrevioSolicitudFacturacion", "Facturacion",  new { area = "GestionarEmbarques"})?parkey=" + parkey,
              contentType: 'application/json; charset=utf-8',
              dataType: 'json',
              beforeSend: function () {
                  $(".loader").fadeIn("slow");
-             }
-         })
-             .done(function (result) {
+             },
+             error: function (jqXHR, textStatus, errorThrown) {
 
-             if (result.codigo == 0) {
-                location.href = "@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques"})?keyBl=" + keyLb + "&servicio=@Model.Servicio&origen=@Model.Origen";
-             } else if (result.codigo > 0) {
-
-                 $("#dialogAlerta").modal("show");
-                 $("#outputMensaje").html(result.mensaje);
-
-             } else {
-
+                 $(".loader").fadeOut("slow");
                  $("#dialogError").modal("show");
-                 $("#outputMensajeError").html(result.mensaje);
-             }
 
-         })
-         .fail(function (xhr, status, error) {
-             $("#dialogError").modal("show");
-             $("#outputMensajeError").html(error);
-         })
-         .always(function () {
-             $(".loader").fadeOut("slow");
+                 if (jqXHR.status == 401) {
+                     $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                 } else {
+                     $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                 }
+
+             },
+             success: function (result) {
+                 $(".loader").fadeOut("slow");
+
+                 if (result.codigo == 0) {
+                     location.href = "@Url.Action("SolicitudFacturacion", "Facturacion", new { area= "GestionarEmbarques"})?parkey=@Model.ParKey";
+                 } else if (result.codigo > 0) {
+
+                     $("#dialogAlerta").modal("show");
+                     $("#outputMensaje").html(result.mensaje);
+
+                 } else {
+
+                     $("#dialogError").modal("show");
+                     $("#outputMensajeError").html(result.mensaje);
+                 }
+
+             },
+             complete: function (data) {
+
+
+
+             }
          });
 
      }
@@ -1460,7 +1476,7 @@
 
          $.ajax({
              type: "POST",
-             url: "@Url.Action("AsignarAgente", "Embarque", new { area= "GestionarEmbarques" })",
+             url: "@Url.Action("AsignarAgente", "AsignarAgente", new { area= "GestionarEmbarques" })",
              data: formData,
              contentType: false,
              processData: false,
@@ -1468,12 +1484,18 @@
                  $(".loader").fadeIn("slow");
              },
              error: function (jqXHR, textStatus, errorThrown) {
-
                  $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
 
              },
              success: function (result) {
-
+                 $(".loader").fadeOut("slow");
                  if (result != null) {
                      if (result.codigo == 0) {
 
@@ -1482,18 +1504,21 @@
                          $("#outputMensajeOk").html(result.mensaje);
 
                      } else {
-                         ShowAlertMensage('ResultMensaje', 'warning', '', result.mensaje, 0, null);
+                         $("#dialogAlerta").modal("show");
+                         $("#outputMensaje").html(result.mensaje);
+
                      }
 
                  } else {
-
+                     $("#dialogError").modal("show");
+                     $("#outputMensajeError").html(error);
                  }
 
              },
              complete: function (data) {
 
 
-                 $(".loader").fadeOut("slow");
+
              }
          });
 
@@ -1650,56 +1675,65 @@
              });
      }
 
-     function VerificarAsignacionAgenteAduanas(keyBl) {
+        function VerificarAsignacionAgenteAduanas(keyBl) {
 
-         $("#divContentAsignacionAgenteAduanas").show();
-         $("#btnAsignarAgenteAduanas").show();
+            $("#divContentAsignacionAgenteAduanas").show();
+            $("#btnAsignarAgenteAduanas").show();
 
-         var formData = new FormData();
-         formData.append("KeyBl", keyBl);
+            var formData = new FormData();
+            formData.append("KeyBl", keyBl);
 
-         $.ajax({
-             type: "POST",
-             url: "@Url.Action("AsignarAgenteVerificar", "Embarque", new { area="GestionarEmbarques"})",
-             data: formData,
-             dataType: "json",
-             contentType: false,
-             processData: false,
-             beforeSend: function () {
-                 $(".loader").fadeIn("slow");
-             }
-         }).done(function (msj) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AsignarAgenteVerificar", "AsignarAgente", new { area="GestionarEmbarques"})",
+                data: formData,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-             if (msj.codigo != 0) {
-                 $("#divContentAsignacionAgenteAduanas").hide();
-                 $("#btnAsignarAgenteAduanas").hide();
-                 ShowAlertMensage('ResultMensaje', 'warning', '', msj.mensaje, 0, null);
-             } else {
-                 $('#ddlAgente option:eq(0)').prop('selected', true)
-             }
+                    $(".loader").fadeOut("slow");
 
-         }).fail(function (xhr, status, error) {
-             ShowAlertMensage('ResultMensaje', 'danger', '', msj.mensaje, 0, null);
-             $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
 
-         }).always(function () {
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
 
-             $(".loader").fadeOut("slow");
+                },
+                success: function (response) {
+                    $(".loader").fadeOut("slow");
 
-         });
+                    if (response.codigo != 0) {
+                        $("#divContentAsignacionAgenteAduanas").hide();
+                        $("#btnAsignarAgenteAduanas").hide();
 
-     }
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+
+                    } else {
+                        $("#modal_asignar").modal("show");
+                        //$('#ddlAgente option:eq(0)').prop('selected', true);
+
+                    }
+
+                },
+                complete: function (response) {
+
+                }
+            });
+
+        }
 
      function autorizarLiberacion() {
-
-
-
         if (ValidarLiberacionCarga()) {
 
-
             var formData = $('#frmLiberacionCarga').serialize();
-
-
 
             $.ajax({
                 type: "POST",
@@ -1708,37 +1742,34 @@
                 processData: true,
                 beforeSend: function () {
                     $(".loader").fadeIn("slow");
-                }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-            }).done(function (msj) {
+                    $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
 
-                if (msj.codigo == 0) {
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
 
-                    $("#modal_autorizar_liberacion_carga").modal("hide");
+                },
+                success: function (response) {
+                    $(".loader").fadeOut("slow");
+                    if (response.codigo == 0) {
+                        $("#modal_autorizar_liberacion_carga").modal("hide");
+                        $("#dialogOk").modal("show");
+                        $("#outputMensajeOk").html(response.mensaje);
+                    } else {
+                        $("#dialogAlerta").modal("show");
+                        $("#outputMensaje").html(response.mensaje);
+                    }
+                },
+             complete: function (data) {
 
-
-                    $("#dialogOk").modal("show");
-
-                    $("#outputMensajeOk").html(msj.mensaje);
-
-                    // window.location.reload();
-
-                } else {
-                    $("#dialogAlerta").modal("show");
-                    $("#outputMensaje").html(msj.mensaje);
-                }
-
-            }).fail(function (xhr, status, error) {
-
-                $(".loader").fadeOut("slow");
-                $("#dialogError").modal("show");
-                $("#outputMensajeError").html(msj.mensaje);
-
-            }).always(function () {
-
-                $(".loader").fadeOut("slow");
-
-             });
+             }
+            });
 
         }
 
@@ -1786,10 +1817,9 @@
         function LiberarCarga(keybl) {
 
             var formData = new FormData();
-            formData.append("KeyBl", '@Model.EmbarqueDetalle.KEYBLD');
+            formData.append("ParKey", '@Model.ParKey');
             formData.append("NroBl", '@Model.EmbarqueDetalle.NROBL');
-            formData.append("Servicio", '@Model.Servicio');
-            formData.append("Origen", '@Model.Origen');
+
 
             $.ajax({
                 type: "POST",
@@ -1800,31 +1830,42 @@
                 processData: false,
                 beforeSend: function () {
                     $(".loader").fadeIn("slow");
-                    $("#modal_autorizar_liberacion_carga").modal("show")
                     $("#divContentLiberarCarga").html("Procesando...")
                 },
-            }).done(function (response) {
-
-                $("#divContentLiberarCarga").html(response);
-
-                DataTableLiberacionCarga();
-
-                ActualizarControles();
-
-            }).fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-                    $("#divContentLiberarCarga").html(error)
-             }).always(function () {
+                error: function (jqXHR, textStatus, errorThrown) {
 
                     $(".loader").fadeOut("slow");
-             });
+                    $("#dialogError").modal("show");
+
+                    $("#divContentLiberarCarga").html("");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
+
+                },
+                success: function (response) {
+                    $(".loader").fadeOut("slow");
+                    $("#modal_autorizar_liberacion_carga").modal("show")
+                    $("#divContentLiberarCarga").html(response);
+
+                    DataTableLiberacionCarga();
+
+                    ActualizarControles();
+                },
+                complete: function (data) {
+
+                }
+            });
 
         }
 
      function GenerarSolicitudDireccionamiento(KeyBL, FlagPlazoEta, FlagDireccionamientoPermanente, pServicio) {
          $.ajax({
              url: '@Url.Action("ValidarSolicitudDireccionamiento", "Direccionamiento",new { area="GestionarEmbarques"})',
-             data: { KeyBL: KeyBL, servicio: pServicio},
+             data: { ParKey: "@Model.ParKey" },
              contentType: 'application/html; charset=utf-8',
              type: 'GET',
              dataType: 'json',
@@ -1833,8 +1874,13 @@
              },
              error: function (jqXHR, textStatus, errorThrown) {
                  $(".loader").fadeOut("slow");
-                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
                  $("#dialogError").modal("show");
+                if (jqXHR.status == 401) {
+                    $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                }
+
              },
              success: function (response) {
                  $(".loader").fadeOut("slow");
@@ -1869,11 +1915,9 @@
 
      function RegistrarDireccionamientoPermanente(KeyBL, CodigoTaf, RazonSocial) {
 
-
-
          $.ajax({
              url: '@Url.Action("RegistrarDireccionamientoPermanente", "Direccionamiento",new { area="GestionarEmbarques"})',
-             data: { KeyBL: KeyBL, CodigoTaf: CodigoTaf, RazonSocial: RazonSocial },
+             data: { ParKey: "@Model.ParKey", CodigoTaf: CodigoTaf, RazonSocial: RazonSocial },
              contentType: 'application/html; charset=utf-8',
              type: 'GET',
              dataType: 'json',
@@ -1882,27 +1926,25 @@
              },
              error: function (jqXHR, textStatus, errorThrown) {
                  $(".loader").fadeOut("slow");
-                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+                 $("#modal_confirmar_direccionamiento").modal("hide");
                  $("#dialogError").modal("show");
+                 if (jqXHR.status == 401) {
+                     $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                 } else {
+                     $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                 }
              },
              success: function (response) {
 
                  $(".loader").fadeOut("slow");
-                 $("#modal_confirmar_direccionamiento").fadeOut("slow");
+                 $("#modal_confirmar_direccionamiento").modal("hide");
 
-                 if (response.codigo == 1)
-                 {
-
+                 if (response.codigo == 1) {
                      $("#dialogOk").modal("show");
                      $("#outputMensajeOk").html(response.mensaje);
-
-
-                 } else
-                 {
-                      $("#dialogAlerta").modal("show");
+                 } else {
+                     $("#dialogAlerta").modal("show");
                      $("#outputMensaje").html(response.mensaje);
-
-
                  }
 
              },
@@ -1934,8 +1976,14 @@
              },
              error: function (jqXHR, textStatus, errorThrown) {
                  $(".loader").fadeOut("slow");
-                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+
                  $("#dialogError").modal("show");
+                if (jqXHR.status == 401) {
+                    $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                }
+
              },
              success: function (response) {
 
@@ -1946,7 +1994,7 @@
                  }
                  if (response.codigo == 0) {
 
-                     window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques"})?id=@Model.EmbarqueDetalle.KEYBLD&servicio=@Model.Servicio&origen=@Model.Origen";
+                     window.location.href = "@Url.Action("AsignarCobroPagar","Embarque",new { area="GestionarEmbarques"})?parkey=@Model.ParKey";
 
                  }
              },
@@ -1969,8 +2017,15 @@
              },
              error: function (jqXHR, textStatus, errorThrown) {
                  $(".loader").fadeOut("slow");
-                 $("#outputMensajeError").html("Ocurrió un error inesperado, intente más tarde.");
+
                  $("#dialogError").modal("show");
+                if (jqXHR.status == 401) {
+                    $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                } else {
+                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                     }
+
+
              },
              success: function (response) {
 

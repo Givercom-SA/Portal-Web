@@ -699,7 +699,7 @@
 
             </div>
             <div class="modal-body">
-                <output id="outputMensajeOk" class="small"></output>
+                <output id="outputMensajeOk" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar</button></div>
         </div>
@@ -715,7 +715,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensaje" class="small"></output>
+                <output id="outputMensaje" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -731,7 +731,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensajeError" class="small"></output>
+                <output id="outputMensajeError" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -740,7 +740,7 @@
 
 
 
-<input type="hidden" id="hidenUrlDetalle" data-url="@Url.Action("Detalle", "Embarque", new { Area= "GestionarEmbarques", codigo = Model.KEYBLD, @servicio = Model.Servicio, @origen = Model.Origen })">
+<input type="hidden" id="hidenUrlDetalle" data-url="@Url.Action("Detalle", "Embarque", new { Area= "GestionarEmbarques", parkey = Model.ParKey })">
 
 @section Scripts{
 
@@ -772,7 +772,7 @@
             });
 
             $("#txtCodigoOperacion").keydown(function (event) {
-               
+
                 if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
                     return false;
                 }
@@ -843,7 +843,7 @@
                 var dateString =$(this).val();
 
                 if (!dateString.match(regEx)) {
-                    
+
                     $(this).val("");
                     return false;
                 }
@@ -1247,9 +1247,12 @@
                             $(".loader").fadeOut("slow");
 
                             $("#dialogError").modal("show");
-                            $("#outputMensajeError").html("Estimado cliente, ocurrio un error de sistema, por favor vovler a intentar más tarde. detalle del error: ", errorThrown);
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                            } else {
+                                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                            }
 
-                            
 
                         },
                         success: function (response) {
@@ -1285,7 +1288,7 @@
                         },
                         complete: function (data) {
 
-                            //$(".loader").fadeOut("slow");
+
 
                         }
                     });
@@ -1313,7 +1316,7 @@
             try {
 
 
-               
+
                     $.ajax({
                         url: oFormElement.action,
                         data: formData,
@@ -1325,49 +1328,40 @@
                             $(".loader").fadeIn("slow");
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-
-                            $('#alertError').show();
-                            outputDetalleError.html( errorThrown);
                             $(".loader").fadeOut("slow");
+
+                            $("#dialogError").modal("show");
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                            } else {
+                                $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                            }
 
                         },
                         success: function (response) {
-
                             $(".loader").fadeOut("slow");
-                            if (response.codigo == 0) {
 
+                            if (response.codigo == 0) {
 
                                 $("#dialogOk").modal("show");
                                 $("#outputMensajeOk").html(response.mensaje);
 
-
-                               // irProcesoFinalizado();
-
                             }
                             else if (response.codigo > 0) {
-
-
                                 $("#dialogAlerta").modal("show");
                                 $("#outputMensaje").html( response.mensaje);
-
-
                             }
                             else {
-
-
                                 $("#dialogError").modal("show");
                                 $("#outputMensajeError").html(response.mensaje);
-
-
-
                             }
                         },
                         complete: function (data) {
-                            $(".loader").fadeOut("slow");
+                            
 
                         }
                     });
-               
+
 
 
             } catch (error) {
@@ -1454,28 +1448,34 @@
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
 
+                        $(".loader").fadeOut("slow");
+
                         $("#cmbCredito option[value='-1'").prop("selected", "selected");
 
-                        $(".loader").fadeOut("slow");
                         $("#dialogError").modal("show");
-                        $("#outputMensajeError").html("Ocurrio un error inesperado " + textStatus + " por favor intente nuevamente");
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
                     },
 
                     success: function (response) {
 
                         $(".loader").fadeOut("slow");
-                        if (response.codigo == 0) {
 
-
-
+                        if (response.codigo == 0)
+                        {
+                            // OK
 
                         } else if (response.codigo > 0) {
-                            
+
                             $("#dialogAlerta").modal("show");
                             $("#outputMensaje").html(response.mensaje);
                             $("#cmbCredito option[value='-1'").prop("selected", "selected");
 
-                            
+
 
                         } else {
                             $("#cmbCredito option[value='-1'").prop("selected", "selected");
@@ -1485,7 +1485,7 @@
 
                     },
                     complete: function (data) {
-                        $(".loader").fadeOut("slow");
+
                     }
 
                 });

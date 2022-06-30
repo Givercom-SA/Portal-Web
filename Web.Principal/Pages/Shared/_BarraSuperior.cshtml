@@ -172,12 +172,12 @@
                     Mi cuenta
                 </a>
 
-                <a class="dropdown-item" href="@Url.Action("CambiarContrasenia","Login", new {area="GestionarAccesos", nuevo="0" })">
+                <a class="dropdown-item" href="@Url.Action("CambiarContrasenia","Usuario", new {area="GestionarUsuarios", nuevo="0" })">
                     <div class="dropdown-item-icon"><i data-feather="settings"></i></div>
                     Cambiar contraseña
                 </a>
 
-                <a class="dropdown-item" href="@Url.Action("LogOut", "Login", new { area = "GestionarAccesos" })">
+                <a class="dropdown-item" href="@Url.RouteUrl("CerrarSesionAsync")">
                     <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
                     Cerrar sesión
                 </a>

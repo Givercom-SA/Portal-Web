@@ -57,7 +57,11 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public int? IdEntidad { get; set; }
 
         public string PerfilNombre { get; set; }
-        public int[] Menus { get; set; }
+
+
+
+        public List<MenuPerfilVM> Menus { get; set; }
+
 
 
         [Display(Name = "Usuario de Creación")]
@@ -91,7 +95,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Models
         public UsuarioRegistroVM Usuario { get; set; }
         public List<GruposAutorizacion> Grupos { get; set; }
 
-        public PerfilVM PerfilVM { get; set; }
+
+        public List<PerfilVM> Perfiles { get; set; }
 
     }
 

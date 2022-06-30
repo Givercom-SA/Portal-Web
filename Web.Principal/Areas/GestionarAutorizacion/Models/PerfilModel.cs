@@ -15,6 +15,12 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
         [StringLength(50, ErrorMessage = "El nombre tiene una longitud inválida")]
         [Required(ErrorMessage = "Debe ingresar un nombre")]
         public string Nombre { get; set; }
+
+        [Display(Name = "Dashboard")]
+        [StringLength(50, ErrorMessage = "El dashboard tiene una longitud inválida")]
+        [Required(ErrorMessage = "Debe ingresar un dashboard")]
+        public string Dashboard { get; set; }
+
         public bool Activo { get; set; }
 
         [Display(Name = "Tipo ")]
@@ -22,7 +28,11 @@ namespace Web.Principal.Areas.GestionarAutorizacion.Models
         public string Tipo { get; set; }
 
         public string UsuarioCrea { get; set; }
+        public string FechaModifica { get; set; }
+        public string UsuarioModifica { get; set; }
+        public string FechaRegistro { get; set; }
 
+      
         public int[] Menus { get; set; }
         public int[] VistaMenu { get; set; }
 

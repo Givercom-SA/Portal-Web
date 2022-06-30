@@ -8,7 +8,7 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
-<input type="hidden" id="hidenUrlEmbarqueDetalle" data-url="@Url.Action("Detalle","Embarque",new {  area="GestionarEmbarques", @codigo=ViewBag.KeyBL,@servicio=ViewBag.Servicio,@origen=ViewBag.Origen})">
+<input type="hidden" id="hidenUrlEmbarqueDetalle" data-url="@Url.Action("Detalle","Embarque",new {  area="GestionarEmbarques", @parkey=ViewBag.ParKey})">
 
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
@@ -43,7 +43,7 @@
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md">
-                                    <form id="frmSolicitud" method="post" enctype="multipart/form-data">
+                                    <form id="frmSolicitud" asp-area="GestionarEmbarques" asp-controller="Memo" asp-action="Solicitud" method="post" enctype="multipart/form-data">
                                         @foreach (var item in ViewBag.ListTipoDoc as SelectList)
                                         {
                                             string multiple = (item.Value.Equals("DM01")) ? "multiple" : "";
@@ -81,9 +81,8 @@
                                             </div>
                                         </div>
 
-                                        <input id="KeyBL"       type="hidden" name="KeyBL"      value="@ViewBag.KeyBL" />
-                                        <input id="Servicio"    type="hidden" name="Servicio"   value="@ViewBag.Servicio" />
-                                        <input id="Origen"      type="hidden" name="Origen"     value="@ViewBag.Origen" />
+                                        <input id="ParKey" name="ParKey" type="hidden" value="@ViewBag.ParKey" />
+                                        
 
                                         <div id="MensajeResult"></div>
                                         <hr />
@@ -127,7 +126,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensaje" class="small"></output>
+                <output id="outputMensaje" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -142,7 +141,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensajeError" class="small"></output>
+                <output id="outputMensajeError" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -170,11 +169,13 @@
         });
 
         $("#frmSolicitud").submit(function (e) {
+
             $('#MensajeResult').html("");
             e.preventDefault();
+
             var isValid = $('#frmSolicitud').valid();
             if (isValid) {
-                $(".loader").fadeIn("slow");
+                
                 var form = $('#frmSolicitud')[0];
                 var formData = new FormData(form);
                 $.ajax({
@@ -182,41 +183,55 @@
                     url: "@Url.Action("Solicitud", "Memo", new { area= "GestionarEmbarques" })",
                     data: formData,
                     contentType: false,
-                    processData: false
-                }).done(function (result) {
+                    processData: false,
+                    beforeSend: function () {
+
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        $(".loader").fadeOut("slow");
+
+                        $("#dialogError").modal("show");
+
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                        } else {
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                        }
+
+                    },
+                    success: function (result) {
+                        $(".loader").fadeOut("slow");
+
                         if (result != null) {
                             if (result.codigo == 0) {
 
-                                $('#mensaje').html(result.mensaje);
-
                                 $('#modal_mensaje').modal('show');
+                                $('#mensaje').html(result.mensaje);
                                 $("#modelMemo_Titulo").html(result.titulo);
 
                             } else if (result.codigo > 0) {
-
-                                $('#outputMensaje').html(result.mensaje);
                                 $('#dialogAlerta').modal('show');
-
-
+                                $('#outputMensaje').html(result.mensaje);
+                                
                             } else {
-                                $('#outputMensajeError').html(result.mensaje);
                                 $('#dialogError').modal('show');
+                                $('#outputMensajeError').html(result.mensaje);
                             }
 
                         } else {
-
-                            $('#outputMensajeError').html(result.mensaje);
                             $('#dialogError').modal('show');
-
-
+                            $('#outputMensajeError').html(result.mensaje);
                         }
-                    })
-                    .fail(function (xhr, status, error) {
 
-                    })
-                    .always(function () {
-                        $(".loader").fadeOut("slow");
-                    });
+                    },
+                    complete: function (data) {
+
+
+
+                    }
+                });
             }
         });
 
@@ -232,7 +247,7 @@
             window.location.href = urlEmbarqueDetalle;
         });
 
- 
+
 
         function fileValidation(objThis, itemValue) {
 

@@ -14,51 +14,51 @@ using Web.Principal.Util;
 namespace Web.Principal.Controllers
 {
     [AllowAnonymous]
-    [Route("api/[controller]")]
-    public class ErrorController : Controller
+
+    public class ErrorController : BaseLibreController
     {
-
-
         private readonly ILogger<ErrorController> _logger;
-
-
         private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
 
-
         public ErrorController(ILogger<ErrorController> logger, Microsoft.Extensions.Configuration.IConfiguration configuration) {
-
             _logger = logger;
             _configuration = configuration;
-
         }
 
-
-
+        [AllowAnonymous]
         public IActionResult PaginaNoEncontrada()
         {
             return View();
         }
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult PaginaError()
-        {
 
+        [AllowAnonymous]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult PaginaNoEncontrado()
+        {
             return View();
         }
 
+        [AllowAnonymous]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult PaginaError()
+        {
+            return View();
+        }
+
+    
         [AllowAnonymous]
         public IActionResult NavegadorNoSoportado()
         {
             return View();
         }
 
-
+        [AllowAnonymous]
         [HttpGet("PaginaExpirada", Name = "PaginaExpirada")]
         public IActionResult PaginaExpirada()
         {
             var user = HttpContext.Session.GetSession<UsuarioRegistroVM>("UserDefault");
           
-
             if (user != null)
                 Log4netExtensions.Usuario(user.CorreoUsuario.ToString(), user.CorreoUsuario );
 
@@ -70,9 +70,6 @@ namespace Web.Principal.Controllers
             HttpContext.Session.Clear();
             return View();
         }
-
-
-
-
+  
     }
 }

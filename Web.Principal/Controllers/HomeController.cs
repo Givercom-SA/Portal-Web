@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Principal.Model;
+using Web.Principal.Util;
 
 namespace Web.Principal.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseLibreController
     {
         public IActionResult Index()
         {
@@ -26,17 +27,20 @@ namespace Web.Principal.Controllers
                         error = new ErrorViewModel
                         {
                             RequestId = Convert.ToString(statusCode),
-                            ErrorMessage = "La vista a la que desea acceder no esta disponible o no tiene acceso",
+                            ErrorMessage = "La vista a la que desea acceder no esta disponible o no tiene acceso.",
                         };
                         break;
+
                     default:
+                        error = new ErrorViewModel
+                        {
+                            RequestId = Convert.ToString(statusCode),
+                            ErrorMessage = "Ocurrio un error inesperado por favor volver a intentar.",
+                        };
                         break;
                 }
             }
             return View(error);
-            
         }
-
-
     }
 }

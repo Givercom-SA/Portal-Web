@@ -1,4 +1,4 @@
-﻿@model Web.Principal.Areas.GestionarAccesos.Models.CambiarContraseniaModel
+﻿@model Web.Principal.Areas.GestionarUsuarios.Models.CambiarContraseniaModel
 
 @{
     ViewData["Title"] = "Cambiar Contraseña";
@@ -13,16 +13,19 @@
             <div class="card mb-4">
                 <div class="card-header">@ViewData["Title"]</div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" asp-controller="Usuario" asp-action="CambiarContrasenia" asp-area="GestionarUsuarios">
+
+                        <input type="hidden" asp-for="@Model.Correo">
+
                         <!-- Form Group (current password)-->
                         <div class="mb-3">
                             <label class="small mb-1" for="currentPassword">Contraseña actual</label>
-                            <input class="form-control" id="currentPassword" maxlength="50"  type="password" placeholder="Ingrese su contraseña actual"
+                            <input class="form-control" id="currentPassword" maxlength="50" type="password" placeholder="Ingrese su contraseña actual"
                                    asp-for="contraseniaActual" />
                             <span asp-validation-for="contraseniaActual" class="small text-danger"></span>
 
 
-                            <input  type="hidden" asp-for="EsNuevo" />
+                            <input type="hidden" asp-for="EsNuevo" />
                         </div>
                         <!-- Form Group (new password)-->
                         <div class="mb-3">
@@ -38,22 +41,24 @@
                             <span asp-validation-for="Contrasenia" class="small text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <span asp-validation-for="Correo" class="small text-danger"></span>
+                        </div>
+
                         <div id="divOutputOk" class="alert alert-success" role="alert" style="display:none">
-                            <output id="outputOk"  class="small"></output>
+                            <output id="outputOk" class="small"></output>
                         </div>
 
                         <div id="divOutputError" class="alert alert-danger" role="alert" style="display:none">
-                            <output id="outputError"  class="small"></output>
+                            <output id="outputError" class="small"></output>
                         </div>
 
-                        <div id="divOutputAlerta" class="alert alert-warning"  role="alert" style="display:none">
+                        <div id="divOutputAlerta" class="alert alert-warning" role="alert" style="display:none">
                             <output id="outputAlerta" class="small"></output>
                         </div>
 
-
-
                         <button class="btn btn-primary" type="submit">Grabar</button>
-                        <a class="btn btn-secondary" href="~/" >Salir</a>
+                        <a class="btn btn-secondary" href="~/">Salir</a>
 
                     </form>
                 </div>
@@ -93,11 +98,7 @@
     </div>
 </div>
 
-
-
 @section Scripts{
-
-    
   
     <script src="@Url.Content("~/lib/jquery-validation/dist/jquery.validate.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js")"></script>
@@ -106,26 +107,19 @@
 
         $(document).ready(function () {
 
-
-
             var strCodigo  = "@ViewBag.codigo";
             var strMensaje ="@ViewBag.mensaje";
 
-
             if (strCodigo == "0") {
-
 
                 $("#divOutputOk").show();
                 $("#outputOk").html(strMensaje);
 
                 $("#outputMensajeConfirmacion").html(strMensaje);
                 $("#dialogConfirmacion").modal("show");
-
-
             }
             else if (strCodigo == "-200") {
 
-            
                 $("#divOutputError").show();
                 $("#outputError").html(strMensaje);
 
@@ -133,16 +127,12 @@
             else if (strCodigo != "") {
 
                 $("#currentPassword").focus();
-
                 $("#divOutputAlerta").show();
                 $("#outputAlerta").html(strMensaje);
 
             }
 
-
-
         });
-
 
     </script>
 

@@ -198,7 +198,7 @@ namespace Web.Principal.ServiceConsumer
             const string SERVICIO = "crear-direccionamiento-permanente";
             var json = JsonConvert.SerializeObject(parameter);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-            var uri = $"{URL_BASE}{SERVICIO_EMBARQUE}{SERVICIO}";
+            var uri = $"{URL_BASE}{SERVICIO_DIRECCIONAMIENTO}{SERVICIO}";
             var response = await client.PostAsync(uri, data);
             var resultado = response.ContentAsType<CrearDireccionamientoPermanenteResultVM>();
 

@@ -14,8 +14,10 @@ namespace ViewModel.Datos.Perfil
         public int Activo { get; set; }
         public int IdSesion { get; set; }
         public int IdUsuarioCrea { get; set; }
+        public int IdUsuario { get; set; }
         public int IdUsuarioModifica { get; set; }
         public string Tipo { get; set; }
+        public string Dashboard { get; set; }
         public int IdEntidad { get; set; }
         public List<int> Menus { get; set; }
 

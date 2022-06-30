@@ -146,9 +146,9 @@ namespace Servicio.Usuario.Controllers
                 {
                     if (parameter.RequiereConfirmacion)
                     {
-                        parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion, result.IN_CODIGO_RESULTADO);
+                        parameter.UrlConfirmacion = string.Format("{0}?token={1}", parameter.UrlConfirmacion,Security.Common.Encriptador.Instance.EncriptarTexto(result.IdUsuario.ToString()));
                         enviarCorreo(parameter.Correo, "!Bienvenido a Transmares Group! Confirmar Correo",
-                     new FormatoCorreoBody().formatoBodyBienvendaUsuarioSecundarioRenovada(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
+                     new FormatoCorreoBody().formatoBodyBienvenidaUsuarioInterno(parameter.Nombres, parameter.ContraseniaNocifrado, parameter.UrlConfirmacion, parameter.ImagenGrupoTrans));
 
 
                     }
@@ -241,6 +241,23 @@ namespace Servicio.Usuario.Controllers
             try
             {
                 result = _repository.ObtenerUsuarioSecundario(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(500, e.Message);
+            }
+            return _mapper.Map<UsuarioSecundarioResultVM>(result);
+        }
+
+        [HttpPost]
+        [Route("obtener-usuario")]
+        public ActionResult<UsuarioSecundarioResultVM> ObtenerUsuario(Models.Usuario.CrearUsuarioSecundarioParameter parameter)
+        {
+            UsuarioSecundarioResult result = new UsuarioSecundarioResult();
+            try
+            {
+                result = _repository.ObtenerUsuario(parameter);
             }
             catch (Exception e)
             {

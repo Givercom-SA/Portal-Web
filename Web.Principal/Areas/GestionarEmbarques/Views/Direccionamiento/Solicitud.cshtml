@@ -9,7 +9,7 @@
     <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
 </div>
 
-<input type="hidden" id="hidenDetalleEmbarque" data-url="@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques", @codigo=Model.KeyBL, @servicio=Model.Servicio, @origen=Model.Origen})">
+<input type="hidden" id="hidenDetalleEmbarque" data-url="@Url.Action("Detalle","Embarque", new { area="GestionarEmbarques",@parkey=Model.ParKey})">
 
 <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
     <div class="container-xl px-4">
@@ -176,6 +176,53 @@
 </div>
 
 
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Solicitud Creada</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -205,11 +252,13 @@
         });
 
         $("#frmSolicitud").submit(function (e) {
+
             $('#MensajeResult').html("");
+
             e.preventDefault();
             var isValid = $('#frmSolicitud').valid();
             if (isValid) {
-                $(".loader").fadeIn("slow");
+                
                 var form = $('#frmSolicitud')[0];
                 var formData = new FormData(form);
                 $.ajax({
@@ -217,25 +266,40 @@
                     url: "/GestionarEmbarques/Direccionamiento/Solicitud",
                     data: formData,
                     contentType: false,
-                    processData: false
-                })
-                .done(function (result) {
-                    if (result != null) {
-                        if (result.codigo == 0) {
-                            $('#mensaje').html(result.mensaje);
-                            $('#modal_mensaje').modal('show');
+                    processData: false,
+                    beforeSend: function () {
+                        $(".loader").fadeIn("slow");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $(".loader").fadeOut("slow");
+
+                        $("#dialogError").modal("show");
+                        if (jqXHR.status == 401) {
+                            $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
                         } else {
-                            ShowAlertMensage('MensajeResult', 'warning', '', result.mensaje, 0, null);
+                            $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
                         }
-                    } else {
+
+                    },
+                    success: function (result) {
+                        $(".loader").fadeOut("slow");
+                        if (result != null) {
+                            if (result.codigo == 0) {
+                                $('#mensaje').html(result.mensaje);
+                                $('#modal_mensaje').modal('show');
+                            } else {
+                                $("#dialogAlerta").modal("show");
+                                $("#outputMensaje").html(response.mensaje);
+                            }
+                        } else {
+                            $("#dialogError").modal("show");
+                            $("#outputMensajeError").html(response.mensaje);
+                        }
+                    },
+                    complete: function (data) {
+
 
                     }
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-                    $(".loader").fadeOut("slow");
                 });
             }
         });
@@ -252,30 +316,51 @@
         });
 
         function ObtenerEntidad(NroDocumento) {
-            $(".loader").fadeIn("slow");
+
             var CodModalidad = $("#ddlModalidad").val();
+
+            var objParametro = new Object();
+            objParametro.CodModalidad = CodModalidad;
+            objParametro.NroDocumento = NroDocumento;
+
+
             $.ajax({
                 type: "GET",
-                url: "/Gestionarembarques/Direccionamiento/ObtenerEntidad?CodModalidad=" + CodModalidad + "&NroDocumento=" + NroDocumento,
+                url: "@Url.Action("ObtenerEntidad", "Direccionamiento", new { area= "Gestionarembarques" })",
+                data: objParametro,
                 contentType: 'application/json; charset=utf-8',
-                dataType: 'json'
-            })
-            .done(function (result) {
-                if (result.codigo == 0) {
-                    $("#txtCodigoTaf").val(result.objeto.codigoClienteFacturarTercero);
-                    $("#txtRazonSocial").removeAttr('readonly').val(result.objeto.nombresClienteFacturarTercero).prop("readonly", true);
-                    $("#txtCodigoAlmacen").removeAttr('readonly').val(result.objeto.codigoAlmacen).prop("readonly", true);
-                } else {
-                    $("#txtCodigoTaf").val(0);
-                    $("#txtRazonSocial").removeAttr('readonly').val("").prop("readonly", true);
-                    $("#txtCodigoAlmacen").removeAttr('readonly').val("").prop("readonly", true);
-                }
-            })
-            .fail(function (xhr, status, error) {
+                dataType: 'json',
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".loader").fadeOut("slow");
 
-            })
-            .always(function () {
-                $(".loader").fadeOut("slow");
+                    $("#dialogError").modal("show");
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: " + textStatus + " - " + errorThrown);
+                    }
+
+                },
+                success: function (result) {
+                    $(".loader").fadeOut("slow");
+
+                    if (result.codigo == 0) {
+                        $("#txtCodigoTaf").val(result.objeto.codigoClienteFacturarTercero);
+                        $("#txtRazonSocial").removeAttr('readonly').val(result.objeto.nombresClienteFacturarTercero).prop("readonly", true);
+                        $("#txtCodigoAlmacen").removeAttr('readonly').val(result.objeto.codigoAlmacen).prop("readonly", true);
+                    } else {
+                        $("#txtCodigoTaf").val(0);
+                        $("#txtRazonSocial").removeAttr('readonly').val("").prop("readonly", true);
+                        $("#txtCodigoAlmacen").removeAttr('readonly').val("").prop("readonly", true);
+                    }
+                },
+                complete: function (data) {
+
+
+                }
             });
         }
 

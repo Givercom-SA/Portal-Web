@@ -25,7 +25,7 @@ namespace Web.Principal.Controllers
         private readonly ServicioUsuario _serviceUsuario;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public ActionResponse ActionResponse { get; set; }
+        
 
         public AutenticacionController(
             ServicioAcceso servicioAcceso,
@@ -153,11 +153,6 @@ namespace Web.Principal.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Metodo(int code)
-        {
-            var data = $"Codigo de estado {code}";
-            return View("Index", data);
-        }
+      
     }
 }

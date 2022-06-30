@@ -74,16 +74,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
 
             model.Servicio = servicio;
             model.Origen = origen;
-         
+            model.ParKey = parkey;
 
-            //if(model.FlagPlazoEta.Equals("0")) // No cumple con el plazo (Mostrar solo modalidad Diferido)
-            //{
-            //    model.ListModalidad = new SelectList(listModalidad.ListaParametros.Where(x=>x.ValorCodigo=="1").ToList(), "ValorCodigo", "NombreDescripcion");
-            //}
-            //else
-            //{
-            //    model.ListModalidad = new SelectList(listModalidad.ListaParametros, "ValorCodigo", "NombreDescripcion");
-            //}
+
             return View(model);
         }
 
@@ -158,15 +151,27 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> ValidarSolicitudDireccionamiento(string KeyBL, string servicio)
+        public async Task<JsonResult> ValidarSolicitudDireccionamiento(string parkey)
         {
             ActionResponse = new ActionResponse();
 
             try
             {
-                var embarque = await _serviceEmbarques.ObtenerEmbarque(KeyBL, servicio);
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
 
-                var result = await _serviceEmbarque.ValidarSolicitudDireccionamiento(KeyBL);
+                string[] parametros = dataDesencriptada.Split('|');
+
+
+                string codigo = parametros[0];
+                string anio = parametros[1];
+                string tipofiltro = parametros[2];
+                string filtro = parametros[3];
+                string servicio = parametros[4];
+                string origen = parametros[5];
+
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
+
+                var result = await _serviceEmbarque.ValidarSolicitudDireccionamiento(codigo);
                 ActionResponse.Codigo = result.CodigoResultado;
                 ActionResponse.Mensaje = result.MensajeResultado;
 
@@ -186,9 +191,9 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             {
                 _logger.LogError(ex, "ValidarSolicitudDireccionamiento()");
 
-
                 ActionResponse.Codigo = -1;
                 ActionResponse.Mensaje = "Ocurrió un error inesperado, intente más tarde.";
+
             }
             return Json(ActionResponse);
         }
@@ -223,7 +228,6 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         {
             ListarSolicitudesModel viewModel = new ListarSolicitudesModel();
      
-
             if (parkey != null)
             {
                 var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(parkey);
@@ -235,7 +239,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
                     string CampoCodSolicitud = parametros[0];
                     string CampoRuc = parametros[1];
                     string CodEstado = parametros[2];
-                    // CampoCodSolicitud=&CampoRuc=&CodEstado=0
+
                     viewModel.CampoCodSolicitud = CampoCodSolicitud;
                     viewModel.CampoRuc = CampoRuc;
                     viewModel.CodEstado = CodEstado;
@@ -310,6 +314,8 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             var listaEstado = await _serviceMaestro.ObtenerParametroPorIdPadre(28);
             ViewBag.ListarMotivosRechazos = new SelectList(listaEstado.ListaParametros, "ValorCodigo", "NombreDescripcion");
 
+            viewModel.TipoPerfil = this.usuario.TipoPerfil;
+
             return View(viewModel);
         }
 
@@ -364,7 +370,7 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error interno Direccionamiento");
+                _logger.LogError(ex, "SaveArchivo");
                 throw;
             }
 
@@ -373,29 +379,51 @@ namespace Web.Principal.Areas.GestionarEmbarques.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> RegistrarDireccionamientoPermanente(string KeyBL, string CodigoTaf, string RazonSocial)
+        public async Task<JsonResult> RegistrarDireccionamientoPermanente(string ParKey, string CodigoTaf, string RazonSocial)
         {
             ActionResponse = new ActionResponse();
 
             try
             {
+
+                var dataDesencriptada = Encriptador.Instance.DesencriptarTexto(ParKey);
+
+                string[] parametros = dataDesencriptada.Split('|');
+
+
+                string codigo = parametros[0];
+                string anio = parametros[1];
+                string tipofiltro = parametros[2];
+                string filtro = parametros[3];
+                string servicio = parametros[4];
+                string origen = parametros[5];
+
+                var embarque = await _serviceEmbarques.ObtenerEmbarque(codigo, servicio);
+
                 var result = await _serviceEmbarques.RegistrarDireccionamientoPermanente(usuario.Sesion.CodigoTransGroupEmpresaSeleccionado,
-                    KeyBL,CodigoTaf,usuario.CorreoUsuario);
+                    codigo,
+                    CodigoTaf,
+                    usuario.CorreoUsuario);
 
-                CrearDireccionamientoPermanenteParameterVM crearDireccionamientoPermanenteParameterVM = new CrearDireccionamientoPermanenteParameterVM();
-                crearDireccionamientoPermanenteParameterVM.KeyBLD = KeyBL;
-                crearDireccionamientoPermanenteParameterVM.NroBL ="";
-                crearDireccionamientoPermanenteParameterVM.Servicio ="";
-                crearDireccionamientoPermanenteParameterVM.Origen ="";
-                crearDireccionamientoPermanenteParameterVM.IdEmpresaGtrm = usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
-                crearDireccionamientoPermanenteParameterVM.IdUsuarioCrea =this.usuario.idUsuario;
-                crearDireccionamientoPermanenteParameterVM.IdSesion =Convert.ToInt32(this.usuario.Sesion.CodigoSesion);
-                await _serviceEmbarque.CrearDireccionamientoPermanente(crearDireccionamientoPermanenteParameterVM);
 
+         
                 if (result == 1)
                 {
+
                     ActionResponse.Codigo = 1;
                     ActionResponse.Mensaje = string.Format("Estimado cliente, de acuerdo a su confirmación se procederá con la instrucción al almacén {0}.", RazonSocial);
+
+                    CrearDireccionamientoPermanenteParameterVM crearDireccionamientoPermanenteParameterVM = new CrearDireccionamientoPermanenteParameterVM();
+                    crearDireccionamientoPermanenteParameterVM.KeyBLD = codigo;
+                    crearDireccionamientoPermanenteParameterVM.NroBL = embarque.NROBL;
+                    crearDireccionamientoPermanenteParameterVM.Servicio = servicio;
+                    crearDireccionamientoPermanenteParameterVM.Origen = origen;
+                    crearDireccionamientoPermanenteParameterVM.IdEmpresaGtrm = usuario.Sesion.CodigoTransGroupEmpresaSeleccionado;
+                    crearDireccionamientoPermanenteParameterVM.IdUsuarioCrea = this.usuario.idUsuario;
+                    crearDireccionamientoPermanenteParameterVM.IdSesion = Convert.ToInt32(this.usuario.Sesion.CodigoSesion);
+                    await _serviceEmbarque.CrearDireccionamientoPermanente(crearDireccionamientoPermanenteParameterVM);
+
+
                 }
                 else
                 {

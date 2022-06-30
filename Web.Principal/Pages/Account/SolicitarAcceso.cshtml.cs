@@ -131,17 +131,6 @@ namespace Web.Principal.Pages.Account
                 ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe seleccionar al menos un tipo de entidad", NombreCampo = "Input.TipoEntidad2" });
             }
 
-            //if ((Input.ListDocumentoTipoEntidad == null) || (Input.ListDocumentoTipoEntidad.listarDocumentosTipoEntidad == null || Input.ListDocumentoTipoEntidad.listarDocumentosTipoEntidad.Count() <= 0))
-            //{
-            //    blDocumentosValido = false;
-            //    ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe seleccionar todo los archivos", NombreCampo = "Input.Files" });
-            //}
-
-            //else if (HttpContext.Request.Form.Files.Count() < Input.ListDocumentoTipoEntidad.listarDocumentosTipoEntidad.Count())
-            //{
-            //    blDocumentosValido = false;
-            //    ActionResponse.ListActionListResponse.Add(new ActionErrorResponse() { Mensaje = "Debe adjuntar todo lo archivos", NombreCampo = "Input.Files" });
-            //}
 
             if (ModelState.IsValid  && (blDocumentosValido) && (listVerificar.Count() > 0))  {
 

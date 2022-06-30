@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransMares.Core;
 using Utilitario.Constante;
+using ViewModel.Datos.Acceso;
 using ViewModel.Datos.Documento;
 using ViewModel.Datos.Message;
 using ViewModel.Datos.Parametros;
@@ -38,7 +39,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         private readonly ServicioMessage _servicioMessage;
         private readonly ServicioSolicitud _serviceSolicitud;
         private readonly ServicioEmbarques _serviceEmbarqueExterno;
-
+        
         private static ILogger _logger = ApplicationLogging.CreateLogger("UsuarioController");
 
         public UsuarioController(
@@ -66,8 +67,12 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         {
             PerfilParameterVM parameter = new PerfilParameterVM();
             parameter.Activo = 1;
+
             var result = await _serviceAcceso.ObtenerPerfiles(parameter);
+
             ViewBag.Perfiles = result.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.INTERNO));
+
+
 
             return View();
         }
@@ -96,6 +101,20 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
             }
 
+
+
+            PerfilParameterVM parameterPerfilUsuario = new PerfilParameterVM();
+            parameterPerfilUsuario.IdPerfil = result.usuario.IdPerfil;
+            parameterPerfilUsuario.IdUsuario = result.usuario.IdUsuario;
+            var resultPerfil = await _serviceAcceso.ObtenerPerfilUsuario(parameterPerfilUsuario);
+
+            resultPerfil.perfil.IdPerfil = result.usuario.IdPerfil;
+            resultPerfil.perfil.Menus.ForEach(x => {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
+
+            });
+
+
             EditarUsuarioInternoModel model = new EditarUsuarioInternoModel();
             model.Correo = result.usuario.Correo;
             model.Nombres = result.usuario.Nombres;
@@ -105,6 +124,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.EsAdmin = result.usuario.EsAdmin;
             model.Perfil = result.usuario.IdPerfil;
             model.Items = result.usuario.Menus;
+            model.Menus = resultPerfil.perfil.Menus;
             model.IdEntidad = result.usuario.IdEntidad;
             model.IdUsuario = result.usuario.IdUsuario;
 
@@ -122,7 +142,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
             parameter.IdUsuario = Id;
-            var result = await _serviceUsuario.ObtenerUsuarioSecundario(parameter);
+            var result = await _serviceUsuario.ObtenerUsuario(parameter);
 
             PerfilParameterVM parameterPerfil = new PerfilParameterVM();
             parameterPerfil.Activo = 1;
@@ -139,6 +159,19 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 ViewBag.Perfiles = resultPerfiles.Perfiles.Where(x => x.Tipo.Equals(Utilitario.Constante.SeguridadConstante.TipPerfil.EXTERNO));
             }
 
+            PerfilParameterVM parameterPerfilUsuario = new PerfilParameterVM();
+            parameterPerfilUsuario.IdPerfil = result.usuario.IdPerfil;
+            parameterPerfilUsuario.IdUsuario = result.usuario.IdUsuario;
+            var resultPerfil = await _serviceAcceso.ObtenerPerfilUsuario(parameterPerfilUsuario);
+
+            resultPerfil.perfil.IdPerfil = result.usuario.IdPerfil;
+            resultPerfil.perfil.Menus.ForEach(x => {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
+
+            });
+
+
+
             EditarUsuarioInternoModel model = new EditarUsuarioInternoModel();
             model.Correo = result.usuario.Correo;
             model.Nombres = result.usuario.Nombres;
@@ -150,13 +183,14 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             model.Items = result.usuario.Menus;
             model.IdEntidad = result.usuario.IdEntidad;
             model.IdUsuario = result.usuario.IdUsuario;
-
+            model.Menus = resultPerfil.perfil.Menus;
             model.UsuarioModifica = result.usuario.UsuarioModifica;
             model.UsuarioCrea = result.usuario.UsuarioCrea;
             model.FechaCrea = result.usuario.FechaRegistro;
             model.FechaModifica = result.usuario.FechaModificacion;
             model.CambioContrasenia = result.usuario.CambioContrasenia;
             model.ConfirmarCuenta = result.usuario.CorreoConfirmado;
+            model.PerfilNombre = resultPerfiles.Perfiles.Where(x=>x.IdPerfil== result.usuario.IdPerfil).First().Nombre;
 
 
             return View(model);
@@ -166,13 +200,10 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         [HttpGet]
         public async Task<IActionResult> ListarUsuarios(string parkey)
         {
-
-
             ListarUsuariosModel model = new ListarUsuariosModel();
 
             try
             {
-
 
                 if (parkey != null)
                 {
@@ -186,8 +217,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                         string Nombres = parametros[1];
                         string isActivo = parametros[2];
                         string IdPerfil = parametros[3];
-                  
-
+                 
                         model.Correo = Correo ;
                         model.Nombres = Nombres;
                         model.isActivo = isActivo == "" ? 0 : Convert.ToInt32(isActivo);
@@ -209,6 +239,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                 await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
                 model.ListUsuarios = result;
                 model.ListEstado = await ListarEstados();
+
             }
             catch (Exception err)
             {
@@ -256,30 +287,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             return result;
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ListarUsuarios(ListarUsuariosModel model)
-        //{
-        //    ListarUsuarioParameterVM listarUsuarioParameterVM = new ListarUsuarioParameterVM();
-        //    //listarUsuarioParameterVM.ApellidoMaterno = model.ApellidoMaterno;
-        //    //listarUsuarioParameterVM.ApellidoPaterno = model.ApellidoPaterno;
-        //    listarUsuarioParameterVM.Nombres = model.Nombres;
-        //    listarUsuarioParameterVM.Correo = model.Correo;
-        //    listarUsuarioParameterVM.IdPerdil = model.IdPerfil;
-        //    listarUsuarioParameterVM.isActivo = model.isActivo;
-        //    listarUsuarioParameterVM.RegistroInicio = 1;
-        //    listarUsuarioParameterVM.RegistroFin = 100;
-        //    var result = await _serviceUsuario.ObtenerListadoUsuarios(listarUsuarioParameterVM);
-
-        //    model.ListUsuarios = result;
-
-        //    await cargarListas(Utilitario.Constante.EmbarqueConstante.TipoPerfil.INTERNO);
-
-        //    model.ListEstado = await ListarEstados();
-
-        //    return View(model);
-        //}
-
-
+        
         private async Task  cargarListas(string tipo) 
         {
             ListarPerfilActivosParameterVM parameter = new ListarPerfilActivosParameterVM();
@@ -295,7 +303,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             ActionResponse = new ActionResponse();
             if (ModelState.IsValid)
             {
-                if (usuario.Menus != null)
+                if (usuario.Perfiles.Any() && usuario.Perfiles.Single().Menus.Where(x=>x.IdMenuChecked !=null).Any())
                 {
                     var UrlInfo = Url.ActionContext.HttpContext.Request;
                     CrearUsuarioSecundarioParameterVM parameterVM = new CrearUsuarioSecundarioParameterVM();
@@ -308,7 +316,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.EsAdmin = false;
                     parameterVM.Activo = true;
                     parameterVM.IdUsuarioCrea = Convert.ToInt32(ViewData["IdUsuario"]);
-                    parameterVM.Menus = usuario.Menus.ToList();
+                    parameterVM.PerfilesMenus = usuario.Perfiles;
                     parameterVM.Contrasenia = new Utilitario.Seguridad.Encrypt().GetSHA256(usuario.Contrasenia);
                     parameterVM.ContraseniaNoCifrado = usuario.Contrasenia;
                     parameterVM.RequiereConfirmacion = true;
@@ -316,7 +324,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.ImagenGrupoTrans = $"{this.GetUriHost()}/{_configuration[Utilitario.Constante.ConfiguracionConstante.Imagen.ImagenGrupo]}"; ;
                     
                     var result = await _serviceUsuario.CrearUsuario(parameterVM);
-                    if (result.CodigoResultado > 0)
+                    if (result.CodigoResultado == 0)
                     {
                         ActionResponse.Codigo = 0;
                         ActionResponse.Mensaje = "El usuario ha sido creado correctamente y se envió sus datos de acceso al correo.";
@@ -719,7 +727,7 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
 
             if (ModelState.IsValid)
             {
-                if (usuario.Menus != null)
+                if (usuario.Perfiles.Any())
                 {
                     CrearUsuarioSecundarioParameterVM parameterVM = new CrearUsuarioSecundarioParameterVM();
                     parameterVM.IdUsuario = usuario.IdUsuario;
@@ -730,8 +738,8 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
                     parameterVM.EsAdmin = usuario.EsAdmin;
                     parameterVM.Activo = usuario.Activo;
                     parameterVM.IdUsuarioModifica = this.usuario.idUsuario;
-                    parameterVM.Menus = usuario.Menus.ToList();
-                    parameterVM.PerfilMenu =usuario.PerfilVM;
+
+                    parameterVM.PerfilesMenus = usuario.Perfiles;
 
                     var result = await _serviceUsuario.EditarUsuarioInterno(parameterVM);
                     ActionResponse.Codigo = result.CodigoResultado;
@@ -873,13 +881,21 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
         [HttpGet]
         public async Task<IActionResult> MenusPorPerfil(int IdPerfil, int IdUsuario)
         {
-            List<UsuarioMenuVM> modelMenus = new List<UsuarioMenuVM>();
-            CrearUsuarioSecundarioParameterVM parameter = new CrearUsuarioSecundarioParameterVM();
-            parameter.IdUsuario = IdUsuario;
-            parameter.IdPerfil = IdPerfil;
-            var result = await _serviceUsuario.ObtenerListaUsuarioMenu(parameter);
-            modelMenus = result.Menus;
-            return PartialView("_MenusPorPerfil", modelMenus);
+       
+
+            PerfilParameterVM parameterPerfilUsuario = new PerfilParameterVM();
+            parameterPerfilUsuario.IdPerfil = IdPerfil;
+            parameterPerfilUsuario.IdUsuario = IdUsuario;
+            var resultPerfil = await _serviceAcceso.ObtenerPerfilUsuario(parameterPerfilUsuario);
+
+            resultPerfil.perfil.IdPerfil = IdPerfil;
+            resultPerfil.perfil.Menus.ForEach(x => {
+                x.VistaMenu = resultPerfil.perfil.VistaMenu.Where(z => z.IdMenu == x.IdMenu).ToArray();
+
+            });
+
+
+            return PartialView("_MenusPorPerfil", resultPerfil.perfil.Menus);
         }
 
         [HttpPost]
@@ -905,6 +921,74 @@ namespace Web.Principal.Areas.GestionarUsuarios.Controllers
             return Json(ActionResponse);
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CambiarContrasenia(string nuevo)
+        {
+            CambiarContraseniaModel model = new CambiarContraseniaModel();
+
+            if (!string.IsNullOrEmpty(nuevo))
+            {
+                ViewBag.mensaje = "";
+                ViewBag.codigo = "";
+                ViewBag.EsNuevo = nuevo;
+                model.Correo =this.usuario.CorreoUsuario;
+                model.EsNuevo = nuevo;
+            }
+            else
+            {
+                return RedirectToAction("Home", "Inicio", new { area = "GestionarDashboards" });
+            }
+
+            return View(model);
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarContrasenia(CambiarContraseniaModel model)
+        {
+            ViewBag.mensaje = "";
+            ViewBag.codigo = "";
+            ViewBag.EsNuevo = model.EsNuevo;
+
+            if (ModelState.IsValid)
+            {
+                CambiarContrasenaParameterVM cambiarContrasenaParameterVM = new CambiarContrasenaParameterVM();
+                if (usuario.AdminSistema == 1)
+                {
+                    cambiarContrasenaParameterVM.IdUsuario = Int32.Parse(usuario.IdUsuarioInicioSesion.ToString());
+                }
+                else
+                {
+                    cambiarContrasenaParameterVM.IdUsuario = usuario.idUsuario;
+                }
+
+                cambiarContrasenaParameterVM.ContrasenaActual = new Utilitario.Seguridad.Encrypt().GetSHA256(model.contraseniaActual);
+                cambiarContrasenaParameterVM.ContrasenaNuevo = new Utilitario.Seguridad.Encrypt().GetSHA256(model.contraseniaNueva);
+
+                if (String.IsNullOrEmpty(model.EsNuevo))
+                { cambiarContrasenaParameterVM.EsUsuarioNuevo = null; }
+
+                else if (model.EsNuevo.Equals("1"))
+                {
+                    cambiarContrasenaParameterVM.EsUsuarioNuevo = true;
+                }
+                else if (model.EsNuevo.Equals("0"))
+                {
+                    cambiarContrasenaParameterVM.EsUsuarioNuevo = false;
+                }
+
+                var cambiarContrasenaResultVM = await _serviceAcceso.ActualizarContrasena(cambiarContrasenaParameterVM);
+
+                ViewBag.mensaje = cambiarContrasenaResultVM.MensajeResultado;
+                ViewBag.codigo = cambiarContrasenaResultVM.CodigoResultado;
+
+            }
+
+            return View(model);
+        }
+
 
         private async void enviarCorreo(string _contenido, string _correo, string _asunto) {
 

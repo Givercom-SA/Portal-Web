@@ -56,9 +56,6 @@ namespace Servicio.Embarque.BusinessLogic
         public async Task MemoJobAsync()
         {
           
-
-            
-
             Interlocked.Increment(ref numberMemo);
             _logger.LogInformation($"Iniciado Memo JOB: Iteracion: {numberMemo}");
             try

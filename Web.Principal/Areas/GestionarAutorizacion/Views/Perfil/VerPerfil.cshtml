@@ -29,7 +29,7 @@
     <div class="card card-header-actions mb-4">
         <div class="card-header">
             Detalle de Perfil
-            <button id="btnVolver"  class="btn btn-sm btn-primary" type="button"  onclick="javascript: history.go(-1)" >Volver</button>
+            <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
         </div>
 
         <div class="card-body">
@@ -49,10 +49,34 @@
                         <input asp-for="@Model.TipoPerfil" class="form-control" readonly type="text" />
                     </div>
                 </div>
+                <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="small mb-1">Estado</label>
+                        @if (Model.Activo)
+                        {
+                            <input asp-for="@Model.Activo" class="form-control" readonly type="text" value="Activo" />
+
+                        }
+                        else
+                        {
+                            <input asp-for="@Model.Activo" class="form-control" readonly type="text" value="Inactivo" />
+                        }
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="small mb-1">Dashboard</label>
+                        <input asp-for="@Model.Dashboard" class="form-control" readonly type="text" />
+
+
+
+                    </div>
+
+                </div>
+
 
 
                 <div class="row gx-3 mb-3">
-
                     <div class="col-md-6">
                         <label class="small mb-1">Usuario de Creación</label>
                         <input asp-for="@Model.UsuarioCrea" class="form-control" readonly type="text" />
@@ -64,6 +88,7 @@
                         <input asp-for="@Model.FechaRegistro" asp-format="{0:dd'/'MM'/'yyyy HH:mm:ss}" class="form-control" readonly type="text" />
                     </div>
                 </div>
+
 
                 <div class="row gx-3 mb-3">
 
@@ -79,12 +104,33 @@
                     </div>
                 </div>
 
+
                 <div class="row gx-3 mb-3">
+                   
 
                     <div class="col-md-6">
+                        <label class="small mb-1">Leyenda</label>
+
+                        <ul class="small">
+
+                            <li>[S] Sección</li>
+                            <li>[G] Grupo</li>
+                            <li>[M] Menu</li>
+                            <li>[V] Vista</li>
+                            <li>[O] Opción</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row gx-3 mb-3">
+
+                    <div class="col-md-12">
 
                         <label a class="small mb-1">Accesos</label>
-                        <fieldset class="border p-2 h-100">
+                        <fieldset class="border p-2 h-200">
 
                             <div style="height:250px;" class="overflow-auto small" id="MenuCheckBox">
                                 @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
@@ -92,21 +138,7 @@
                         </fieldset>
                     </div>
 
-                    <div class="col-md-6">
-                        <label a class="small mb-1">Estado</label>
-                        <fieldset class="border p-2  h-100">
 
-                            <div class="form-check form-check-solid">
-                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio1" disabled type="radio" value="true">
-                                <label class="form-check-label small" for="Radio1">Activo</label>
-                            </div>
-                            <div class="form-check form-check-solid">
-                                <input asp-for="@Model.Activo" class="form-check-input" id="Radio2" disabled type="radio" value="false">
-                                <label class="form-check-label small" for="Radio2">Inactivo</label>
-                            </div>
-                        </fieldset>
-
-                    </div>
 
 
 
@@ -120,11 +152,11 @@
                     <button id="btnEditar" class="btn btn-primary" type="button">Editar</button>
                 </div>
 
+
             </div>
-            </div>
+        </div>
     </div>
 </div>
-
 
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

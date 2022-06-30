@@ -28,7 +28,7 @@
 
 <!-- Main page content-->
 <div class="container-xl px-4 mt-n10">
-    <form method="post" id="frmBandejaFacturacionTercero" asp-area="GestionarEmbarques" asp-controller="Facturacion" asp-action="ListarEncriptar">
+    <form method="post" id="frmBandejaFacturacionTercero" asp-area="GestionarEmbarques" asp-controller="Facturacion" asp-action="ListarEncriptarFacturacionTercero">
         <div class="card card-header-actions mb-4">
             <div class="card-header">
                 Filtros para Búsqueda
@@ -179,7 +179,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensajeError"></output>
+                <output id="outputMensajeError"></output> 
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -193,7 +193,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensaje"></output>
+                <output id="outputMensaje"></output> 
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -235,32 +235,64 @@
             formData.append("Correo", $('#pCorreo').val());
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("AprobarRechazarFacturacionTercero", "Embarque", new { area= "GestionarEmbarques" })",
+                url: "@Url.Action("AprobarRechazarFacturacionTercero", "Facturacion", new { area= "GestionarEmbarques" })",
                 data: formData,
                 dataType: "json",
                 contentType: false,
-                processData: false
-            })
-                .done(function (result) {
+                processData: false,
+                beforeSend: function () {
+                    $(".loader").fadeIn("slow");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-                if (result != null) {
-                    if (result.codigo == 0) {
-                        ShowAlertMensage('ResultConfirmar', 'success', '', result.mensaje, 3, CargarPagina);
+                    $(".loader").fadeOut("slow");
+                    $("#modal_confirmar").modal("hide");
+
+                    $("#btnCancelarConfirmar").prop('disabled', false);
+                    $("#btnAprobarRechazar").prop('disabled', false);
+
+                    $('#dialogError').modal("show");
+
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
                     } else {
-                        ShowAlertMensage('ResultConfirmar', 'warning', '', result.mensaje, 0, null);
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
+
+                },
+                success: function (response) {
+
+                    $(".loader").fadeOut("slow");
+                    $("#modal_confirmar").modal("hide");
+
+
+                   // dialogAlerta outputMensaje  dialogOk outputMensajeOk
+
+                    if (response != null) {
+                        if (response.codigo == 0) {
+                            
+                            $("#dialogOk").modal("show");
+                            $("#outputMensajeOk").html(response.mensaje);
+                        } else {
+                            
+                            $("#dialogAlerta").modal("show");
+                            $("#outputMensaje").html(response.mensaje);
+
+                            $("#btnCancelarConfirmar").prop('disabled', false);
+                            $("#btnAprobarRechazar").prop('disabled', false);
+                        }
+                    } else {
+
+                        $("#dialogError").modal("show");
+                        $("#outputMensajeError").html(response.mensaje);
+
                         $("#btnCancelarConfirmar").prop('disabled', false);
                         $("#btnAprobarRechazar").prop('disabled', false);
                     }
-                } else {
-                    $("#btnCancelarConfirmar").prop('disabled', false);
-                    $("#btnAprobarRechazar").prop('disabled', false);
                 }
-            })
-            .fail(function (xhr, status, error) {
-                $("#btnCancelarConfirmar").prop('disabled', false);
-                $("#btnAprobarRechazar").prop('disabled', false);
-            })
-            .always(function () {
 
             });
 
@@ -331,14 +363,25 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
                     $(".loader").fadeOut("slow");
+
+
+                    $('#dialogError').modal("show");
+
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
 
                 },
                 success: function (response) {
 
                     $(".loader").fadeOut("slow");
+
                     if (response.codigo == 0) {
 
 
@@ -363,7 +406,7 @@
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+
 
                 }
             });
@@ -386,27 +429,35 @@
                     $("#divContentFacturacionTerceroHistorial").html("Procesando...")
 
                 },
-            })
-                .done(function (response) {
+                 error: function (jqXHR, textStatus, errorThrown) {
+
+                    $(".loader").fadeOut("slow");
+
+
+                    $('#dialogError').modal('show');
+
+
+                         $('#dialogError').modal("show");
+
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+
+
+
+                },
+                success: function (response) {
+
                     $(".loader").fadeOut("slow");
                     $('#modal_facturacion_tercero_historial').modal('show');
                     $("#divContentFacturacionTerceroHistorial").html(response);
 
                     DataTableFacturacionTerceroHistorial();
-
-                })
-                .fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-
-
-                    $('#dialogError').modal('show');
-                    $("#outputMensajeError").html(error);
-
-                })
-                .always(function () {
-
-
-                });
+                }
+            });
 
         }
 

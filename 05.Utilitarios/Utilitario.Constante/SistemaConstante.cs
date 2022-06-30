@@ -44,11 +44,11 @@ namespace Utilitario.Constante
         {
             public static Route Login()
             {
-                return GetRoute("exists", "Seguridad", "Login");
+                return GetRoute("", "", "Login");
             }
 
-     
 
+   
             public static Route Logout()
             {
                 return GetRoute("exists", "Seguridad", "CerrarSesionAsync");
@@ -56,12 +56,42 @@ namespace Utilitario.Constante
 
             public static Route UpdatePassword()
             {
-                return GetRoute("GestionarAccesos", "Login", "CambiarContrasenia");
+                return GetRoute("GestionarUsuarios", "Usuario", "CambiarContrasenia");
             }
 
-     
+            public static Route CambiarEmpresa()
+            {
+                return GetRoute("GestionarDashboards", "inicio", "CambiarEmpresa");
+            }
 
-       
+            public static Route MiCuenta()
+            {
+                return GetRoute("GestionarUsuarios", "Usuario", "CuentaUsuario");
+            }
+
+            public static Route CerrarInspeccionModoAdmin()
+            {
+                return GetRoute("GestionarEmbarques", "Entidad", "CerrarSesionInspector");
+
+            }
+            public static Route CambiarPerfil()
+            {
+                return GetRoute("GestionarDashboards", "inicio", "CambiarPerfil");
+            }
+            public static Route DashboardAdministrador()
+            {
+                return GetRoute("GestionarDashboards", "Inicio", "Administracion");
+            }
+
+
+            public static Route DashboardInterno()
+            {
+                return GetRoute("GestionarDashboards", "Inicio", "Operaciones");
+            }
+            public static Route DashboardEntidadExterna()
+            {
+                return GetRoute("GestionarDashboards", "Inicio", "Home");
+            }
 
             public static Route PageNotFound()
             {
@@ -101,7 +131,7 @@ namespace Utilitario.Constante
             public const string IncorrectInputData = "Datos de entrada incorrectos";
             public const string DataCannotBeObtained = "No se ha podido obtener los datos";
             public const string ErrorProcessingTheRequest = "Error al procesar la solicitud";
-            public const string YouDoNotHaveAccess = "El usuario no cuenta con acceso";
+            public const string YouDoNotHaveAccess = "Estimado usuario, no tiene acceso a este recurso.";
             public const string YouDoNotHavePrivileges = "El usuario no cuenta con privilegios";
             
         }

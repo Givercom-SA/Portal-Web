@@ -1,0 +1,395 @@
+﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.EditarMenusModel
+@{
+
+    ViewData["Title"] = "Editar Menu";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    this.ViewData.Add("ModoLectura", false);
+ }
+
+    <div class="loader" style="">
+        <div class='lds-ripple' id='divLoadTipoEntidad'><div></div><div></div></div>
+    </div>
+
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <div class="container-xl px-4">
+            <div class="page-header-content pt-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mt-4">
+                        <h1 class="page-header-title">
+                            <div class="page-header-icon"><i data-feather="edit-3"></i></div>
+                            @ViewData["Title"]
+                        </h1>
+                        <div class="page-header-subtitle">Aquí puedes modificar el menu.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-xl px-4 mt-n10">
+        <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                @ViewData["Title"]
+                <button id="btnVolver" class="btn btn-sm btn-primary" type="button" onclick="javascript: history.go(-1)">Volver</button>
+            </div>
+
+            <div class="card-body">
+                <div class="sbp-preview-content">
+
+                    <form id="frmMenu" asp-area="GestionarAutorizacion" asp-controller="Menu" asp-action="Editar">
+
+
+                        <input type="hidden"  asp-for="@Model.Menu.IdMenu"/>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Nombre Menu</label>
+                                <input class="form-control" type="text" asp-for="@Model.Menu.Nombre" />
+                                <span asp-validation-for="@Model.Menu.Nombre" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">  Area</label>
+                                <input class="form-control" type="text" asp-for="@Model.Menu.Area" />
+
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">Tipo Menu</label>
+                                <select class="form-select small"
+                                        asp-for="@Model.Menu.TipoMenu"
+                                        asp-items="Model.ListTipoMenu">
+                                   
+                                </select>
+                                <span asp-validation-for="@Model.Menu.TipoMenu" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Controller</label>
+                                <input class="form-control" type="text" asp-for="@Model.Menu.Controlador" />
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Menu Padre</label>
+                                <select class="form-select small" asp-for="@Model.Menu.IdPadre"
+                                       asp-items="@Model.ListMenuPadre" >
+                                    <option value="">No Asignado</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="small mb-1"> Action</label>
+                                <input class="form-control" type="text" asp-for="@Model.Menu.Accion" />
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Visible</label>
+                                <fieldset class="border p-2">
+
+                                    <div class="form-check form-check-solid">
+                                        <input class="form-check-input" id="Radio1" asp-for="@Model.Menu.Visible" type="radio" value="true">
+                                        <label class="form-check-label small" for="Radio1">SI</label>
+                                    </div>
+
+                                    <div class="form-check form-check-solid">
+                                        <input class="form-check-input" id="Radio2" asp-for="@Model.Menu.Visible" type="radio" value="false">
+                                        <label class="form-check-label small" for="Radio2">NO</label>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1"> Orden</label>
+                                <input class="form-control" type="text" asp-for="@Model.Menu.Orden" />
+
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Estado</label>
+                                <fieldset class="border p-2">
+
+                                    <div class="form-check form-check-solid">
+                                        <input class="form-check-input" id="Radio1" asp-for="@Model.Menu.Activo" type="radio" value="true">
+                                        <label class="form-check-label small" for="Radio1">Activo</label>
+                                    </div>
+
+                                    <div class="form-check form-check-solid">
+                                        <input class="form-check-input" id="Radio2" asp-for="@Model.Menu.Activo" type="radio" value="false">
+                                        <label class="form-check-label small" for="Radio2">Inactivo</label>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Usuario de Creación</label>
+                                <input class="form-control" readonly type="text" asp-for="@Model.Menu.UsuarioCreaNombres" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Fecha de Creación</label>
+                                <input class="form-control" readonly type="text" asp-for="@Model.Menu.FechaRegistro" />
+                            </div>
+                        </div>
+
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label a class="small mb-1">Ultimo Usuario que Modifica</label>
+                                <input class="form-control" readonly type="text" asp-for="@Model.Menu.UsuarioModificaNombres" />
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="small mb-1">Ultima Fecha de Modificación</label>
+                                <input class="form-control" readonly type="text" asp-for="@Model.Menu.FechaModifica" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-12">
+                                <label class="small mb-1">Vistas</label>
+                                <fieldset class=" p-2 h-300">
+
+                                    <div style="height:300px;" class="overflow-auto small" id="MenuCheckBox">
+
+                                        @await Html.PartialAsync("_VistasPorMenu", Model.Menu.Vistas)
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div id="MensajeResult"></div>
+
+                        <hr />
+                        <div class="mb-2 text-right">
+                            <button id="btnGuardar" class="btn btn-primary" type="button">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" data-bs-backdrop="static" id="modalConfirmarActualizacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Actualización de Menu</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estas seguro de registrar los cambios?
+
+                </div>
+                <div class="modal-footer">
+                    <button onclick="registrarActualizacion()" class="btn btn-primary" type="button">SI</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Información</h5>
+
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensajeOk" class="small"></output>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning">Alerta</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensaje" class="small"></output>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Error</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <output id="outputMensajeError" class="small"></output>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+
+
+    @section Scripts{
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+        <script>
+
+
+            let outputMensajeOk = $("#outputMensajeOk");
+            let outputMensajeError = $("#outputMensajeError");
+            let outputMensaje = $("#outputMensaje");
+
+
+            $(document).ready(function () {
+
+                $(".loader").fadeOut("slow");
+
+   $("#btnGuardar").click(function () {
+
+                var isValid = $('#frmMenu').valid();
+
+                if (isValid) {
+                    $("#modalConfirmarActualizacion").modal("show");
+                }
+                else {
+                    $("#frmMenu").validate();
+
+                }
+
+
+
+
+
+            });
+
+
+
+
+            $("#frmMenu").submit(function (e) {
+
+
+
+                e.preventDefault();
+
+                var isValid = $('#frmMenu').valid();
+
+                if (isValid) {
+
+                    var form = $('#frmMenu')[0];
+                    var formData = new FormData(form);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Editar","Menu",new { area="GestionarAutorizacion"})",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                            $(".loader").fadeIn("slow");
+                            $("#modalConfirmarActualizacion").modal("hide");
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            $(".loader").fadeOut("slow");
+                            $("#dialogPrincipalError").modal("show");
+                            $("#modalConfirmarActualizacion").modal("hide");
+
+                            if (jqXHR.status == 401) {
+                                $("#outputMensajePrincipalError").html("Estimado usuario, no tiene acceso a este recurso.");
+                            } else {
+                                $("#outputMensajePrincipalError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                            }
+
+                        },
+                        success: function (response) {
+                            $(".loader").fadeOut("slow");
+
+                            if (response != null) {
+                                if (response.codigo == 0) {
+
+                                    $('#outputMensajeOk').html(response.mensaje);
+                                    $('#dialogOk').modal('show');
+
+                                } else {
+
+
+                                    $('#outputMensaje').html(response.mensaje);
+                                    $('#dialogAlerta').modal('show');
+                                }
+                            } else {
+
+                                $('#outputMensajeError').html("Error inesperado, volver a intentar por favor.");
+                                $('#dialogAlerta').modal('show');
+                            }
+
+
+
+                        },
+                        complete: function (data) {
+                            $(".loader").fadeOut("slow");
+
+                        }
+                    });
+                }
+                else {
+                    $("#frmMenu").validate();
+                }
+            });
+
+
+            });
+
+
+        function registrarActualizacion() {
+
+
+            $("#frmMenu").submit();
+
+        }
+
+        function ActualizarForm() {
+
+
+            window.location.href = "@Url.Action("Listar","Menu",new { area="GestionarAutorizacion"})";
+        }
+
+        </script>
+    }

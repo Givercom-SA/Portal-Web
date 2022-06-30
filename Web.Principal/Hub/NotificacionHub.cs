@@ -16,12 +16,12 @@ namespace Web.Principal.Hub
     public class NotificacionHub : Hub<INotificacionHub>
     {
         private ILogger<NotificacionHub> _logger;
-        private readonly NotificacionService _notificacionService;
+        private readonly ServicioNotificacion _notificacionService;
         private IMemoryCache _memoryCache;
 
         public NotificacionHub(
             ILogger<NotificacionHub> logger,
-            NotificacionService notificacionService,
+            ServicioNotificacion notificacionService,
             IMemoryCache memoryCache
         ) : base()
         {

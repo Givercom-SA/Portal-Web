@@ -1,7 +1,7 @@
 ﻿@model Web.Principal.Areas.GestionarAutorizacion.Models.ListarPerfilesModel
 
 @{
-    ViewData["Title"] = "Listado de Perfiles";
+    ViewData["Title"] = "Perfiles";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -155,7 +155,7 @@
 
             </div>
             <div class="modal-body">
-                <output id="outputMensajeOk" class="small"></output>
+                <output id="outputMensajeOk" ></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
         </div>
@@ -171,7 +171,7 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensaje" class="small"></output>
+                <output id="outputMensaje"></output>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
@@ -186,21 +186,21 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <output id="outputMensajeError" class="small"></output>
+                <output id="outputMensajeError"></output>  
             </div>
             <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
         </div>
     </div>
 </div>
 
-
-
 @section Scripts{
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" type="text/javascript"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
+
             $(".loader").fadeOut("slow");
+
             let dataTable = new simpleDatatables.DataTable("#datatable", {
                 searchable: true,
                 labels: {
@@ -218,31 +218,6 @@
         });
 
 
-        @*function VerInformacion(IdPerfil) {
-
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("VerPerfil", "Perfil", new { area= "GestionarAutorizacion" })/?Id=" + IdPerfil,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
-            })
-                .done(function (result) {
-
-                    if (result != null) {
-                        $('#ContentVerPerfil').html(result);
-                        $('#modal_perfil').modal('show');
-                    } else {
-
-                    }
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-
-                });
-        }*@
 
 
         function EliminarPerfil() {
@@ -259,14 +234,25 @@
                 contentType: false,
                 processData: false,
                 beforeSend: function () {
-
+                    $(".loader").fadeIn("slow");
                     $("#modal_confirmar").modal("hide");
 
-                    $(".loader").fadeIn("slow");
+                    
 
                 },
-            })
-                .done(function (response) {
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+                },
+                success: function (response) {
+
                     $(".loader").fadeOut("slow");
 
                     if (response.codigo == 0) {
@@ -284,16 +270,12 @@
                         $("#outputMensajeError").html(response.mensaje);
 
                     }
+                },
+                complete: function (data) {
 
-                })
-                .fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar mas tarde. Detalle: " + error);
-                })
-                .always(function () {
 
-                });
+                }
+            });
         }
 
 
@@ -312,8 +294,18 @@
                 beforeSend: function () {
                     $(".loader").fadeIn("slow");
                 },
-            })
-                .done(function (response) {
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    $(".loader").fadeOut("slow");
+
+                    $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
+                },
+                success: function (response) {
 
                     $(".loader").fadeOut("slow");
                     if (response.codigo == 0) {
@@ -330,15 +322,12 @@
                         $("#dialogError").modal("show");
                         $("#outputMensajeError").html(response.mensaje);
                     }
-                })
-                .fail(function (xhr, status, error) {
-                    $(".loader").fadeOut("slow");
-                    $("#dialogError").modal("show");
-                    $("#outputMensajeError").html("Estimado usuario, ocurrio un error interno, por favor volver a intentar más tarde. Detalle: " + error);
-                })
-                .always(function () {
+                },
+                complete: function (data) {
 
-                });
+
+                }
+            });
         }
 
 
@@ -352,7 +341,7 @@
             VerificarSiTieneAccesos(IdPerfil, Nombre);
         }
 
-      
+
 
         function ActualizarForm() {
             window.location.reload();
@@ -374,40 +363,35 @@
                     $(".loader").fadeIn("slow");
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
                     $(".loader").fadeOut("slow");
 
+                    $("#dialogError").modal("show");
+
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
                 },
                 success: function (response) {
 
                     $(".loader").fadeOut("slow");
                     if (response.codigo == 0) {
-
-
                         window.location.href = response.mensaje;
-
-
                     }
                     else if (response.codigo > 0) {
-
-
                         $("#dialogAlerta").modal("show");
                         $("#outputMensaje").html(response.mensaje);
 
-
                     }
                     else {
-
-
                         $("#dialogError").modal("show");
                         $("#outputMensajeError").html(response.mensaje);
 
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+
 
                 }
             });

@@ -59,7 +59,7 @@
 
                         </div>
 
-                    
+
 
                     </div>
 
@@ -162,64 +162,36 @@
                     </div>
 
                     <div class="row gx-3 mb-3">
-
-
                         <div class="col-md-6">
                             <label class="small mb-1">Perfil</label>
-                            <fieldset class="border p-2">
-                             
-                                @foreach (var perfil in ViewBag.Perfiles as IEnumerable<ViewModel.Datos.Perfil.PerfilVM>
-)
-                                {
-
-                                    <div class="form-check form-check-solid">
-
-                                        @if (Model.Perfil == perfil.IdPerfil)
-                                        {
-
-                                            <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" checked disabled />
+                            
+                            <input asp-for="@Model.PerfilNombre" disabled class="form-control" type="text" />
+                        </div>
+                    </div>
+                        <div class="row gx-3 mb-3">
 
 
 
-                                        }
-                                        else
-                                        {
+                            <div class="col-md-12">
+                                <label class="small mb-1">Accesos</label>
+                                <fieldset class="border p-2">
 
-                                            <input asp-for="@Model.Perfil" class="form-check-input border-primary" id="Perfil@(perfil.IdPerfil)" type="radio" value="@perfil.IdPerfil" disabled />
-
-                                        }
-
-                                        <label class="form-check-label small" for="Perfil@(perfil.IdPerfil)">@perfil.Nombre</label>
-
+                                    <div style="height:400px;" class="overflow-auto small" id="MenuCheckBox">
+                                        @await Html.PartialAsync("_MenusPorPerfil", Model.Menus)
                                     </div>
+                                </fieldset>
+                            </div>
+                        </div>
 
-                                }
 
 
+                        <div id="MensajeResult"></div>
+                        <hr />
+                        <div class="mb-2 text-right">
 
-                            </fieldset>
+                            <button class="btn btn-primary" id="btnEditar" type="button"> Editar</button>
 
                         </div>
-                        <div class="col-md-6">
-                            <label class="small mb-1">Accesos</label>
-                            <fieldset class="border p-2">
-                           
-                                <div style="height:180px;" class="overflow-auto small" id="MenuCheckBox">
-                                    @await Html.PartialAsync("_MenusPorPerfil", Model.Items)
-                                </div>
-                            </fieldset>
-                        </div>
-                    </div>
-
-
-
-                    <div id="MensajeResult"></div>
-                    <hr />
-                    <div class="mb-2 text-right">
-
-                        <button class="btn btn-primary" id="btnEditar" type="button"> Editar</button>
-
-                    </div>
                 </form>
                 
             </div>

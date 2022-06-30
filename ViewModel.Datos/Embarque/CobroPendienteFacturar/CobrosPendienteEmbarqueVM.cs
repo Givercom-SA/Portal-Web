@@ -58,7 +58,9 @@ namespace ViewModel.Datos.Embarque.CobroPendienteFacturar
 
         public string Servicio { get; set; }
         public string Origen { get; set; }
-       
+
+        public string ParKey { get; set; }
+
 
 
     }

@@ -11,6 +11,7 @@ using Web.Principal.Interface;
 using Utilitario.Constante;
 using ViewModel.Notificacion;
 using Web.Principal.ServiceConsumer;
+using System.Linq;
 
 namespace Web.Principal.Hub
 {
@@ -18,12 +19,12 @@ namespace Web.Principal.Hub
     {
         private readonly IUserConnectionManager _userConnectionManager;
         private ILogger<NotificationUserHub> _logger;
-        private readonly NotificacionService _notificacionService;
+        private readonly ServicioNotificacion _notificacionService;
         private IMemoryCache _memoryCache;
 
         public NotificationUserHub(IUserConnectionManager userConnectionManage,
             ILogger<NotificationUserHub> logger,
-               NotificacionService notificacionService,
+               ServicioNotificacion notificacionService,
             IMemoryCache memoryCache): base()
         {
             _userConnectionManager = userConnectionManage;
@@ -34,18 +35,49 @@ namespace Web.Principal.Hub
 
         public static List<Tuple<int, string>> Usuario { get; set; } = new List<Tuple<int, string>>();
 
-        public async Task<List<Notificacion>> Matricular(string codigoUsuarioEncriptado)
+        public async Task<NotificacionManager> Matricular(string codigoUsuarioEncriptado)
         {
-            var codigoUsario = Encriptador.Instance.DesencriptarTexto(codigoUsuarioEncriptado);
+            var notificacionManager = new NotificacionManager();
+            notificacionManager.Notificaciones= new List<Notificacion>();
 
-            _userConnectionManager.KeepUserConnection(codigoUsario, Context.ConnectionId);
+            try
+            {
 
-            var t = Tuple.Create(Convert.ToInt32(codigoUsario), Context.ConnectionId);
-            Usuario.Add(t);
+                var codigoUsuario =int.Parse( Encriptador.Instance.DesencriptarTexto(codigoUsuarioEncriptado));
 
-            var notificacionesEnviar = new List<Notificacion>();
+                _userConnectionManager.KeepUserConnection(codigoUsuario.ToString(), Context.ConnectionId);
 
-            return notificacionesEnviar;
+                var t = Tuple.Create(Convert.ToInt32(codigoUsuario), Context.ConnectionId);
+                Usuario.Add(t);
+
+                var notificaciones = _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones);
+
+                var notificacionesPorUsuario = new List<NotificacionVM>();
+
+                notificaciones.TryGetValue(codigoUsuario, out notificacionesPorUsuario);
+
+                //Por Seguridad no se envia el codigo de usuario, ademas no es necesario
+                if (notificacionesPorUsuario != null)
+                    notificacionManager.Notificaciones = notificacionesPorUsuario.Select(x => new Notificacion {    CodigoUsuario = 0, 
+                                                                                                                    CreacionFecha = x.Fecha, 
+                                                                                                                    Mensaje = x.Mensaje, 
+                                                                                                                    Proceso = x.Proceso ,
+                                                                                                                    ContadorVisible=x.ContadorVisible,
+                                                                                                                    FechaFormato=x.FechaFormato,
+                                                                                                                    Leido=x.Leido,
+                                                                                                                    Link=x.Link,
+                                                                                                                    Titulo  =x.Titulo
+                                                                                                                    }).ToList();        
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Sucedio un error en Matricula");
+            }
+
+            notificacionManager.CantidadNotificacion = notificacionManager.Notificaciones.Count(X=>X.ContadorVisible==false);
+
+            return notificacionManager;
         }
 
         public async Task LimpiarNotificaciones(string codigoUsuarioEncriptado)
@@ -71,11 +103,15 @@ namespace Web.Principal.Hub
                 var codigoUsuario = Int32.Parse(Encriptador.Instance.DesencriptarTexto(codigoUsuarioEncriptado));
                 await _notificacionService.LimpiarContadorNotificacionesPorUsuario(codigoUsuario);
 
-                _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[codigoUsuario] = new List<NotificacionVM>();
+                _memoryCache.Get<Dictionary<int, List<NotificacionVM>>>(SistemaConstante.Cache.Notificaciones)[codigoUsuario].ForEach(x=> {
+                    x.ContadorVisible = true;
+                });
+
+
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Sucedio un error al LimpiarNotificaciones");
+                _logger.LogError(e, "Sucedio un error al limpiar el contador de notificación.");
             }
 
         }
@@ -119,7 +155,8 @@ namespace Web.Principal.Hub
                            Titulo = notificacion.Titulo,
                            Leido = notificacion.Leido,
                            Link = notificacion.Link,
-                           ContadorVisible = notificacion.ContadorVisible
+                           ContadorVisible = notificacion.ContadorVisible,
+                           FechaFormato= notificacion.FechaFormato
                        });
 
             foreach (var t in Usuario)
@@ -136,10 +173,28 @@ namespace Web.Principal.Hub
         //Called when a connection with the hub is terminated.
         public async override Task OnDisconnectedAsync(Exception exception)
         {
-            //get the connectionId
-            var connectionId = Context.ConnectionId;
-            _userConnectionManager.RemoveUserConnection(connectionId);
-            var value = await Task.FromResult(0);//adding dump code to follow the template of Hub > OnDisconnectedAsync
+           
+
+            int conexionesEliminadas = 0;
+
+            try
+            {
+                conexionesEliminadas = Usuario.RemoveAll(x => {
+                    return x.Item2.Equals(Context.ConnectionId);
+                });
+
+                var connectionId = Context.ConnectionId;
+                _userConnectionManager.RemoveUserConnection(connectionId);
+                var value = await Task.FromResult(0);//adding dump code to follow the template of Hub > OnDisconnectedAsync
+
+            }
+            catch (Exception ex1)
+            {
+                _logger.LogError(ex1, "Sucedio un error en OnDisconnectedAsync");
+            }
+
+            await base.OnDisconnectedAsync(exception);
+
         }
 
     }

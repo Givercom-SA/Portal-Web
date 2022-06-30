@@ -1,7 +1,7 @@
 ﻿@model Web.Principal.Areas.GestionarUsuarios.Models.ListarUsuariosModel
 
 @{
-    ViewData["Title"] = "Listado de Usuarios Secundarios";
+    ViewData["Title"] = "Usuarios Secundarios";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -26,7 +26,7 @@
 </header>
 
 <div class="container-xl px-4 mt-n10">
-    <form asp-area="GestionarUsuarios" asp-controller="UsuarioSecundario" asp-action="ListarEncriptar" id="frmUsuarioSecundarios" method="get" >
+    <form asp-area="GestionarUsuarios" asp-controller="UsuarioSecundario" asp-action="ListarEncriptar" id="frmUsuarioSecundarios" method="get">
 
         <!-- Payment methods card-->
         <div class="card card-header-actions mb-4">
@@ -101,26 +101,75 @@
     </div>
 </div>
 
+
+
+
+<div class="modal fade" id="dialogOk" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeOk"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal" onclick="ActualizarForm()">Cerrar y Actualizar</button></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogAlerta" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning">Alerta</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensaje"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogError" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="myExtraLargeModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Error</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <output id="outputMensajeError"></output>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button></div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts{
     <script src="@Url.Content("~/js/datatables/simple-datatables.js")" type="text/javascript"></script>
     <script type="text/javascript">
 
 
-        $(document).ready(function () { 
-
-       
-
+        $(document).ready(function () {
             $(".loader").fadeOut("slow");
             let dataTable = new simpleDatatables.DataTable("#datatable", {
-                searchable: false,
+                searchable: true,
                 labels: {
                     "noRows": "No hay información",
                     perPage: "{select} Registros por página",
                     "info": "Mostrando {start} a {end} de {rows} Registros",
+                    placeholder: "Filtro rápido...",
                 },
             });
 
         });
+
         function btnBuscar() {
 
             var form = $('#frmUsuarioSecundarios')[0];
@@ -138,66 +187,37 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
 
-                    $('#alertError').show();
-                    outputDetalleError.html(errorThrown);
                     $(".loader").fadeOut("slow");
-
+                    $("#dialogError").modal("show");
+                    if (jqXHR.status == 401) {
+                        $("#outputMensajeError").html("@Utilitario.Constante.SistemaConstante.Error.YouDoNotHaveAccess");
+                    } else {
+                        $("#outputMensajeError").html("Estimado usuario, ocurrio un error inesperado detalle: "+ textStatus + " - " + errorThrown);
+                    }
                 },
                 success: function (response) {
 
                     $(".loader").fadeOut("slow");
                     if (response.codigo == 0) {
-
-
                         window.location.href = response.mensaje;
-
-
                     }
                     else if (response.codigo > 0) {
-
-
                         $("#dialogAlerta").modal("show");
                         $("#outputMensaje").html(response.mensaje);
-
-
                     }
                     else {
-
-
                         $("#dialogError").modal("show");
                         $("#outputMensajeError").html(response.mensaje);
-
                     }
                 },
                 complete: function (data) {
-                    $(".loader").fadeOut("slow");
+
 
                 }
             });
 
         }
-        function VerInformacion(IdUsuario) {
-            $.ajax({
-                type: "GET",
-                url: "/GestionarUsuarios/UsuarioSecundario/VerUsuario?Id=" + IdUsuario,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
-            })
-                .done(function (result) {
-                    if (result != null) {
-                        $('#ContentVerUsuario').html(result);
-                        $('#modal_usuario').modal('show');
-                    } else {
 
-                    }
-                })
-                .fail(function (xhr, status, error) {
-
-                })
-                .always(function () {
-
-                });
-        }
+    
     </script>
 }
